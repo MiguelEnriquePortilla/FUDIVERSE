@@ -1,5 +1,5 @@
 // lib/api.ts
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // Tipos de respuesta
 interface ChatResponse {
@@ -54,7 +54,7 @@ class FudiAPI {
   // Chat con FudiGPT
   async chat(restaurantId: string, message: string, conversationId?: string): Promise<ChatResponse> {
     try {
-      const response = await fetch(`${API_URL}/api/chat`, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: this.getHeaders(),
         body: JSON.stringify({
@@ -86,7 +86,7 @@ class FudiAPI {
     phoneNumber?: string;
   }): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${API_URL}/api/auth/register`, {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: this.getHeaders(),
         body: JSON.stringify(restaurantData)
@@ -111,7 +111,7 @@ class FudiAPI {
   // Login
   async login(email: string, password: string): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: this.getHeaders(),
         body: JSON.stringify({ email, password })
@@ -136,7 +136,7 @@ class FudiAPI {
   // Obtener insights
   async getInsights(restaurantId: string): Promise<any> {
     try {
-      const response = await fetch(`${API_URL}/api/insights/${restaurantId}`, {
+      const response = await fetch(`/api/insights/${restaurantId}`, {
         method: 'GET',
         headers: this.getHeaders()
       });
@@ -146,7 +146,7 @@ class FudiAPI {
       console.error('Insights error:', error);
       return {
         success: false,
-        ererror: (error as Error).message
+        error: (error as Error).message
       };
     }
   }
@@ -154,7 +154,7 @@ class FudiAPI {
   // Obtener estadísticas del dashboard
   async getDashboardStats(restaurantId: string): Promise<any> {
     try {
-      const response = await fetch(`${API_URL}/api/dashboard/${restaurantId}`, {
+      const response = await fetch(`/api/dashboard/${restaurantId}`, {
         method: 'GET',
         headers: this.getHeaders()
       });
@@ -172,7 +172,7 @@ class FudiAPI {
   // Ejecutar acción rápida
   async executeAction(restaurantId: string, action: string, data?: any): Promise<any> {
     try {
-      const response = await fetch(`${API_URL}/api/actions/${action}`, {
+      const response = await fetch(`/api/actions/${action}`, {
         method: 'POST',
         headers: this.getHeaders(),
         body: JSON.stringify({
@@ -199,7 +199,7 @@ class FudiAPI {
         ...filters
       });
 
-      const response = await fetch(`${API_URL}/api/discover?${params}`, {
+      const response = await fetch(`/api/discover?${params}`, {
         method: 'GET',
         headers: this.getHeaders()
       });
