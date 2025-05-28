@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { fudiAPI } from '@/lib/api';
-import { FudiMarkdown } from '@/components/FudiMarkdown';
+import FudiMarkdown from '../../../components/FudiMarkdown';
 
 interface InsightCard {
   id: number;
