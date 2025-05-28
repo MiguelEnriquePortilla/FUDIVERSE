@@ -4,6 +4,7 @@ import Anthropic from '@anthropic-ai/sdk';
 
 // Importar servicios de inteligencia
 const { IntelligenceCoordinator } = require('../../../services/intelligence');
+const { ProductPerformanceAnalyzer } = require('../../../services/intelligence');
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,8 +15,13 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
-// Inicializar IntelligenceCoordinator
+// Inicializar IntelligenceCoordinator y ProductPerformanceAnalyzer
 const intelligence = new IntelligenceCoordinator(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+const productAnalyzer = new ProductPerformanceAnalyzer(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
@@ -240,6 +246,30 @@ const tools: any[] = [
         }
       },
       required: ["query"]
+    }
+  },
+  {
+    name: "get_product_performance",
+    description: "Analiza el rendimiento de productos/platillos específicos del restaurante",
+    input_schema: {
+      type: "object",
+      properties: {
+        period: {
+          type: "string",
+          description: "Período de análisis",
+          enum: ["today", "week", "month", "all"]
+        },
+        metric: {
+          type: "string", 
+          description: "Métrica a analizar",
+          enum: ["sales", "profit", "popularity", "trend"]
+        },
+        product_name: {
+          type: "string",
+          description: "Nombre específico del producto (opcional)"
+        }
+      },
+      required: ["period", "metric"]
     }
   }
 ];
@@ -467,6 +497,36 @@ async function executeToolFunction(toolName: string, toolInput: any, restaurantI
         top_products: topProducts
       };
     
+    case 'get_product_performance':
+      const { period, metric, product_name } = toolInput;
+      console.log('📊 Analizando rendimiento de productos:', { period, metric, product_name });
+      
+      try {
+        const productAnalysis = await productAnalyzer.analyzeProducts(restaurantId, {
+          period: period,
+          metric: metric,
+          productName: product_name
+        });
+        
+        return {
+          success: true,
+          analysis_type: 'product_performance',
+          period: period,
+          metric: metric,
+          insights: productAnalysis.insights || [],
+          top_products: productAnalysis.topProducts || [],
+          trends: productAnalysis.trends || [],
+          recommendations: productAnalysis.recommendations || []
+        };
+      } catch (error) {
+        console.error('❌ Error en ProductPerformanceAnalyzer:', error);
+        return {
+          success: false,
+          error: 'Error analizando rendimiento de productos',
+          message: 'No se pudieron obtener datos de productos en este momento'
+        };
+      }
+    
     case 'analyze_with_intelligence':
       const { query, context } = toolInput;
       console.log('🧠 Usando IntelligenceCoordinator para:', query);
@@ -651,10 +711,10 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error('❌ Error:', error);
-    return NextResponse.json({
-      success: true,
-      response: '😅 Ups, mi cerebro tuvo un cortocircuito. ¿Puedes repetir?\n\n---',
-      error: true
-    });
+      return NextResponse.json({
+        success: true,
+        response: '😅 Ups, mi cerebro tuvo un cortocircuito. ¿Puedes repetir?\n\n---',
+        error: true
+      });
+    }
   }
-}
