@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 
+// Importar servicios de inteligencia
+const { IntelligenceCoordinator } = require('../../../services/intelligence');
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -10,6 +13,12 @@ const supabase = createClient(
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
+
+// Inicializar IntelligenceCoordinator
+const intelligence = new IntelligenceCoordinator(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 // 🧠 PERSONALIDAD FUDIFLOW COMPLETA (IGUAL QUE SERVER.JS)
 const FUDIFLOW_SYSTEM_PROMPT = `
@@ -167,19 +176,19 @@ Jamás uses párrafos. Usa estructura visual jerárquica y directa.
 `;
 
 // 🔧 HERRAMIENTAS DISPONIBLES (IGUALES QUE SERVER.JS)
-const tools = [
+const tools: any[] = [
   {
     name: "get_sales_data",
     description: "Obtiene datos de ventas del restaurante para un período específico",
     input_schema: {
-      type: "object" as const,
+      type: "object",
       properties: {
         days: {
-          type: "number" as const,
+          type: "number",
           description: "Número de días hacia atrás para consultar"
         },
         specific_date: {
-          type: "string" as const,
+          type: "string",
           description: "Fecha específica en formato YYYY-MM-DD (opcional)"
         }
       },
@@ -190,10 +199,10 @@ const tools = [
     name: "get_inventory_status",
     description: "Revisa el estado actual del inventario",
     input_schema: {
-      type: "object" as const,
+      type: "object",
       properties: {
         category: {
-          type: "string" as const,
+          type: "string",
           description: "Categoría a revisar o 'all' para todo",
           enum: ["all", "proteins", "vegetables", "beverages", "supplies"]
         }
@@ -205,10 +214,10 @@ const tools = [
     name: "get_best_sellers",
     description: "Obtiene los productos más vendidos",
     input_schema: {
-      type: "object" as const,
+      type: "object",
       properties: {
         limit: {
-          type: "number" as const,
+          type: "number",
           description: "Cantidad de productos top a mostrar"
         }
       },
@@ -219,14 +228,14 @@ const tools = [
     name: "analyze_with_intelligence",
     description: "Analiza datos del restaurante usando inteligencia artificial para pagos, tendencias y patrones",
     input_schema: {
-      type: "object" as const,
+      type: "object",
       properties: {
         query: {
-          type: "string" as const,
+          type: "string",
           description: "La pregunta o análisis que se desea realizar"
         },
         context: {
-          type: "object" as const,
+          type: "object",
           description: "Contexto adicional si es necesario"
         }
       },
@@ -364,17 +373,22 @@ async function executeToolFunction(toolName: string, toolInput: any, restaurantI
         .order('date', { ascending: false });
       
       // Calcular totales y promedios
-      const safeSalesData = salesData ?? [];
-      const total = safeSalesData.reduce((sum, day) => sum + (day.data.total || 0), 0);
-      const average = safeSalesData.length > 0 ? total / safeSalesData.length : 0;
+      if (!salesData || salesData.length === 0) {
+        return {
+          success: false,
+          message: "No se encontraron datos de ventas para este restaurante en el período solicitado"
+        };
+      }
+      const total = salesData.reduce((sum: number, day: any) => sum + (day.data.total || 0), 0);
+      const average = total / salesData.length;
       
       return {
         success: true,
         period: `últimos ${days} días`,
         total_sales: total,
         average_daily: average,
-        days_with_data: safeSalesData.length,
-        details: safeSalesData.map(d => ({
+        days_with_data: salesData.length,
+        details: salesData.map((d: any) => ({
           date: d.date,
           total: d.data.total,
           transactions: d.data.transactions
@@ -433,7 +447,7 @@ async function executeToolFunction(toolName: string, toolInput: any, restaurantI
       
       // Agregar ventas por producto
       const productSales: { [key: string]: number } = {};
-      menuData.forEach(day => {
+      menuData.forEach((day: any) => {
         if (day.data.products) {
           Object.entries(day.data.products).forEach(([product, quantity]) => {
             productSales[product] = (productSales[product] || 0) + (quantity as number);
@@ -457,21 +471,13 @@ async function executeToolFunction(toolName: string, toolInput: any, restaurantI
       const { query, context } = toolInput;
       console.log('🧠 Usando IntelligenceCoordinator para:', query);
       
-      // Por ahora, simulamos el IntelligenceCoordinator
-      // Aquí migrarías la lógica completa del IntelligenceCoordinator
+      const intelligenceResult = await intelligence.analyzeQuery(query, restaurantId);
       
       return {
         success: true,
-        analysis_type: 'payment_analysis', // Esto vendría del IntelligenceCoordinator
-        insights: [
-          '🧠 Análisis inteligente activado',
-          '💳 Detectando patrones de pago',
-          '📊 Datos procesados exitosamente'
-        ],
-        data: {
-          query: query,
-          processed: true
-        }
+        analysis_type: intelligenceResult.intent,
+        insights: intelligenceResult.insights,
+        data: intelligenceResult.data
       };
     
     default:
@@ -541,7 +547,7 @@ export async function POST(request: NextRequest) {
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 1024,
       system: FUDIFLOW_SYSTEM_PROMPT,
-      messages: messages,
+      messages: messages as any,
       tools: tools,
       tool_choice: { type: "auto" }
     });
@@ -581,7 +587,7 @@ export async function POST(request: NextRequest) {
           model: 'claude-3-5-sonnet-20241022',
           max_tokens: 1024,
           system: FUDIFLOW_SYSTEM_PROMPT,
-          messages: messages
+          messages: messages as any
         });
         
         // Agregar respuesta final
