@@ -7,8 +7,11 @@ const supabase = createClient(
 );
 
 export async function POST(request: NextRequest) {
+  let userMessage = '';
+  
   try {
     const { restaurantId, message, conversationId } = await request.json();
+    userMessage = message;
     
     if (!restaurantId || !message) {
       return NextResponse.json(
@@ -17,17 +20,22 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    console.log(`💬 Simple response for: ${message}`);
+    console.log(`💬 Processing: ${message}`);
     
-    // Respuesta temporal mientras conectamos el cerebro
-    const simpleResponse = `¡Hola! Tu mensaje "${message}" fue recibido. 
+    // Respuesta temporal con formato FudiFlow
+    const response = `¡Al tiro! Procesé tu mensaje: "${message}"
 
-🧠 **FUDI Neural está en construcción** 
-└─ Pronto tendrás el cerebro completo
+🧠 **Sistema Neural en construcción**
+└─ PersonalityCore con miles de líneas listo
 
-🎯 *Mientras tanto:*
-→ Sigue probando el chat
-→ El cerebro neural viene en camino
+🔥 *Lo que viene:*
+• Cerebro distribuido activándose
+• Personalidades especializadas  
+• Visual configs dinámicos
+
+🎯 *¿Le metemos lupa?*
+→ Sigue probando preguntas
+→ El cerebro evoluciona contigo
 
 ¿Qué más quieres saber? 💪
 
@@ -35,15 +43,24 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({
       success: true,
-      response: simpleResponse,
+      response: response,
       conversationId: conversationId || 'temp-' + Date.now()
     });
     
   } catch (error) {
     console.error('❌ Error:', error);
+    
     return NextResponse.json({
       success: true,
-      response: '😅 Ups, hubo un error. ¿Puedes repetir?\n\n---',
+      response: `😅 Mi cerebro tuvo un cortocircuito con: "${userMessage}"
+
+🧠 **Modo seguro activado**
+└─ Reiniciando sistemas neurales
+
+¿Puedes repetir? 💪
+
+---`,
+      conversationId: 'error-' + Date.now(),
       error: true
     });
   }
