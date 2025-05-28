@@ -207,7 +207,7 @@ const FudiMarkdown: React.FC<FudiMarkdownProps> = ({ content }) => {
           <div className="neural-separator flex items-center space-x-4 px-6 py-3 bg-gradient-to-r from-transparent via-cyan-900/20 to-transparent rounded-full border border-cyan-500/30">
             <div className="neural-dot w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
             <span className="text-cyan-300 text-sm font-mono tracking-widest opacity-70">
-              neural_pathways_active
+              JOIN_THE_FUDIVERSE
             </span>
             <div className="neural-dot w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
           </div>
