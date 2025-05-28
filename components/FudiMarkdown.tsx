@@ -58,20 +58,9 @@ const separatorThemes = {
   }
 };
 
-// 🎯 TEMPORADAS AUTOMÁTICAS
+// 🎯 SOLO MATRIX POR AHORA
 const getSeasonalTheme = () => {
-  const month = new Date().getMonth();
-  const day = new Date().getDate();
-  
-  // Eventos especiales
-  if (month === 11 && day >= 15) return 'matrix'; // Navidad tech
-  if (month === 9) return 'cyberpunk'; // Octubre cyberpunk
-  if (month === 4 && day === 4) return 'starwars'; // May 4th
-  
-  // Rotación diaria
-  const themes = Object.keys(separatorThemes);
-  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-  return themes[dayOfYear % themes.length];
+  return 'matrix'; // Simple y directo
 };
 
 const FudiMarkdown: React.FC<FudiMarkdownProps> = ({ content }) => {
