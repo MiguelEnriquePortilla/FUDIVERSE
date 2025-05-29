@@ -34,6 +34,7 @@ class PaymentAnalyzer {
       }
 
       console.log(`📊 Analizando ${transactions.length} transacciones...`);
+      console.log('💳 SAMPLE TRANSACTION:', JSON.stringify(transactions[0], null, 2));
 
       // Analizar distribución de métodos REAL
       const paymentDistribution = this.analyzeDistribution(transactions);
