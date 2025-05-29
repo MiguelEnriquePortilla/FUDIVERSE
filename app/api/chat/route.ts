@@ -48,43 +48,47 @@ export async function POST(request: NextRequest) {
       
       console.log('⚡ Neural processing complete');
       
-      // 🎭 SI TIENE DATOS REALES, USAR CLAUDE PARA INTELIGENCIA SUPERIOR
-      if (neuralResponse.metadata && neuralResponse.metadata.neuralActivity.includes('intelligence')) {
-        console.log('🚀 Elevating to Claude intelligence...');
-        
-        const superintelligentResponse = await elevateToSuperIntelligence(
-          message,
-          neuralResponse,
-          restaurantId
-        );
+      // 🎭 VERIFICAR SI YA TENEMOS INSIGHTS REALES
+      const hasRealInsights = neuralResponse.text && 
+        neuralResponse.text.includes('**') && 
+        neuralResponse.text.length > 100 &&
+        !neuralResponse.text.includes('He procesado tu consulta');
+
+      if (hasRealInsights) {
+        console.log('✅ Using real insights directly - NO Claude elevation needed');
         
         return NextResponse.json({
           success: true,
-          response: superintelligentResponse.text,
-          conversationId: superintelligentResponse.conversationId,
+          response: neuralResponse.text,
+          conversationId: neuralResponse.conversationId,
           metadata: {
-            processingMode: 'neural_plus_superintelligence',
+            processingMode: 'neural_real_data',
             neuralActivity: neuralResponse.metadata.neuralActivity,
-            intelligenceLevel: 'maximum',
+            intelligenceLevel: 'real_data',
             responseTime: Date.now(),
             fudiflowActive: true
           }
         });
       }
+
+      // Solo elevar si NO hay insights reales
+      if (neuralResponse.metadata && neuralResponse.metadata.neuralActivity.includes('intelligence')) {
+        console.log('🚀 Elevating to Claude intelligence (no real insights found)...');
       
-      // 🧠 RESPUESTA NEURAL PURA
-      return NextResponse.json({
-        success: true,
-        response: neuralResponse.text,
-        conversationId: neuralResponse.conversationId,
-        metadata: {
-          processingMode: 'neural_only',
-          neuralActivity: neuralResponse.metadata.neuralActivity,
-          intelligenceLevel: 'high',
-          responseTime: Date.now(),
-          fudiflowActive: true
-        }
-      });
+        // 🧠 RESPUESTA NEURAL PURA
+        return NextResponse.json({
+          success: true,
+          response: neuralResponse.text,
+          conversationId: neuralResponse.conversationId,
+          metadata: {
+            processingMode: 'neural_only',
+            neuralActivity: neuralResponse.metadata.neuralActivity,
+            intelligenceLevel: 'high',
+            responseTime: Date.now(),
+            fudiflowActive: true
+          }
+        });
+      }
       
     } catch (brainError) {
       console.error('🧠 FudiBrain error, falling back to direct intelligence:', brainError);
