@@ -12,7 +12,9 @@ const anthropic = new Anthropic({
 });
 
 // Importar Intelligence Coordinator
-const IntelligenceCoordinator = require('../../../services/intelligence/IntelligenceCoordinator');
+import path from 'path';
+const coordinatorPath = path.join(process.cwd(), 'services', 'intelligence', 'IntelligenceCoordinator.js');
+const IntelligenceCoordinator = (await import(coordinatorPath)).default;
 
 export async function POST(request: NextRequest) {
   let userMessage = '';
