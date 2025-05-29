@@ -307,11 +307,12 @@ class FudiBrain {
 
   async processPaymentLobe(sensoryData, memories) {
     console.log('💳 Payment Lobe: Processing...');
-    console.log('💳 PaymentLobe result:', JSON.stringify(result, null, 2));
     
     try {
       const result = await this.paymentLobe.analyze(sensoryData.restaurantId, 30);
-      console.log('💳 PaymentLobe result:', JSON.stringify(result, null, 2));
+      console.log('💳 PaymentLobe result:', result ? JSON.stringify(result, null, 2) : 'undefined');
+
+
       return {
         type: 'payment',
         success: true,
