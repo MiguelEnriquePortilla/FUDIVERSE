@@ -279,20 +279,24 @@ class PaymentAnalyzer {
     return 'other';
   }
 
-  generateInsights(analysis) {
-    const insights = [];
-    const { distribution, hourly, weekday, averages, trends, totalDays, totalTransactions } = analysis;
-    
-    // Método dominante con datos REALES
-    const methods = Object.entries(distribution)
-      .filter(([_, data]) => data.count > 0)
-      .sort((a, b) => b[1].count - a[1].count);
-    
-    if (methods.length > 0) {
-      const topMethod = methods[0];
-      insights.push(`💳 **${topMethod[0]}** domina con el **${topMethod[1].percentage}%** de las transacciones (${topMethod[1].count} de ${totalTransactions} totales)`);
-      
-      // Ticket promedio REAL
+generateInsights(analysis) {
+  const insights = [];
+  const { distribution, hourly, weekday, averages, trends, totalDays, totalTransactions } = analysis;
+  
+  
+  // 🔧 FIX: Definir topMethod desde el inicio
+    let topMethod = null;
+  
+  // Método dominante con datos REALES
+  const methods = Object.entries(distribution)
+    .filter(([_, data]) => data.count > 0)
+    .sort((a, b) => b[1].count - a[1].count);
+  
+  if (methods.length > 0) {
+    topMethod = methods[0]; // ✅ Ahora SÍ está definido
+    insights.push(`💳 **${topMethod[0]}** domina con el **${topMethod[1].percentage}%** de las transacciones (${topMethod[1].count} de ${totalTransactions} totales)`);
+
+    // Ticket promedio REAL
       insights.push(`💰 Ticket promedio con ${topMethod[0]}: **$${topMethod[1].averageTicket.toFixed(2)}**`);
     }
 
