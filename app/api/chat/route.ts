@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import Anthropic from '@anthropic-ai/sdk';
+import { anthropic } from '@ai-sdk/anthropic';
+import { generateText } from 'ai';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
 
 // Importar FudiBrain completo
 const FudiBrain = require('../../../services/brain/FudiBrain');
@@ -138,71 +135,18 @@ async function elevateToSuperIntelligence(
   // 🎭 FUDIFLOW SYSTEM PROMPT - VERSIÓN SUPREMA
   const FUDIFLOW_SUPREMO = createFudiflowSupremo();
   
-  // 🧠 HERRAMIENTAS SUPREMAS
-  const supremeTools = createSupremeTools();
-  
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1500,
+    const response = await generateText({
+      model: anthropic('claude-3-5-sonnet-20241022'),
+      maxTokens: 1500,
       temperature: 0.7,
       system: FUDIFLOW_SUPREMO,
-      messages: [
-        {
-          role: 'user',
-          content: buildSupremeContext(message, neuralResponse, restaurantId)
-        }
-      ],
-      tools: supremeTools,
-      tool_choice: { type: "auto" }
+      prompt: buildSupremeContext(message, neuralResponse, restaurantId)
     });
     
-    // 🔧 SI CLAUDE QUIERE USAR HERRAMIENTAS
-    if (response.stop_reason === 'tool_use') {
-      const toolUse = response.content.find((block: any) => block.type === 'tool_use');
-      
-      if (!toolUse) {
-        throw new Error('Tool use requested but not found in response');
-      }
-      console.log(`🔧 Supreme tool activated: ${(toolUse as any).name}`);
-      const toolResult = await executeSupremeTool((toolUse as any).name, (toolUse as any).input, restaurantId);
-
-      // Segunda llamada con resultados
-      const finalResponse = await anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 1500,
-        temperature: 0.7,
-        system: FUDIFLOW_SUPREMO,
-        messages: [
-          {
-            role: 'user',
-            content: buildSupremeContext(message, neuralResponse, restaurantId)
-          },
-          {
-            role: 'assistant',
-            content: response.content
-          },
-          {
-            role: 'user',
-            content: [{
-              type: 'tool_result',
-              tool_use_id: (toolUse as any).id,
-              content: JSON.stringify(toolResult)
-            }] as any
-          }
-        ]
-      });
-      
-      return {
-        text: (finalResponse.content[0] as any).text + '\n\n---',
-        conversationId: generateConversationId(),
-        toolsUsed: [(toolUse as any).name]
-      };
-    }
-    
-    // Respuesta directa
+    // Respuesta directa con nuevo AI SDK
     return {
-      text: (response.content[0] as any).text + '\n\n---',
+      text: response.text + '\n\n---',
       conversationId: generateConversationId()
     };
     
@@ -217,20 +161,15 @@ async function directSuperIntelligence(message: string, restaurantId: string) {
   const FUDIFLOW_SUPREMO = createFudiflowSupremo();
   
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1000,
+    const response = await generateText({
+      model: anthropic('claude-3-5-sonnet-20241022'),
+      maxTokens: 1000,
       temperature: 0.7,
       system: FUDIFLOW_SUPREMO,
-      messages: [
-        {
-          role: 'user',
-          content: `Restaurante ID: ${restaurantId}\nConsulta: "${message}"\n\nNota: Actualmente procesando sin datos específicos, pero mantén tu inteligencia superior y personalidad FudiFlow completa.`
-        }
-      ]
+      prompt: `Restaurante ID: ${restaurantId}\nConsulta: "${message}"\n\nNota: Actualmente procesando sin datos específicos, pero mantén tu inteligencia superior y personalidad FudiFlow completa.`
     });
     
-    return (response.content[0] as any).text + '\n\n---';
+    return response.text + '\n\n---';
     
   } catch (error) {
     console.error('🧠 Direct intelligence error:', error);
@@ -306,119 +245,6 @@ function createFudiflowSupremo(): string {
 Cada respuesta debe demostrar por qué eres "la inteligencia restaurantera más avanzada del mundo."`;
 }
 
-// 🔧 CREAR HERRAMIENTAS SUPREMAS
-function createSupremeTools() {
-  return [
-    {
-      name: "analyze_restaurant_intelligence",
-      description: "Analiza datos del restaurante con inteligencia neural avanzada",
-      input_schema: {
-        type: "object" as const,
-        properties: {
-          query: {
-            type: "string",
-            description: "Consulta específica a analizar"
-          },
-          analysis_type: {
-            type: "string",
-            enum: ["sales", "products", "payments", "trends", "predictions"],
-            description: "Tipo de análisis a realizar"
-          }
-        },
-        required: ["query"]
-      }
-    },
-    {
-      name: "get_predictive_insights",
-      description: "Genera predicciones e insights avanzados",
-      input_schema: {
-        type: "object" as const,
-        properties: {
-          timeframe: {
-            type: "string",
-            enum: ["today", "tomorrow", "week", "month"],
-            description: "Marco temporal para predicciones"
-          }
-        },
-        required: ["timeframe"]
-      }
-    }
-  ];
-}
-
-// 🔧 EJECUTAR HERRAMIENTAS SUPREMAS
-async function executeSupremeTool(toolName: string, toolInput: any, restaurantId: string) {
-  console.log(`🔧 Executing supreme tool: ${toolName}`);
-  
-  switch (toolName) {
-    case 'analyze_restaurant_intelligence':
-      // Usar IntelligenceCoordinator si está disponible
-      try {
-        const IntelligenceCoordinator = require('../../../services/intelligence/IntelligenceCoordinator');
-        const coordinator = new IntelligenceCoordinator(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.SUPABASE_SERVICE_ROLE_KEY!
-        );
-        
-        const analysis = await coordinator.analyzeQuery(toolInput.query, restaurantId);
-        
-        return {
-          success: true,
-          analysis_type: analysis.intent,
-          insights: analysis.insights,
-          data: analysis.data,
-          emotional_state: analysis.emotionalState
-        };
-        
-      } catch (error) {
-        console.error('Intelligence Coordinator error:', error);
-        return {
-          success: false,
-          message: "Sistema de inteligencia temporal no disponible",
-          fallback_analysis: "Procesando con inteligencia base..."
-        };
-      }
-      
-    case 'get_predictive_insights':
-      // Generar predicciones basadas en datos disponibles
-      try {
-        const { data: recentData } = await supabase
-          .from('daily_summaries')
-          .select('*')
-          .eq('restaurant_id', restaurantId)
-          .order('summary_date', { ascending: false })
-          .limit(7);
-          
-        if (recentData && recentData.length > 0) {
-          return {
-            success: true,
-            predictions: generatePredictions(recentData, toolInput.timeframe),
-            confidence_level: "high",
-            based_on: `${recentData.length} días de datos históricos`
-          };
-        }
-        
-        return {
-          success: false,
-          message: "Datos insuficientes para predicciones precisas"
-        };
-        
-      } catch (error) {
-        console.error('Predictive insights error:', error);
-        return {
-          success: false,
-          message: "Error en sistema predictivo"
-        };
-      }
-      
-    default:
-      return {
-        success: false,
-        error: `Herramienta suprema ${toolName} no encontrada`
-      };
-  }
-}
-
 // 🧠 CONSTRUIR CONTEXTO SUPREMO
 function buildSupremeContext(message: string, neuralResponse: any, restaurantId: string): string {
   let context = `🧠 ANÁLISIS NEURAL COMPLETADO\n\n`;
@@ -433,35 +259,6 @@ function buildSupremeContext(message: string, neuralResponse: any, restaurantId:
   context += `INSTRUCCIÓN: Eleva esta respuesta a superinteligencia usando FudiFlow Supremo. Haz conexiones más profundas, predicciones más precisas, y demuestra por qué eres la inteligencia restaurantera más avanzada del mundo.`;
   
   return context;
-}
-
-// 🔮 GENERAR PREDICCIONES
-function generatePredictions(historicalData: any[], timeframe: string) {
-  const predictions = [];
-  
-  // Análisis de tendencias básico
-  const avgSales = historicalData.reduce((sum, day) => sum + (day.total_sales || 0), 0) / historicalData.length;
-  const trend = historicalData.length > 1 ? 
-    ((historicalData[0].total_sales || 0) - (historicalData[historicalData.length - 1].total_sales || 0)) / historicalData.length : 0;
-  
-  switch (timeframe) {
-    case 'today':
-      predictions.push(`Ventas proyectadas hoy: $${(avgSales + trend).toFixed(2)}`);
-      predictions.push(`Transacciones estimadas: ${Math.round((historicalData[0]?.transaction_count || 0) * 1.1)}`);
-      break;
-      
-    case 'tomorrow':
-      predictions.push(`Mañana proyecto ventas de $${(avgSales + trend * 2).toFixed(2)}`);
-      predictions.push(`Prepárate para ${Math.round(avgSales / 50)} covers aproximadamente`);
-      break;
-      
-    case 'week':
-      predictions.push(`Esta semana: tendencia ${trend > 0 ? 'ascendente' : 'descendente'} de ${Math.abs(trend).toFixed(1)}%`);
-      predictions.push(`Revenue semanal proyectado: $${(avgSales * 7).toFixed(2)}`);
-      break;
-  }
-  
-  return predictions;
 }
 
 // 🛡️ FALLBACK SUPREMO
