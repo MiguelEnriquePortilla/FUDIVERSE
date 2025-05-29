@@ -351,4 +351,4 @@ class HumanizerUniversal {
   }
 }
 
-module.exports = HumanizerUniversal;F
+module.exports = HumanizerUniversal;
