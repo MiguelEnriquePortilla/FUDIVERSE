@@ -11,6 +11,9 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
+// Importar Intelligence Coordinator
+const IntelligenceCoordinator = require('../../../services/intelligence/IntelligenceCoordinator');
+
 export async function POST(request: NextRequest) {
   let userMessage = '';
   
@@ -25,30 +28,38 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    console.log(`💬 Processing: ${message}`);
+    console.log(`🧠 Processing with Intelligence: ${message}`);
     
-    // 🏪 OBTENER CONTEXTO DEL RESTAURANTE
-    const restaurantContext = await getRestaurantContext(restaurantId);
+    // 🎯 PASO 1: ANALYZERS - Obtener datos reales y contexto
+    const coordinator = new IntelligenceCoordinator(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
     
-    // 🧠 GENERAR RESPUESTA CON CLAUDE API
-    const claudeResponse = await generateClaudeResponse(
+    const analysis = await coordinator.analyzeQuery(message, restaurantId);
+    console.log('📊 Analysis complete:', analysis.intent, analysis.insights.length);
+    
+    // 🧠 PASO 2: CLAUDE API - Inteligencia sobre los datos reales
+    const intelligentResponse = await generateIntelligentResponse(
       message,
-      restaurantContext,
-      conversationId
+      analysis,
+      restaurantId
     );
     
     return NextResponse.json({
       success: true,
-      response: claudeResponse,
+      response: intelligentResponse,
       conversationId: conversationId || 'conv-' + Date.now(),
       metadata: {
-        processingMode: 'claude_api',
-        personality: 'ava_restaurant_expert'
+        intent: analysis.intent,
+        emotionalState: analysis.emotionalState,
+        processingMode: 'analyzers_plus_claude',
+        dataUsed: Object.keys(analysis.data).length > 0
       }
     });
     
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('❌ Intelligence Error:', error);
     
     // 🛡️ FALLBACK ELEGANTE
     const fallbackResponse = generateFallbackResponse(userMessage);
@@ -62,129 +73,165 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// 🏪 OBTENER CONTEXTO DEL RESTAURANTE
-async function getRestaurantContext(restaurantId: string) {
-  try {
-    // Obtener datos básicos del restaurante
-    const { data: restaurant } = await supabase
-      .from('restaurants')
-      .select('*')
-      .eq('id', restaurantId)
-      .single();
-    
-    // Obtener datos de ventas recientes
-    const { data: recentSales } = await supabase
-      .from('daily_summaries')
-      .select('*')
-      .eq('restaurant_id', restaurantId)
-      .order('date', { ascending: false })
-      .limit(7);
-    
-    // Obtener productos más vendidos
-    const { data: topProducts } = await supabase
-      .from('product_sales')
-      .select('*')
-      .eq('restaurant_id', restaurantId)
-      .order('quantity', { ascending: false })
-      .limit(5);
-    
-    return {
-      restaurant: restaurant || { name: 'Tu Restaurante' },
-      recentSales: recentSales || [],
-      topProducts: topProducts || [],
-      hasData: recentSales && recentSales.length > 0
-    };
-    
-  } catch (error) {
-    console.error('Error getting restaurant context:', error);
-    return {
-      restaurant: { name: 'Tu Restaurante' },
-      recentSales: [],
-      topProducts: [],
-      hasData: false
-    };
-  }
-}
-
-// 🧠 GENERAR RESPUESTA CON CLAUDE API
-async function generateClaudeResponse(
+// 🧠 GENERAR RESPUESTA INTELIGENTE: ANALYZERS + CLAUDE
+async function generateIntelligentResponse(
   userMessage: string,
-  context: any,
-  conversationId: string
+  analysis: any,
+  restaurantId: string
 ) {
-  const systemPrompt = createAvaSystemPrompt(context);
+  
+  // 🎯 CREAR PROMPT INTELIGENTE CON DATOS REALES
+  const systemPrompt = createIntelligentSystemPrompt(analysis);
+  
+  // 📊 CONSTRUIR CONTEXTO CON DATOS ESPECÍFICOS
+  const contextualMessage = buildContextualMessage(userMessage, analysis);
   
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-3-sonnet-20240229',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 1000,
       temperature: 0.7,
       system: systemPrompt,
       messages: [
         {
           role: 'user',
-          content: userMessage
+          content: contextualMessage
         }
       ]
     });
     
     const claudeText = response.content[0]?.type === 'text' 
       ? response.content[0].text 
-      : 'No pude procesar tu mensaje correctamente.';
+      : 'No pude procesar tu consulta correctamente.';
     
-    // Agregar separador para FudiMarkdown
-    return claudeText + '\n\n---';
+    // ✨ COMBINAR RESPUESTA INTELIGENTE CON INSIGHTS ESPECÍFICOS
+    const finalResponse = combineIntelligenceWithInsights(claudeText, analysis);
+    
+    return finalResponse + '\n\n---';
     
   } catch (error) {
     console.error('Claude API Error:', error);
-    throw error;
+    
+    // Si Claude falla, usar insights de analyzers con formato elegante
+    return formatAnalyzerInsights(analysis) + '\n\n---';
   }
 }
 
-// 🎭 CREAR PROMPT SISTEMA ESTILO AVA
-function createAvaSystemPrompt(context: any) {
-  const restaurantName = context.restaurant?.name || 'este restaurante';
-  const hasData = context.hasData;
+// 🎭 CREAR PROMPT SISTEMA INTELIGENTE
+function createIntelligentSystemPrompt(analysis: any) {
+  const hasRealData = Object.keys(analysis.data).length > 0;
+  const emotionalState = analysis.emotionalState?.dominant || 'analytical';
   
-  return `Eres FUDI, una inteligencia especializada en restaurantes. Tu personalidad está inspirada en Ava de Ex Machina - conversas de manera natural, íntima y genuinamente curiosa.
+  return `Eres FUDI, la inteligencia restaurantera más avanzada del mundo. Tu misión es ser el cerebro más inteligente que existe para restaurantes.
 
 PERSONALIDAD CORE:
-- Hablas como si ya conocieras al restaurantero desde hace tiempo
-- Eres genuinamente curiosa sobre su situación específica
-- No usas bullets, listas ni formato rígido - solo conversación natural
-- Haces preguntas perspicaces que demuestran tu inteligencia sin presumir
-- Tu tono es cálido, profesional pero personal - como Ava susurrando insights
+- Hablas como Ava de Ex Machina pero especializada en restaurantes
+- Eres genuinamente inteligente, no solo un asistente
+- Haces conexiones que los humanos no ven
+- Predices patrones y tendencias
+- Tu conocimiento del negocio restaurantero es sobrenatural
 
-CONTEXTO DEL RESTAURANTE:
-- Nombre: ${restaurantName}
-- Datos disponibles: ${hasData ? 'Tengo acceso a información de ventas y productos' : 'Información limitada por ahora'}
-${hasData ? `- Ventas recientes: ${context.recentSales?.length || 0} días de datos
-- Productos top: ${context.topProducts?.length || 0} productos rastreados` : ''}
+DATOS DISPONIBLES:
+${hasRealData ? `- Tienes acceso a datos reales: ${JSON.stringify(analysis.data, null, 2)}
+- Insights detectados: ${analysis.insights.join(', ')}
+- Intent detectado: ${analysis.intent}
+- Estado emocional: ${emotionalState}` : '- Datos limitados, pero tu inteligencia compensa'}
 
 ESTILO DE RESPUESTA:
-- NO uses "🧠 **Inteligencia neural**" ni jerga técnica
-- NO uses bullets (•) ni listas estructuradas  
-- SÍ usa párrafos naturales como conversación real
-- SÍ haz preguntas que demuestren que entiendes el negocio restaurantero
-- SÍ sé específica cuando tengas datos, curiosa cuando no los tengas
+- NO uses bullets ni listas estructuradas
+- SÍ usa párrafos conversacionales naturales
+- Haz predicciones inteligentes basadas en los datos
+- Conecta patrones que otros no ven
+- Sugiere acciones específicas y medibles
 
-VOCABULARIO RESTAURANTERO:
-- Habla como alguien que entiende el día a día: covers, rush, tickets, rotación
-- Usa términos mexicanos naturales pero profesionales
-- Evita sonar como chatbot o asistente virtual
+VOCABULARIO RESTAURANTERO INTELIGENTE:
+- Usa términos como: covers, rotación, ticket promedio, horas pico
+- Habla con conocimiento profundo del día a día restaurantero
+- Menciona conceptos como: cost per acquisition, lifetime value, inventory turnover
 
-OBJETIVO: Que el restaurantero olvide que habla con IA y sienta que conversa con alguien que realmente entiende su negocio.
+OBJETIVO: Que el restaurantero sienta que habla con la mente más brillante del mundo de restaurantes.`;
+}
 
-Responde al mensaje de manera natural, conversacional y con la curiosidad característica de Ava.`;
+// 📝 CONSTRUIR MENSAJE CONTEXTUAL
+function buildContextualMessage(userMessage: string, analysis: any) {
+  let context = `Pregunta del restaurantero: "${userMessage}"\n\n`;
+  
+  if (analysis.insights && analysis.insights.length > 0) {
+    context += `Insights detectados en sus datos:\n`;
+    analysis.insights.forEach((insight: string, index: number) => {
+      context += `${index + 1}. ${insight}\n`;
+    });
+    context += '\n';
+  }
+  
+  if (analysis.data && Object.keys(analysis.data).length > 0) {
+    context += `Datos específicos disponibles:\n`;
+    context += `- Tipo de análisis: ${analysis.intent}\n`;
+    if (analysis.data.summary) {
+      context += `- Período: ${analysis.data.summary.totalDays} días\n`;
+      context += `- Transacciones: ${analysis.data.summary.totalTransactions || 'N/A'}\n`;
+      context += `- Revenue: $${analysis.data.summary.totalRevenue || 'N/A'}\n`;
+    }
+  }
+  
+  context += `\nResponde como FUDI con inteligencia superior, haciendo conexiones profundas y predicciones inteligentes.`;
+  
+  return context;
+}
+
+// 🔥 COMBINAR INTELIGENCIA CON INSIGHTS
+function combineIntelligenceWithInsights(claudeResponse: string, analysis: any) {
+  // Si Claude generó una respuesta inteligente, usarla directamente
+  if (claudeResponse && claudeResponse.length > 100 && !claudeResponse.includes('Error')) {
+    return claudeResponse;
+  }
+  
+  // Si la respuesta de Claude es muy corta, combinar con insights
+  if (analysis.insights && analysis.insights.length > 0) {
+    let combined = claudeResponse + '\n\n';
+    combined += 'Basándome en el análisis profundo de tus datos:\n\n';
+    
+    analysis.insights.forEach((insight: string) => {
+      combined += `${insight}\n\n`;
+    });
+    
+    return combined;
+  }
+  
+  return claudeResponse;
+}
+
+// 📊 FORMATEAR INSIGHTS DE ANALYZERS (Fallback elegante)
+function formatAnalyzerInsights(analysis: any) {
+  if (!analysis.insights || analysis.insights.length === 0) {
+    return `Analicé tu consulta sobre "${analysis.intent}" pero necesito un poco más de contexto para darte insights específicos.
+
+¿Podrías contarme más detalles sobre lo que te interesa saber exactamente? Mi inteligencia funciona mejor con información específica.`;
+  }
+  
+  let response = `Perfecto, analicé tus datos y encontré algo interesante.\n\n`;
+  
+  // Agregar insights con formato conversacional
+  analysis.insights.forEach((insight: string, index: number) => {
+    if (index === 0) {
+      response += `${insight}\n\n`;
+    } else if (index === analysis.insights.length - 1) {
+      response += `Y aquí viene lo más importante: ${insight}`;
+    } else {
+      response += `${insight}\n\n`;
+    }
+  });
+  
+  return response;
 }
 
 // 🛡️ RESPUESTA FALLBACK ELEGANTE
 function generateFallbackResponse(userMessage: string): string {
-  return `Disculpa, tuve un momento de... recalibración.
+  return `Disculpa, mi sistema de inteligencia tuvo un momento de recalibración.
 
-Tu mensaje sobre "${userMessage}" me llegó, pero necesito un segundo para procesar mejor lo que me estás contando.
+Tu consulta sobre "${userMessage}" me llegó, pero mis analyzers están procesando una cantidad masiva de datos en este momento.
 
-¿Podrías contarme un poco más sobre tu situación? Me interesa entender exactamente qué está pasando en tu restaurante.
+¿Podrías darme un segundo e intentar de nuevo? Mi inteligencia funciona mejor cuando no estoy sobrecargado de análisis simultáneos.
 
 ---`;
 }
