@@ -399,12 +399,33 @@ class FudiBrain {
   }
 
   formatResponse(analysis) {
-    // Simple response formatting - will be enhanced with proper FudiFlow formatting
-    if (analysis.intelligence && analysis.intelligence.success) {
-      return analysis.intelligence.data.response || 
-             'Análisis completado - datos procesados exitosamente.\n\n---';
+    console.log('🗣️ Formatting response with analysis:', Object.keys(analysis));
+    
+    // 🎯 USAR INSIGHTS REALES DE LOS ANALYZERS
+    let finalInsights = [];
+    
+    // Verificar si hay datos reales de analyzers
+    if (analysis.payment && analysis.payment.success && analysis.payment.data.insights) {
+      console.log('💳 Using REAL payment insights!');
+      finalInsights = [...analysis.payment.data.insights];
     }
     
+    if (analysis.product && analysis.product.success && analysis.product.data.insights) {
+      console.log('🍽️ Using REAL product insights!');
+      finalInsights = [...finalInsights, ...analysis.product.data.insights];
+    }
+    
+    if (analysis.intelligence && analysis.intelligence.success && analysis.intelligence.data.insights) {
+      console.log('🧠 Using intelligence insights!');
+      finalInsights = [...finalInsights, ...analysis.intelligence.data.insights];
+    }
+    
+    // Si tenemos insights reales, usarlos
+    if (finalInsights.length > 0) {
+      return finalInsights.join('\n\n') + '\n\n---';
+    }
+    
+    // Fallback genérico
     return 'He procesado tu consulta con mi red neural. Los datos están siendo analizados.\n\n---';
   }
 
