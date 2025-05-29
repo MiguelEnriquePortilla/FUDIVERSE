@@ -1,11 +1,12 @@
 // services/brain/FudiBrain.js
-// 🧠 FUDI NEURAL BRAIN - Main Orchestrator
+// 🧠 FUDI NEURAL BRAIN - Main Orchestrator + HUMANIZER INTEGRATION
 
 const { IntelligenceCoordinator } = require('../intelligence');
 const PaymentAnalyzer = require('../intelligence/PaymentAnalyzer');
 const ProductPerformanceAnalyzer = require('../intelligence/ProductPerformanceAnalyzer');
 const TrendAnalyzer = require('../intelligence/TrendAnalyzer');
 const PeakHourAnalyzer = require('../intelligence/PeakHourAnalyzer');
+const HumanizerUniversal = require('./HumanizerUniversal'); // 🪄 MAGIC IMPORT
 
 class FudiBrain {
   constructor(supabaseUrl, supabaseKey, anthropicApiKey) {
@@ -23,6 +24,9 @@ class FudiBrain {
     
     // Initialize new neural components
     this.initializeNeuralCores();
+    
+    // 🪄 Initialize Humanizer Universal
+    this.humanizer = new HumanizerUniversal();
     
     console.log('🧠 FudiBrain: Neural network online!');
   }
@@ -312,7 +316,6 @@ class FudiBrain {
       const result = await this.paymentLobe.analyze(sensoryData.restaurantId, 30);
       console.log('💳 PaymentLobe result:', result ? JSON.stringify(result, null, 2) : 'undefined');
 
-
       return {
         type: 'payment',
         success: true,
@@ -382,9 +385,6 @@ class FudiBrain {
   async generateResponse(personalizedAnalysis) {
     console.log('🗣️ Response Generator: Creating response...');
     
-    // For now, use the intelligence coordinator response
-    // Later we'll integrate with Anthropic for more sophisticated generation
-    
     const response = {
       text: this.formatResponse(personalizedAnalysis),
       conversationId: this.generateConversationId(),
@@ -420,13 +420,46 @@ class FudiBrain {
       finalInsights = [...finalInsights, ...analysis.intelligence.data.insights];
     }
     
-    // Si tenemos insights reales, usarlos
+    // 🪄 HUMANIZER UNIVERSAL MAGIC - TRANSFORM TO FUDIRESTO™️ TONE
     if (finalInsights.length > 0) {
-      return finalInsights.join('\n\n') + '\n\n---';
+      console.log('🪄 Applying Humanizer Universal...');
+      
+      // Detectar tipo de contenido para contexto
+      const contentType = this.detectContentType(finalInsights);
+      
+      // Humanizar con contexto específico
+      const humanizedResponse = this.humanizer.humanize(finalInsights, { 
+        type: contentType,
+        tone: analysis.tone || 'professional'
+      });
+      
+      console.log('✨ Response humanized with FudiResto™️ tone');
+      return humanizedResponse;
     }
     
-    // Fallback genérico
-    return 'He procesado tu consulta con mi red neural. Los datos están siendo analizados.\n\n---';
+    // Fallback genérico humanizado
+    console.log('🪄 Applying humanized fallback...');
+    return this.humanizer.generateFallbackResponse({ tone: analysis.tone });
+  }
+
+  // 🔍 Detectar tipo de contenido para el humanizer
+  detectContentType(insights) {
+    const text = insights.join(' ').toLowerCase();
+    
+    if (text.includes('efectivo') || text.includes('cash') || text.includes('tarjeta') || text.includes('pago')) {
+      return 'payments';
+    }
+    if (text.includes('producto') || text.includes('platillo') || text.includes('menú')) {
+      return 'products';
+    }
+    if (text.includes('venta') || text.includes('revenue') || text.includes('ticket')) {
+      return 'sales';
+    }
+    if (text.includes('hora') || text.includes('pico') || text.includes('rush')) {
+      return 'hours';
+    }
+    
+    return 'general';
   }
 
   generateConversationId() {
@@ -459,8 +492,14 @@ class FudiBrain {
   generateErrorResponse(error) {
     console.log('🧠 Generating error response...');
     
+    // 🪄 Even errors get humanized
+    const humanizedError = this.humanizer.generateFallbackResponse({ 
+      type: 'error',
+      tone: 'empathetic' 
+    });
+    
     return {
-      text: '😅 Mi cerebro neural tuvo un pequeño cortocircuito. ¿Puedes repetir la pregunta?\n\n---',
+      text: humanizedError,
       conversationId: this.generateConversationId(),
       metadata: {
         error: true,
@@ -481,7 +520,8 @@ class FudiBrain {
         paymentLobe: this.paymentLobe ? 'online' : 'offline',
         productLobe: this.productLobe ? 'online' : 'offline',
         trendLobe: this.trendLobe ? 'online' : 'offline',
-        peakHourLobe: this.peakHourLobe ? 'online' : 'offline'
+        peakHourLobe: this.peakHourLobe ? 'online' : 'offline',
+        humanizer: this.humanizer ? 'online' : 'offline' // 🪄 New component
       },
       memoryUsage: {
         conversationContexts: this.memorySystem.conversationContext.size
