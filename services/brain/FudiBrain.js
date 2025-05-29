@@ -309,7 +309,8 @@ class FudiBrain {
     console.log('💳 Payment Lobe: Processing...');
     
     try {
-      const result = await this.paymentLobe.analyzePayments(sensoryData.restaurantId);
+      const result = await this.paymentLobe.analyze(sensoryData.restaurantId, 30);
+
       
       return {
         type: 'payment',
@@ -330,11 +331,11 @@ class FudiBrain {
     console.log('🍽️ Product Lobe: Processing...');
     
     try {
-      const result = await this.productLobe.analyzeProducts(
+      const result = await this.productLobe.analyze(
         sensoryData.restaurantId,
-        { period: 'week', metric: 'sales' }
+        30 // días
       );
-      
+
       return {
         type: 'product',
         success: true,
