@@ -51,8 +51,8 @@ class PaymentAnalyzer {
       // Tendencias temporales REAL
       const trends = this.analyzeTrends(transactions);
       
-      // Generar insights con FudiFlow
-      const insights = this.generateInsights({
+      // 🪄 GENERAR INSIGHTS MÁGICOS (HUMANOS Y CONCISOS)
+      const insights = this.generateMagicalInsights({
         distribution: paymentDistribution,
         hourly: hourlyAnalysis,
         weekday: weekdayAnalysis,
@@ -61,7 +61,7 @@ class PaymentAnalyzer {
         totalDays: days,
         totalTransactions: transactions.length
       });
-      
+
       // 🔍 DEBUG: Ver qué retorna el analyzer
       console.log('💳 ANALYZER RESULT:', JSON.stringify({
         success: true,
@@ -294,51 +294,90 @@ class PaymentAnalyzer {
     return 'other';
   }
 
-generateInsights(analysis) {
-  const insights = [];
-  const { distribution, hourly, weekday, averages, trends, totalDays, totalTransactions } = analysis;
-  
-  
-  // 🔧 FIX: Definir topMethod desde el inicio
-    let topMethod = null;
-  
-  // Método dominante con datos REALES
-  const methods = Object.entries(distribution)
-    .filter(([_, data]) => data.count > 0)
-    .sort((a, b) => b[1].count - a[1].count);
-  
-  if (methods.length > 0) {
-    topMethod = methods[0]; // ✅ Ahora SÍ está definido
-    insights.push(`💳 **${topMethod[0]}** domina con el **${topMethod[1].percentage}%** de las transacciones (${topMethod[1].count} de ${totalTransactions} totales)`);
-
-    // Ticket promedio REAL
-      insights.push(`💰 Ticket promedio con ${topMethod[0]}: **$${topMethod[1].averageTicket.toFixed(2)}**`);
-    }
-
-    // Hora pico REAL
-    if (hourly.peakHours.overall.count > 0) {
-      insights.push(`🔥 Tu hora pico REAL es a las **${hourly.peakHours.overall.hour}:00** con ${hourly.peakHours.overall.count} transacciones`);
-    }
+  // 🪄 GENERAR INSIGHTS MÁGICOS (HUMANOS Y CONCISOS)
+  generateMagicalInsights(analysis) {
+    const insights = [];
+    const { distribution, hourly, weekday, averages, trends, totalDays, totalTransactions } = analysis;
     
-    // Comparación de métodos
-    if (methods.length > 1) {
-      const second = methods[1];
-      insights.push(`⚖️ ${topMethod[0]} vs ${second[0]}: **${topMethod[1].percentage}%** vs **${second[1].percentage}%**`);
+    // 1. DATO PRINCIPAL (MÁS DIRECTO)
+    const methods = Object.entries(distribution)
+      .filter(([_, data]) => data.count > 0)
+      .sort((a, b) => b[1].count - a[1].count);
+    
+    if (methods.length > 0) {
+      const topMethod = methods[0];
+      const dominanceLevel = parseFloat(topMethod[1].percentage);
+      
+      if (dominanceLevel > 90) {
+        insights.push(`💰 **Tu negocio es 100% efectivo** — ${topMethod[1].count} de ${totalTransactions} transacciones en cash`);
+      } else if (dominanceLevel > 70) {
+        insights.push(`💳 **${topMethod[0]} domina brutal:** ${topMethod[1].percentage}% de tus ventas (${topMethod[1].count} transacciones)`);
+      } else {
+        insights.push(`⚖️ **Equilibrio en pagos:** ${topMethod[0]} ${topMethod[1].percentage}% vs otros métodos`);
+      }
     }
 
-    // Tendencias REALES
-    if (trends.weeklyComparison) {
-      const trending = Object.entries(trends.weeklyComparison)
-        .filter(([_, data]) => parseFloat(data.percentage) > 10);
+    // 2. HORA PICO (MÁS ESPECÍFICO)
+    if (hourly.peakHours.overall.count > 0) {
+      const peakHour = hourly.peakHours.overall.hour;
+      const peakCount = hourly.peakHours.overall.count;
+      const percentage = ((peakCount / totalTransactions) * 100).toFixed(1);
       
-      if (trending.length > 0) {
-        const topTrend = trending[0];
-        if (topTrend[1].trend === 'up') {
-          insights.push(`📈 ${topTrend[0]} subió **${topTrend[1].percentage}%** (de ${topTrend[1].previous} a ${topTrend[1].recent} transacciones)`);
+      if (peakHour >= 12 && peakHour <= 14) {
+        insights.push(`🔥 **Lunch rush a las ${peakHour}:00** — ${peakCount} transacciones (${percentage}% de tu día)`);
+      } else if (peakHour >= 19 && peakHour <= 22) {
+        insights.push(`🌙 **Tu hora dorada: ${peakHour}:00** — ${peakCount} transacciones se concentran ahí`);
+      } else {
+        insights.push(`⏰ **Pico inesperado a las ${peakHour}:00** — ${peakCount} transacciones (${percentage}% del día)`);
+      }
+    }
+
+    // 3. TICKET PROMEDIO (MÁS CONTEXTUAL)
+    if (methods.length > 0) {
+      const topMethod = methods[0];
+      const avgTicket = topMethod[1].averageTicket;
+      
+      if (avgTicket > 200) {
+        insights.push(`💎 **Ticket promedio alto: $${avgTicket.toFixed(2)}** — clientela premium confirmada`);
+      } else if (avgTicket > 100) {
+        insights.push(`📊 **Ticket promedio de $${avgTicket.toFixed(2)}** — sweet spot perfecto para tu zona`);
+      } else {
+        insights.push(`🎯 **Ticket promedio: $${avgTicket.toFixed(2)}** — volumen > margen strategy`);
+      }
+    }
+
+    // 4. COMPARACIÓN ENTRE MÉTODOS (SOLO SI HAY VARIOS)
+    if (methods.length > 1) {
+      const first = methods[0];
+      const second = methods[1];
+      const ratio = (parseFloat(first[1].percentage) / parseFloat(second[1].percentage)).toFixed(1);
+      
+      insights.push(`⚡ **${first[0]} vs ${second[0]}:** ${first[1].percentage}% vs ${second[1].percentage}% — dominio ${ratio}x`);
+    }
+
+    // 5. TENDENCIA (SOLO SI ES SIGNIFICATIVA)
+    if (trends.weeklyComparison) {
+      const significantTrends = Object.entries(trends.weeklyComparison)
+        .filter(([_, data]) => parseFloat(data.percentage) > 20);
+      
+      if (significantTrends.length > 0) {
+        const biggestTrend = significantTrends[0];
+        const change = biggestTrend[1];
+        
+        if (change.trend === 'up') {
+          insights.push(`📈 **${biggestTrend[0]} disparándose:** +${change.percentage}% esta semana (de ${change.previous} a ${change.recent})`);
         } else {
-          insights.push(`📉 ${topTrend[0]} bajó **${topTrend[1].percentage}%** (de ${topTrend[1].previous} a ${topTrend[1].recent} transacciones)`);
+          insights.push(`📉 **${biggestTrend[0]} cayendo fuerte:** -${change.percentage}% (de ${change.previous} a ${change.recent})`);
         }
       }
+    }
+
+    // 6. INSIGHT ESPECIAL BASADO EN PATRÓN
+    const cashDominance = parseFloat(distribution.cash?.percentage || 0);
+    if (cashDominance > 95) {
+      insights.push(`🏆 **Ecosistema cash perfecto** — velocidad de servicio + cero comisiones bancarias`);
+    } else if (cashDominance < 30) {
+      insights.push(`💻 **Restaurant digital** — tus clientes adoptaron el futuro de pagos`);
     }
 
     return insights;
