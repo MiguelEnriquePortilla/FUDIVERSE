@@ -61,6 +61,20 @@ class PaymentAnalyzer {
         totalDays: days,
         totalTransactions: transactions.length
       });
+      
+      // 🔍 DEBUG: Ver qué retorna el analyzer
+      console.log('💳 ANALYZER RESULT:', JSON.stringify({
+        success: true,
+        insightsCount: insights.length,
+        dataKeys: Object.keys({
+          distribution: paymentDistribution,
+          hourlyPatterns: hourlyAnalysis,
+          weekdayPatterns: weekdayAnalysis,
+          averageTickets: averageTickets,
+          trends: trends
+        }),
+        firstInsight: insights[0]
+      }, null, 2));
 
       return {
         success: true,
