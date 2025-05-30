@@ -1,13 +1,4 @@
-// 🔧 FudiBrain.js - ENV VARS FIX
-
-const { IntelligenceCoordinator } = require('../intelligence');
-const PaymentAnalyzer = require('../intelligence/PaymentAnalyzer');
-const ProductPerformanceAnalyzer = require('../intelligence/ProductPerformanceAnalyzer');
-const TrendAnalyzer = require('../intelligence/TrendAnalyzer');
-const PeakHourAnalyzer = require('../intelligence/PeakHourAnalyzer');
-
-const HumanizerUniversal = require('./HumanizerUniversal');
-const PersonalityCore = require('./cores/PersonalityCore');
+// 🔧 FudiBrain.js - ENV VARIABLE NAME FIX
 
 class FudiBrain {
   constructor(supabase, anthropic) {
@@ -16,9 +7,9 @@ class FudiBrain {
     this.supabase = supabase;
     this.anthropic = anthropic;
     
-    // 🔧 ENSURE ENV VARS ARE AVAILABLE
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // 🔧 CORRECT ENVIRONMENT VARIABLE NAMES (match Vercel)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;  // ✅ CHANGED
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // ✅ SAME
     
     console.log('🔍 Environment check:', {
       supabaseUrl: supabaseUrl ? 'Available' : 'Missing',
@@ -72,27 +63,27 @@ class FudiBrain {
     
     // Initialize core systems (always available)
     this.intelligenceCoordinator = new IntelligenceCoordinator(
-      supabaseUrl,
+      supabaseUrl,    // ✅ CHANGED
       supabaseKey
     );
     
     this.paymentAnalyzer = new PaymentAnalyzer(
-      supabaseUrl,
+      supabaseUrl,    // ✅ CHANGED
       supabaseKey
     );
     
     this.productAnalyzer = new ProductPerformanceAnalyzer(
-      supabaseUrl,
+      supabaseUrl,    // ✅ CHANGED
       supabaseKey
     );
     
     this.trendAnalyzer = new TrendAnalyzer(
-      supabaseUrl,
+      supabaseUrl,    // ✅ CHANGED
       supabaseKey
     );
     
     this.peakHourAnalyzer = new PeakHourAnalyzer(
-      supabaseUrl,
+      supabaseUrl,    // ✅ CHANGED
       supabaseKey
     );
     
