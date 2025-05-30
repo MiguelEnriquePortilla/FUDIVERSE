@@ -25,7 +25,8 @@ class ProductPerformanceAnalyzer {
         .select('*')
         .eq('restaurant_id', restaurantId)
         .gte('transaction_date', startDateStr)
-        .lte('transaction_date', endDateStr);
+        .lte('transaction_date', endDateStr)
+        .limit(5000); // Limit to 5000 for performance, adjust as needed
 
       if (error) throw error;
 
