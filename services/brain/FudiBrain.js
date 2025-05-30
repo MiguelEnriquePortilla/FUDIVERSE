@@ -1,12 +1,11 @@
 // services/brain/FudiBrain.js
-// 🧠 FUDI NEURAL BRAIN - Main Orchestrator + HUMANIZER INTEGRATION
+// 🧠 FUDI NEURAL BRAIN - Neural Architecture for FUDI Bourdain
 
 const { IntelligenceCoordinator } = require('../intelligence');
 const PaymentAnalyzer = require('../intelligence/PaymentAnalyzer');
 const ProductPerformanceAnalyzer = require('../intelligence/ProductPerformanceAnalyzer');
 const TrendAnalyzer = require('../intelligence/TrendAnalyzer');
 const PeakHourAnalyzer = require('../intelligence/PeakHourAnalyzer');
-const HumanizerUniversal = require('./HumanizerUniversal'); // 🪄 MAGIC IMPORT
 
 class FudiBrain {
   constructor(supabaseUrl, supabaseKey, anthropicApiKey) {
@@ -19,14 +18,11 @@ class FudiBrain {
       anthropicApiKey
     };
     
-    // Initialize existing analyzers (our neural lobes)
+    // Initialize neural lobes (our "emotions" like Intensamente)
     this.initializeNeuralLobes();
     
-    // Initialize new neural components
+    // Initialize neural cores
     this.initializeNeuralCores();
-    
-    // 🪄 Initialize Humanizer Universal
-    this.humanizer = new HumanizerUniversal();
     
     console.log('🧠 FudiBrain: Neural network online!');
   }
@@ -34,31 +30,31 @@ class FudiBrain {
   initializeNeuralLobes() {
     console.log('🧠 Initializing neural lobes...');
     
-    // 🧠 Intelligence Coordinator (Central nervous system)
+    // 🧠 Intelligence Coordinator (Central coordination)
     this.intelligenceCoordinator = new IntelligenceCoordinator(
       this.config.supabaseUrl,
       this.config.supabaseKey
     );
     
-    // 💳 Payment Lobe (Financial cortex)
+    // 💰 Payment Lobe (Like "Joy" - gets excited about money)
     this.paymentLobe = new PaymentAnalyzer(
       this.config.supabaseUrl,
       this.config.supabaseKey
     );
     
-    // 🍽️ Product Lobe (Menu cortex)
+    // 🍽️ Product Lobe (Like "Anger" - passionate about product performance)
     this.productLobe = new ProductPerformanceAnalyzer(
       this.config.supabaseUrl,
       this.config.supabaseKey
     );
     
-    // 📈 Trend Lobe (Pattern recognition cortex)
+    // 📈 Trend Lobe (Like "Fear" - worried about trends and changes)
     this.trendLobe = new TrendAnalyzer(
       this.config.supabaseUrl,
       this.config.supabaseKey
     );
     
-    // ⏰ Peak Hour Lobe (Temporal cortex)
+    // ⏰ Peak Hour Lobe (Like "Sadness" - focused on operational difficulties)
     this.peakHourLobe = new PeakHourAnalyzer(
       this.config.supabaseUrl,
       this.config.supabaseKey
@@ -68,18 +64,13 @@ class FudiBrain {
   initializeNeuralCores() {
     console.log('🧠 Initializing neural cores...');
     
-    // 🎭 Simple personality for now (will expand)
+    // 🎭 Personality system (simplified for now)
     this.personalityCore = {
       currentMood: 'analytical',
-      traits: {
-        enthusiasm: 0.8,
-        helpfulness: 0.9,
-        directness: 0.7,
-        empathy: 0.6
-      }
+      expertise: 'restaurant_operations'
     };
     
-    // 💾 Simple memory system (will expand)
+    // 💾 Memory system (will expand later)
     this.memorySystem = {
       workingMemory: new Map(),
       conversationContext: new Map()
@@ -87,29 +78,26 @@ class FudiBrain {
   }
 
   async processMessage(message, restaurantId, conversationId) {
-    console.log(`🧠 FudiBrain: Processing message for restaurant ${restaurantId}`);
+    console.log(`🧠 FudiBrain: Processing neural analysis for restaurant ${restaurantId}`);
     console.log(`💬 Message: "${message}"`);
     
     try {
-      // 1. SENSORY PROCESSING (Analyze input)
+      // 1. SENSORY PROCESSING (Analyze what user wants)
       const sensoryData = await this.processSensoryInput(message, restaurantId);
       
-      // 2. MEMORY ACTIVATION (Context)
+      // 2. MEMORY ACTIVATION (Context from previous conversations)
       const memories = await this.activateMemories(sensoryData, conversationId);
       
-      // 3. NEURAL LOBE PROCESSING (Analysis)
-      const analysis = await this.processNeuralLobes(sensoryData, memories);
+      // 3. NEURAL LOBE PROCESSING (The "emotions" analyze in parallel)
+      const neuralAnalysis = await this.processNeuralLobes(sensoryData, memories);
       
-      // 4. PERSONALITY FILTERING (Tone & Style)
-      const personalizedResponse = await this.applyPersonality(analysis, sensoryData);
+      // 4. MOTOR CORTEX (Prepare analysis for FUDI to think)
+      const motorResponse = await this.generateMotorResponse(neuralAnalysis, sensoryData);
       
-      // 5. RESPONSE GENERATION (Output)
-      const finalResponse = await this.generateResponse(personalizedResponse);
+      // 5. MEMORY CONSOLIDATION (Learning)
+      await this.consolidateMemories(sensoryData, neuralAnalysis, motorResponse, conversationId);
       
-      // 6. MEMORY CONSOLIDATION (Learning)
-      await this.consolidateMemories(sensoryData, analysis, finalResponse, conversationId);
-      
-      return finalResponse;
+      return motorResponse;
       
     } catch (error) {
       console.error('🧠 Neural processing error:', error);
@@ -125,13 +113,13 @@ class FudiBrain {
       restaurantId: restaurantId,
       timestamp: new Date(),
       
-      // Basic intent detection
+      // Detect what user wants to know
       intent: this.detectIntent(message),
       
-      // Basic emotion detection
+      // Detect emotional context
       emotion: this.detectEmotion(message),
       
-      // Topic classification
+      // Classify topics
       topics: this.classifyTopics(message)
     };
     
@@ -142,11 +130,11 @@ class FudiBrain {
   detectIntent(message) {
     const lowerMessage = message.toLowerCase();
     
+    if (lowerMessage.includes('platillo') || lowerMessage.includes('producto') || lowerMessage.includes('estrella') || lowerMessage.includes('menú')) {
+      return 'product_inquiry';
+    }
     if (lowerMessage.includes('ventas') || lowerMessage.includes('dinero') || lowerMessage.includes('ingresos')) {
       return 'sales_inquiry';
-    }
-    if (lowerMessage.includes('platillo') || lowerMessage.includes('producto') || lowerMessage.includes('menú')) {
-      return 'product_inquiry';
     }
     if (lowerMessage.includes('pago') || lowerMessage.includes('efectivo') || lowerMessage.includes('tarjeta')) {
       return 'payment_inquiry';
@@ -168,7 +156,7 @@ class FudiBrain {
       return 'concern';
     }
     if (lowerMessage.match(/bien|excelente|subiendo|ganando|éxito|increíble/)) {
-      return 'positive';
+      return 'excitement';
     }
     if (lowerMessage.match(/urgente|ahora|ya|rápido|ayuda|necesito/)) {
       return 'urgent';
@@ -196,42 +184,33 @@ class FudiBrain {
     // Simple memory system for now
     const memories = {
       conversationHistory: this.memorySystem.conversationContext.get(conversationId) || [],
-      restaurantContext: await this.getRestaurantContext(sensoryData.restaurantId),
-      relevantPatterns: this.findRelevantPatterns(sensoryData)
+      restaurantContext: await this.getRestaurantContext(sensoryData.restaurantId)
     };
     
     return memories;
   }
 
   async getRestaurantContext(restaurantId) {
-    // For now, return basic context
     return {
       restaurantId: restaurantId,
-      lastAnalysisTime: new Date(),
-      knownPatterns: []
+      lastAnalysisTime: new Date()
     };
   }
 
-  findRelevantPatterns(sensoryData) {
-    // For now, return empty - will expand later
-    return [];
-  }
-
   async processNeuralLobes(sensoryData, memories) {
-    console.log('⚡ Neural Lobes: Processing in parallel...');
+    console.log('⚡ Neural Lobes: Processing in parallel like Intensamente emotions...');
     
-    const results = {};
-    
-    // Determine which lobes to activate based on intent
+    // Determine which "emotions" (lobes) should activate
     const activeLobes = this.determineActiveLobes(sensoryData.intent, sensoryData.topics);
     
-    // Process with active lobes in parallel
+    const lobeResults = {};
     const lobePromises = [];
     
+    // Activate relevant lobes in parallel
     if (activeLobes.includes('intelligence')) {
       lobePromises.push(
         this.processIntelligenceLobe(sensoryData, memories).then(result => {
-          results.intelligence = result;
+          lobeResults.intelligence = result;
         })
       );
     }
@@ -239,7 +218,7 @@ class FudiBrain {
     if (activeLobes.includes('payment')) {
       lobePromises.push(
         this.processPaymentLobe(sensoryData, memories).then(result => {
-          results.payment = result;
+          lobeResults.payment = result;
         })
       );
     }
@@ -247,7 +226,15 @@ class FudiBrain {
     if (activeLobes.includes('product')) {
       lobePromises.push(
         this.processProductLobe(sensoryData, memories).then(result => {
-          results.product = result;
+          lobeResults.product = result;
+        })
+      );
+    }
+    
+    if (activeLobes.includes('trend')) {
+      lobePromises.push(
+        this.processTrendLobe(sensoryData, memories).then(result => {
+          lobeResults.trend = result;
         })
       );
     }
@@ -255,12 +242,12 @@ class FudiBrain {
     // Wait for all active lobes to complete
     await Promise.all(lobePromises);
     
-    console.log('⚡ Neural processing complete:', Object.keys(results));
-    return results;
+    console.log('⚡ Neural processing complete:', Object.keys(lobeResults));
+    return lobeResults;
   }
 
   determineActiveLobes(intent, topics) {
-    const activeLobes = ['intelligence']; // Intelligence coordinator always active
+    const activeLobes = ['intelligence']; // Always include intelligence coordinator
     
     if (intent === 'payment_inquiry' || topics.includes('payments')) {
       activeLobes.push('payment');
@@ -297,7 +284,8 @@ class FudiBrain {
       return {
         type: 'intelligence',
         success: true,
-        data: result
+        data: result,
+        summary: this.createIntelligenceSummary(result)
       };
     } catch (error) {
       console.error('🧠 Intelligence Lobe error:', error);
@@ -310,19 +298,19 @@ class FudiBrain {
   }
 
   async processPaymentLobe(sensoryData, memories) {
-    console.log('💳 Payment Lobe: Processing...');
+    console.log('💰 Payment Lobe: Getting excited about money...');
     
     try {
       const result = await this.paymentLobe.analyze(sensoryData.restaurantId, 30);
-      console.log('💳 PaymentLobe result:', result ? JSON.stringify(result, null, 2) : 'undefined');
-
+      
       return {
         type: 'payment',
         success: true,
-        data: result
+        data: result,
+        summary: this.createPaymentSummary(result)
       };
     } catch (error) {
-      console.error('💳 Payment Lobe error:', error);
+      console.error('💰 Payment Lobe error:', error);
       return {
         type: 'payment',
         success: false,
@@ -332,18 +320,16 @@ class FudiBrain {
   }
 
   async processProductLobe(sensoryData, memories) {
-    console.log('🍽️ Product Lobe: Processing...');
+    console.log('🍽️ Product Lobe: Getting passionate about products...');
     
     try {
-      const result = await this.productLobe.analyze(
-        sensoryData.restaurantId,
-        30 // días
-      );
-
+      const result = await this.productLobe.analyze(sensoryData.restaurantId, 30);
+      
       return {
         type: 'product',
         success: true,
-        data: result
+        data: result,
+        summary: this.createProductSummary(result)
       };
     } catch (error) {
       console.error('🍽️ Product Lobe error:', error);
@@ -355,133 +341,100 @@ class FudiBrain {
     }
   }
 
-  async applyPersonality(analysis, sensoryData) {
-    console.log('🎭 PersonalityCore: Applying personality filter...');
+  async processTrendLobe(sensoryData, memories) {
+    console.log('📈 Trend Lobe: Analyzing patterns...');
     
-    // Simple personality application for now
-    const personalizedAnalysis = {
-      ...analysis,
-      tone: this.determineTone(sensoryData.emotion),
-      enthusiasm: this.personalityCore.traits.enthusiasm,
-      directness: this.personalityCore.traits.directness
-    };
-    
-    return personalizedAnalysis;
-  }
-
-  determineTone(emotion) {
-    switch (emotion) {
-      case 'concern':
-        return 'empathetic';
-      case 'positive':
-        return 'enthusiastic';
-      case 'urgent':
-        return 'action-oriented';
-      default:
-        return 'professional';
+    try {
+      const result = await this.trendLobe.analyze(sensoryData.restaurantId, 30);
+      
+      return {
+        type: 'trend',
+        success: true,
+        data: result,
+        summary: this.createTrendSummary(result)
+      };
+    } catch (error) {
+      console.error('📈 Trend Lobe error:', error);
+      return {
+        type: 'trend',
+        success: false,
+        error: error.message
+      };
     }
   }
 
-  async generateResponse(personalizedAnalysis) {
-    console.log('🗣️ Response Generator: Creating response...');
+  // 🧠 CREATE SUMMARIES FOR FUDI TO THINK WITH
+  createIntelligenceSummary(result) {
+    if (!result || !result.success) return "Análisis general no disponible";
+    return "Contexto general del restaurante analizado";
+  }
+
+  createPaymentSummary(result) {
+    if (!result || !result.success || !result.data) return "Datos de pagos no disponibles";
     
-    const response = {
-      text: this.formatResponse(personalizedAnalysis),
+    const summary = result.data.summary || {};
+    return `${summary.totalTransactions || 0} transacciones, $${(summary.totalRevenue || 0).toFixed(2)} en revenue, ${summary.dominantMethod || 'método'} dominante`;
+  }
+
+  createProductSummary(result) {
+    if (!result || !result.success || !result.data) return "Datos de productos no disponibles";
+    
+    const topProducts = result.data.topProducts || [];
+    if (topProducts.length === 0) return "No hay datos de productos";
+    
+    const star = topProducts[0];
+    return `${star.name || `Producto ${star.id}`} lidera con ${star.quantity} unidades, $${star.revenue.toFixed(2)} en revenue`;
+  }
+
+  createTrendSummary(result) {
+    if (!result || !result.success || !result.data) return "Datos de tendencias no disponibles";
+    
+    return "Análisis de tendencias completado";
+  }
+
+  async generateMotorResponse(neuralAnalysis, sensoryData) {
+    console.log('🗣️ MotorCortex: Preparing neural insights for FUDI...');
+    
+    // 🧠 PREPARE NEURAL INSIGHTS FOR FUDI TO THINK WITH
+    const neuralInsights = [];
+    
+    // Extract insights from each successful lobe
+    Object.values(neuralAnalysis).forEach(lobeResult => {
+      if (lobeResult.success && lobeResult.data) {
+        neuralInsights.push({
+          type: lobeResult.type,
+          data: lobeResult.data,
+          summary: lobeResult.summary
+        });
+      }
+    });
+    
+    return {
+      text: "Neural analysis complete - ready for FUDI thinking",
       conversationId: this.generateConversationId(),
       metadata: {
-        neuralActivity: Object.keys(personalizedAnalysis),
+        neuralActivity: Object.keys(neuralAnalysis),
+        neuralInsights: neuralInsights, // 🧠 THIS IS WHAT FUDI WILL THINK WITH
         processingTime: Date.now(),
-        tone: personalizedAnalysis.tone
+        sensoryData: sensoryData
       }
     };
-    
-    return response;
   }
 
-  formatResponse(analysis) {
-    console.log('🗣️ Formatting response with analysis:', Object.keys(analysis));
+  async consolidateMemories(sensoryData, neuralAnalysis, response, conversationId) {
+    console.log('💾 Memory Consolidation: Storing neural experience...');
     
-    // 🎯 USAR INSIGHTS REALES DE LOS ANALYZERS
-    let finalInsights = [];
-    
-    // Verificar si hay datos reales de analyzers
-    if (analysis.payment && analysis.payment.success && analysis.payment.data.insights) {
-      console.log('💳 Using REAL payment insights!');
-      finalInsights = [...analysis.payment.data.insights];
-    }
-    
-    if (analysis.product && analysis.product.success && analysis.product.data.insights) {
-      console.log('🍽️ Using REAL product insights!');
-      finalInsights = [...finalInsights, ...analysis.product.data.insights];
-    }
-    
-    if (analysis.intelligence && analysis.intelligence.success && analysis.intelligence.data.insights) {
-      console.log('🧠 Using intelligence insights!');
-      finalInsights = [...finalInsights, ...analysis.intelligence.data.insights];
-    }
-    
-    // 🪄 HUMANIZER UNIVERSAL MAGIC - TRANSFORM TO FUDIRESTO™️ TONE
-    if (finalInsights.length > 0) {
-      console.log('🪄 Applying Humanizer Universal...');
-      
-      // Detectar tipo de contenido para contexto
-      const contentType = this.detectContentType(finalInsights);
-      
-      // Humanizar con contexto específico
-      const humanizedResponse = this.humanizer.humanize(finalInsights, { 
-        type: contentType,
-        tone: analysis.tone || 'professional'
-      });
-      
-      console.log('✨ Response humanized with FudiResto™️ tone');
-      return humanizedResponse;
-    }
-    
-    // Fallback genérico humanizado
-    console.log('🪄 Applying humanized fallback...');
-    return this.humanizer.generateFallbackResponse({ tone: analysis.tone });
-  }
-
-  // 🔍 Detectar tipo de contenido para el humanizer
-  detectContentType(insights) {
-    const text = insights.join(' ').toLowerCase();
-    
-    if (text.includes('efectivo') || text.includes('cash') || text.includes('tarjeta') || text.includes('pago')) {
-      return 'payments';
-    }
-    if (text.includes('producto') || text.includes('platillo') || text.includes('menú')) {
-      return 'products';
-    }
-    if (text.includes('venta') || text.includes('revenue') || text.includes('ticket')) {
-      return 'sales';
-    }
-    if (text.includes('hora') || text.includes('pico') || text.includes('rush')) {
-      return 'hours';
-    }
-    
-    return 'general';
-  }
-
-  generateConversationId() {
-    return 'conv-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-  }
-
-  async consolidateMemories(sensoryData, analysis, response, conversationId) {
-    console.log('💾 Memory Consolidation: Storing experience...');
-    
-    // Store in working memory
     const experience = {
       input: sensoryData,
-      analysis: analysis,
+      neuralAnalysis: neuralAnalysis,
       response: response,
       timestamp: new Date()
     };
     
-    // Add to conversation context
     let conversationHistory = this.memorySystem.conversationContext.get(conversationId) || [];
     conversationHistory.push(experience);
     
-    // Keep only last 10 interactions per conversation
+    // Keep only last 10 interactions
     if (conversationHistory.length > 10) {
       conversationHistory = conversationHistory.slice(-10);
     }
@@ -489,17 +442,15 @@ class FudiBrain {
     this.memorySystem.conversationContext.set(conversationId, conversationHistory);
   }
 
+  generateConversationId() {
+    return 'neural-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  }
+
   generateErrorResponse(error) {
-    console.log('🧠 Generating error response...');
-    
-    // 🪄 Even errors get humanized
-    const humanizedError = this.humanizer.generateFallbackResponse({ 
-      type: 'error',
-      tone: 'empathetic' 
-    });
+    console.log('🧠 Generating neural error response...');
     
     return {
-      text: humanizedError,
+      text: "Neural processing error",
       conversationId: this.generateConversationId(),
       metadata: {
         error: true,
@@ -509,24 +460,22 @@ class FudiBrain {
     };
   }
 
-  // Health check method
+  // Health check
   async neuralHealthCheck() {
     console.log('🧠 FudiBrain: Running neural health check...');
     
     const health = {
       status: 'healthy',
-      components: {
+      neuralLobes: {
         intelligenceCoordinator: this.intelligenceCoordinator ? 'online' : 'offline',
         paymentLobe: this.paymentLobe ? 'online' : 'offline',
         productLobe: this.productLobe ? 'online' : 'offline',
         trendLobe: this.trendLobe ? 'online' : 'offline',
-        peakHourLobe: this.peakHourLobe ? 'online' : 'offline',
-        humanizer: this.humanizer ? 'online' : 'offline' // 🪄 New component
+        peakHourLobe: this.peakHourLobe ? 'online' : 'offline'
       },
       memoryUsage: {
         conversationContexts: this.memorySystem.conversationContext.size
-      },
-      personality: this.personalityCore.traits
+      }
     };
     
     console.log('🧠 Neural health:', health);

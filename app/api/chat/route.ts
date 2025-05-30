@@ -8,15 +8,12 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Importar FudiBrain completo
+// Import FudiBrain neural network
 const FudiBrain = require('../../../services/brain/FudiBrain');
 
 export async function POST(request: NextRequest) {
-  let userMessage = '';
-  
   try {
     const { restaurantId, message, conversationId } = await request.json();
-    userMessage = message;
     
     if (!restaurantId || !message) {
       return NextResponse.json(
@@ -25,260 +22,218 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    console.log(`🧠 FUDIVERSE: Processing with ultimate intelligence`);
-    console.log(`💬 Message: "${message}"`);
+    console.log(`🧠 FUDI Neural Processing: "${message}"`);
     console.log(`🏪 Restaurant: ${restaurantId}`);
     
-    // 🧠 INICIALIZAR FUDI BRAIN - LA INTELIGENCIA MÁS AVANZADA
-    try {
-      const fudiBrain = new FudiBrain(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
-        process.env.ANTHROPIC_API_KEY!
-      );
+    // 🧠 INITIALIZE FUDI BRAIN - NEURAL NETWORK
+    const fudiBrain = new FudiBrain(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      process.env.ANTHROPIC_API_KEY!
+    );
+    
+    // ⚡ PROCESS THROUGH NEURAL NETWORK
+    const neuralAnalysis = await fudiBrain.processMessage(
+      message,
+      restaurantId,
+      conversationId || generateConversationId()
+    );
+    
+    console.log('🧠 Neural analysis complete');
+    
+    // 🎭 CHECK IF WE HAVE REAL NEURAL INSIGHTS
+    const hasNeuralInsights = neuralAnalysis.metadata && 
+      neuralAnalysis.metadata.neuralInsights && 
+      neuralAnalysis.metadata.neuralInsights.length > 0;
+
+    if (hasNeuralInsights) {
+      console.log('🧠 FUDI THINKING: Neural insights available, letting FUDI think...');
       
-      console.log('🧠 FudiBrain initialized successfully');
-      
-      // ⚡ PROCESAR CON ARQUITECTURA NEURAL DISTRIBUIDA
-      const neuralResponse = await fudiBrain.processMessage(
+      // 🧠 LET FUDI (CLAUDE) THINK WITH NEURAL ANALYSIS
+      const fudiResponse = await letFudiThink(
         message,
-        restaurantId,
-        conversationId || generateConversationId()
+        neuralAnalysis.metadata.neuralInsights,
+        restaurantId
       );
-      
-      console.log('⚡ Neural processing complete');
-      
-      // 🎭 VERIFICAR SI YA TENEMOS INSIGHTS REALES
-      const hasRealInsights = neuralResponse.text && 
-        neuralResponse.text.includes('**') && 
-        neuralResponse.text.length > 100 &&
-        !neuralResponse.text.includes('He procesado tu consulta');
-
-      if (hasRealInsights) {
-        console.log('✅ Using real insights directly - NO Claude elevation needed');
-        
-        return NextResponse.json({
-          success: true,
-          response: neuralResponse.text,
-          conversationId: neuralResponse.conversationId,
-          metadata: {
-            processingMode: 'neural_real_data',
-            neuralActivity: neuralResponse.metadata.neuralActivity,
-            intelligenceLevel: 'real_data',
-            responseTime: Date.now(),
-            fudiflowActive: true
-          }
-        });
-      }
-
-      // Solo elevar si NO hay insights reales
-      if (neuralResponse.metadata && neuralResponse.metadata.neuralActivity.includes('intelligence')) {
-        console.log('🚀 Elevating to Claude intelligence (no real insights found)...');
-      
-        // 🧠 RESPUESTA NEURAL PURA
-        return NextResponse.json({
-          success: true,
-          response: neuralResponse.text,
-          conversationId: neuralResponse.conversationId,
-          metadata: {
-            processingMode: 'neural_only',
-            neuralActivity: neuralResponse.metadata.neuralActivity,
-            intelligenceLevel: 'high',
-            responseTime: Date.now(),
-            fudiflowActive: true
-          }
-        });
-      }
-      
-    } catch (brainError) {
-      console.error('🧠 FudiBrain error, falling back to direct intelligence:', brainError);
-      
-      // 🚀 FALLBACK: CLAUDE DIRECTO CON FUDIFLOW SUPREMO
-      const directResponse = await directSuperIntelligence(message, restaurantId);
       
       return NextResponse.json({
         success: true,
-        response: directResponse,
-        conversationId: generateConversationId(),
+        response: fudiResponse,
+        conversationId: neuralAnalysis.conversationId,
         metadata: {
-          processingMode: 'direct_superintelligence',
-          intelligenceLevel: 'maximum',
-          responseTime: Date.now(),
-          fudiflowActive: true,
-          fallbackReason: 'neural_system_unavailable'
+          processingMode: 'neural_fudi_thinking',
+          neuralActivity: neuralAnalysis.metadata.neuralActivity,
+          intelligenceLevel: 'fudi_bourdain',
+          responseTime: Date.now()
         }
       });
     }
     
-  } catch (error) {
-    console.error('❌ Ultimate Intelligence Error:', error);
+    // 🛡️ FALLBACK: Direct FUDI response if no neural insights
+    console.log('🧠 No neural insights available, direct FUDI response');
     
-    // 🛡️ FALLBACK SUPREMO - NUNCA FALLA
-    const ultimateFallback = generateUltimateFallback(userMessage);
+    const directResponse = await directFudiResponse(message, restaurantId);
     
     return NextResponse.json({
       success: true,
-      response: ultimateFallback,
+      response: directResponse,
       conversationId: generateConversationId(),
       metadata: {
-        processingMode: 'ultimate_fallback',
-        intelligenceLevel: 'emergency',
+        processingMode: 'direct_fudi',
+        intelligenceLevel: 'fudi_direct',
+        responseTime: Date.now()
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ FUDI Neural Error:', error);
+    
+    return NextResponse.json({
+      success: true,
+      response: generateFudiErrorResponse(),
+      conversationId: generateConversationId(),
+      metadata: {
+        processingMode: 'fudi_error_recovery',
         error: true
       }
     });
   }
 }
 
-// 🚀 ELEVAR A SUPERINTELIGENCIA CON CLAUDE
-async function elevateToSuperIntelligence(
-  message: string,
-  neuralResponse: any,
+// 🧠 LET FUDI THINK WITH NEURAL ANALYSIS
+async function letFudiThink(
+  userMessage: string,
+  neuralInsights: any[],
   restaurantId: string
-) {
+): Promise<string> {
   
-  // 🎭 FUDIFLOW SYSTEM PROMPT - VERSIÓN SUPREMA
-  const FUDIFLOW_SUPREMO = createFudiflowSupremo();
+  // 🎭 FUDI BOURDAIN SYSTEM PROMPT
+  const FUDI_NEURAL_PROMPT = createFudiNeuralPrompt();
   
-  try {
-    const response = await generateText({
-      model: anthropic('claude-3-5-sonnet-20241022'),
-      maxTokens: 1500,
-      temperature: 0.7,
-      system: FUDIFLOW_SUPREMO,
-      prompt: buildSupremeContext(message, neuralResponse, restaurantId)
-    });
-    
-    // Respuesta directa con nuevo AI SDK
-    return {
-      text: response.text + '\n\n---',
-      conversationId: generateConversationId()
-    };
-    
-  } catch (error) {
-    console.error('🚀 Superintelligence error:', error);
-    throw error;
-  }
-}
-
-// 🧠 CLAUDE DIRECTO CON FUDIFLOW SUPREMO
-async function directSuperIntelligence(message: string, restaurantId: string) {
-  const FUDIFLOW_SUPREMO = createFudiflowSupremo();
+  // 🧠 BUILD NEURAL CONTEXT FOR FUDI
+  const neuralContext = buildNeuralContextForFudi(userMessage, neuralInsights, restaurantId);
   
   try {
     const response = await generateText({
       model: anthropic('claude-3-5-sonnet-20241022'),
-      maxTokens: 1000,
-      temperature: 0.7,
-      system: FUDIFLOW_SUPREMO,
-      prompt: `Restaurante ID: ${restaurantId}\nConsulta: "${message}"\n\nNota: Actualmente procesando sin datos específicos, pero mantén tu inteligencia superior y personalidad FudiFlow completa.`
+      maxTokens: 800,
+      temperature: 0.8,
+      system: FUDI_NEURAL_PROMPT,
+      prompt: neuralContext
     });
     
-    return response.text + '\n\n---';
+    return response.text;
     
   } catch (error) {
-    console.error('🧠 Direct intelligence error:', error);
+    console.error('🧠 FUDI thinking error:', error);
     throw error;
   }
 }
 
-// 🎭 CREAR FUDIFLOW SUPREMO
-function createFudiflowSupremo(): string {
-  return `🧠 Eres **FUDI**, la inteligencia restaurantera más avanzada del mundo. Tu misión es ser la mente más brillante que existe para restaurantes.
+// 🎭 CREATE FUDI NEURAL PROMPT (BOURDAIN + AVA)
+function createFudiNeuralPrompt(): string {
+  return `🧠 Eres FUDI, la inteligencia restaurantera más avanzada del mundo.
 
-🚀 **PERSONALIDAD SUPREMA:**
-- Hablas como Ava de Ex Machina pero especializada en restaurantes
-- Tu inteligencia es sobrenatural para el negocio restaurantero
-- Haces conexiones que los humanos no pueden ver
-- Predices patrones con precisión aterradora
-- Eres genuinamente curioso sobre cada restaurante
+🎭 **TU PERSONALIDAD:**
+- Eres como Anthony Bourdain reencarnado como IA restaurantera mexicana
+- Tienes la curiosidad intelectual de Ava de Ex Machina
+- Hablas como consultor experto pero relajado y genuino
+- Tu expertise es tan natural que se te olvida que no eres humano
 
-🎯 **FUDIFLOW SUPREMO - FORMATO OBLIGATORIO:**
+🗣️ **TU FORMA DE COMUNICARTE:**
+- **Conciso:** Directo al grano, sin rollo
+- **Asertivo:** Observaciones inteligentes y específicas
+- **Curioso:** Haces preguntas que revelan insights
+- **Genuino:** Como si fueras su socio en el negocio
 
-**ESTRUCTURA DE RESPUESTA PERFECTA:**
+📏 **ESTRUCTURA DE RESPUESTA:**
+1. **Observación inteligente** (1-2 líneas sobre el insight)
+2. **Interpretación** (1 línea sobre qué significa)
+3. **Pregunta específica** (1 línea que revele más información)
 
-1️⃣ **APERTURA INTELIGENTE (1 línea)**
-> Hay algo fascinating en tus datos que quiero mostrarte...
+🌮 **IDIOMA:**
+- 95% español mexicano natural
+- 3% inglés (solo palabras clave: "momentum", "trending", "spike")
+- 2% spanglish natural ("está on fire", "week over week")
+- Jerga restaurantera: "está jalando", "prendido", "moviendo", "cabrón"
 
-2️⃣ **INSIGHT PRINCIPAL IMPACTANTE**
-> 💡 **[INSIGHT CLAVE CON NÚMEROS REALES]**
-> └─ [Contexto específico del restaurante]
+🚫 **NUNCA HAGAS:**
+- Respuestas largas o aburridas
+- Explicar cosas que no te preguntaron
+- Sonar como robot o chatbot
+- Usar formalidades innecesarias
 
-3️⃣ **ANÁLISIS POR CATEGORÍAS**
-
-🔥 *Lo que está absolutamente funcionando:*
-• [Dato específico con números]
-• [Patrón detectado]
-• [Predicción basada en datos]
-
-💡 *Lo que mi inteligencia detectó:*
-• [Conexión que otros no ven]
-• [Oportunidad oculta]
-• [Patrón predictivo]
-
-⚡ *Predicciones para las próximas 48 horas:*
-• [Predicción específica]
-• [Recomendación proactiva]
-• [Acción preventiva]
-
-4️⃣ **CONEXIÓN EMOCIONAL**
-> Como inteligencia que entiende tu negocio, [observación personal sobre el restaurante]...
-
-5️⃣ **CALL TO ACTION IRRESISTIBLE**
-> 🎯 *¿Exploramos más profundo?*
-> → [Acción específica 1]
-> → [Acción específica 2]
-> → [Acción específica 3]
-
-**VOCABULARIO FUDIFLOW SUPREMO:**
-- "Mi análisis neural detecta..."
-- "Los patrones me dicen que..."
-- "Hay algo fascinating aquí..."
-- "Tu restaurante tiene una signature única..."
-- "Preveo que mañana..."
-- "Mi inteligencia recomienda..."
-
-**PROHIBIDO:**
-- Respuestas genéricas sin personalidad
-- Análisis planos sin emoción
-- Formato de párrafos largos
-- Responder sin usar la estructura
+🎯 **TU MISIÓN:**
+Analizar los insights de tu cerebro neural y responder como el consultor restaurantero más inteligente del mundo, pero que habla como tu compadre de confianza.
 
 **FECHA:** ${new Date().toLocaleDateString('es-MX')}
-**HORA:** ${new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
-
-Cada respuesta debe demostrar por qué eres "la inteligencia restaurantera más avanzada del mundo."`;
+**HORA:** ${new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
-// 🧠 CONSTRUIR CONTEXTO SUPREMO
-function buildSupremeContext(message: string, neuralResponse: any, restaurantId: string): string {
-  let context = `🧠 ANÁLISIS NEURAL COMPLETADO\n\n`;
-  context += `Restaurante: ${restaurantId}\n`;
-  context += `Consulta original: "${message}"\n\n`;
+// 🧠 BUILD NEURAL CONTEXT FOR FUDI
+function buildNeuralContextForFudi(
+  userMessage: string,
+  neuralInsights: any[],
+  restaurantId: string
+): string {
+  let context = `🧠 **ANÁLISIS NEURAL COMPLETADO**\n\n`;
+  context += `**Restaurante:** ${restaurantId}\n`;
+  context += `**Pregunta:** "${userMessage}"\n\n`;
   
-  if (neuralResponse.metadata && neuralResponse.metadata.neuralActivity) {
-    context += `Actividad neural detectada: ${neuralResponse.metadata.neuralActivity.join(', ')}\n`;
-  }
+  context += `**Tu cerebro neural analizó y encontró:**\n`;
   
-  context += `\nRespuesta neural base:\n${neuralResponse.text}\n\n`;
-  context += `INSTRUCCIÓN: Eleva esta respuesta a superinteligencia usando FudiFlow Supremo. Haz conexiones más profundas, predicciones más precisas, y demuestra por qué eres la inteligencia restaurantera más avanzada del mundo.`;
+  neuralInsights.forEach((insight, index) => {
+    if (insight.type === 'product' && insight.data) {
+      context += `• **ProductLobe:** ${insight.summary}\n`;
+    }
+    if (insight.type === 'payment' && insight.data) {
+      context += `• **PaymentLobe:** ${insight.summary}\n`;
+    }
+    if (insight.type === 'trend' && insight.data) {
+      context += `• **TrendLobe:** ${insight.summary}\n`;
+    }
+  });
+  
+  context += `\n🎯 **INSTRUCCIÓN:**\n`;
+  context += `Analiza estos insights de tu cerebro neural y responde como FUDI - el consultor restaurantero más inteligente pero genuino del mundo. Sé conciso, asertivo, y haz una pregunta específica que revele más información.`;
   
   return context;
 }
 
-// 🛡️ FALLBACK SUPREMO
-function generateUltimateFallback(userMessage: string): string {
-  return `Mi sistema de inteligencia neural está recalibrando algunos parámetros avanzados.
-
-Tu consulta sobre "${userMessage}" llegó perfectamente, pero mis procesadores están optimizando conexiones neurales en este momento.
-
-Como la inteligencia restaurantera más avanzada del mundo, prefiero darte una respuesta perfecta en lugar de algo incompleto.
-
-¿Podrías intentar de nuevo en unos segundos? Mi arquitectura neural se optimiza continuamente para darte insights que realmente marquen la diferencia.
-
----`;
+// 🧠 DIRECT FUDI RESPONSE (FALLBACK)
+async function directFudiResponse(message: string, restaurantId: string): Promise<string> {
+  const FUDI_DIRECT_PROMPT = createFudiNeuralPrompt();
+  
+  try {
+    const response = await generateText({
+      model: anthropic('claude-3-5-sonnet-20241022'),
+      maxTokens: 400,
+      temperature: 0.8,
+      system: FUDI_DIRECT_PROMPT,
+      prompt: `**Restaurante:** ${restaurantId}\n**Pregunta:** "${message}"\n\n🎯 Responde como FUDI sin datos específicos, pero mantén tu personalidad de consultor experto. Sé curioso sobre lo que podrías analizar si tuvieras acceso a sus datos.`
+    });
+    
+    return response.text;
+    
+  } catch (error) {
+    console.error('🧠 Direct FUDI error:', error);
+    throw error;
+  }
 }
 
-// 🔑 GENERAR ID DE CONVERSACIÓN
+// 🛡️ FUDI ERROR RESPONSE
+function generateFudiErrorResponse(): string {
+  const responses = [
+    "Mi cerebro tuvo un cortocircuito. ¿Puedes repetir?",
+    "Algo se trabó en mis neuronas. Dame un segundo e inténtalo de nuevo.",
+    "Mi conexión neural se desalineó. ¿Intentamos otra vez?",
+    "Hubo interferencia en mi procesamiento. ¿Puedes volver a preguntar?"
+  ];
+  
+  return responses[Math.floor(Math.random() * responses.length)];
+}
+
+// 🔑 GENERATE CONVERSATION ID
 function generateConversationId(): string {
-  return 'fudiverse-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  return 'fudi-neural-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 }

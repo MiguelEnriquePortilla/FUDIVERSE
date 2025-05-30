@@ -1,10 +1,10 @@
 // services/discovery/DataExplorer.js - FIXED VERSION
 const { createClient } = require('@supabase/supabase-js');
 
-// Usar variables de entorno directamente (sin dotenv)
+// Usar keys correctas del .env
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://vdcqwjodfuwrthcuvzfr.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  'https://vdcqwjodfuwrthcuvzfr.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkY3F3am9kZnV3cnRoY3V2emZyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODEwMjkzNywiZXhwIjoyMDYzNjc4OTM3fQ.Dp4LTTUl9BXQGK1etr8FhtEOeHGTvb5YVseeAlJimb4'
 );
 
 class DataExplorer {
