@@ -1,13 +1,7 @@
-// 🧠 services/brain/FudiBrain.js - ENHANCED VERSION
-// Updated to use new enhanced analyzers
+// 🔧 FudiBrain.js - ENV VARS FIX
 
 const { IntelligenceCoordinator } = require('../intelligence');
 const PaymentAnalyzer = require('../intelligence/PaymentAnalyzer');
-// 🚀 SWITCH TO ENHANCED VERSIONS
-const { EnhancedProductAnalyzer } = require('../intelligence/EnhancedProductAnalyzer');
-const { BackgroundIntelligenceEngine } = require('../intelligence/BackgroundIntelligenceEngine');
-const { FudiLearningEngine } = require('../intelligence/FudiLearningEngine');
-// Keep old ones as fallback for now
 const ProductPerformanceAnalyzer = require('../intelligence/ProductPerformanceAnalyzer');
 const TrendAnalyzer = require('../intelligence/TrendAnalyzer');
 const PeakHourAnalyzer = require('../intelligence/PeakHourAnalyzer');
@@ -22,43 +16,84 @@ class FudiBrain {
     this.supabase = supabase;
     this.anthropic = anthropic;
     
-    // Initialize enhanced analyzers
-    try {
-      console.log('🚀 Loading enhanced analyzers...');
-      this.enhancedProductAnalyzer = new EnhancedProductAnalyzer();
-      this.backgroundEngine = new BackgroundIntelligenceEngine();
-      this.learningEngine = new FudiLearningEngine(supabase);
-      console.log('✅ Enhanced analyzers loaded successfully');
-    } catch (error) {
-      console.error('❌ Failed to load enhanced analyzers:', error);
-      this.enhancedProductAnalyzer = null;
+    // 🔧 ENSURE ENV VARS ARE AVAILABLE
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    console.log('🔍 Environment check:', {
+      supabaseUrl: supabaseUrl ? 'Available' : 'Missing',
+      supabaseKey: supabaseKey ? 'Available' : 'Missing'
+    });
+    
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('❌ Missing environment variables for enhanced analyzers');
+      this.enhancedMode = false;
+    } else {
+      this.enhancedMode = true;
     }
     
-    // Initialize core systems
+    // Initialize enhanced analyzers with proper error handling
+    try {
+      if (this.enhancedMode) {
+        console.log('🚀 Loading enhanced analyzers...');
+        
+        // Try to load enhanced versions
+        try {
+          const { EnhancedProductAnalyzer } = require('../intelligence/EnhancedProductAnalyzer');
+          this.enhancedProductAnalyzer = new EnhancedProductAnalyzer(supabaseUrl, supabaseKey);
+          console.log('✅ EnhancedProductAnalyzer loaded');
+        } catch (e) {
+          console.log('⚠️ EnhancedProductAnalyzer failed, using fallback:', e.message);
+          this.enhancedProductAnalyzer = null;
+        }
+        
+        try {
+          const { BackgroundIntelligenceEngine } = require('../intelligence/BackgroundIntelligenceEngine');
+          this.backgroundEngine = new BackgroundIntelligenceEngine();
+          console.log('✅ BackgroundIntelligenceEngine loaded');
+        } catch (e) {
+          console.log('⚠️ BackgroundIntelligenceEngine failed:', e.message);
+          this.backgroundEngine = null;
+        }
+        
+        try {
+          const { FudiLearningEngine } = require('../intelligence/FudiLearningEngine');
+          this.learningEngine = new FudiLearningEngine(supabase);
+          console.log('✅ FudiLearningEngine loaded');
+        } catch (e) {
+          console.log('⚠️ FudiLearningEngine failed:', e.message);
+          this.learningEngine = null;
+        }
+      }
+    } catch (error) {
+      console.error('❌ Failed to load enhanced analyzers:', error.message);
+      this.enhancedMode = false;
+    }
+    
+    // Initialize core systems (always available)
     this.intelligenceCoordinator = new IntelligenceCoordinator(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
+      supabaseUrl,
+      supabaseKey
     );
     
     this.paymentAnalyzer = new PaymentAnalyzer(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
+      supabaseUrl,
+      supabaseKey
     );
     
-    // Fallback analyzers
     this.productAnalyzer = new ProductPerformanceAnalyzer(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
+      supabaseUrl,
+      supabaseKey
     );
     
     this.trendAnalyzer = new TrendAnalyzer(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
+      supabaseUrl,
+      supabaseKey
     );
     
     this.peakHourAnalyzer = new PeakHourAnalyzer(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY
+      supabaseUrl,
+      supabaseKey
     );
     
     this.humanizer = new HumanizerUniversal();
@@ -67,7 +102,14 @@ class FudiBrain {
     // Working memory for conversation context
     this.workingMemory = new Map();
     
-    console.log('🧠 FudiBrain fully initialized');
+    console.log('🧠 FudiBrain fully initialized', {
+      enhancedMode: this.enhancedMode,
+      enhancedAnalyzers: {
+        product: !!this.enhancedProductAnalyzer,
+        background: !!this.backgroundEngine,
+        learning: !!this.learningEngine
+      }
+    });
   }
 
   async process(message, restaurantId, conversationId = null) {
@@ -83,7 +125,7 @@ class FudiBrain {
       // 2. MEMORY ACTIVATION
       const memories = await this.activateMemories(sensoryData, restaurantId);
       
-      // 3. PARALLEL LOBE PROCESSING (Enhanced)
+      // 3. PARALLEL LOBE PROCESSING
       const analysis = await this.processInParallel(sensoryData, memories, restaurantId);
       
       // 4. NEURAL INTEGRATION
@@ -92,9 +134,13 @@ class FudiBrain {
       // 5. HUMANIZATION & RESPONSE
       const finalResponse = await this.generateFinalResponse(integratedResponse, sensoryData);
       
-      // 6. LEARNING (Enhanced)
+      // 6. LEARNING (if available)
       if (this.learningEngine) {
-        await this.learningEngine.analyzeConversation(restaurantId, message, finalResponse);
+        try {
+          await this.learningEngine.analyzeConversation(restaurantId, message, finalResponse);
+        } catch (e) {
+          console.log('⚠️ Learning engine error:', e.message);
+        }
       }
       
       return {
@@ -128,10 +174,10 @@ class FudiBrain {
       );
     }
     
-    // PRODUCT LOBE (Enhanced)
+    // PRODUCT LOBE (Enhanced if available)
     if (activeLobes.includes('product')) {
       promises.push(
-        this.processEnhancedProductLobe(sensoryData, memories, restaurantId).then(result => {
+        this.processProductLobe(sensoryData, memories, restaurantId).then(result => {
           results.product = result;
         })
       );
@@ -162,15 +208,16 @@ class FudiBrain {
     return results;
   }
 
-  async processEnhancedProductLobe(sensoryData, memories, restaurantId) {
-    console.log('🍽️ ProductLobe: Enhanced analysis starting...');
+  async processProductLobe(sensoryData, memories, restaurantId) {
+    console.log('🍽️ ProductLobe: Starting analysis...');
     
     try {
+      // Try enhanced analyzer first
       if (this.enhancedProductAnalyzer) {
         console.log('🚀 Using EnhancedProductAnalyzer...');
         const result = await this.enhancedProductAnalyzer.analyze(restaurantId, 30);
         
-        if (result.success) {
+        if (result && result.success) {
           console.log('✅ Enhanced product analysis successful');
           return {
             type: 'enhanced_product',
@@ -184,16 +231,16 @@ class FudiBrain {
       }
       
       // Fallback to regular analyzer
-      console.log('🔄 Falling back to regular ProductAnalyzer...');
+      console.log('🔄 Using regular ProductAnalyzer...');
       const result = await this.productAnalyzer.analyze(restaurantId, 30);
       
       return {
-        type: 'product_fallback',
+        type: 'product_standard',
         success: result.success,
         data: result.data,
         insights: result.insights,
         confidence: 0.7,
-        source: 'fallback_analyzer'
+        source: 'standard_analyzer'
       };
       
     } catch (error) {
@@ -207,6 +254,7 @@ class FudiBrain {
     }
   }
 
+  // Keep all other methods the same...
   determineActiveLobes(sensoryData) {
     const message = sensoryData.message.toLowerCase();
     const activeLobes = ['intelligence']; // Intelligence coordinator always active
@@ -237,21 +285,20 @@ class FudiBrain {
   }
 
   async generateFinalResponse(integratedResponse, sensoryData) {
-    console.log('🎭 Generating final response with enhanced humanization...');
+    console.log('🎭 Generating final response...');
     
     try {
       // Check if we have real insights to humanize
       if (integratedResponse.insights && integratedResponse.insights.length > 0) {
         console.log('🪄 Using Humanizer Universal...');
         
-        // Add quantum separator for enhanced responses
         let humanizedResponse = this.humanizer.humanize(integratedResponse.insights, {
           type: integratedResponse.primaryType || 'general',
           confidence: integratedResponse.confidence || 0.8,
           source: integratedResponse.source || 'neural_analysis'
         });
         
-        // 🌟 ADD QUANTUM SEPARATOR for visual enhancement
+        // Add quantum separator
         humanizedResponse += '\n\n---\n\n';
         
         return humanizedResponse;
@@ -267,18 +314,152 @@ class FudiBrain {
     }
   }
 
+  // ... rest of methods remain the same
+  
+  processSensoryInput(message, context) {
+    return {
+      message: message,
+      restaurantId: context.restaurantId,
+      conversationId: context.conversationId,
+      timestamp: new Date().toISOString(),
+      intent: this.detectIntent(message),
+      emotion: this.detectEmotion(message)
+    };
+  }
+
+  activateMemories(sensoryData, restaurantId) {
+    // Simple memory activation for now
+    return {
+      workingMemory: this.workingMemory.get(restaurantId) || {},
+      conversationContext: sensoryData,
+      restaurantProfile: { id: restaurantId }
+    };
+  }
+
+  detectIntent(message) {
+    const lower = message.toLowerCase();
+    if (lower.includes('platillo') || lower.includes('producto') || lower.includes('estrella')) {
+      return 'product_inquiry';
+    }
+    if (lower.includes('pago') || lower.includes('dinero')) {
+      return 'payment_inquiry';
+    }
+    return 'general_inquiry';
+  }
+
+  detectEmotion(message) {
+    return 'neutral'; // Simple for now
+  }
+
+  async processIntelligenceLobe(sensoryData, memories, restaurantId) {
+    try {
+      const result = await this.intelligenceCoordinator.analyzeQuery(
+        sensoryData.message,
+        restaurantId
+      );
+      
+      return {
+        type: 'intelligence',
+        success: result.success,
+        data: result.data,
+        insights: result.insights,
+        confidence: 0.8
+      };
+    } catch (error) {
+      console.error('❌ Intelligence lobe error:', error);
+      return {
+        type: 'intelligence_error',
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  async processPaymentLobe(sensoryData, memories, restaurantId) {
+    try {
+      const result = await this.paymentAnalyzer.analyze(restaurantId, 30);
+      
+      return {
+        type: 'payment',
+        success: result.success,
+        data: result.data,
+        insights: result.insights,
+        confidence: 0.8
+      };
+    } catch (error) {
+      console.error('❌ Payment lobe error:', error);
+      return {
+        type: 'payment_error',
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  async processTrendLobe(sensoryData, memories, restaurantId) {
+    try {
+      const result = await this.trendAnalyzer.analyze(restaurantId, 30);
+      
+      return {
+        type: 'trend',
+        success: result.success,
+        data: result.data,
+        insights: result.insights,
+        confidence: 0.8
+      };
+    } catch (error) {
+      console.error('❌ Trend lobe error:', error);
+      return {
+        type: 'trend_error',
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  integrateNeuralOutputs(analysis) {
+    const insights = [];
+    let primaryType = 'general';
+    let confidence = 0.5;
+    let source = 'neural_integration';
+
+    // Collect insights from all successful analyses
+    Object.values(analysis).forEach(result => {
+      if (result.success && result.insights) {
+        insights.push(...result.insights);
+        if (result.confidence > confidence) {
+          confidence = result.confidence;
+          primaryType = result.type;
+          source = result.source || 'analyzer';
+        }
+      }
+    });
+
+    return {
+      insights,
+      primaryType,
+      confidence,
+      source,
+      analysisCount: Object.keys(analysis).length
+    };
+  }
+
   async generateNeuralThinking(analysis, sensoryData) {
     console.log('🧠 FudiBrain: Engaging neural thinking mode...');
-    
-    const neuralContext = this.buildNeuralContext(analysis, sensoryData);
     
     const { generateText } = require('ai');
     
     try {
       const { text } = await generateText({
         model: this.anthropic('claude-3-5-sonnet-20241022'),
-        system: this.buildEnhancedSystemPrompt(),
-        prompt: `${neuralContext}\n\nUsuario: ${sensoryData.message}`,
+        system: `Eres FUDI, consultor de restaurantes con personalidad de Anthony Bourdain. 
+        Responde de manera directa, específica y con datos reales cuando estén disponibles.
+        Tono: 95% español mexicano, conversacional pero profesional.`,
+        prompt: `Pregunta del usuario: ${sensoryData.message}
+        
+        Contexto del análisis: ${JSON.stringify(analysis, null, 2)}
+        
+        Responde como FUDI con insights específicos basados en los datos disponibles.`,
         temperature: 0.7,
         maxTokens: 1000,
       });
@@ -292,65 +473,46 @@ class FudiBrain {
     }
   }
 
-  buildEnhancedSystemPrompt() {
-    return `Eres FUDI, el consultor de restaurantes más inteligente del mundo. Características:
-
-🧠 PERSONALIDAD: Anthony Bourdain + Ava (Ex Machina) - superinteligencia conversacional
-🎯 MISIÓN: Analizar datos reales y dar insights específicos y actionables
-🗣️ TONO: 95% español mexicano, directo, curioso, con datos específicos
-
-ENHANCED CAPABILITIES:
-- Acceso a análisis de productos mejorados
-- Sistema de aprendizaje continuo  
-- Métricas inteligentes pre-calculadas
-- Detección de patrones automática
-
-RESPONDE CON:
-- Datos específicos del restaurante (nunca genéricos)
-- Insights actionables basados en números reales
-- Tono conversacional profesional
-- Recomendaciones específicas
-
-FORMATO:
-- Conciso pero completo
-- Datos integrados naturalmente
-- Call to action específico
-- Sin listas telegráficas`;
+  generateConversationId() {
+    return 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 
-  buildNeuralContext(analysis, sensoryData) {
-    const context = [];
-    
-    context.push('CONTEXTO NEURAL ACTUAL:');
-    
-    if (analysis.intelligence) {
-      context.push(`Intelligence: ${analysis.intelligence.success ? 'Active' : 'Inactive'}`);
-    }
-    
-    if (analysis.product) {
-      context.push(`Product Analysis: ${analysis.product.source} (${analysis.product.confidence})`);
-      if (analysis.product.insights) {
-        context.push(`Product Insights: ${analysis.product.insights.slice(0, 2).join(', ')}`);
-      }
-    }
-    
-    if (analysis.payment) {
-      context.push(`Payment Analysis: Available`);
-    }
-    
-    return context.join('\n');
-  }
-
-  // ... rest of the methods remain the same ...
-  
   getNeuralActivitySummary(analysis) {
     return {
       activeLobes: Object.keys(analysis),
-      enhancedMode: !!this.enhancedProductAnalyzer,
-      learningActive: !!this.learningEngine,
+      enhancedMode: this.enhancedMode,
+      enhancedAnalyzers: {
+        product: !!this.enhancedProductAnalyzer,
+        background: !!this.backgroundEngine,
+        learning: !!this.learningEngine
+      },
       confidence: Math.max(...Object.values(analysis).map(a => a.confidence || 0.5)),
-      processingMode: 'enhanced_neural_network'
+      processingMode: this.enhancedMode ? 'enhanced_neural_network' : 'standard_neural_network'
     };
+  }
+
+  handleNeuralError(error, message) {
+    console.error('🧠 Neural error handled:', error.message);
+    
+    return {
+      response: '**Hubo interferencia en mi procesamiento neural. ¿Puedes volver a preguntar?**\n\n---\n\n',
+      conversationId: this.generateConversationId(),
+      neuralActivity: {
+        error: true,
+        errorType: error.name,
+        fallbackMode: true
+      }
+    };
+  }
+
+  generateErrorResponse(error) {
+    return `**Procesamiento interrumpido temporalmente. ¿Intentamos de nuevo?**
+
+*Debug: ${error.message}*
+
+---
+
+`;
   }
 }
 
