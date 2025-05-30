@@ -1,71 +1,129 @@
-// 📁 services/brain/lobes/ProductLobe.js - REPLACE WITH AI SUPERPOWERS
+// 📁 services/brain/lobes/ProductLobe.js - FIXED WITH DEBUG LOGS
 
 const { createClient } = require('@supabase/supabase-js');
-
-// 🚀 IMPORT AI SUPERPOWERS
-const { EnhancedProductAnalyzer } = require('../../intelligence/EnhancedProductAnalyzer');
 
 class ProductLobe {
   constructor(supabaseUrl, supabaseKey) {
     this.supabase = createClient(supabaseUrl, supabaseKey);
     
-    // 🚀 AI SUPERPOWERS ACTIVATED
-    this.enhancedAnalyzer = new EnhancedProductAnalyzer();
-    this.aiSuperpowersActive = true;
+    console.log('🍽️ ProductLobe initializing...');
     
-    console.log('🍽️ ProductLobe initialized with AI superpowers');
+    // 🚀 TRY TO LOAD AI SUPERPOWERS
+    try {
+      console.log('🔍 ATTEMPTING to load EnhancedProductAnalyzer...');
+      
+      // Try different import paths
+      let EnhancedProductAnalyzer;
+      try {
+        console.log('📁 Trying path: ../../intelligence/EnhancedProductAnalyzer');
+        const module1 = require('../../intelligence/EnhancedProductAnalyzer');
+        EnhancedProductAnalyzer = module1.EnhancedProductAnalyzer;
+        console.log('✅ Path 1 SUCCESS');
+      } catch (e1) {
+        console.log('❌ Path 1 failed:', e1.message);
+        try {
+          console.log('📁 Trying path: ../../../services/intelligence/EnhancedProductAnalyzer');
+          const module2 = require('../../../services/intelligence/EnhancedProductAnalyzer');
+          EnhancedProductAnalyzer = module2.EnhancedProductAnalyzer;
+          console.log('✅ Path 2 SUCCESS');
+        } catch (e2) {
+          console.log('❌ Path 2 failed:', e2.message);
+          try {
+            console.log('📁 Trying direct require...');
+            EnhancedProductAnalyzer = require('../../../services/intelligence/EnhancedProductAnalyzer').EnhancedProductAnalyzer;
+            console.log('✅ Direct require SUCCESS');
+          } catch (e3) {
+            console.log('❌ All paths failed:', e3.message);
+            throw new Error('Cannot load EnhancedProductAnalyzer');
+          }
+        }
+      }
+      
+      this.enhancedAnalyzer = new EnhancedProductAnalyzer();
+      this.aiSuperpowersActive = true;
+      console.log('🚀 AI SUPERPOWERS ACTIVATED in ProductLobe');
+      
+    } catch (error) {
+      console.error('💥 FAILED to load AI superpowers:', error.message);
+      this.enhancedAnalyzer = null;
+      this.aiSuperpowersActive = false;
+      console.log('🛡️ ProductLobe will use FALLBACK mode');
+    }
+    
+    console.log(`🍽️ ProductLobe initialized. AI Superpowers: ${this.aiSuperpowersActive ? 'ACTIVE' : 'INACTIVE'}`);
   }
 
   async analyze(restaurantId, days = 30) {
     console.log(`🍽️ ProductLobe analyzing for ${restaurantId} (${days} days)`);
+    console.log(`🤖 AI Superpowers Status: ${this.aiSuperpowersActive ? 'ACTIVE' : 'INACTIVE'}`);
     
     try {
       // 🚀 TRY AI SUPERPOWERS FIRST
-      if (this.aiSuperpowersActive) {
-        console.log('🤖 Activating Enhanced AI Analysis...');
+      if (this.aiSuperpowersActive && this.enhancedAnalyzer) {
+        console.log('🚀 AI SUPERPOWERS ATTEMPT - Starting Enhanced Analysis...');
+        console.log('🤖 Enhanced Analyzer available:', !!this.enhancedAnalyzer);
         
-        const aiAnalysis = await this.enhancedAnalyzer.analyze(restaurantId, days);
-        
-        if (aiAnalysis.success && aiAnalysis.data.products.length > 0) {
-          console.log(`✅ AI Analysis SUCCESS: ${aiAnalysis.data.products.length} products analyzed`);
+        try {
+          const aiAnalysis = await this.enhancedAnalyzer.analyze(restaurantId, days);
+          console.log('🎯 AI Analysis result success:', aiAnalysis.success);
+          console.log('📊 AI Analysis products found:', aiAnalysis.data?.products?.length || 0);
           
-          // 🧠 CONVERT AI INSIGHTS TO NEURAL FORMAT
-          const neuralInsights = this.convertAIToNeuralInsights(aiAnalysis);
-          
-          return {
-            success: true,
-            insights: neuralInsights,
-            data: {
-              topProducts: this.formatTopProducts(aiAnalysis.data.products),
-              aiMetadata: {
-                processingMode: 'ai_enhanced',
-                intelligenceScores: true,
-                marketPositioning: true,
-                aiRecommendations: true
-              },
-              summary: {
-                totalProducts: aiAnalysis.data.products.length,
-                processingMode: 'ai_enhanced'
+          if (aiAnalysis.success && aiAnalysis.data?.products?.length > 0) {
+            console.log('✅ AI ANALYSIS SUCCESS - Converting to neural format...');
+            
+            // 🧠 CONVERT AI INSIGHTS TO NEURAL FORMAT
+            const neuralInsights = this.convertAIToNeuralInsights(aiAnalysis);
+            console.log('🧠 Neural insights generated:', neuralInsights.length);
+            
+            return {
+              success: true,
+              insights: neuralInsights,
+              data: {
+                topProducts: this.formatTopProducts(aiAnalysis.data.products),
+                aiMetadata: {
+                  processingMode: 'ai_enhanced',
+                  intelligenceScores: true,
+                  marketPositioning: true,
+                  aiRecommendations: true
+                },
+                summary: {
+                  totalProducts: aiAnalysis.data.products.length,
+                  processingMode: 'ai_enhanced'
+                }
               }
-            }
-          };
+            };
+          } else {
+            console.log('⚠️ AI Analysis returned no products, falling back');
+          }
+          
+        } catch (aiError) {
+          console.error('💥 AI Analysis FAILED:', aiError.message);
+          console.error('🔍 Error details:', aiError);
         }
+      } else {
+        console.log('🛡️ AI Superpowers not available, using original analysis');
       }
       
       // 🛡️ FALLBACK TO ORIGINAL ANALYSIS
-      console.log('⚠️ AI Analysis failed, using original ProductLobe');
+      console.log('🔄 FALLING BACK to original ProductLobe analysis...');
       return await this.originalProductAnalysis(restaurantId, days);
       
     } catch (error) {
-      console.error('❌ Enhanced ProductLobe error:', error);
+      console.error('❌ ProductLobe analyze error:', error);
       
-      // 🛡️ GRACEFUL DEGRADATION
-      return await this.originalProductAnalysis(restaurantId, days);
+      // 🛡️ ULTIMATE FALLBACK
+      return {
+        success: false,
+        insights: ['❌ Error en análisis de productos'],
+        data: { topProducts: [], summary: { totalProducts: 0 } }
+      };
     }
   }
 
   // 🧠 CONVERT AI INSIGHTS TO NEURAL FORMAT
   convertAIToNeuralInsights(aiAnalysis) {
+    console.log('🧠 Converting AI insights to neural format...');
+    
     const products = aiAnalysis.data.products;
     const starProduct = products[0];
     
@@ -95,8 +153,9 @@ class ProductLobe {
       neuralInsights.push(`🎯 **AI Strategy:** Promociona intensamente → ${promoteHeavily.map(p => p.product_name).slice(0, 3).join(', ')}`);
     }
 
-    neuralInsights.push(`⚡ **Superpowers activos:** Análisis completado con Enhanced AI + Intelligence Scoring`);
+    neuralInsights.push(`⚡ **AI SUPERPOWERS ACTIVOS:** Análisis completado con Enhanced AI + Intelligence Scoring`);
 
+    console.log('✅ Neural insights conversion complete');
     return neuralInsights;
   }
 
@@ -237,8 +296,10 @@ class ProductLobe {
       `🌟 **${starProductName}** ES tu platillo estrella absoluto con **${starProduct.quantity} unidades** vendidas en ${days} días`,
       `🔥 Lidera tu operación generando **$${starProduct.revenue.toFixed(2)}** en revenue (precio promedio: $${starProduct.avgPrice.toFixed(2)})`,
       `📊 Ritmo de venta: **${starProduct.dailyAverage.toFixed(1)} unidades diarias** - este producto está on fire, cabrón`,
-      `🛡️ **Modo original:** Análisis completado sin AI superpowers (Enhanced AI no disponible)`
+      `🛡️ **Modo original:** Análisis completado sin AI superpowers (Enhanced AI falló o no disponible)`
     ];
+
+    console.log('✅ Original analysis complete');
 
     return {
       success: true,

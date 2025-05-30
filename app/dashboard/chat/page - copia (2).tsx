@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { fudiAPI } from '@/lib/api';
-import QuantumNeuralSeparator from '../../../components/QuantumNeuralSeparator';
+import FudiMarkdown from '../../../components/FudiMarkdown';
 
 interface InsightCard {
   id: number;
@@ -444,7 +444,7 @@ export default function DashboardPage() {
                       }`}>
                         {message.type === 'assistant' ? (
                           <div className="text-[15px] leading-relaxed fudi-markdown">
-                            <QuantumNeuralSeparator content={message.content} />
+                            <FudiMarkdown content={message.content} />
                           </div>
                         ) : (
                           <p className="text-[15px] leading-relaxed">{message.content}</p>
@@ -620,16 +620,16 @@ export default function DashboardPage() {
         }
 
         /* Estilos específicos para el Markdown de Fudi */
-        .quantum-neural-markdown {
+        .fudi-markdown {
           word-wrap: break-word;
         }
 
-        .quantum-neural-markdown pre {
+        .fudi-markdown pre {
           white-space: pre-wrap;
           word-break: break-word;
         }
 
-        .quantum-neural-markdown code {
+        .fudi-markdown code {
           font-family: 'Fira Code', 'Consolas', monospace;
         }
         
