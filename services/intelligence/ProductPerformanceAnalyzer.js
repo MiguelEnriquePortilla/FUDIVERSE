@@ -9,17 +9,23 @@ class ProductPerformanceAnalyzer {
     console.log(`📊 Analizando productos de ${days} días...`);
     
     try {
-      // ✅ CAMBIO CRÍTICO: Leer de TRANSACTIONS en lugar de daily_summaries
+      // 🔧 FIX 1: FECHA SIN TIMEZONE ISSUES
+      const endDate = new Date();
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
       
-      console.log(`🗓️ DEBUGGING: Filtro de fecha desde ${startDate.toISOString()} hasta ahora`);
+      // Format dates properly for Supabase
+      const startDateStr = startDate.toISOString().split('T')[0] + 'T00:00:00Z';
+      const endDateStr = endDate.toISOString();
+      
+      console.log(`🗓️ DEBUGGING: Filtro de fecha desde ${startDateStr} hasta ${endDateStr}`);
       
       const { data: transactions, error } = await this.supabase
         .from('transactions')
         .select('*')
         .eq('restaurant_id', restaurantId)
-        .gte('transaction_date', startDate.toISOString());
+        .gte('transaction_date', startDateStr)
+        .lte('transaction_date', endDateStr);
 
       if (error) throw error;
 
@@ -34,7 +40,7 @@ class ProductPerformanceAnalyzer {
 
       console.log(`📊 Analizando ${transactions.length} transacciones...`);
 
-      // ✅ NUEVO: Extraer productos de transactions.items
+      // Extract products from transactions
       const allItems = this.extractProductsFromTransactions(transactions);
       
       if (allItems.length === 0) {
@@ -47,38 +53,40 @@ class ProductPerformanceAnalyzer {
       }
 
       // 🔍 DEBUGGING: Verificar datos específicos de producto 212
-      console.log(`🔍 DEBUGGING PRODUCTO 212:`);
+      console.log(`🔍 DEBUGGING PRODUCTO 212 (AFTER DATE FIX):`);
       const product212Items = allItems.filter(item => item.product_id === 212);
       console.log(`   📦 Items encontrados para producto 212: ${product212Items.length}`);
       console.log(`   📊 Cantidad total producto 212: ${product212Items.reduce((sum, item) => sum + item.quantity, 0)}`);
       console.log(`   💰 Revenue total producto 212: $${product212Items.reduce((sum, item) => sum + item.price, 0).toFixed(2)}`);
-      
-      // Mostrar algunos items de ejemplo
-      if (product212Items.length > 0) {
-        console.log(`   📄 Ejemplo item 212:`, JSON.stringify(product212Items[0], null, 2));
-      }
 
-      // ✅ NUEVO: Obtener nombres de productos desde la tabla products
+      // Get product names
       const productNames = await this.getProductNames(restaurantId);
 
-      // Análisis principal con datos reales
+      // Main analysis
       const productStats = this.aggregateProductDataReal(allItems, productNames);
       const topProducts = this.getTopProducts(productStats);
       const trends = this.analyzeRealTrends(transactions, productNames);
       
-      // 🔍 DEBUGGING: Verificar productStats para 212
+      // 🔍 DEBUGGING: Verificar productStats para 212 después del fix
       if (productStats[212]) {
-        console.log(`🔍 DEBUGGING PRODUCT STATS 212:`, JSON.stringify(productStats[212], null, 2));
+        console.log(`🔍 PRODUCT STATS 212 (AFTER FIX):`, JSON.stringify({
+          id: productStats[212].id,
+          name: productStats[212].name,
+          quantity: productStats[212].quantity,
+          revenue: productStats[212].revenue,
+          transactions: productStats[212].transactions
+        }, null, 2));
       }
       
-      // Generar insights con datos reales
-      const insights = this.generateRealInsights({
+      // 🎯 FIX 2: CONTEXT-AWARE INSIGHTS GENERATION
+      const insights = this.generateContextualInsights({
         productStats,
         topProducts,
         trends,
         totalTransactions: transactions.length,
         totalDays: days,
-        totalItems: allItems.length
+        totalItems: allItems.length,
+        query_context: 'star_product' // Add context for response generation
       });
 
       return {
@@ -92,7 +100,7 @@ class ProductPerformanceAnalyzer {
             totalUnits: Object.values(productStats).reduce((sum, p) => sum + p.quantity, 0),
             totalRevenue: Object.values(productStats).reduce((sum, p) => sum + p.revenue, 0),
             totalTransactions: transactions.length,
-            dateRange: { from: startDate, to: new Date() }
+            dateRange: { from: startDate, to: endDate }
           }
         }
       };
@@ -108,7 +116,6 @@ class ProductPerformanceAnalyzer {
     }
   }
 
-  // ✅ NUEVO: Extraer productos de transactions.items usando estructura real
   extractProductsFromTransactions(transactions) {
     const allItems = [];
     
@@ -124,8 +131,8 @@ class ProductPerformanceAnalyzer {
           
           allItems.push({
             product_id: item.product_id,
-            quantity: item.num || 1, // 'num' es la cantidad en la estructura real
-            price: parseFloat(item.product_sum || 0), // 'product_sum' es el precio total
+            quantity: item.num || 1,
+            price: parseFloat(item.product_sum || 0),
             cost: parseFloat(item.product_cost || 0),
             profit: parseFloat(item.product_profit || 0),
             transaction_date: transaction.transaction_date,
@@ -153,7 +160,6 @@ class ProductPerformanceAnalyzer {
     return allItems;
   }
 
-  // ✅ NUEVO: Obtener nombres de productos desde tabla products
   async getProductNames(restaurantId) {
     try {
       const { data: products } = await this.supabase
@@ -185,7 +191,6 @@ class ProductPerformanceAnalyzer {
     }
   }
 
-  // ✅ NUEVO: Agregar datos de productos con estructura real
   aggregateProductDataReal(allItems, productNames) {
     const products = {};
     
@@ -222,7 +227,7 @@ class ProductPerformanceAnalyzer {
       });
     });
 
-    // Calcular métricas adicionales
+    // Calculate additional metrics
     Object.values(products).forEach(product => {
       product.avgPrice = product.quantity > 0 ? product.revenue / product.quantity : 0;
       product.profitMargin = product.revenue > 0 ? (product.profit / product.revenue) * 100 : 0;
@@ -232,7 +237,7 @@ class ProductPerformanceAnalyzer {
     const top3ByQuantity = Object.values(products)
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 3);
-    console.log(`🔍 TOP 3 por cantidad agregada:`, 
+    console.log(`🔍 TOP 3 por cantidad agregada (AFTER FIX):`, 
       top3ByQuantity.map(p => `${p.name}: ${p.quantity} uds, $${p.revenue.toFixed(2)}`).join(' | ')
     );
 
@@ -257,7 +262,6 @@ class ProductPerformanceAnalyzer {
       }));
   }
 
-  // ✅ NUEVO: Análisis de tendencias con datos reales
   analyzeRealTrends(transactions, productNames) {
     // Dividir en semanas
     const now = new Date();
@@ -283,7 +287,7 @@ class ProductPerformanceAnalyzer {
       stable: []
     };
 
-    // Comparar productos
+    // Compare products
     Object.keys(recentProducts).forEach(productId => {
       const recent = recentProducts[productId];
       const previous = previousProducts[productId];
@@ -309,67 +313,61 @@ class ProductPerformanceAnalyzer {
       }
     });
 
-    // Ordenar por magnitud del cambio
+    // Sort by magnitude of change
     trends.rising.sort((a, b) => parseFloat(b.change) - parseFloat(a.change));
     trends.falling.sort((a, b) => parseFloat(a.change) - parseFloat(b.change));
 
     return trends;
   }
 
-  // ✅ NUEVO: Generar insights con datos reales y tono FUDI profesional
-  generateRealInsights(analysis) {
+  // 🎯 FIX 2: CONTEXT-AWARE INSIGHTS WITH SPECIFIC STAR PRODUCT IDENTIFICATION
+  generateContextualInsights(analysis) {
     const insights = [];
     const { productStats, topProducts, trends, totalTransactions, totalDays, totalItems } = analysis;
     
-    // Producto estrella con datos reales
+    // 🌟 STAR PRODUCT - SPECIFIC IDENTIFICATION (Fix for context)
     if (topProducts.length > 0) {
       const star = topProducts[0];
-      insights.push(`⭐ **${star.name}** lidera tu operación con **${star.quantity} unidades** vendidas en ${totalDays} días`);
-      insights.push(`💰 Generó **$${star.revenue.toFixed(2)}** en revenue con **${star.transactions} transacciones** (precio promedio: $${star.avgPrice.toFixed(2)})`);
+      
+      // 🎯 CONTEXT-SPECIFIC: "¿Cuál es mi platillo estrella?" response
+      insights.push(`🌟 **${star.name}** ES tu platillo estrella absoluto con **${star.quantity} unidades** vendidas en ${totalDays} días`);
+      insights.push(`🔥 Lidera tu operación generando **$${star.revenue.toFixed(2)}** en revenue (precio promedio: $${star.avgPrice.toFixed(2)})`);
+      
+      // Add daily rate for context
+      const dailyRate = (star.quantity / totalDays).toFixed(1);
+      insights.push(`📊 Ritmo de venta: **${dailyRate} unidades diarias** - este producto está on fire, cabrón`);
       
       if (star.profitMargin > 0) {
-        insights.push(`📊 Margen de utilidad del **${star.profitMargin.toFixed(1)}%** - producto altamente rentable`);
+        insights.push(`💰 Margen de utilidad del **${star.profitMargin.toFixed(1)}%** - tu goldmine personal`);
       }
     }
 
-    // Top 3 productos
+    // Top 3 comparison for context
     if (topProducts.length >= 3) {
       const top3 = topProducts.slice(0, 3);
-      const top3Names = top3.map(p => `${p.name} (${p.quantity} uds)`).join(', ');
-      insights.push(`🏆 **Top 3 por volumen:** ${top3Names}`);
+      const runner_up = topProducts[1];
+      const third = topProducts[2];
       
-      const totalTop3Revenue = top3.reduce((sum, p) => sum + p.revenue, 0);
-      const totalRevenue = Object.values(productStats).reduce((sum, p) => sum + p.revenue, 0);
-      const concentration = ((totalTop3Revenue / totalRevenue) * 100).toFixed(1);
-      insights.push(`📈 Estos 3 productos representan el **${concentration}%** de tu revenue total`);
+      insights.push(`🏆 **Dominio total:** ${top3[0].name} (${top3[0].quantity} uds) vs ${runner_up.name} (${runner_up.quantity} uds) vs ${third.name} (${third.quantity} uds)`);
+      
+      const starDominance = ((top3[0].quantity / (top3[0].quantity + runner_up.quantity + third.quantity)) * 100).toFixed(1);
+      insights.push(`👑 **${top3[0].name}** domina el top 3 con ${starDominance}% de participación`);
     }
 
-    // Tendencias de productos
+    // Growth trends for star product
     if (trends.rising.length > 0) {
-      const bestRiser = trends.rising[0];
-      insights.push(`🚀 **${bestRiser.name}** en crecimiento: +${bestRiser.change}% vs semana anterior (de ${bestRiser.previousQuantity} a ${bestRiser.quantity} unidades)`);
+      const starInTrends = trends.rising.find(p => p.id === topProducts[0]?.id);
+      if (starInTrends) {
+        insights.push(`🚀 **Bonus:** Tu estrella está en crecimiento +${starInTrends.change}% vs semana anterior`);
+      } else {
+        const bestRiser = trends.rising[0];
+        insights.push(`📈 **En crecimiento:** ${bestRiser.name} +${bestRiser.change}% (de ${bestRiser.previousQuantity} a ${bestRiser.quantity} unidades)`);
+      }
     }
 
-    if (trends.falling.length > 0) {
-      const worstFaller = trends.falling[0];
-      insights.push(`⚠️ **${worstFaller.name}** requiere atención: ${worstFaller.change}% de caída (de ${worstFaller.previousQuantity} a ${worstFaller.quantity} unidades)`);
-    }
-
-    // Análisis de distribución
-    const lowPerformers = Object.values(productStats).filter(p => p.quantity <= 2);
-    if (lowPerformers.length > 0) {
-      insights.push(`🔍 **${lowPerformers.length} productos** vendieron 2 unidades o menos - evalúa descontinuar o promocionar`);
-    }
-
-    // Insights de rentabilidad
-    const profitableProducts = topProducts.filter(p => p.profitMargin > 50);
-    if (profitableProducts.length > 0) {
-      insights.push(`💎 **${profitableProducts.length} productos** tienen márgenes superiores al 50% - enfoca promoción en estos`);
-    }
-
-    // Recomendación operativa
+    // Operational insights
     const avgTransactionsPerProduct = totalItems / Object.keys(productStats).length;
-    insights.push(`📊 **Promedio:** ${avgTransactionsPerProduct.toFixed(1)} ventas por producto en ${totalDays} días basado en ${totalTransactions} transacciones`);
+    insights.push(`📊 **Contexto:** ${avgTransactionsPerProduct.toFixed(1)} ventas promedio por producto en ${totalDays} días (${totalTransactions} transacciones totales)`);
 
     return insights;
   }
