@@ -13,6 +13,8 @@ class ProductPerformanceAnalyzer {
       const startDate = new Date();
       startDate.setDate(startDate.getDate() - days);
       
+      console.log(`🗓️ DEBUGGING: Filtro de fecha desde ${startDate.toISOString()} hasta ahora`);
+      
       const { data: transactions, error } = await this.supabase
         .from('transactions')
         .select('*')
@@ -44,6 +46,18 @@ class ProductPerformanceAnalyzer {
         };
       }
 
+      // 🔍 DEBUGGING: Verificar datos específicos de producto 212
+      console.log(`🔍 DEBUGGING PRODUCTO 212:`);
+      const product212Items = allItems.filter(item => item.product_id === 212);
+      console.log(`   📦 Items encontrados para producto 212: ${product212Items.length}`);
+      console.log(`   📊 Cantidad total producto 212: ${product212Items.reduce((sum, item) => sum + item.quantity, 0)}`);
+      console.log(`   💰 Revenue total producto 212: $${product212Items.reduce((sum, item) => sum + item.price, 0).toFixed(2)}`);
+      
+      // Mostrar algunos items de ejemplo
+      if (product212Items.length > 0) {
+        console.log(`   📄 Ejemplo item 212:`, JSON.stringify(product212Items[0], null, 2));
+      }
+
       // ✅ NUEVO: Obtener nombres de productos desde la tabla products
       const productNames = await this.getProductNames(restaurantId);
 
@@ -51,6 +65,11 @@ class ProductPerformanceAnalyzer {
       const productStats = this.aggregateProductDataReal(allItems, productNames);
       const topProducts = this.getTopProducts(productStats);
       const trends = this.analyzeRealTrends(transactions, productNames);
+      
+      // 🔍 DEBUGGING: Verificar productStats para 212
+      if (productStats[212]) {
+        console.log(`🔍 DEBUGGING PRODUCT STATS 212:`, JSON.stringify(productStats[212], null, 2));
+      }
       
       // Generar insights con datos reales
       const insights = this.generateRealInsights({
@@ -93,9 +112,16 @@ class ProductPerformanceAnalyzer {
   extractProductsFromTransactions(transactions) {
     const allItems = [];
     
-    transactions.forEach(transaction => {
+    console.log(`🔍 DEBUGGING: Procesando ${transactions.length} transacciones...`);
+    
+    transactions.forEach((transaction, index) => {
       if (transaction.items && Array.isArray(transaction.items)) {
         transaction.items.forEach(item => {
+          // 🔍 DEBUGGING: Log para los primeros items
+          if (index < 3 && item.product_id === 212) {
+            console.log(`🔍 SAMPLE ITEM 212:`, JSON.stringify(item, null, 2));
+          }
+          
           allItems.push({
             product_id: item.product_id,
             quantity: item.num || 1, // 'num' es la cantidad en la estructura real
@@ -110,6 +136,20 @@ class ProductPerformanceAnalyzer {
     });
     
     console.log(`📦 Extraídos ${allItems.length} items de productos`);
+    
+    // 🔍 DEBUGGING: Distribución por product_id
+    const productDistribution = {};
+    allItems.forEach(item => {
+      productDistribution[item.product_id] = (productDistribution[item.product_id] || 0) + 1;
+    });
+    console.log(`🔍 Top 5 productos por frecuencia:`, 
+      Object.entries(productDistribution)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 5)
+        .map(([id, count]) => `${id}: ${count}`)
+        .join(', ')
+    );
+    
     return allItems;
   }
 
@@ -132,6 +172,12 @@ class ProductPerformanceAnalyzer {
       }
       
       console.log(`🏷️ Cargados nombres de ${Object.keys(productMap).length} productos`);
+      
+      // 🔍 DEBUGGING: Verificar si producto 212 tiene nombre
+      if (productMap[212]) {
+        console.log(`🔍 Producto 212 nombre: "${productMap[212].name}"`);
+      }
+      
       return productMap;
     } catch (error) {
       console.log('⚠️ No se pudieron cargar nombres de productos, usando IDs');
@@ -142,6 +188,8 @@ class ProductPerformanceAnalyzer {
   // ✅ NUEVO: Agregar datos de productos con estructura real
   aggregateProductDataReal(allItems, productNames) {
     const products = {};
+    
+    console.log(`🔍 DEBUGGING: Agregando datos de ${allItems.length} items...`);
     
     allItems.forEach(item => {
       const productId = item.product_id;
@@ -180,6 +228,14 @@ class ProductPerformanceAnalyzer {
       product.profitMargin = product.revenue > 0 ? (product.profit / product.revenue) * 100 : 0;
     });
 
+    // 🔍 DEBUGGING: Top 3 productos por quantity
+    const top3ByQuantity = Object.values(products)
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 3);
+    console.log(`🔍 TOP 3 por cantidad agregada:`, 
+      top3ByQuantity.map(p => `${p.name}: ${p.quantity} uds, $${p.revenue.toFixed(2)}`).join(' | ')
+    );
+
     return products;
   }
 
@@ -212,6 +268,8 @@ class ProductPerformanceAnalyzer {
     const previousWeek = transactions.filter(t => 
       new Date(t.transaction_date) >= twoWeeksAgo && new Date(t.transaction_date) < oneWeekAgo
     );
+    
+    console.log(`📈 DEBUGGING TRENDS: Semana reciente: ${recentWeek.length} transacciones, Semana anterior: ${previousWeek.length} transacciones`);
     
     const recentItems = this.extractProductsFromTransactions(recentWeek);
     const previousItems = this.extractProductsFromTransactions(previousWeek);
