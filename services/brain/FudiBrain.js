@@ -1,5 +1,5 @@
 // services/brain/FudiBrain.js
-// 🧠 FUDI NEURAL BRAIN - Main Orchestrator
+// 🧠 FUDI NEURAL BRAIN - Main Orchestrator (FIXED)
 
 const { IntelligenceCoordinator } = require('../intelligence');
 const PaymentAnalyzer = require('../intelligence/PaymentAnalyzer');
@@ -99,8 +99,8 @@ class FudiBrain {
       // 4. PERSONALITY FILTERING (Tone & Style)
       const personalizedResponse = await this.applyPersonality(analysis, sensoryData);
       
-      // 5. RESPONSE GENERATION (Output)
-      const finalResponse = await this.generateResponse(personalizedResponse);
+      // 5. RESPONSE GENERATION (Output) - FIXED TO INCLUDE NEURAL INSIGHTS
+      const finalResponse = await this.generateResponse(personalizedResponse, analysis);
       
       // 6. MEMORY CONSOLIDATION (Learning)
       await this.consolidateMemories(sensoryData, analysis, finalResponse, conversationId);
@@ -310,19 +310,23 @@ class FudiBrain {
     
     try {
       const result = await this.paymentLobe.analyze(sensoryData.restaurantId, 30);
-
       
       return {
         type: 'payment',
         success: true,
-        data: result
+        data: result,
+        // 🎯 EXTRACT INSIGHTS FOR NEURAL PIPELINE
+        insights: result.insights || [],
+        summary: this.extractPaymentSummary(result)
       };
     } catch (error) {
       console.error('💳 Payment Lobe error:', error);
       return {
         type: 'payment',
         success: false,
-        error: error.message
+        error: error.message,
+        insights: [],
+        summary: 'Payment analysis failed'
       };
     }
   }
@@ -336,19 +340,68 @@ class FudiBrain {
         30 // días
       );
 
+      console.log('🍽️ Product Lobe result:', result);
+
       return {
         type: 'product',
         success: true,
-        data: result
+        data: result,
+        // 🎯 EXTRACT INSIGHTS FOR NEURAL PIPELINE
+        insights: result.insights || [],
+        summary: this.extractProductSummary(result)
       };
     } catch (error) {
       console.error('🍽️ Product Lobe error:', error);
       return {
         type: 'product',
         success: false,
-        error: error.message
+        error: error.message,
+        insights: [],
+        summary: 'Product analysis failed'
       };
     }
+  }
+
+  // 🎯 NEW: EXTRACT PAYMENT SUMMARY FOR NEURAL INSIGHTS
+  extractPaymentSummary(paymentResult) {
+    if (!paymentResult.success || !paymentResult.data) {
+      return 'No payment data available';
+    }
+
+    const data = paymentResult.data;
+    const cashCount = data.cashTransactions || 0;
+    const cardCount = data.cardTransactions || 0;
+    const total = cashCount + cardCount;
+    
+    if (total === 0) return 'No transactions found';
+    
+    const cashPercent = ((cashCount / total) * 100).toFixed(1);
+    const avgTicket = data.averageTicket || 0;
+    
+    return `${cashCount} cash (${cashPercent}%) vs ${cardCount} card transactions, $${avgTicket} avg ticket`;
+  }
+
+  // 🎯 NEW: EXTRACT PRODUCT SUMMARY FOR NEURAL INSIGHTS  
+  extractProductSummary(productResult) {
+    if (!productResult.success || !productResult.data) {
+      return 'No product data available';
+    }
+
+    const data = productResult.data;
+    
+    // If we have specific product insights from the analyzer
+    if (productResult.insights && productResult.insights.length > 0) {
+      const firstInsight = productResult.insights[0];
+      return `Product analysis: ${firstInsight.substring(0, 100)}...`;
+    }
+    
+    // If we have structured data
+    if (data.topProducts && data.topProducts.length > 0) {
+      const topProduct = data.topProducts[0];
+      return `Top product: ${topProduct.name} (${topProduct.quantity} units, $${topProduct.revenue})`;
+    }
+    
+    return `Analyzed ${data.totalProducts || 0} products from ${data.totalTransactions || 0} transactions`;
   }
 
   async applyPersonality(analysis, sensoryData) {
@@ -378,23 +431,68 @@ class FudiBrain {
     }
   }
 
-  async generateResponse(personalizedAnalysis) {
-    console.log('🗣️ Response Generator: Creating response...');
+  // 🎯 FIXED: GENERATE RESPONSE WITH NEURAL INSIGHTS
+  async generateResponse(personalizedAnalysis, rawAnalysis) {
+    console.log('🗣️ Response Generator: Creating response with neural insights...');
     
-    // For now, use the intelligence coordinator response
-    // Later we'll integrate with Anthropic for more sophisticated generation
+    // 🧠 EXTRACT NEURAL INSIGHTS FROM ALL ACTIVE LOBES
+    const neuralInsights = this.extractNeuralInsights(rawAnalysis);
+    
+    console.log('🧠 Extracted neural insights:', neuralInsights);
     
     const response = {
       text: this.formatResponse(personalizedAnalysis),
       conversationId: this.generateConversationId(),
       metadata: {
+        // 🎯 CRITICAL FIX: ADD NEURAL INSIGHTS TO METADATA
+        neuralInsights: neuralInsights,
         neuralActivity: Object.keys(personalizedAnalysis),
         processingTime: Date.now(),
-        tone: personalizedAnalysis.tone
+        tone: personalizedAnalysis.tone,
+        activeLobes: this.getActiveLobeNames(rawAnalysis)
       }
     };
     
+    console.log('🧠 Generated response with', neuralInsights.length, 'neural insights');
+    
     return response;
+  }
+
+  // 🎯 NEW: EXTRACT NEURAL INSIGHTS FROM ALL LOBES
+  extractNeuralInsights(analysis) {
+    const insights = [];
+    
+    // Extract insights from each active lobe
+    Object.values(analysis).forEach(lobeResult => {
+      if (lobeResult.success && lobeResult.insights && lobeResult.insights.length > 0) {
+        // Add each insight with lobe metadata
+        lobeResult.insights.forEach(insight => {
+          insights.push({
+            type: lobeResult.type,
+            content: insight,
+            summary: lobeResult.summary,
+            data: lobeResult.data
+          });
+        });
+      } else if (lobeResult.success && lobeResult.summary) {
+        // If no specific insights but we have a summary, use that
+        insights.push({
+          type: lobeResult.type,
+          content: lobeResult.summary,
+          summary: lobeResult.summary,
+          data: lobeResult.data
+        });
+      }
+    });
+    
+    return insights;
+  }
+
+  // 🎯 NEW: GET ACTIVE LOBE NAMES FOR METADATA
+  getActiveLobeNames(analysis) {
+    return Object.keys(analysis).filter(key => 
+      analysis[key] && analysis[key].success
+    );
   }
 
   formatResponse(analysis) {
@@ -443,7 +541,8 @@ class FudiBrain {
       metadata: {
         error: true,
         neuralActivity: ['error_handler'],
-        processingTime: Date.now()
+        processingTime: Date.now(),
+        neuralInsights: [] // Empty insights for error cases
       }
     };
   }
