@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     
     // 🧠 INITIALIZE FUDI BRAIN - NEURAL NETWORK
     const fudiBrain = new FudiBrain(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
       process.env.ANTHROPIC_API_KEY!
     );
