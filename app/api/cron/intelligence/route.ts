@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     console.log(`🏢 Processing restaurant intelligence: ${restaurantId}`);
     
     // Execute systematic intelligence processing (using correct method name)
-    const processingResult = await engine.processRestaurant(restaurantId);
+    const processingResult = await engine.processRestaurantIntelligence(restaurantId);
     
     const processingDuration = Date.now() - processingStartTime;
     const totalDuration = Date.now() - startTime;
