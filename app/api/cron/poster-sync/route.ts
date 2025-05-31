@@ -21,8 +21,8 @@ export async function GET(request: NextRequest) {
     console.log('🔄 Starting automated Poster sync...');
     console.log(`⏰ Sync initiated at: ${new Date().toISOString()}`);
     
-    // 📦 Import DataQuarryImporterV3 (CommonJS - matching existing structure)
-    const DataQuarryImporterV3 = require('../../../../services/dataQuarry/DataQuarryImporterV3.js');
+    // 📦 Import DataQuarryImporterV3 (Named export - matching file structure)
+    const { DataQuarryImporterV3 } = require('../../../../services/dataQuarry/DataQuarryImporterV3.js');
     
     // 🚀 Initialize and run full import (proven working code)
     const importer = new DataQuarryImporterV3();
