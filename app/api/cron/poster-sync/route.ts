@@ -1,5 +1,5 @@
-// 📁 app/api/cron/intelligence/route.ts
-// PHASE 1 - DAY 6: AUTOMATED DAILY INTELLIGENCE PROCESSING
+// 📁 app/api/cron/poster-sync/route.ts
+// PHASE 1 - DAY 5: AUTOMATED DAILY POSTER SYNC
 // According to FUDIVERSE MASTER PLAN
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,87 +11,63 @@ export async function GET(request: NextRequest) {
     // 🔐 Verify cron authorization (CRITICAL SECURITY)
     const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      console.log('🚨 Unauthorized intelligence processing access attempt');
+      console.log('🚨 Unauthorized cron access attempt');
       return NextResponse.json({ 
         error: 'Unauthorized',
         timestamp: new Date().toISOString()
       }, { status: 401 });
     }
 
-    console.log('🧠 Starting automated intelligence processing...');
-    console.log(`⏰ Intelligence processing initiated at: ${new Date().toISOString()}`);
+    console.log('🔄 Starting automated Poster sync...');
+    console.log(`⏰ Sync initiated at: ${new Date().toISOString()}`);
     
-    // 🎯 Import BackgroundIntelligenceEngine (CommonJS - matching existing structure)
-    const { BackgroundIntelligenceEngine } = require('../../../../services/intelligence/BackgroundIntelligenceEngine.js');
+    // 📦 Import DataQuarryImporterV3 (CommonJS - matching existing structure)
+    const DataQuarryImporterV3 = require('../../../../services/dataQuarry/DataQuarryImporterV3.js');
     
-    // 🚀 Initialize intelligence engine
-    const engine = new BackgroundIntelligenceEngine();
-    const processingStartTime = Date.now();
+    // 🚀 Initialize and run full import (proven working code)
+    const importer = new DataQuarryImporterV3();
+    const importStartTime = Date.now();
     
-    // 🏢 Process restaurant systematically (correct method name from existing code)
-    const restaurantId = '13207c90-2ea6-4aa0-bfac-349753d24ea4'; // Main restaurant from Master Plan
+    // Execute the systematic import
+    await importer.runFullImport();
     
-    console.log(`🏢 Processing restaurant intelligence: ${restaurantId}`);
-    
-    // Execute systematic intelligence processing (using correct method name)
-    const processingResult = await engine.processRestaurant(restaurantId);
-    
-    const processingDuration = Date.now() - processingStartTime;
+    const importDuration = Date.now() - importStartTime;
     const totalDuration = Date.now() - startTime;
     
-    console.log(`✅ Intelligence processing completed successfully in ${processingDuration}ms`);
-    console.log(`📊 Metrics generated: ${processingResult?.metricsCount || 'multiple'}`);
+    console.log(`✅ Poster sync completed successfully in ${importDuration}ms`);
     
-    // 📊 Return comprehensive intelligence status (Master Plan requirements)
+    // 📊 Return comprehensive status (Master Plan requirements)
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
-      message: 'Intelligence processing completed successfully',
-      restaurantId: restaurantId,
-      processing: {
-        metricsGenerated: processingResult?.metricsCount || 'systematic_processing',
-        patternsDiscovered: processingResult?.patternsCount || 'pattern_discovery',
-        insightsCreated: processingResult?.insightsCount || 'consumable_insights',
-        cacheUpdated: true
-      },
+      message: 'Poster data sync completed successfully',
       performance: {
-        processingDuration: `${processingDuration}ms`,
+        importDuration: `${importDuration}ms`,
         totalDuration: `${totalDuration}ms`,
-        efficiency: processingDuration < 180000 ? 'optimal' : 'review_needed'
+        efficiency: importDuration < 120000 ? 'optimal' : 'review_needed'
       },
-      pipeline: {
-        dataSource: 'fresh_poster_sync',
-        processingMode: 'systematic_intelligence',
-        readyForConsumption: true
-      },
-      nextScheduledProcessing: '2:00 AM daily (after 1:00 AM Poster sync)',
-      phase: 'PHASE_1_DAY_6_COMPLETE',
-      masterPlanStatus: 'INTELLIGENCE_PIPELINE_ACTIVE'
+      nextScheduledSync: '1:00 AM daily',
+      phase: 'PHASE_1_DAY_5_COMPLETE',
+      masterPlanStatus: 'ON_TRACK'
     });
 
   } catch (error) {
     const totalDuration = Date.now() - startTime;
     
     // 🚨 Comprehensive error handling
-    console.error('❌ Intelligence processing failed:', error);
+    console.error('❌ Poster sync failed:', error);
     
     return NextResponse.json({
       success: false,
       timestamp: new Date().toISOString(),
-      error: 'Intelligence processing failed',
+      error: 'Poster sync failed',
       errorDetails: {
         message: error instanceof Error ? error.message : 'Unknown error',
         duration: `${totalDuration}ms`,
-        phase: 'PHASE_1_DAY_6_ERROR',
-        context: 'BackgroundIntelligenceEngine execution'
+        phase: 'PHASE_1_DAY_5_ERROR'
       },
-      diagnostics: {
-        checkDataAvailability: 'Verify fresh data from Poster sync (1:00 AM)',
-        checkDatabaseConnections: 'Verify Supabase intelligent_metrics table access',
-        checkEngineStatus: 'Review BackgroundIntelligenceEngine logs'
-      },
-      retryRecommendation: 'Manual trigger available via POST method for debugging',
-      escalation: 'Review intelligence processing pipeline and data flow'
+      retryRecommendation: 'Check Poster API credentials and network connectivity',
+      escalation: 'Review DataQuarryImporterV3 logs for detailed diagnostics'
     }, { status: 500 });
   }
 }
@@ -99,32 +75,6 @@ export async function GET(request: NextRequest) {
 // 🎯 FUTURE: POST method for manual triggers (Development/Testing)
 export async function POST(request: NextRequest) {
   // Manual trigger with same logic as GET
-  // Useful for testing intelligence processing independently
-  console.log('🔬 Manual intelligence processing triggered');
+  // Useful for testing before cron activation
   return GET(request);
-}
-
-// 🧠 ADDITIONAL: Health check endpoint for intelligence system
-export async function HEAD(request: NextRequest) {
-  try {
-    // Quick health check without full processing (using corrected import)
-    const { BackgroundIntelligenceEngine } = require('../../../../services/intelligence/BackgroundIntelligenceEngine.js');
-    
-    return new NextResponse(null, {
-      status: 200,
-      headers: {
-        'X-Intelligence-Status': 'healthy',
-        'X-Last-Check': new Date().toISOString(),
-        'X-Phase': 'PHASE_1_DAY_6'
-      }
-    });
-  } catch (error) {
-    return new NextResponse(null, {
-      status: 503,
-      headers: {
-        'X-Intelligence-Status': 'error',
-        'X-Error': 'Engine unavailable'
-      }
-    });
-  }
 }
