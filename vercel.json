@@ -1,0 +1,31 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/poster-sync",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/intelligence",
+      "schedule": "0 2 * * *"
+    }
+  ],
+  "functions": {
+    "app/api/cron/poster-sync/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/intelligence/route.ts": {
+      "maxDuration": 300
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/cron/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ]
+}
