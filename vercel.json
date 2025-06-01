@@ -15,6 +15,12 @@
     },
     "app/api/cron/intelligence/route.ts": {
       "maxDuration": 300
+    },
+    "pages/api/cron/poster-sync.js": {
+      "maxDuration": 300
+    },
+    "pages/api/cron/intelligence.js": {
+      "maxDuration": 300
     }
   },
   "headers": [
