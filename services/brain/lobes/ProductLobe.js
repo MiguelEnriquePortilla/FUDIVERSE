@@ -1,4 +1,4 @@
-// 📁 services/brain/lobes/ProductLobe.js - FIXED WITH DEBUG LOGS
+// 📁 services/brain/lobes/ProductLobe.js - TEMPORAL ENHANCED WITH NEURAL INTELLIGENCE
 
 const { createClient } = require('@supabase/supabase-js');
 
@@ -6,7 +6,7 @@ class ProductLobe {
   constructor(supabaseUrl, supabaseKey) {
     this.supabase = createClient(supabaseUrl, supabaseKey);
     
-    console.log('🍽️ ProductLobe initializing...');
+    console.log('🍽️ ProductLobe initializing with TEMPORAL INTELLIGENCE...');
     
     // 🚀 TRY TO LOAD AI SUPERPOWERS
     try {
@@ -53,156 +53,105 @@ class ProductLobe {
     console.log(`🍽️ ProductLobe initialized. AI Superpowers: ${this.aiSuperpowersActive ? 'ACTIVE' : 'INACTIVE'}`);
   }
 
-  async analyze(restaurantId, days = 30) {
-    console.log(`🍽️ ProductLobe analyzing for ${restaurantId} (${days} days)`);
-    console.log(`🤖 AI Superpowers Status: ${this.aiSuperpowersActive ? 'ACTIVE' : 'INACTIVE'}`);
+  // 🧠 NEW: TEMPORAL-AWARE ANALYSIS
+  async analyzeWithTemporal(restaurantId, temporalIntelligence) {
+    console.log(`🍽️ ProductLobe TEMPORAL ANALYSIS for ${restaurantId}`);
+    console.log(`⏰ Timeframe: ${temporalIntelligence.timeframe.type} (${temporalIntelligence.timeframe.days} days)`);
+    console.log(`🧠 Context: ${temporalIntelligence.context.primary}`);
     
     try {
-      // 🚀 TRY AI SUPERPOWERS FIRST
+      // 📅 EXTRACT TEMPORAL PARAMETERS
+      const { startDate, endDate, days } = temporalIntelligence.dateRange;
+      const { type: timeframeType, label: timeframeLabel } = temporalIntelligence.timeframe;
+      
+      // 🚀 TRY AI SUPERPOWERS FIRST (if available)
       if (this.aiSuperpowersActive && this.enhancedAnalyzer) {
-        console.log('🚀 AI SUPERPOWERS ATTEMPT - Starting Enhanced Analysis...');
-        console.log('🤖 Enhanced Analyzer available:', !!this.enhancedAnalyzer);
+        console.log('🚀 AI SUPERPOWERS TEMPORAL ATTEMPT...');
         
         try {
-          const aiAnalysis = await this.enhancedAnalyzer.analyze(restaurantId, days);
-          console.log('🎯 AI Analysis result success:', aiAnalysis.success);
-          console.log('📊 AI Analysis products found:', aiAnalysis.data?.products?.length || 0);
+          const aiAnalysis = await this.enhancedAnalyzer.analyzeWithDateRange(
+            restaurantId, 
+            startDate, 
+            endDate
+          );
           
           if (aiAnalysis.success && aiAnalysis.data?.products?.length > 0) {
-            console.log('✅ AI ANALYSIS SUCCESS - Converting to neural format...');
+            console.log('✅ AI TEMPORAL ANALYSIS SUCCESS');
             
-            // 🧠 CONVERT AI INSIGHTS TO NEURAL FORMAT
-            const neuralInsights = this.convertAIToNeuralInsights(aiAnalysis);
-            console.log('🧠 Neural insights generated:', neuralInsights.length);
+            // 🧠 CONVERT AI INSIGHTS TO TEMPORAL-AWARE FORMAT
+            const temporalInsights = this.convertAIToTemporalInsights(
+              aiAnalysis, 
+              temporalIntelligence
+            );
             
             return {
               success: true,
-              insights: neuralInsights,
+              insights: temporalInsights,
               data: {
                 topProducts: this.formatTopProducts(aiAnalysis.data.products),
-                aiMetadata: {
-                  processingMode: 'ai_enhanced',
-                  intelligenceScores: true,
-                  marketPositioning: true,
-                  aiRecommendations: true
+                temporalMetadata: {
+                  processingMode: 'ai_temporal_enhanced',
+                  timeframe: temporalIntelligence.timeframe,
+                  context: temporalIntelligence.context,
+                  dateRange: temporalIntelligence.dateRange
                 },
                 summary: {
                   totalProducts: aiAnalysis.data.products.length,
-                  processingMode: 'ai_enhanced'
+                  processingMode: 'ai_temporal_enhanced',
+                  timeframeLabel: timeframeLabel
                 }
               }
             };
           } else {
-            console.log('⚠️ AI Analysis returned no products, falling back');
+            console.log('⚠️ AI Temporal Analysis returned no products, falling back');
           }
           
         } catch (aiError) {
-          console.error('💥 AI Analysis FAILED:', aiError.message);
-          console.error('🔍 Error details:', aiError);
+          console.error('💥 AI Temporal Analysis FAILED:', aiError.message);
         }
-      } else {
-        console.log('🛡️ AI Superpowers not available, using original analysis');
       }
       
-      // 🛡️ FALLBACK TO ORIGINAL ANALYSIS
-      console.log('🔄 FALLING BACK to original ProductLobe analysis...');
-      return await this.originalProductAnalysis(restaurantId, days);
+      // 🛡️ FALLBACK TO ORIGINAL TEMPORAL ANALYSIS
+      console.log('🔄 FALLING BACK to original temporal analysis...');
+      return await this.originalTemporalAnalysis(restaurantId, temporalIntelligence);
       
     } catch (error) {
-      console.error('❌ ProductLobe analyze error:', error);
+      console.error('❌ ProductLobe temporal analyze error:', error);
       
       // 🛡️ ULTIMATE FALLBACK
       return {
         success: false,
-        insights: ['❌ Error en análisis de productos'],
+        insights: ['❌ Error en análisis temporal de productos'],
         data: { topProducts: [], summary: { totalProducts: 0 } }
       };
     }
   }
 
-  // 🧠 CONVERT AI INSIGHTS TO NEURAL FORMAT
-  convertAIToNeuralInsights(aiAnalysis) {
-    console.log('🧠 Converting AI insights to neural format...');
+  // 🛡️ ORIGINAL TEMPORAL ANALYSIS (WITH DATE RANGE SUPPORT)
+  async originalTemporalAnalysis(restaurantId, temporalIntelligence) {
+    console.log('🛡️ Using original ProductLobe temporal analysis');
     
-    const products = aiAnalysis.data.products;
-    const starProduct = products[0];
+    const { startDate, endDate, days } = temporalIntelligence.dateRange;
+    const { type: timeframeType, label: timeframeLabel } = temporalIntelligence.timeframe;
     
-    const neuralInsights = [
-      `🌟 **${starProduct.product_name}** ES tu platillo estrella absoluto con **Intelligence Score del ${(starProduct.intelligence_score * 100).toFixed(0)}%**`,
-      `🚀 Posición de mercado: **${starProduct.ai_insights.market_position.toUpperCase()}** - generando **$${starProduct.performance_metrics.total_revenue}**`,
-      `🤖 AI Recommendation: **${starProduct.ai_insights.recommendation.replace('_', ' ').toUpperCase()}** (${starProduct.performance_metrics.total_quantity} unidades vendidas)`,
-      `📊 Análisis AI: **${products.length} productos** procesados con inteligencia artificial avanzada`,
-      `🧠 Confiabilidad: **${(starProduct.confidence_level * 100).toFixed(0)}%** - datos súper confiables para tomar decisiones`
-    ];
+    console.log(`📊 Analizando productos para ${timeframeLabel}...`);
+    console.log(`🗓️ TEMPORAL DEBUG: Filtro de fecha desde ${startDate} hasta ${endDate}`);
 
-    // Add market analysis
-    const dominant = products.filter(p => p.ai_insights.market_position === 'dominant');
-    const strong = products.filter(p => p.ai_insights.market_position === 'strong');
-    
-    if (dominant.length > 1) {
-      neuralInsights.push(`👑 **Productos dominantes:** ${dominant.length} productos dominando tu mercado`);
-    }
-    
-    if (strong.length > 0) {
-      neuralInsights.push(`💪 **Portfolio fuerte:** ${strong.length} productos con posición sólida en el mercado`);
-    }
-
-    // Add AI recommendations summary
-    const promoteHeavily = products.filter(p => p.ai_insights.recommendation === 'promote_heavily');
-    if (promoteHeavily.length > 0) {
-      neuralInsights.push(`🎯 **AI Strategy:** Promociona intensamente → ${promoteHeavily.map(p => p.product_name).slice(0, 3).join(', ')}`);
-    }
-
-    neuralInsights.push(`⚡ **AI SUPERPOWERS ACTIVOS:** Análisis completado con Enhanced AI + Intelligence Scoring`);
-
-    console.log('✅ Neural insights conversion complete');
-    return neuralInsights;
-  }
-
-  // 📊 FORMAT TOP PRODUCTS FOR NEURAL PIPELINE
-  formatTopProducts(aiProducts) {
-    return aiProducts.slice(0, 10).map((product, index) => ({
-      rank: index + 1,
-      id: product.product_id,
-      name: product.product_name,
-      quantity: product.performance_metrics.total_quantity,
-      revenue: product.performance_metrics.total_revenue,
-      avgPrice: product.performance_metrics.avg_price || (product.performance_metrics.total_revenue / product.performance_metrics.total_quantity),
-      intelligenceScore: (product.intelligence_score * 100).toFixed(1),
-      marketPosition: product.ai_insights.market_position,
-      aiRecommendation: product.ai_insights.recommendation,
-      confidenceLevel: (product.confidence_level * 100).toFixed(0)
-    }));
-  }
-
-  // 🛡️ ORIGINAL PRODUCT ANALYSIS (FALLBACK)
-  async originalProductAnalysis(restaurantId, days) {
-    console.log('🛡️ Using original ProductLobe analysis');
-    
-    // Calculate date range
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - days);
-
-    console.log(`📊 Analizando productos de ${days} días...`);
-    console.log(`🗓️ DEBUGGING: Filtro de fecha desde ${startDate.toISOString()} hasta ${endDate.toISOString()}`);
-
-    // Get transactions for the period
+    // Get transactions for the specific temporal period
     const { data: transactions, error } = await this.supabase
       .from('transactions')
       .select('*')
       .eq('restaurant_id', restaurantId)
-      .gte('transaction_date', startDate.toISOString())
-      .lte('transaction_date', endDate.toISOString())
+      .gte('transaction_date', startDate)
+      .lte('transaction_date', endDate)
       .limit(1000);
 
     if (error) {
-      console.error('❌ Error fetching transactions:', error);
+      console.error('❌ Error fetching temporal transactions:', error);
       throw error;
     }
 
-    console.log(`📊 Analizando ${transactions.length} transacciones...`);
-    console.log(`🔍 DEBUGGING: Procesando ${transactions.length} transacciones...`);
+    console.log(`📊 Analizando ${transactions.length} transacciones para ${timeframeLabel}...`);
 
     // Extract items from transactions
     const allItems = [];
@@ -219,7 +168,7 @@ class ProductLobe {
       }
     });
 
-    console.log(`📦 Extraídos ${allItems.length} items de productos`);
+    console.log(`📦 Extraídos ${allItems.length} items de productos para ${timeframeLabel}`);
 
     // Aggregate by product
     const productStats = {};
@@ -245,12 +194,10 @@ class ProductLobe {
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
 
-    console.log(`🔍 Top 5 productos por frecuencia: ${topProductsByQuantity.map(p => `${p.id}: ${p.transactions}`).join(', ')}`);
-
     if (topProductsByQuantity.length === 0) {
       return {
         success: false,
-        insights: ['❌ No se encontraron datos de productos para el período especificado'],
+        insights: [`❌ No se encontraron datos de productos para ${timeframeLabel}`],
         data: { topProducts: [], summary: { totalProducts: 0 } }
       };
     }
@@ -272,34 +219,31 @@ class ProductLobe {
       });
     }
 
-    // Add names to stats
+    // Add names to stats and calculate metrics
     Object.values(productStats).forEach(stat => {
       stat.name = productNames[stat.id] || `Producto ${stat.id}`;
       stat.avgPrice = stat.quantity > 0 ? stat.revenue / stat.quantity : 0;
-      stat.dailyAverage = stat.quantity / days;
+      
+      // 📅 TEMPORAL-AWARE METRICS
+      if (timeframeType === 'today' || timeframeType === 'yesterday') {
+        stat.dailyMetric = stat.quantity; // Already daily
+      } else {
+        stat.dailyAverage = stat.quantity / days;
+      }
     });
 
     const starProduct = topProductsByQuantity[0];
     const starProductName = productNames[starProduct.id] || `Producto ${starProduct.id}`;
 
-    console.log(`🔍 Producto ${starProduct.id} nombre: "${starProductName}"`);
-    console.log(`🔍 PRODUCT STATS ${starProduct.id} (AFTER FIX): ${JSON.stringify({
-      id: starProduct.id,
-      name: starProductName,
-      quantity: starProduct.quantity,
-      revenue: starProduct.revenue,
-      transactions: starProduct.transactions
-    }, null, 2)}`);
+    // 🧠 GENERATE TEMPORAL-AWARE INSIGHTS
+    const insights = this.generateTemporalInsights(
+      starProduct, 
+      starProductName, 
+      temporalIntelligence, 
+      Object.keys(productStats).length
+    );
 
-    // Generate insights
-    const insights = [
-      `🌟 **${starProductName}** ES tu platillo estrella absoluto con **${starProduct.quantity} unidades** vendidas en ${days} días`,
-      `🔥 Lidera tu operación generando **$${starProduct.revenue.toFixed(2)}** en revenue (precio promedio: $${starProduct.avgPrice.toFixed(2)})`,
-      `📊 Ritmo de venta: **${starProduct.dailyAverage.toFixed(1)} unidades diarias** - este producto está on fire, cabrón`,
-      `🛡️ **Modo original:** Análisis completado sin AI superpowers (Enhanced AI falló o no disponible)`
-    ];
-
-    console.log('✅ Original analysis complete');
+    console.log('✅ Original temporal analysis complete');
 
     return {
       success: true,
@@ -315,15 +259,134 @@ class ProductLobe {
             quantity: product.quantity,
             revenue: product.revenue,
             avgPrice: product.avgPrice,
-            dailyAverage: product.dailyAverage,
+            dailyAverage: product.dailyAverage || product.quantity,
             transactions: product.transactions
           })),
+        temporalMetadata: {
+          processingMode: 'original_temporal',
+          timeframe: temporalIntelligence.timeframe,
+          context: temporalIntelligence.context,
+          dateRange: temporalIntelligence.dateRange
+        },
         summary: {
           totalProducts: Object.keys(productStats).length,
-          processingMode: 'original_fallback'
+          processingMode: 'original_temporal',
+          timeframeLabel: timeframeLabel
         }
       }
     };
+  }
+
+  // 🧠 GENERATE TEMPORAL-AWARE INSIGHTS
+  generateTemporalInsights(starProduct, starProductName, temporalIntelligence, totalProducts) {
+    const { timeframe, context } = temporalIntelligence;
+    const { type: timeframeType, label: timeframeLabel } = timeframe;
+    
+    const insights = [];
+    
+    // 🌟 STAR PRODUCT WITH TEMPORAL CONTEXT
+    if (timeframeType === 'today') {
+      insights.push(`🌟 **${starProductName}** está dominando HOY con **${starProduct.quantity} unidades** vendidas`);
+      insights.push(`🔥 Revenue del día: **$${starProduct.revenue.toFixed(2)}** (precio promedio: $${starProduct.avgPrice.toFixed(2)})`);
+    } else if (timeframeType === 'yesterday') {
+      insights.push(`🌟 **${starProductName}** fue tu estrella AYER con **${starProduct.quantity} unidades** vendidas`);
+      insights.push(`📊 Performance de ayer: **$${starProduct.revenue.toFixed(2)}** en revenue total`);
+    } else if (timeframeType === 'thisWeek') {
+      insights.push(`🌟 **${starProductName}** lidera ESTA SEMANA con **${starProduct.quantity} unidades** vendidas`);
+      insights.push(`📈 Ritmo semanal: **${(starProduct.quantity / 7).toFixed(1)} unidades diarias** de promedio`);
+    } else if (timeframeType === 'thisMonth') {
+      insights.push(`🌟 **${starProductName}** ES tu platillo estrella del MES con **${starProduct.quantity} unidades** vendidas`);
+      insights.push(`🚀 Performance mensual: **$${starProduct.revenue.toFixed(2)}** en revenue`);
+    } else {
+      insights.push(`🌟 **${starProductName}** ES tu platillo estrella en ${timeframeLabel} con **${starProduct.quantity} unidades** vendidas`);
+    }
+    
+    // 📊 TEMPORAL CONTEXT
+    insights.push(`📊 Análisis temporal: **${totalProducts} productos** analizados para ${timeframeLabel}`);
+    
+    // 🧠 TEMPORAL MODE INDICATOR
+    insights.push(`⏰ **Análisis temporal activo:** Datos específicos de ${timeframeLabel} procesados con inteligencia temporal`);
+    
+    return insights;
+  }
+
+  // 🧠 CONVERT AI INSIGHTS TO TEMPORAL-AWARE FORMAT
+  convertAIToTemporalInsights(aiAnalysis, temporalIntelligence) {
+    console.log('🧠 Converting AI insights to temporal-aware format...');
+    
+    const products = aiAnalysis.data.products;
+    const starProduct = products[0];
+    const { timeframe } = temporalIntelligence;
+    const { type: timeframeType, label: timeframeLabel } = timeframe;
+    
+    const temporalInsights = [];
+    
+    // 🌟 TEMPORAL-AWARE STAR PRODUCT
+    temporalInsights.push(`🌟 **${starProduct.product_name}** domina ${timeframeLabel} con **Intelligence Score del ${(starProduct.intelligence_score * 100).toFixed(0)}%**`);
+    
+    // 🚀 TEMPORAL PERFORMANCE
+    if (timeframeType === 'today') {
+      temporalInsights.push(`🔥 Performance HOY: **$${starProduct.performance_metrics.total_revenue}** en revenue actual`);
+    } else if (timeframeType === 'yesterday') {
+      temporalInsights.push(`📊 Performance AYER: **$${starProduct.performance_metrics.total_revenue}** en revenue total`);
+    } else {
+      temporalInsights.push(`🚀 Performance en ${timeframeLabel}: **$${starProduct.performance_metrics.total_revenue}** generados`);
+    }
+    
+    // 🤖 AI RECOMMENDATIONS WITH TEMPORAL CONTEXT
+    temporalInsights.push(`🤖 AI Recommendation para ${timeframeLabel}: **${starProduct.ai_insights.recommendation.replace('_', ' ').toUpperCase()}**`);
+    
+    // 📊 TEMPORAL ANALYSIS SUMMARY
+    temporalInsights.push(`📊 Análisis AI temporal: **${products.length} productos** procesados para ${timeframeLabel}`);
+    
+    // ⚡ AI SUPERPOWERS INDICATOR
+    temporalInsights.push(`⚡ **AI SUPERPOWERS TEMPORAL:** Análisis completado con Enhanced AI + Temporal Intelligence`);
+
+    console.log('✅ AI temporal insights conversion complete');
+    return temporalInsights;
+  }
+
+  // 🛡️ LEGACY ANALYZE METHOD (FOR COMPATIBILITY)
+  async analyze(restaurantId, days = 30) {
+    console.log(`🍽️ ProductLobe legacy analyze for ${restaurantId} (${days} days)`);
+    
+    // Create a basic temporal intelligence object for compatibility
+    const basicTemporal = {
+      timeframe: {
+        type: 'default',
+        days: days,
+        label: `últimos ${days} días`,
+        period: 'default_range'
+      },
+      context: {
+        primary: 'products',
+        confidence: 0.7
+      },
+      dateRange: {
+        startDate: new Date(Date.now() - (days * 24 * 60 * 60 * 1000)).toISOString(),
+        endDate: new Date().toISOString(),
+        days: days,
+        type: 'default'
+      }
+    };
+    
+    return await this.analyzeWithTemporal(restaurantId, basicTemporal);
+  }
+
+  // 📊 FORMAT TOP PRODUCTS FOR NEURAL PIPELINE
+  formatTopProducts(aiProducts) {
+    return aiProducts.slice(0, 10).map((product, index) => ({
+      rank: index + 1,
+      id: product.product_id,
+      name: product.product_name,
+      quantity: product.performance_metrics.total_quantity,
+      revenue: product.performance_metrics.total_revenue,
+      avgPrice: product.performance_metrics.avg_price || (product.performance_metrics.total_revenue / product.performance_metrics.total_quantity),
+      intelligenceScore: (product.intelligence_score * 100).toFixed(1),
+      marketPosition: product.ai_insights.market_position,
+      aiRecommendation: product.ai_insights.recommendation,
+      confidenceLevel: (product.confidence_level * 100).toFixed(0)
+    }));
   }
 }
 

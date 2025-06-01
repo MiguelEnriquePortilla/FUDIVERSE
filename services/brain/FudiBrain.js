@@ -1,5 +1,6 @@
 // 🧠 FudiBrain.js - CLEAN ARCHITECTURE (Master Plan Implementation)
 // ✅ ONLY uses brain/lobes/ components (NO MORE intelligence/ imports)
+// ⏰ NOW WITH TEMPORAL INTELLIGENCE
 
 class FudiBrain {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
@@ -169,21 +170,57 @@ class FudiBrain {
     console.log('🍽️ ProductLobe: Starting analysis...');
     
     try {
-      // Use ProductLobe for analysis
-      const result = await this.productLobe.analyze(restaurantId, 30);
+      // 🧠 USE TEMPORAL PROCESSOR FOR TIME-AWARE ANALYSIS
+      const TemporalProcessor = require('./TemporalProcessor');
+      const temporalProcessor = new TemporalProcessor();
+      
+      // 📅 ANALYZE TEMPORAL CONTEXT
+      const temporalIntelligence = temporalProcessor.analyzeTemporalContext(
+        sensoryData.message, 
+        restaurantId
+      );
+      
+      console.log('⏰ Temporal context analyzed:', {
+        timeframe: temporalIntelligence.timeframe.type,
+        days: temporalIntelligence.timeframe.days,
+        context: temporalIntelligence.context.primary
+      });
+      
+      // 🍽️ USE TIME-AWARE PRODUCTLOBE ANALYSIS
+      const result = await this.productLobe.analyzeWithTemporal(
+        restaurantId, 
+        temporalIntelligence
+      );
       
       if (result && result.success) {
-        console.log('✅ ProductLobe analysis successful');
+        console.log('✅ ProductLobe time-aware analysis successful');
         return {
           type: 'product',
           success: true,
           data: result.data,
           insights: result.insights,
           confidence: 0.9,
-          source: 'product_lobe'
+          source: 'product_lobe_temporal',
+          temporalContext: temporalIntelligence.responseContext
         };
       } else {
-        console.log('⚠️ ProductLobe analysis failed');
+        console.log('⚠️ ProductLobe analysis failed, trying fallback...');
+        
+        // 🛡️ FALLBACK TO REGULAR ANALYSIS
+        const fallbackResult = await this.productLobe.analyze(restaurantId, temporalIntelligence.timeframe.days);
+        
+        if (fallbackResult && fallbackResult.success) {
+          return {
+            type: 'product',
+            success: true,
+            data: fallbackResult.data,
+            insights: fallbackResult.insights,
+            confidence: 0.7,
+            source: 'product_lobe_fallback',
+            temporalContext: temporalIntelligence.responseContext
+          };
+        }
+        
         return {
           type: 'product_failed',
           success: false,
