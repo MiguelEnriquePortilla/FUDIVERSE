@@ -1,1 +1,1 @@
-{  "crons": [    {      "path": "/api/cron/poster-sync",      "schedule": "0 1 * * *"    }  ]} 
+{  "crons": [    {      "path": "/api/cron/poster-sync",      "schedule": "0 1 * * *"    },    {      "path": "/api/cron/intelligence",      "schedule": "0 2 * * *"    }  ]} 
