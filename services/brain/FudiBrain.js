@@ -2,19 +2,18 @@
 // ✅ ONLY uses brain/lobes/ components (NO MORE intelligence/ imports)
 
 class FudiBrain {
-  constructor(supabase, anthropic) {
+  constructor(supabaseUrl, supabaseKey, anthropicKey) {
     console.log('🧠 FudiBrain initializing with CLEAN ARCHITECTURE...');
     
-    this.supabase = supabase;
-    this.anthropic = anthropic;
-    
-    // 🔧 ENVIRONMENT VARIABLES
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // 🔧 STORE PARAMETERS DIRECTLY (MATCHES ROUTE.TS CALL)
+    this.supabaseUrl = supabaseUrl;
+    this.supabaseKey = supabaseKey;
+    this.anthropicKey = anthropicKey;
     
     console.log('🔍 Environment check:', {
       supabaseUrl: supabaseUrl ? 'Available' : 'Missing',
-      supabaseKey: supabaseKey ? 'Available' : 'Missing'
+      supabaseKey: supabaseKey ? 'Available' : 'Missing',
+      anthropicKey: anthropicKey ? 'Available' : 'Missing'
     });
     
     // ✅ INITIALIZE BRAIN LOBES (CLEAN ARCHITECTURE)
@@ -46,8 +45,12 @@ class FudiBrain {
         this.backgroundEngine = new BackgroundIntelligenceEngine();
         console.log('✅ BackgroundIntelligenceEngine loaded');
         
+        // Create supabase client for learning engine
+        const { createClient } = require('@supabase/supabase-js');
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+        
         const { FudiLearningEngine } = require('../intelligence/FudiLearningEngine');
-        this.learningEngine = new FudiLearningEngine(supabase);
+        this.learningEngine = new FudiLearningEngine(supabaseClient);
         console.log('✅ FudiLearningEngine loaded');
         
         this.enhancedMode = true;
@@ -300,9 +303,10 @@ class FudiBrain {
     
     try {
       const { generateText } = require('ai');
+      const { anthropic } = require('@ai-sdk/anthropic');
       
       const { text } = await generateText({
-        model: this.anthropic('claude-3-5-sonnet-20241022'),
+        model: anthropic('claude-3-5-sonnet-20241022'),
         system: `Eres FUDI, consultor de restaurantes con personalidad de Anthony Bourdain. 
         Responde de manera directa, específica y con datos reales cuando estén disponibles.
         Tono: 95% español mexicano, conversacional pero profesional.
