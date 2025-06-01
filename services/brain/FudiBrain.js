@@ -398,6 +398,12 @@ class FudiBrain {
 
 `;
   }
+
+  // ✅ COMPATIBILITY METHOD FOR ROUTE.TS
+  async processMessage(message, restaurantId, conversationId = null) {
+    console.log('🔄 Legacy processMessage called, redirecting to process()');
+    return await this.process(message, restaurantId, conversationId);
+  }
 }
 
 module.exports = FudiBrain;
