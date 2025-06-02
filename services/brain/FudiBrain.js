@@ -2,6 +2,9 @@
 // ✅ ONLY uses brain/lobes/ components (NO MORE intelligence/ imports)
 // ⏰ NOW WITH TEMPORAL INTELLIGENCE
 
+// 🚀 NEW: Intelligent Query Router for Claude Model
+const { IntelligentQueryRouter } = require('../intelligence/IntelligentQueryRouter');
+
 class FudiBrain {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
     console.log('🧠 FudiBrain initializing with CLEAN ARCHITECTURE...');
@@ -25,6 +28,10 @@ class FudiBrain {
       const ProductLobe = require('./lobes/ProductLobe');
       this.productLobe = new ProductLobe(supabaseUrl, supabaseKey);
       console.log('✅ ProductLobe loaded');
+      
+      // 🚀 NEW: Intelligent Query Router (Claude Model)
+      this.intelligentRouter = new IntelligentQueryRouter();
+      console.log('✅ IntelligentQueryRouter loaded');
       
       // TODO: Add more lobes as we create them
       // this.paymentLobe = new PaymentLobe(supabaseUrl, supabaseKey);
@@ -186,8 +193,8 @@ class FudiBrain {
         context: temporalIntelligence.context.primary
       });
       
-      // 🍽️ USE TIME-AWARE PRODUCTLOBE ANALYSIS
-      const result = await this.productLobe.analyzeWithTemporal(
+      // 🍽️ USE INTELLIGENT QUERY ROUTER (Claude Model)
+      const result = await this.intelligentRouter.routeProductQuery(
         restaurantId, 
         temporalIntelligence
       );
