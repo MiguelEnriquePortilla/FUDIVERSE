@@ -1,4 +1,4 @@
-// 📁 services/brain/lobes/ProductLobe.js - TEMPORAL ENHANCED WITH NEURAL INTELLIGENCE
+// 📁 services/brain/lobes/ProductLobe.js - TEMPORAL ENHANCED WITH NEURAL INTELLIGENCE + DEBUG
 
 const { createClient } = require('@supabase/supabase-js');
 
@@ -153,6 +153,17 @@ class ProductLobe {
 
     console.log(`📊 Analizando ${transactions.length} transacciones para ${timeframeLabel}...`);
 
+    // 🔍 DEBUG: Log sample transactions to see structure
+    if (transactions.length > 0) {
+      console.log('🔍 SAMPLE TRANSACTION STRUCTURE:');
+      console.log('Transaction 0:', {
+        id: transactions[0].pos_transaction_id,
+        date: transactions[0].transaction_date,
+        items_count: transactions[0].items?.length || 0,
+        items_sample: transactions[0].items?.slice(0, 2) || 'NO ITEMS'
+      });
+    }
+
     // Extract items from transactions
     const allItems = [];
     transactions.forEach(transaction => {
@@ -162,13 +173,45 @@ class ProductLobe {
             product_id: item.product_id,
             quantity: item.num || 1,
             price: parseFloat(item.product_sum || 0),
-            transaction_date: transaction.transaction_date
+            transaction_date: transaction.transaction_date,
+            // 🔍 DEBUG: Keep original data for inspection
+            originalItem: item
           });
         });
       }
     });
 
     console.log(`📦 Extraídos ${allItems.length} items de productos para ${timeframeLabel}`);
+
+    // 🔍 DEBUG: Ver primeros 5 items para diagnóstico
+    console.log('🔍 PRIMEROS 5 ITEMS DEBUG:');
+    allItems.slice(0, 5).forEach((item, i) => {
+      console.log(`Item ${i + 1}:`, {
+        product_id: item.product_id,
+        product_sum_original: item.originalItem.product_sum,
+        quantity: item.quantity,
+        price_parsed: item.price,
+        originalItem: item.originalItem
+      });
+    });
+
+    // 🔍 DEBUG: Suma total de todos los items
+    const totalItemsValue = allItems.reduce((sum, item) => sum + item.price, 0);
+    console.log('💰 SUMA TOTAL DE TODOS LOS ITEMS:', totalItemsValue);
+
+    // 🔍 DEBUG: Verificar items con precio 0
+    const zeroValueItems = allItems.filter(item => item.price === 0);
+    const validValueItems = allItems.filter(item => item.price > 0);
+    console.log('🔍 ITEMS SIN VALOR (price = 0):', zeroValueItems.length);
+    console.log('🔍 ITEMS CON VALOR (price > 0):', validValueItems.length);
+
+    if (validValueItems.length > 0) {
+      console.log('🔍 SAMPLE VALID ITEM:', {
+        product_id: validValueItems[0].product_id,
+        price: validValueItems[0].price,
+        originalItem: validValueItems[0].originalItem
+      });
+    }
 
     // Aggregate by product
     const productStats = {};
@@ -188,6 +231,24 @@ class ProductLobe {
       productStats[productId].revenue += item.price;
       productStats[productId].transactions++;
     });
+
+    // 🔍 DEBUG: Verificar aggregation results
+    console.log('📊 PRODUCT STATS DEBUG (Top 3):');
+    const topProductsForDebug = Object.entries(productStats)
+      .sort(([,a], [,b]) => b.revenue - a.revenue)
+      .slice(0, 3);
+    
+    topProductsForDebug.forEach(([id, stats]) => {
+      console.log(`Product ${id}:`, {
+        quantity: stats.quantity,
+        revenue: stats.revenue,
+        transactions: stats.transactions,
+        avgPrice: stats.revenue / stats.quantity
+      });
+    });
+
+    const totalRevenue = Object.values(productStats).reduce((sum, stat) => sum + stat.revenue, 0);
+    console.log('💰 TOTAL CALCULATED REVENUE FROM PRODUCT STATS:', totalRevenue);
 
     // Get top products by quantity
     const topProductsByQuantity = Object.values(productStats)
@@ -234,6 +295,16 @@ class ProductLobe {
 
     const starProduct = topProductsByQuantity[0];
     const starProductName = productNames[starProduct.id] || `Producto ${starProduct.id}`;
+
+    // 🔍 DEBUG: Star product details
+    console.log('🌟 STAR PRODUCT DEBUG:', {
+      id: starProduct.id,
+      name: starProductName,
+      quantity: starProduct.quantity,
+      revenue: starProduct.revenue,
+      avgPrice: starProduct.avgPrice,
+      transactions: starProduct.transactions
+    });
 
     // 🧠 GENERATE TEMPORAL-AWARE INSIGHTS
     const insights = this.generateTemporalInsights(
