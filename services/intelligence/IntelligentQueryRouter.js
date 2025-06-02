@@ -236,6 +236,9 @@ class IntelligentQueryRouter {
   // 🧠 FORMAT CLAUDE MODEL RESPONSE (Pre-calculated intelligence)
   formatClaudeModelResponse(productData, paymentData, temporalData, temporalIntelligence, routingDecision) {
     console.log('🧠 Formatting Claude Model response...');
+    console.log('🔍 DEBUG productData length:', productData?.length);
+    console.log('🔍 DEBUG temporalData revenue:', temporalData?.total_revenue);
+    console.log('🔍 DEBUG first product:', productData[0]);
     
     const starProduct = productData[0]; // Already ordered by revenue DESC
     const { timeframe } = temporalIntelligence;
@@ -248,10 +251,16 @@ class IntelligentQueryRouter {
     const starProductQuantity = starProduct.total_quantity || 0;
     const starProductName = starProduct.product_name || 'Producto estrella';
     
+    console.log('🔍 DEBUG star product values:', {
+      name: starProductName,
+      revenue: starProductRevenue,
+      quantity: starProductQuantity
+    });
+    
     if (timeframe.type === 'yesterday') {
-      insights.push(`🌟 **${starProductName}** fue tu ESTRELLA ayer con **${starProductQuantity} unidades** ($${starProductRevenue.toFixed(2)})`);
+      insights.push(`🌟 **${starProductName}** fue tu ESTRELLA ayer con **${starProductQuantity} unidades** (${starProductRevenue.toFixed(2)})`);
     } else {
-      insights.push(`🌟 **${starProductName}** domina con **${starProductQuantity} unidades** ($${starProductRevenue.toFixed(2)})`);
+      insights.push(`🌟 **${starProductName}** domina con **${starProductQuantity} unidades** (${starProductRevenue.toFixed(2)})`);
     }
     
     // 🧠 INTELLIGENT METRICS (PRE-CALCULATED)
@@ -267,11 +276,20 @@ class IntelligentQueryRouter {
     const peakHourRevenue = parseFloat(temporalData?.peak_hour_revenue) || 0;
     const temporalPeakHour = temporalData?.peak_hour || 'N/A';
     
-    insights.push(`💰 **Revenue Total:** $${totalRevenue.toFixed(2)} en ${totalTransactions} transacciones`);
-    insights.push(`⏰ **Peak Intelligence:** ${temporalPeakHour}:00 horas con $${peakHourRevenue.toFixed(2)} en revenue`);
+    console.log('🔍 DEBUG temporal values:', {
+      totalRevenue,
+      totalTransactions,
+      peakHourRevenue,
+      temporalPeakHour
+    });
+    
+    insights.push(`💰 **Revenue Total:** ${totalRevenue.toFixed(2)} en ${totalTransactions} transacciones`);
+    insights.push(`⏰ **Peak Intelligence:** ${temporalPeakHour}:00 horas con ${peakHourRevenue.toFixed(2)} en revenue`);
     
     // 🤖 CLAUDE MODEL SIGNATURE
     insights.push(`⚡ **Claude Model:** Respuesta instantánea con inteligencia pre-calculada`);
+    
+    console.log('🔍 DEBUG final insights:', insights);
     
     // 📊 TOP PRODUCTS (PRE-CALCULATED)
     const topProducts = productData.slice(0, 5).map((product, index) => ({
@@ -286,7 +304,7 @@ class IntelligentQueryRouter {
       peakHour: product.peak_hour || 'N/A'
     }));
     
-    return {
+    const result = {
       success: true,
       insights: insights,
       data: {
@@ -310,6 +328,15 @@ class IntelligentQueryRouter {
         }
       }
     };
+    
+    console.log('🔍 DEBUG final result structure:', {
+      success: result.success,
+      insightsCount: result.insights.length,
+      totalRevenue: result.data.summary.totalRevenue,
+      topProductsCount: result.data.topProducts.length
+    });
+    
+    return result;
   }
 
   // 🔄 FORMAT HYBRID RESPONSE
