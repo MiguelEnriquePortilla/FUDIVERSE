@@ -376,4 +376,4 @@ class ProductLobe {
   }
 }
 
-module.exports = { ProductLobe };
+module.exports = ProductLobe;
