@@ -219,7 +219,8 @@ class FudiBrain {
       
       // 🛡️ FALLBACK TO REGULAR ANALYSIS (ALWAYS WORKS)
       console.log('🔄 Using ProductLobe fallback analysis...');
-      const fallbackResult = await this.productLobe.analyze(restaurantId, temporalIntelligence.timeframe.days);
+      const fallbackResult = await this.productLobe.analyzeWithTemporal(restaurantId, temporalIntelligence);
+
       
       if (fallbackResult && fallbackResult.success) {
         return {
