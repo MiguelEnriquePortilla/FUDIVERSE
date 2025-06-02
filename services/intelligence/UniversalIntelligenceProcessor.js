@@ -510,8 +510,7 @@ class UniversalIntelligenceProcessor {
   async getActiveRestaurants() {
     const { data } = await this.supabase
       .from('restaurants')
-      .select('id, name')
-      .eq('active', true);
+      .select('id, name');
     
     return data || [];
   }
