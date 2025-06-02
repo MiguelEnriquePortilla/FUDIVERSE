@@ -30,7 +30,7 @@ class FudiBrain {
       console.log('✅ ProductLobe loaded');
       
       // 🚀 NEW: Intelligent Query Router (Claude Model)
-      this.intelligentRouter = new IntelligentQueryRouter();
+      this.intelligentRouter = new IntelligentQueryRouter(supabaseUrl, supabaseKey);
       console.log('✅ IntelligentQueryRouter loaded');
       
       // TODO: Add more lobes as we create them

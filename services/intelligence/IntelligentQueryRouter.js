@@ -5,10 +5,10 @@
 const { createClient } = require('@supabase/supabase-js');
 
 class IntelligentQueryRouter {
-  constructor() {
+  constructor(supabaseUrl, supabaseKey) {
     this.supabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
+      supabaseUrl || process.env.SUPABASE_URL,
+      supabaseKey || process.env.SUPABASE_ANON_KEY
     );
     
     console.log('🧠 IntelligentQueryRouter initializing...');

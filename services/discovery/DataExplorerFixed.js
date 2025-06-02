@@ -1,10 +1,10 @@
-// services/discovery/DataExplorer.js - FIXED VERSION
+// services/discovery/DataExplorer.js - FIXED VERSION WITH HARDCODED KEYS
 const { createClient } = require('@supabase/supabase-js');
 
-// Usar variables de entorno directamente (sin dotenv)
+// 🔑 HARDCODED KEYS FOR DEBUGGING (TEMPORARY)
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://vdcqwjodfuwrthcuvzfr.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  'https://vdcqwjodfuwrthcuvzfr.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkY3F3am9kZnV3cnRoY3V2emZyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODEwMjkzNywiZXhwIjoyMDYzNjc4OTM3fQ.Dp4LTTUl9BXQGK1etr8FhtEOeHGTvb5YVseeAlJimb4'
 );
 
 class DataExplorer {
@@ -44,6 +44,7 @@ class DataExplorer {
         console.log(`   ID: ${transaction.pos_transaction_id}`);
         console.log(`   Fecha: ${transaction.transaction_date}`);
         console.log(`   Total: $${transaction.total_amount}`);
+        console.log(`   Amount: $${transaction.amount}`);
         console.log(`   Método pago: ${transaction.payment_method}`);
         
         // ANALIZAR ITEMS - ESTO ES LO CRÍTICO
@@ -93,15 +94,34 @@ class DataExplorer {
           if (key.includes('product') || key.includes('name') || key.includes('id')) {
             usefulFields.push(`✅ ${key} (identificación)`);
           }
-          if (key.includes('price') || key.includes('cost') || key.includes('amount')) {
+          if (key.includes('price') || key.includes('cost') || key.includes('amount') || key.includes('sum')) {
             usefulFields.push(`💰 ${key} (monetario)`);
           }
-          if (key.includes('quantity') || key.includes('count') || key.includes('qty')) {
+          if (key.includes('quantity') || key.includes('count') || key.includes('qty') || key.includes('num')) {
             usefulFields.push(`📊 ${key} (cantidad)`);
           }
         });
         
         usefulFields.forEach(field => console.log(`   ${field}`));
+        
+        // 🎯 CALCULATE REAL REVENUE
+        console.log('\n💰 REAL REVENUE CALCULATION:');
+        let totalItemRevenue = 0;
+        allItems.forEach(item => {
+          Object.keys(item).forEach(key => {
+            if (key.includes('sum') || key.includes('price') || key.includes('amount')) {
+              const value = parseFloat(item[key] || 0);
+              if (value > 0) {
+                console.log(`   💰 ${key}: $${value}`);
+                totalItemRevenue += value;
+              }
+            }
+          });
+        });
+        
+        console.log(`\n📊 TOTAL CALCULATED FROM ITEMS: $${totalItemRevenue}`);
+        console.log(`📊 TRANSACTION TOTAL_AMOUNT: $${data[0].total_amount}`);
+        console.log(`📊 TRANSACTION AMOUNT: $${data[0].amount}`);
         
       } else {
         console.log('❌ No se encontraron items válidos en las transacciones');
