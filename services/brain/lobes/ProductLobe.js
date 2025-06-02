@@ -205,6 +205,22 @@ class ProductLobe {
     console.log('🔍 ITEMS SIN VALOR (price = 0):', zeroValueItems.length);
     console.log('🔍 ITEMS CON VALOR (price > 0):', validValueItems.length);
 
+    // 🚨 BUG FIX: Filtrar items anómalos (quantity > 50 es sospechoso)
+    const anomalousItems = allItems.filter(item => item.quantity > 50);
+    const normalItems = allItems.filter(item => item.quantity <= 50 && item.price > 0);
+    
+    console.log('🚨 ITEMS ANÓMALOS (quantity > 50):', anomalousItems.length);
+    if (anomalousItems.length > 0) {
+      console.log('🔍 SAMPLE ANOMALOUS ITEM:', {
+        product_id: anomalousItems[0].product_id,
+        quantity: anomalousItems[0].quantity,
+        price: anomalousItems[0].price,
+        suspicious: 'QUANTITY_TOO_HIGH'
+      });
+    }
+    
+    console.log('✅ ITEMS NORMALES (quantity <= 50, price > 0):', normalItems.length);
+
     if (validValueItems.length > 0) {
       console.log('🔍 SAMPLE VALID ITEM:', {
         product_id: validValueItems[0].product_id,
@@ -213,9 +229,9 @@ class ProductLobe {
       });
     }
 
-    // Aggregate by product
+    // 🔧 BUG FIX: Aggregate ONLY normal items (no anomalous quantities)
     const productStats = {};
-    allItems.forEach(item => {
+    normalItems.forEach(item => {
       const productId = item.product_id;
       
       if (!productStats[productId]) {
@@ -248,14 +264,15 @@ class ProductLobe {
     });
 
     const totalRevenue = Object.values(productStats).reduce((sum, stat) => sum + stat.revenue, 0);
-    console.log('💰 TOTAL CALCULATED REVENUE FROM PRODUCT STATS:', totalRevenue);
+    console.log('💰 TOTAL CALCULATED REVENUE FROM PRODUCT STATS (NORMAL ITEMS ONLY):', totalRevenue);
+    console.log('📊 ANOMALOUS ITEMS EXCLUDED REVENUE:', anomalousItems.reduce((sum, item) => sum + item.price, 0));
 
-    // Get top products by quantity
-    const topProductsByQuantity = Object.values(productStats)
-      .sort((a, b) => b.quantity - a.quantity)
+    // 🔧 BUG FIX: Get top products by REVENUE (not quantity) - more reliable
+    const topProductsByRevenue = Object.values(productStats)
+      .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
 
-    if (topProductsByQuantity.length === 0) {
+    if (topProductsByRevenue.length === 0) {
       return {
         success: false,
         insights: [`❌ No se encontraron datos de productos para ${timeframeLabel}`],
@@ -293,17 +310,18 @@ class ProductLobe {
       }
     });
 
-    const starProduct = topProductsByQuantity[0];
+    const starProduct = topProductsByRevenue[0];
     const starProductName = productNames[starProduct.id] || `Producto ${starProduct.id}`;
 
-    // 🔍 DEBUG: Star product details
-    console.log('🌟 STAR PRODUCT DEBUG:', {
+    // 🔍 DEBUG: Star product details (now by REVENUE, not quantity)
+    console.log('🌟 STAR PRODUCT DEBUG (BY REVENUE)::', {
       id: starProduct.id,
       name: starProductName,
       quantity: starProduct.quantity,
       revenue: starProduct.revenue,
       avgPrice: starProduct.avgPrice,
-      transactions: starProduct.transactions
+      transactions: starProduct.transactions,
+      reason: 'HIGHEST_REVENUE'
     });
 
     // 🧠 GENERATE TEMPORAL-AWARE INSIGHTS
