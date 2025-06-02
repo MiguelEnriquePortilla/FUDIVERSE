@@ -1,5 +1,5 @@
-// 📁 services/brain/lobes/ProductLobe.js - CLEAN SUPERINTELLIGENCE
-// 🧠 NO MORE AI DEPENDENCIES - PURE NEURAL INTELLIGENCE
+// 📁 services/brain/lobes/ProductLobe.js - SUPERINTELLIGENCE WITH INTELLIGENCE TABLES
+// 🧠 USES INTELLIGENCE TABLES FIRST, FALLBACK TO RAW TRANSACTIONS
 
 const { createClient } = require('@supabase/supabase-js');
 
@@ -8,7 +8,7 @@ class ProductLobe {
     this.supabase = createClient(supabaseUrl, supabaseKey);
     
     console.log('🍽️ ProductLobe initializing with PURE NEURAL INTELLIGENCE...');
-    console.log('🧠 SUPERINTELLIGENCE MODE: No dependencies, pure data analysis');
+    console.log('🧠 SUPERINTELLIGENCE MODE: Intelligence tables + raw data fallback');
     console.log('🎯 MISSION: Dar miedo por lo inteligente');
     
     // 🚀 NEURAL CAPABILITIES
@@ -18,6 +18,7 @@ class ProductLobe {
       anomalyFiltering: true,
       revenueOptimization: true,
       predictiveInsights: true,
+      intelligenceTables: true, // NEW: Uses pre-calculated intelligence
       customerPatterns: false, // Future: CustomerLobe integration
       competitorAnalysis: false // Future: CompetitiveLobe integration
     };
@@ -25,18 +26,24 @@ class ProductLobe {
     console.log('✅ ProductLobe SUPERINTELLIGENCE initialized');
   }
 
-  // 🧠 MAIN TEMPORAL-AWARE ANALYSIS (SUPERINTELLIGENCE VERSION)
+  // 🧠 MAIN TEMPORAL-AWARE ANALYSIS (INTELLIGENCE TABLES FIRST)
   async analyzeWithTemporal(restaurantId, temporalIntelligence) {
     console.log(`🧠 ProductLobe SUPERINTELLIGENCE ANALYSIS for ${restaurantId}`);
     console.log(`⏰ Timeframe: ${temporalIntelligence.timeframe.type} (${temporalIntelligence.timeframe.days} days)`);
     console.log(`🎯 Context: ${temporalIntelligence.context.primary}`);
     
     try {
-      // 📅 EXTRACT TEMPORAL PARAMETERS
-      const { startDate, endDate, days } = temporalIntelligence.dateRange;
-      const { type: timeframeType, label: timeframeLabel } = temporalIntelligence.timeframe;
+      // 🧠 TRY INTELLIGENCE TABLES FIRST (FAST PATH)
+      const intelligenceResult = await this.tryIntelligenceTablesFirst(restaurantId, temporalIntelligence);
       
-      // 🧠 SUPERINTELLIGENCE ANALYSIS
+      if (intelligenceResult.success) {
+        console.log('🚀 INTELLIGENCE TABLES: Data found, using pre-calculated intelligence');
+        return intelligenceResult;
+      }
+
+      console.log('🔄 INTELLIGENCE TABLES: No data found, falling back to raw analysis');
+      
+      // 🛡️ FALLBACK TO RAW TRANSACTIONS (SLOW PATH)
       return await this.performSuperIntelligenceAnalysis(restaurantId, temporalIntelligence);
       
     } catch (error) {
@@ -50,7 +57,139 @@ class ProductLobe {
     }
   }
 
-  // 🤖 SUPERINTELLIGENCE ANALYSIS ENGINE
+  // 🚀 TRY INTELLIGENCE TABLES FIRST (CLAUDE MODEL PATH)
+  async tryIntelligenceTablesFirst(restaurantId, temporalIntelligence) {
+    console.log('🧠 TRYING INTELLIGENCE TABLES: Pre-calculated data lookup...');
+    
+    const { timeframe } = temporalIntelligence;
+    
+    // For yesterday queries, check intelligent_product_daily
+    if (timeframe.type === 'yesterday') {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayDate = yesterday.toISOString().split('T')[0]; // YYYY-MM-DD
+      
+      console.log(`🔍 INTELLIGENCE LOOKUP: Searching for date ${yesterdayDate}`);
+      
+      const { data: intelligentProducts, error } = await this.supabase
+        .from('intelligent_product_daily')
+        .select('*')
+        .eq('restaurant_id', restaurantId)
+        .eq('date', yesterdayDate)
+        .order('total_revenue', { ascending: false });
+
+      if (error) {
+        console.log('⚠️ INTELLIGENCE TABLES: Query error:', error.message);
+        return { success: false };
+      }
+
+      if (!intelligentProducts || intelligentProducts.length === 0) {
+        console.log('📊 INTELLIGENCE TABLES: No data found for yesterday');
+        return { success: false };
+      }
+
+      console.log(`✅ INTELLIGENCE TABLES: Found ${intelligentProducts.length} pre-calculated products`);
+      
+      // Convert intelligence table data to standard format
+      return this.formatIntelligenceTableData(intelligentProducts, temporalIntelligence);
+    }
+
+    // For other timeframes, fall back to raw analysis
+    console.log('🔄 INTELLIGENCE TABLES: Timeframe not supported, using raw analysis');
+    return { success: false };
+  }
+
+  // 🏗️ FORMAT INTELLIGENCE TABLE DATA
+  formatIntelligenceTableData(intelligentProducts, temporalIntelligence) {
+    console.log('🏗️ FORMATTING: Converting intelligence table data...');
+    
+    const topProducts = intelligentProducts.map((product, index) => ({
+      rank: index + 1,
+      id: product.product_id,
+      name: product.product_name || `Producto ${product.product_id}`,
+      quantity: product.total_quantity,
+      revenue: parseFloat(product.total_revenue),
+      avgPrice: parseFloat(product.avg_price || 0),
+      profitMargin: parseFloat(product.profit_margin || 0),
+      velocityScore: product.velocity_score || 0,
+      consistencyScore: product.consistency_score || 0,
+      peakHour: product.peak_hour ? `${product.peak_hour}:00` : 'N/A',
+      intelligenceLevel: 'PRE_CALCULATED',
+      transactions: product.total_transactions || 0
+    }));
+
+    // Generate insights from intelligence data
+    const insights = this.generateIntelligenceInsights(topProducts, temporalIntelligence);
+
+    return {
+      success: true,
+      insights: insights,
+      data: {
+        topProducts: topProducts,
+        intelligence: {
+          dataSource: 'intelligent_product_daily',
+          processingMode: 'pre_calculated',
+          cacheHit: true
+        },
+        temporalMetadata: {
+          processingMode: 'intelligence_tables',
+          timeframe: temporalIntelligence.timeframe,
+          context: temporalIntelligence.context,
+          dateRange: temporalIntelligence.dateRange
+        },
+        summary: {
+          totalProducts: topProducts.length,
+          processingMode: 'intelligence_tables',
+          timeframeLabel: temporalIntelligence.timeframe.label,
+          intelligenceLevel: 'PRE_CALCULATED'
+        }
+      }
+    };
+  }
+
+  // 🧠 GENERATE INSIGHTS FROM INTELLIGENCE DATA
+  generateIntelligenceInsights(topProducts, temporalIntelligence) {
+    console.log('🧠 GENERATING: Intelligence-based insights...');
+    
+    if (topProducts.length === 0) {
+      return ['📊 No hay datos de productos disponibles para este período'];
+    }
+
+    const insights = [];
+    const starProduct = topProducts[0];
+    const { timeframe } = temporalIntelligence;
+
+    // Star product insight
+    if (timeframe.type === 'yesterday') {
+      insights.push(`🌟 **${starProduct.name}** fue tu ESTRELLA ayer con **${starProduct.quantity} unidades** ($${starProduct.revenue.toFixed(2)})`);
+      
+      if (starProduct.profitMargin > 0) {
+        insights.push(`🧠 **Intelligence:** Velocity ${starProduct.velocityScore}/100 | Margin ${starProduct.profitMargin.toFixed(1)}% | Peak: ${starProduct.peakHour}`);
+      }
+    } else {
+      insights.push(`🌟 **${starProduct.name}** domina tu menú con **${starProduct.quantity} unidades** ($${starProduct.revenue.toFixed(2)})`);
+    }
+
+    // Calculate total revenue from all products
+    const totalRevenue = topProducts.reduce((sum, product) => sum + product.revenue, 0);
+    const totalTransactions = topProducts.reduce((sum, product) => sum + product.transactions, 0);
+
+    if (totalRevenue > 0) {
+      insights.push(`💰 **Revenue Total:** $${totalRevenue.toFixed(2)} en ${totalTransactions} transacciones`);
+    }
+
+    // Peak performance insight
+    if (starProduct.peakHour && starProduct.peakHour !== 'N/A') {
+      insights.push(`⏰ **Peak Intelligence:** ${starProduct.peakHour} horas con máxima actividad detectada`);
+    }
+
+    // Intelligence signature
+    insights.push(`⚡ **Claude Model:** Respuesta instantánea con inteligencia pre-calculada`);
+
+    return insights;
+  }
+
+  // 🤖 SUPERINTELLIGENCE ANALYSIS ENGINE (FALLBACK - RAW DATA)
   async performSuperIntelligenceAnalysis(restaurantId, temporalIntelligence) {
     console.log('🤖 SUPERINTELLIGENCE ENGINE: Starting deep analysis...');
     
@@ -121,7 +260,9 @@ class ProductLobe {
         intelligence: {
           anomaliesDetected: superintelligentInsights.anomaliesDetected,
           patternsFound: superintelligentInsights.patternsFound,
-          predictiveInsights: superintelligentInsights.predictiveInsights
+          predictiveInsights: superintelligentInsights.predictiveInsights,
+          dataSource: 'raw_transactions',
+          processingMode: 'real_time_analysis'
         },
         temporalMetadata: {
           processingMode: 'superintelligence',
@@ -270,7 +411,7 @@ class ProductLobe {
     };
   }
 
-  // 🤖 GENERATE SUPERINTELLIGENT INSIGHTS
+  // 🤖 GENERATE SUPERINTELLIGENT INSIGHTS (FOR RAW DATA ANALYSIS)
   async generateSuperIntelligentInsights(productIntelligence, temporalIntelligence, transactionCount) {
     console.log('🤖 SUPERINTELLIGENCE: Generating intelligent insights...');
     
