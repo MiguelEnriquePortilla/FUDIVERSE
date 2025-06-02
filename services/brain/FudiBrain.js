@@ -5,6 +5,9 @@
 // 🚀 NEW: Intelligent Query Router for Claude Model (COMMENTED FOR BUILD)
 // const { IntelligentQueryRouter } = require('../intelligence/IntelligentQueryRouter');
 
+// 🧠 CRITICAL: IntelligentResponseProcessor (THE MISSING PIECE)
+const { IntelligentResponseProcessor } = require('../intelligence/IntelligentResponseProcessor');
+
 class FudiBrain {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
     console.log('🧠 FudiBrain initializing with CLEAN ARCHITECTURE...');
@@ -34,6 +37,10 @@ class FudiBrain {
       // console.log('✅ IntelligentQueryRouter loaded');
       this.intelligentRouter = null; // Fallback mode
       console.log('⚠️ IntelligentQueryRouter disabled for build compatibility');
+      
+      // 🧠 ACTIVATE INTELLIGENT RESPONSE PROCESSOR (THE MISSING PIECE!)
+      this.intelligentResponseProcessor = new IntelligentResponseProcessor();
+      console.log('✅ IntelligentResponseProcessor loaded - DATA → LOGIC bridge active');
       
       // TODO: Add more lobes as we create them
       // this.paymentLobe = new PaymentLobe(supabaseUrl, supabaseKey);
@@ -219,8 +226,7 @@ class FudiBrain {
       
       // 🛡️ FALLBACK TO REGULAR ANALYSIS (ALWAYS WORKS)
       console.log('🔄 Using ProductLobe fallback analysis...');
-      const fallbackResult = await this.productLobe.analyzeWithTemporal(restaurantId, temporalIntelligence);
-
+      const fallbackResult = await this.productLobe.analyze(restaurantId, temporalIntelligence.timeframe.days);
       
       if (fallbackResult && fallbackResult.success) {
         return {
@@ -320,20 +326,39 @@ class FudiBrain {
     console.log('📊 Integrated insights count:', integratedResponse.insights?.length || 0);
     
     try {
-      // Check if we have real insights to humanize
+      // Check if we have real insights to process
       if (integratedResponse.hasRealData && integratedResponse.insights.length > 0) {
-        console.log('🪄 Using Humanizer Universal with real data...');
+        console.log('🧠 USING INTELLIGENTRESPONSEPROCESSOR: Processing insights...');
         
-        let humanizedResponse = this.humanizer.humanize(integratedResponse.insights, {
-          type: integratedResponse.primaryType || 'general',
-          confidence: integratedResponse.confidence || 0.8,
-          source: integratedResponse.source || 'brain_analysis'
+        // 🧠 STEP 1: INTELLIGENT RESPONSE PROCESSING (LOGIC LAYER)
+        const queryContext = {
+          type: this.determineQueryType(sensoryData.message),
+          timeframe: 'yesterday', // From temporal analysis
+          userId: 'restaurant_owner',
+          restaurantId: sensoryData.restaurantId
+        };
+
+        const structuredResponse = await this.intelligentResponseProcessor.processIntelligentResponse(
+          integratedResponse.insights, 
+          queryContext, 
+          {
+            restaurantName: 'tu restaurante'
+          }
+        );
+
+        console.log('🏗️ Structured response ready for humanization');
+        
+        // 🎭 STEP 2: HUMANIZATION (SOUL LAYER - PERSONALITY ONLY)
+        let humanizedResponse = this.humanizer.humanize([structuredResponse.text], {
+          type: 'structured_intelligence',
+          confidence: 0.9,
+          source: 'intelligent_response_processor'
         });
         
         // Add quantum separator
         humanizedResponse += '\n\n---\n\n';
         
-        console.log('✅ Humanized response generated');
+        console.log('✅ INTELLIGENCE → STRUCTURE → PERSONALITY pipeline complete');
         return humanizedResponse;
       }
       
@@ -345,6 +370,23 @@ class FudiBrain {
       console.error('❌ Response generation error:', error);
       return this.generateErrorResponse(error);
     }
+  }
+
+  // 🎯 DETERMINE QUERY TYPE (for IntelligentResponseProcessor)
+  determineQueryType(message) {
+    const queryLower = message.toLowerCase();
+    
+    if (queryLower.includes('venta') || queryLower.includes('revenue') || queryLower.includes('dinero')) {
+      return 'sales_analysis';
+    }
+    if (queryLower.includes('producto') || queryLower.includes('platillo') || queryLower.includes('estrella')) {
+      return 'product_performance';
+    }
+    if (queryLower.includes('hora') || queryLower.includes('tiempo') || queryLower.includes('peak')) {
+      return 'temporal_analysis';
+    }
+    
+    return 'general_analysis';
   }
 
   async generateNeuralThinking(analysis, sensoryData) {
