@@ -270,49 +270,36 @@ Responde como FUDI con datos específicos y insights valiosos.`,
   }
 
   // 📋 FORMAT DATA CONTEXT FOR CLAUDE
-  formatDataContextForClaude(restaurantContext, dataContext) {
+  formatDataContextForClaude(restaurantContext, intelligenceData) {
     let formattedContext = '';
 
     // Restaurant info
     formattedContext += `RESTAURANTE: ${restaurantContext.restaurant.name || 'Restaurant'}\n`;
     formattedContext += `PRODUCTOS DISPONIBLES: ${restaurantContext.totalProducts} productos\n\n`;
 
-    // Intelligence tables (preferred data source)
-    if (dataContext.intelligenceTables.available) {
-      formattedContext += `📊 INTELLIGENCE TABLES (PRE-CALCULADAS):\n`;
+    // Generated Intelligence (our gold data)
+    formattedContext += `🧠 GENERATED INTELLIGENCE (GOLD STANDARD):\n`;
+    formattedContext += `Calidad: ${intelligenceData.restaurantContext.dataQuality.level} (${intelligenceData.restaurantContext.dataQuality.score}/100)\n\n`;
 
-      if (dataContext.intelligenceTables.products.length > 0) {
-        formattedContext += `Productos Intelligence: ${dataContext.intelligenceTables.products.length} registros\n`;
-        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.products.slice(0, 5), null, 2)}\n\n`;
-      }
-
-      if (dataContext.intelligenceTables.payments.length > 0) {
-        formattedContext += `Payments Intelligence: ${dataContext.intelligenceTables.payments.length} registros\n`;
-        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.payments.slice(0, 3), null, 2)}\n\n`;
-      }
-
-      if (dataContext.intelligenceTables.temporal.length > 0) {
-        formattedContext += `Temporal Intelligence: ${dataContext.intelligenceTables.temporal.length} registros\n`;
-        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.temporal.slice(0, 3), null, 2)}\n\n`;
-      }
+    if (intelligenceData.generatedIntelligence.products.available) {
+      formattedContext += `🍽️ Product Intelligence: ${intelligenceData.generatedIntelligence.products.totalProducts} productos\n`;
+      formattedContext += `Top performers: ${JSON.stringify(intelligenceData.generatedIntelligence.products.topPerformers?.slice(0, 3), null, 2)}\n\n`;
     }
 
-    // Recent transactions (fallback data)
-    if (dataContext.recentTransactions.length > 0) {
-      formattedContext += `📈 TRANSACCIONES RECIENTES: ${dataContext.recentTransactions.length} disponibles\n`;
-      formattedContext += `Muestra de datos: ${JSON.stringify(dataContext.recentTransactions.slice(0, 3), null, 2)}\n\n`;
+    if (intelligenceData.generatedIntelligence.sales.available) {
+      formattedContext += `📈 Sales Intelligence: $${intelligenceData.generatedIntelligence.sales.totalRevenue?.toFixed(2)} revenue total\n`;
+      formattedContext += `Mejor día: ${JSON.stringify(intelligenceData.generatedIntelligence.sales.bestDay, null, 2)}\n\n`;
     }
 
-    // Time context
-    formattedContext += `⏰ CONTEXTO TEMPORAL:\n`;
-    formattedContext += `Hoy: ${dataContext.timeframes.today}\n`;
-    formattedContext += `Ayer: ${dataContext.timeframes.yesterday}\n`;
-    formattedContext += `Hace una semana: ${dataContext.timeframes.lastWeek}\n\n`;
+    if (intelligenceData.generatedIntelligence.temporal.available) {
+      formattedContext += `⏰ Temporal Intelligence: Peak hour ${intelligenceData.generatedIntelligence.temporal.peakHour}:00\n`;
+      formattedContext += `Revenue pico: $${intelligenceData.generatedIntelligence.temporal.peakHourRevenue?.toFixed(2)}\n\n`;
+    }
 
-    // Products context
-    if (restaurantContext.products.length > 0) {
-      formattedContext += `🍽️ PRODUCTOS DEL MENÚ:\n`;
-      formattedContext += `${JSON.stringify(restaurantContext.products.slice(0, 10), null, 2)}\n\n`;
+    // Raw data summary
+    if (intelligenceData.rawDataSummary.transactionHistory.available) {
+      formattedContext += `📊 Transaction Summary: ${intelligenceData.rawDataSummary.transactionHistory.count} transactions\n`;
+      formattedContext += `Revenue: $${intelligenceData.rawDataSummary.transactionHistory.totalRevenue?.toFixed(2)}\n\n`;
     }
 
     return formattedContext;
