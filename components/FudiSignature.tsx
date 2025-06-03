@@ -36,13 +36,11 @@ const FudiSignatureComponent: React.FC = () => {
         const charReveal = setInterval(() => {
           if (cycles < 4) {
             const randomChar = randomChars[Math.floor(Math.random() * randomChars.length)];
-            setMainText(revealedText + randomChar + mainFullText.substring(currentIndex + 1).split('').map(() => 
-              Math.random() > 0.7 ? randomChars[Math.floor(Math.random() * randomChars.length)] : ' '
-            ).join(''));
+            setMainText(revealedText + randomChar);
             cycles++;
           } else {
             revealedText += mainFullText[currentIndex];
-            setMainText(revealedText + mainFullText.substring(currentIndex + 1).split('').map(() => ' ').join(''));
+            setMainText(revealedText);
             currentIndex++;
             clearInterval(charReveal);
           }
@@ -192,22 +190,22 @@ const FudiSignatureComponent: React.FC = () => {
           {/* Subtle flame cursor */}
           {subText && subText.length <= subFullText.length && (
             <svg 
-              width="8" 
-              height="12" 
-              viewBox="0 0 8 12" 
+              width="10" 
+              height="14" 
+              viewBox="0 0 10 14" 
               className="inline-block ml-1 transition-all duration-200"
               style={{
                 opacity: Math.sin(glitchPhase * 0.1) * 0.4 + 0.6,
-                filter: `drop-shadow(0 0 ${2 + Math.sin(glitchPhase * 0.08)}px rgba(6, 182, 212, 0.6))`,
+                filter: `drop-shadow(0 0 ${2 + Math.sin(glitchPhase * 0.08)}px rgba(6, 182, 212, 0.8))`,
                 transform: `translateY(${Math.sin(glitchPhase * 0.06) * 0.3}px)`
               }}
             >
               <path
-                d="M4 1 C 3 2.5, 2.5 4, 3 6 C 3.5 8, 5.5 8.5, 6 6.5 C 6.25 5.5, 6 4.5, 5.5 4 C 5 3.5, 4.75 3, 4 1 Z"
+                d="M5 1 C 3.5 3, 2.5 5, 3 7.5 C 3.5 10, 6.5 11, 7.5 8.5 C 8 7, 7.5 5.5, 7 4.5 C 6.5 3.5, 6 2.5, 5 1 Z"
                 fill="url(#miniFlameGradient)"
               />
               <path
-                d="M4 2 C 3.5 3, 3.25 4.5, 3.5 6 C 3.75 7, 4.75 7.25, 5.25 6.25 C 5.5 5.75, 5.25 5.25, 5 4.75 C 4.75 4.25, 4.5 3.75, 4 2 Z"
+                d="M5 2.5 C 4 4, 3.5 6, 4 7.5 C 4.25 8.5, 5.75 9, 6.5 7.5 C 7 6.5, 6.5 5.5, 6 4.5 C 5.5 3.5, 5.25 3, 5 2.5 Z"
                 fill="url(#miniFlameInner)"
               />
               <defs>
@@ -226,33 +224,37 @@ const FudiSignatureComponent: React.FC = () => {
         </div>
       </div>
 
-      {/* Code streaming effect in corners */}
-      <div className="absolute top-0 left-0 text-xs font-mono opacity-20 text-cyan-300">
-        {Array.from({length: 5}).map((_, i) => (
-          <div key={i} style={{
-            transform: `translateY(${Math.sin(glitchPhase * 0.03 + i) * 10}px)`,
-            opacity: Math.sin(glitchPhase * 0.02 + i) * 0.3 + 0.7
-          }}>
-            {randomChars.slice(i * 3, i * 3 + 8)}
+      {/* Code streaming effect - only at start */}
+      {(mainText.length < 3 || subText.length < 3) && (
+        <>
+          <div className="absolute top-2 left-2 text-xs font-mono opacity-15 text-cyan-300">
+            {Array.from({length: 2}).map((_, i) => (
+              <div key={i} style={{
+                transform: `translateY(${Math.sin(glitchPhase * 0.03 + i) * 5}px)`,
+                opacity: Math.sin(glitchPhase * 0.02 + i) * 0.3 + 0.7
+              }}>
+                {randomChars.slice(i * 3, i * 3 + 6)}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className="absolute bottom-0 right-0 text-xs font-mono opacity-20 text-cyan-300">
-        {Array.from({length: 3}).map((_, i) => (
-          <div key={i} style={{
-            transform: `translateY(${Math.sin(glitchPhase * 0.025 + i + 10) * 8}px)`,
-            opacity: Math.sin(glitchPhase * 0.03 + i + 10) * 0.3 + 0.7
-          }}>
-            {randomChars.slice(i * 4 + 10, i * 4 + 18)}
+          <div className="absolute top-2 right-2 text-xs font-mono opacity-15 text-cyan-300">
+            {Array.from({length: 2}).map((_, i) => (
+              <div key={i} style={{
+                transform: `translateY(${Math.sin(glitchPhase * 0.025 + i + 5) * 5}px)`,
+                opacity: Math.sin(glitchPhase * 0.03 + i + 5) * 0.3 + 0.7
+              }}>
+                {randomChars.slice(i * 4 + 10, i * 4 + 16)}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
       <style jsx>{`
         .fudi-signature-container {
           position: relative;
-          min-height: 120px;
+          min-height: 60px;
         }
 
         @keyframes float {
@@ -274,15 +276,15 @@ const FudiSignatureComponent: React.FC = () => {
 
         @media (max-width: 768px) {
           .fudi-signature-container {
-            transform: scale(0.8);
-            min-height: 100px;
+            transform: scale(0.9);
+            min-height: 50px;
           }
         }
 
         @media (max-width: 480px) {
           .fudi-signature-container {
-            transform: scale(0.7);
-            min-height: 90px;
+            transform: scale(0.8);
+            min-height: 45px;
           }
         }
       `}</style>
