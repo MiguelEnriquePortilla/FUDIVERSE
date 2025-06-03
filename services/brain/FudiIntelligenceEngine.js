@@ -93,7 +93,8 @@ class FudiIntelligenceEngine {
           created_at
         `)
         .eq('restaurant_id', restaurantId)
-        .order('transaction_date', { ascending: false });
+        .order('transaction_date', { ascending: false })
+        .limit(null); // Load all transactions
 
       if (error) {
         console.error('❌ Transaction mining error:', error.message);
