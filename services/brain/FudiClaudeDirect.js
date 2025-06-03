@@ -183,7 +183,7 @@ class FudiClaudeDirect {
   }
 
   // 🤖 CLAUDE DIRECT PROCESSING - THE MAGIC HAPPENS HERE
-  async claudeDirectProcessing(message, restaurantContext, dataContext, userContext) {
+  async claudeDirectProcessing(message, restaurantContext, intelligenceData, userContext) {
     console.log('🤖 CLAUDE-DIRECT: Engaging unlimited intelligence...');
 
     try {
@@ -200,7 +200,7 @@ class FudiClaudeDirect {
 IDENTIDAD: Soy Claude, con conocimiento especializado en análisis de restaurantes.
 
 DATOS DEL RESTAURANTE:
-${this.formatDataContextForClaude(restaurantContext, dataContext)}
+${this.formatDataContextForClaude(restaurantContext, intelligenceData)}
 
 ESTILO CLAUDE - CARACTERÍSTICAS EXACTAS:
 
@@ -358,131 +358,6 @@ Responde como FUDI con datos específicos y insights valiosos.`,
       throw error;
     }
   }
-
-  // 📋 FORMAT DATA CONTEXT FOR CLAUDE
-  formatDataContextForClaude(restaurantContext, dataContext) {
-    let formattedContext = '';
-
-    // Restaurant info
-    formattedContext += `RESTAURANTE: ${restaurantContext.restaurant.name || 'Restaurant'}\n`;
-    formattedContext += `PRODUCTOS DISPONIBLES: ${restaurantContext.totalProducts} productos\n\n`;
-
-    // Intelligence tables (preferred data source)
-    if (dataContext.intelligenceTables.available) {
-      formattedContext += `📊 INTELLIGENCE TABLES (PRE-CALCULADAS):\n`;
-      
-      if (dataContext.intelligenceTables.products.length > 0) {
-        formattedContext += `Productos Intelligence: ${dataContext.intelligenceTables.products.length} registros\n`;
-        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.products.slice(0, 5), null, 2)}\n\n`;
-      }
-
-      if (dataContext.intelligenceTables.payments.length > 0) {
-        formattedContext += `Payments Intelligence: ${dataContext.intelligenceTables.payments.length} registros\n`;
-        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.payments.slice(0, 3), null, 2)}\n\n`;
-      }
-
-      if (dataContext.intelligenceTables.temporal.length > 0) {
-        formattedContext += `Temporal Intelligence: ${dataContext.intelligenceTables.temporal.length} registros\n`;
-        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.temporal.slice(0, 3), null, 2)}\n\n`;
-      }
-    }
-
-    // Recent transactions (fallback data)
-    if (dataContext.recentTransactions.length > 0) {
-      formattedContext += `📈 TRANSACCIONES RECIENTES: ${dataContext.recentTransactions.length} disponibles\n`;
-      formattedContext += `Muestra de datos: ${JSON.stringify(dataContext.recentTransactions.slice(0, 3), null, 2)}\n\n`;
-    }
-
-    // Time context
-    formattedContext += `⏰ CONTEXTO TEMPORAL:\n`;
-    formattedContext += `Hoy: ${dataContext.timeframes.today}\n`;
-    formattedContext += `Ayer: ${dataContext.timeframes.yesterday}\n`;
-    formattedContext += `Hace una semana: ${dataContext.timeframes.lastWeek}\n\n`;
-
-    // Products context
-    if (restaurantContext.products.length > 0) {
-      formattedContext += `🍽️ PRODUCTOS DEL MENÚ:\n`;
-      formattedContext += `${JSON.stringify(restaurantContext.products.slice(0, 10), null, 2)}\n\n`;
-    }
-
-    return formattedContext;
-  }
-
-  // 🆘 ERROR HANDLING
-  async handleError(error, message) {
-    console.log('🆘 CLAUDE-DIRECT: Handling error gracefully...');
-    
-    return {
-      success: false,
-      response: `Disculpa, tuve un problema procesando tu consulta sobre "${message}". Mi sistema de inteligencia directa está experimentando interferencias temporales. ¿Podrías intentar de nuevo?\n\n---`,
-      metadata: {
-        architecture: 'claude_direct',
-        error: true,
-        errorMessage: error.message
-      }
-    };
-  }
-
-  // 📊 SYSTEM STATUS
-  getSystemStatus() {
-    return {
-      architecture: 'claude_direct',
-      intelligence: 'unlimited',
-      adaptability: 'infinite',
-      functionsRequired: 0,
-      scalability: 'unlimited',
-      description: 'Claude processes any query directly with restaurant data',
-      advantages: [
-        'Handles any question type',
-        'No function limitations',
-        'Infinite adaptability',
-        'Fewer points of failure',
-        'Natural intelligence processing'
-      ]
-    };
-  }
-
-  // 🧪 TEST METHOD
-  async testSystem() {
-    console.log('🧪 Testing CLAUDE-DIRECT system...');
-    
-    const testQueries = [
-      "¿cómo estuvieron las ventas ayer?",
-      "¿qué producto vendo más los martes?",
-      "dame un análisis completo de la semana pasada",
-      "compara mis tacos vs pizzas",
-      "¿a qué hora vendo más?"
-    ];
-
-    console.log('🧪 Test queries ready:', testQueries.length);
-    console.log('✅ CLAUDE-DIRECT can handle ALL of these and more');
-    
-    return {
-      testResult: 'ready',
-      adaptability: 'unlimited',
-      questionsSupported: 'infinite'
-    };
-  }
 }
 
 module.exports = { FudiClaudeDirect };
-
-// 🎯 USAGE EXAMPLE:
-/*
-const { FudiClaudeDirect } = require('./FudiClaudeDirect');
-
-const claudeDirect = new FudiClaudeDirect(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY,
-  process.env.ANTHROPIC_API_KEY
-);
-
-// Handle ANY query type:
-const result = await claudeDirect.processQuery(
-  "Dame ventas de martes a viernes de hace 2 semanas comparado con esta semana",
-  restaurantId
-);
-
-console.log('Claude Response:', result.response);
-// Expected: Detailed, specific analysis that no function could handle
-*/
