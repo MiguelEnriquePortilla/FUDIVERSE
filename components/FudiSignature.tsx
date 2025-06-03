@@ -8,7 +8,12 @@ interface FudiSignatureProps {
 // FUDI SIGNATURE COMPONENT
 const FudiSignatureComponent: React.FC = () => {
   const [breathPhase, setBreathPhase] = useState(0);
+  const [typewriterText, setTypewriterText] = useState('');
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  
+  const fullText = 'JOIN_THE_FUDIVERSE';
 
+  // Breathing animation
   useEffect(() => {
     const interval = setInterval(() => {
       setBreathPhase(prev => (prev + 1) % 360);
@@ -17,8 +22,25 @@ const FudiSignatureComponent: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Typewriter effect
+  useEffect(() => {
+    let currentIndex = 0;
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setTypewriterText(fullText.substring(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
+        setIsTypingComplete(true);
+      }
+    }, 120); // 120ms per character for smooth typing
+
+    return () => clearInterval(typingInterval);
+  }, []);
+
   const breathIntensity = 0.8 + Math.sin(breathPhase * 0.05) * 0.2;
   const glowIntensity = 0.3 + Math.sin(breathPhase * 0.03) * 0.1;
+  const cursorIntensity = 0.6 + Math.sin(breathPhase * 0.08) * 0.4;
 
   return (
     <div className="fudi-signature-container flex flex-col items-center justify-center py-6 mt-4">
@@ -78,16 +100,87 @@ const FudiSignatureComponent: React.FC = () => {
         </svg>
       </div>
 
-      {/* FUDI Brand Mark */}
-      <div 
-        className="text-xs font-mono tracking-[0.2em] transition-all duration-500"
-        style={{
-          color: `rgba(6, 182, 212, ${0.6 + glowIntensity})`,
-          textShadow: `0 0 ${1 + glowIntensity * 2}px rgba(6, 182, 212, 0.3)`,
-          letterSpacing: '0.15em'
-        }}
-      >
-        JOIN_THE_FUDIVERSE
+      {/* FUDI Brand Mark with Typewriter Effect */}
+      <div className="flex items-center justify-center space-x-1">
+        {/* Typewriter text */}
+        <div 
+          className="text-xs font-mono tracking-[0.2em] transition-all duration-300"
+          style={{
+            color: `rgba(6, 182, 212, ${0.6 + glowIntensity})`,
+            textShadow: `0 0 ${1 + glowIntensity * 2}px rgba(6, 182, 212, 0.3)`,
+            letterSpacing: '0.15em'
+          }}
+        >
+          {typewriterText}
+        </div>
+        
+        {/* Animated Flame Cursor */}
+        <div className="relative flex items-center">
+          <svg 
+            width="12" 
+            height="18" 
+            viewBox="0 0 12 18" 
+            className="transition-all duration-200"
+            style={{
+              opacity: cursorIntensity,
+              filter: `drop-shadow(0 0 ${1 + cursorIntensity * 2}px rgba(6, 182, 212, ${cursorIntensity * 0.8}))`,
+              transform: `scale(${0.8 + cursorIntensity * 0.2}) translateY(${Math.sin(breathPhase * 0.06) * 0.5}px)`
+            }}
+          >
+            {/* Flame cursor shape */}
+            <path
+              d="M6 1 C 4.5 3, 3 6, 3.5 9 C 4 12, 7.5 13.5, 9 10.5 C 9.5 9, 9 7.5, 8.5 6.75 C 8 6, 7.5 5.25, 6 1 Z"
+              fill="url(#flameCursorGradient)"
+              className="transition-all duration-300"
+              style={{
+                opacity: cursorIntensity
+              }}
+            />
+            
+            {/* Inner flame core */}
+            <path
+              d="M6 2.5 C 5.25 4.5, 4.5 6.75, 5 9 C 5.25 10.5, 7 11.25, 7.75 9.75 C 8 9, 7.75 8.25, 7.5 7.5 C 7.25 6.75, 7 6, 6 2.5 Z"
+              fill="url(#innerFlameCursor)"
+              className="transition-all duration-500"
+              style={{
+                opacity: cursorIntensity * 0.9
+              }}
+            />
+
+            {/* Cursor particle */}
+            <circle 
+              cx="6" 
+              cy={11 + Math.sin(breathPhase * 0.09) * 0.8}
+              r="0.4" 
+              fill="rgba(255, 255, 255, 0.8)"
+              style={{
+                opacity: Math.sin(breathPhase * 0.12) * 0.4 + 0.6
+              }}
+            />
+
+            {/* Gradients for cursor */}
+            <defs>
+              <linearGradient id="flameCursorGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stopColor="rgba(6, 182, 212, 1)" />
+                <stop offset="50%" stopColor="rgba(56, 189, 248, 0.9)" />
+                <stop offset="100%" stopColor="rgba(147, 197, 253, 0.7)" />
+              </linearGradient>
+              <linearGradient id="innerFlameCursor" x1="0%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stopColor="rgba(6, 182, 212, 0.8)" />
+                <stop offset="100%" stopColor="rgba(255, 255, 255, 0.6)" />
+              </linearGradient>
+            </defs>
+          </svg>
+          
+          {/* Cursor glow effect */}
+          <div 
+            className="absolute inset-0 w-3 h-4 rounded-full transition-all duration-300 pointer-events-none"
+            style={{
+              background: `radial-gradient(ellipse, rgba(6, 182, 212, ${cursorIntensity * 0.3}) 0%, transparent 70%)`,
+              transform: `scale(${1 + cursorIntensity * 0.5})`
+            }}
+          />
+        </div>
       </div>
 
       {/* Subtle connection line */}
