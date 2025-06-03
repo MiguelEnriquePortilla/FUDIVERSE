@@ -155,12 +155,12 @@ class FudiIntelligenceEngine {
     
     // 📊 GENERATE INTELLIGENCE FROM RAW DATA
     const productIntelligence = await this.generateProductIntelligence(rawData.transactions, rawData.products, rawData.restaurant.id);
-    const salesIntelligence = this.generateSalesIntelligence(rawData.transactions);
-    const temporalIntelligence = this.generateTemporalIntelligence(rawData.transactions);
-    const customerIntelligence = this.generateCustomerIntelligence(rawData.transactions);
-    const financialIntelligence = this.generateFinancialIntelligence(rawData.transactions, rawData.products);
-    const operationalIntelligence = this.generateOperationalIntelligence(rawData.transactions, rawData.products);
-    
+    const salesIntelligence = await this.generateSalesIntelligence(rawData.transactions);
+    const temporalIntelligence = await this.generateTemporalIntelligence(rawData.transactions);
+    const customerIntelligence = await this.generateCustomerIntelligence(rawData.transactions);
+    const financialIntelligence = await this.generateFinancialIntelligence(rawData.transactions, rawData.products);
+    const operationalIntelligence = await this.generateOperationalIntelligence(rawData.transactions, rawData.products);
+
     // 🎯 ASSESS INTELLIGENCE QUALITY
     const intelligenceQuality = this.assessIntelligenceQuality({
       products: productIntelligence,
