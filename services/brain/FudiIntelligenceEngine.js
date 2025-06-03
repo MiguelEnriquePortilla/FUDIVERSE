@@ -100,8 +100,8 @@ class FudiIntelligenceEngine {
         // 📅 ADD DATE FILTER IF PROVIDED
         if (dateFilter && dateFilter.startDate && dateFilter.endDate) {
         query = query
-            .gte('transaction_date', dateFilter.startDate)
-            .lte('transaction_date', dateFilter.endDate);
+        .gte('transaction_date', dateFilter.startDate)
+        .lte('transaction_date', dateFilter.endDate + 'T23:59:59');
         }
 
         const { data: transactions, error } = await query
