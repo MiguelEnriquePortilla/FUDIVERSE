@@ -15,15 +15,18 @@ class FudiIntelligenceEngine {
   }
 
   // 🎯 MAIN MAGIC: Transform ANY restaurant data into 95/100+ intelligence
-  async transformRestaurantData(restaurantId) {
+  async transformRestaurantData(restaurantId, dateFilter = null) {
     console.log(`🚀 TRANSFORMING: Converting restaurant ${restaurantId} data into pure intelligence...`);
+    if (dateFilter) {
+      console.log(`📅 Date filter applied: ${dateFilter.startDate} to ${dateFilter.endDate}`);
+    }
 
     try {
       // 🏪 GET BASIC RESTAURANT INFO
       const restaurantBasics = await this.getRestaurantBasics(restaurantId);
       
       // 📈 GET RAW TRANSACTIONS (The gold mine)
-      const rawTransactions = await this.getRawTransactions(restaurantId);
+      const rawTransactions = await this.getRawTransactions(restaurantId, dateFilter);
       
       // 🍽️ GET RAW PRODUCTS (The catalog)
       const rawProducts = await this.getRawProducts(restaurantId);
@@ -94,7 +97,7 @@ class FudiIntelligenceEngine {
         `)
         .eq('restaurant_id', restaurantId)
         .order('transaction_date', { ascending: false })
-        .limit(500); // Load all transactions
+        .limit(null); // Remove default 1000 limit - get ALL transactions
 
       if (error) {
         console.error('❌ Transaction mining error:', error.message);
