@@ -108,7 +108,7 @@ const FudiSignatureComponent: React.FC = () => {
   const shouldGlitch = Math.random() > 0.95;
 
   return (
-    <div className="fudi-signature-container relative flex flex-col items-center justify-center py-8 mt-6 overflow-hidden">
+    <div className="fudi-signature-container relative flex flex-col items-center justify-center py-4 mt-4 overflow-hidden">
       
       {/* Digital Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -138,18 +138,18 @@ const FudiSignatureComponent: React.FC = () => {
       </div>
 
       {/* Main Title - FudiGPT */}
-      <div className="relative mb-3">
+      <div className="relative mb-2">
         <div 
-          className="text-3xl font-bold tracking-wider font-mono transition-all duration-200"
+          className="text-lg font-bold tracking-wide font-mono transition-all duration-200"
           style={{
             color: 'rgba(6, 182, 212, 0.95)',
             textShadow: `
-              0 0 10px rgba(6, 182, 212, 0.6),
-              0 0 20px rgba(6, 182, 212, 0.4),
-              0 0 30px rgba(6, 182, 212, 0.2)
+              0 0 8px rgba(6, 182, 212, 0.6),
+              0 0 16px rgba(6, 182, 212, 0.4),
+              0 0 24px rgba(6, 182, 212, 0.2)
             `,
             filter: shouldGlitch ? `hue-rotate(${Math.random() * 30}deg) saturate(${1.2 + Math.random() * 0.3})` : 'none',
-            transform: shouldGlitch ? `translateX(${Math.random() * 4 - 2}px)` : 'none'
+            transform: shouldGlitch ? `translateX(${Math.random() * 2 - 1}px)` : 'none'
           }}
         >
           {mainText}
@@ -158,19 +158,19 @@ const FudiSignatureComponent: React.FC = () => {
           <div 
             className="absolute top-0 left-0 w-full h-full pointer-events-none"
             style={{
-              background: `linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.3) 50%, transparent 100%)`,
+              background: `linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.2) 50%, transparent 100%)`,
               transform: `translateX(${Math.sin(glitchPhase * 0.02) * 200}%)`,
-              opacity: glitchIntensity * 0.5
+              opacity: glitchIntensity * 0.3
             }}
           />
         </div>
         
         {/* Glow effect behind main text */}
         <div 
-          className="absolute inset-0 text-3xl font-bold tracking-wider font-mono blur-sm -z-10"
+          className="absolute inset-0 text-lg font-bold tracking-wide font-mono blur-sm -z-10"
           style={{
-            color: 'rgba(6, 182, 212, 0.3)',
-            transform: 'scale(1.1)'
+            color: 'rgba(6, 182, 212, 0.2)',
+            transform: 'scale(1.05)'
           }}
         >
           {mainText}
@@ -180,24 +180,48 @@ const FudiSignatureComponent: React.FC = () => {
       {/* Subtitle - join_the_fudiverse */}
       <div className="relative">
         <div 
-          className="text-sm font-mono tracking-[0.2em] uppercase transition-all duration-300"
+          className="text-xs font-mono tracking-[0.15em] uppercase transition-all duration-300"
           style={{
-            color: 'rgba(56, 189, 248, 0.8)',
-            textShadow: '0 0 8px rgba(56, 189, 248, 0.4)',
-            letterSpacing: '0.2em'
+            color: 'rgba(56, 189, 248, 0.7)',
+            textShadow: '0 0 6px rgba(56, 189, 248, 0.3)',
+            letterSpacing: '0.15em'
           }}
         >
           {subText}
           
-          {/* Blinking cursor for subtitle */}
+          {/* Subtle flame cursor */}
           {subText && subText.length <= subFullText.length && (
-            <span 
-              className="inline-block w-2 h-4 ml-1 bg-cyan-400"
+            <svg 
+              width="8" 
+              height="12" 
+              viewBox="0 0 8 12" 
+              className="inline-block ml-1 transition-all duration-200"
               style={{
-                opacity: Math.sin(glitchPhase * 0.1) * 0.5 + 0.5,
-                boxShadow: '0 0 8px rgba(6, 182, 212, 0.8)'
+                opacity: Math.sin(glitchPhase * 0.1) * 0.4 + 0.6,
+                filter: `drop-shadow(0 0 ${2 + Math.sin(glitchPhase * 0.08)}px rgba(6, 182, 212, 0.6))`,
+                transform: `translateY(${Math.sin(glitchPhase * 0.06) * 0.3}px)`
               }}
-            />
+            >
+              <path
+                d="M4 1 C 3 2.5, 2.5 4, 3 6 C 3.5 8, 5.5 8.5, 6 6.5 C 6.25 5.5, 6 4.5, 5.5 4 C 5 3.5, 4.75 3, 4 1 Z"
+                fill="url(#miniFlameGradient)"
+              />
+              <path
+                d="M4 2 C 3.5 3, 3.25 4.5, 3.5 6 C 3.75 7, 4.75 7.25, 5.25 6.25 C 5.5 5.75, 5.25 5.25, 5 4.75 C 4.75 4.25, 4.5 3.75, 4 2 Z"
+                fill="url(#miniFlameInner)"
+              />
+              <defs>
+                <linearGradient id="miniFlameGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(6, 182, 212, 1)" />
+                  <stop offset="50%" stopColor="rgba(56, 189, 248, 0.9)" />
+                  <stop offset="100%" stopColor="rgba(147, 197, 253, 0.7)" />
+                </linearGradient>
+                <linearGradient id="miniFlameInner" x1="0%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(6, 182, 212, 0.8)" />
+                  <stop offset="100%" stopColor="rgba(255, 255, 255, 0.6)" />
+                </linearGradient>
+              </defs>
+            </svg>
           )}
         </div>
       </div>
