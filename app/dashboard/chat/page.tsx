@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { fudiAPI } from '@/lib/api';
-import QuantumNeuralSeparator from '../../../components/QuantumNeuralSeparator';
+import FudiSignature from '../../../components/FudiSignature';
 
 interface InsightCard {
   id: number;
@@ -444,7 +444,7 @@ export default function DashboardPage() {
                       }`}>
                         {message.type === 'assistant' ? (
                           <div className="text-[15px] leading-relaxed fudi-markdown">
-                            <QuantumNeuralSeparator content={message.content} />
+                            <FudiSignature content={message.content} />
                           </div>
                         ) : (
                           <p className="text-[15px] leading-relaxed">{message.content}</p>
