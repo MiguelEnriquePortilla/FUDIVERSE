@@ -76,47 +76,56 @@ class FudiIntelligenceEngine {
     }
   }
 
-  // 📈 GET RAW TRANSACTIONS (The treasure trove)
-  async getRawTransactions(restaurantId) {
+    // 📈 GET RAW TRANSACTIONS (The treasure trove)
+    async getRawTransactions(restaurantId, dateFilter = null) {
     console.log('📈 MINING: Raw transaction data...');
     
     try {
-      const { data: transactions, error } = await this.supabase
+        let query = this.supabase
         .from('transactions')
         .select(`
-          id,
-          transaction_date,
-          items,
-          total_amount,
-          amount,
-          payment_method,
-          guest_count,
-          employee_id,
-          employee_name,
-          created_at
+            id,
+            transaction_date,
+            items,
+            total_amount,
+            amount,
+            payment_method,
+            guest_count,
+            employee_id,
+            employee_name,
+            created_at
         `)
-        .eq('restaurant_id', restaurantId)
-        .order('transaction_date', { ascending: false })
-        .limit(null); // Remove default 1000 limit - get ALL transactions
+        .eq('restaurant_id', restaurantId);
 
-      if (error) {
+        // 📅 ADD DATE FILTER IF PROVIDED
+        if (dateFilter && dateFilter.startDate && dateFilter.endDate) {
+        query = query
+            .gte('transaction_date', dateFilter.startDate)
+            .lte('transaction_date', dateFilter.endDate);
+        }
+
+        const { data: transactions, error } = await query
+        .order('transaction_date', { ascending: false })
+        .limit(null);
+
+        if (error) {
         console.error('❌ Transaction mining error:', error.message);
         return [];
-      }
+        }
 
-      console.log('💎 MINED:', transactions?.length || 0, 'transaction gems');
-      // Log date range for debugging
-      if (transactions && transactions.length > 0) {
+        console.log('💎 MINED:', transactions?.length || 0, 'transaction gems');
+        // Log date range for debugging
+        if (transactions && transactions.length > 0) {
         const dates = transactions.map(t => t.transaction_date?.split('T')[0]).filter(Boolean);
         console.log('📅 Transaction dates:', [...new Set(dates)].slice(0, 5), '...(total:', new Set(dates).size, 'dates)');
-      }
-      return transactions || [];
+        }
+        return transactions || [];
 
     } catch (error) {
-      console.error('❌ Transaction mining failed:', error);
-      return [];
+        console.error('❌ Transaction mining failed:', error);
+        return [];
     }
-  }
+    }
 
   // 🍽️ GET RAW PRODUCTS (The menu)
   async getRawProducts(restaurantId) {
