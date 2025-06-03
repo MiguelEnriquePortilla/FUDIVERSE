@@ -3,6 +3,7 @@
 // NO MORE FUNCTIONS - CLAUDE HANDLES EVERYTHING
 
 const { createClient } = require('@supabase/supabase-js');
+const { FudiIntelligenceEngine } = require('./FudiIntelligenceEngine');
 
 class FudiClaudeDirect {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
@@ -10,6 +11,8 @@ class FudiClaudeDirect {
     
     this.supabase = createClient(supabaseUrl, supabaseKey);
     this.anthropicKey = anthropicKey;
+    this.engine = new FudiIntelligenceEngine(supabaseUrl, supabaseKey);
+
     
     console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
     console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
@@ -26,13 +29,14 @@ class FudiClaudeDirect {
       const restaurantContext = await this.getRestaurantContext(restaurantId);
       
       // 🧠 STEP 2: Claude analyzes query and gets needed data
-      const dataContext = await this.getDataContextForClaude(message, restaurantId);
+      const intelligenceData = await this.engine.transformRestaurantData(restaurantId);
+
       
       // 🤖 STEP 3: Claude processes everything and responds
       const claudeResponse = await this.claudeDirectProcessing(
-        message, 
-        restaurantContext, 
-        dataContext, 
+        message,
+        restaurantContext,
+        intelligenceData,
         context
       );
 
