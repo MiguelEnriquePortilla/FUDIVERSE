@@ -5,15 +5,14 @@ interface FudiSignatureProps {
   content: string;
 }
 
-// FUDI SIGNATURE COMPONENT
+// FUDI SIGNATURE COMPONENT - TYPEWRITER ONLY
 const FudiSignatureComponent: React.FC = () => {
   const [breathPhase, setBreathPhase] = useState(0);
   const [typewriterText, setTypewriterText] = useState('');
-  const [isTypingComplete, setIsTypingComplete] = useState(false);
   
   const fullText = 'JOIN_THE_FUDIVERSE';
 
-  // Breathing animation
+  // Breathing animation for cursor
   useEffect(() => {
     const interval = setInterval(() => {
       setBreathPhase(prev => (prev + 1) % 360);
@@ -31,91 +30,32 @@ const FudiSignatureComponent: React.FC = () => {
         currentIndex++;
       } else {
         clearInterval(typingInterval);
-        setIsTypingComplete(true);
       }
-    }, 120); // 120ms per character for smooth typing
+    }, 120); // 120ms per character
 
     return () => clearInterval(typingInterval);
   }, []);
 
-  const breathIntensity = 0.8 + Math.sin(breathPhase * 0.05) * 0.2;
-  const glowIntensity = 0.3 + Math.sin(breathPhase * 0.03) * 0.1;
   const cursorIntensity = 0.6 + Math.sin(breathPhase * 0.08) * 0.4;
 
   return (
-    <div className="fudi-signature-container flex flex-col items-center justify-center py-6 mt-4">
+    <div className="fudi-signature-container flex items-center justify-center py-6 mt-4">
       
-      {/* Minimalist Digital Flame */}
-      <div className="relative flex items-center justify-center mb-3">
-        <svg 
-          width="32" 
-          height="48" 
-          viewBox="0 0 32 48" 
-          className="transition-all duration-300"
-          style={{
-            opacity: breathIntensity,
-            filter: `drop-shadow(0 0 ${2 + glowIntensity * 3}px rgba(6, 182, 212, ${glowIntensity}))`
-          }}
-        >
-          <path
-            d="M16 4 C 12 8, 8 16, 10 24 C 12 32, 20 36, 24 28 C 26 24, 24 20, 22 18 C 20 16, 18 14, 16 4 Z"
-            fill="url(#flameGradient)"
-            className="transition-all duration-500"
-            style={{ opacity: breathIntensity }}
-          />
-          
-          <path
-            d="M16 8 C 14 12, 12 18, 14 24 C 15 28, 19 30, 21 26 C 22 24, 21 22, 20 20 C 19 18, 18 16, 16 8 Z"
-            fill="url(#innerFlame)"
-            className="transition-all duration-700"
-            style={{ opacity: breathIntensity * 0.8 }}
-          />
-
-          <circle 
-            cx="16" 
-            cy={30 + Math.sin(breathPhase * 0.08) * 2}
-            r="1" 
-            fill="rgba(6, 182, 212, 0.6)"
-            style={{ opacity: Math.sin(breathPhase * 0.1) * 0.5 + 0.5 }}
-          />
-          <circle 
-            cx="18" 
-            cy={26 + Math.sin(breathPhase * 0.06 + 1) * 1.5}
-            r="0.5" 
-            fill="rgba(147, 51, 234, 0.4)"
-            style={{ opacity: Math.sin(breathPhase * 0.08 + 2) * 0.3 + 0.4 }}
-          />
-
-          <defs>
-            <linearGradient id="flameGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="rgba(6, 182, 212, 0.9)" />
-              <stop offset="50%" stopColor="rgba(56, 189, 248, 0.7)" />
-              <stop offset="100%" stopColor="rgba(147, 197, 253, 0.5)" />
-            </linearGradient>
-            <linearGradient id="innerFlame" x1="0%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="rgba(6, 182, 212, 0.6)" />
-              <stop offset="100%" stopColor="rgba(255, 255, 255, 0.3)" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-
-      {/* FUDI Brand Mark with Typewriter Effect */}
-      <div className="flex items-center justify-center space-x-1">
+      {/* TYPEWRITER TEXT + FLAME CURSOR */}
+      <div className="flex items-center space-x-1">
         {/* Typewriter text */}
         <div 
-          className="text-xs font-mono tracking-[0.2em] transition-all duration-300"
+          className="text-xs font-mono tracking-[0.15em] transition-all duration-300"
           style={{
-            color: `rgba(6, 182, 212, ${0.6 + glowIntensity})`,
-            textShadow: `0 0 ${1 + glowIntensity * 2}px rgba(6, 182, 212, 0.3)`,
-            letterSpacing: '0.15em'
+            color: 'rgba(6, 182, 212, 0.8)',
+            textShadow: '0 0 2px rgba(6, 182, 212, 0.3)'
           }}
         >
           {typewriterText}
         </div>
         
         {/* Animated Flame Cursor */}
-        <div className="relative flex items-center">
+        <div className="relative">
           <svg 
             width="12" 
             height="18" 
@@ -123,7 +63,7 @@ const FudiSignatureComponent: React.FC = () => {
             className="transition-all duration-200"
             style={{
               opacity: cursorIntensity,
-              filter: `drop-shadow(0 0 ${1 + cursorIntensity * 2}px rgba(6, 182, 212, ${cursorIntensity * 0.8}))`,
+              filter: `drop-shadow(0 0 ${1 + cursorIntensity}px rgba(6, 182, 212, ${cursorIntensity * 0.8}))`,
               transform: `scale(${0.8 + cursorIntensity * 0.2}) translateY(${Math.sin(breathPhase * 0.06) * 0.5}px)`
             }}
           >
@@ -131,20 +71,14 @@ const FudiSignatureComponent: React.FC = () => {
             <path
               d="M6 1 C 4.5 3, 3 6, 3.5 9 C 4 12, 7.5 13.5, 9 10.5 C 9.5 9, 9 7.5, 8.5 6.75 C 8 6, 7.5 5.25, 6 1 Z"
               fill="url(#flameCursorGradient)"
-              className="transition-all duration-300"
-              style={{
-                opacity: cursorIntensity
-              }}
+              style={{ opacity: cursorIntensity }}
             />
             
             {/* Inner flame core */}
             <path
               d="M6 2.5 C 5.25 4.5, 4.5 6.75, 5 9 C 5.25 10.5, 7 11.25, 7.75 9.75 C 8 9, 7.75 8.25, 7.5 7.5 C 7.25 6.75, 7 6, 6 2.5 Z"
               fill="url(#innerFlameCursor)"
-              className="transition-all duration-500"
-              style={{
-                opacity: cursorIntensity * 0.9
-              }}
+              style={{ opacity: cursorIntensity * 0.9 }}
             />
 
             {/* Cursor particle */}
@@ -153,9 +87,7 @@ const FudiSignatureComponent: React.FC = () => {
               cy={11 + Math.sin(breathPhase * 0.09) * 0.8}
               r="0.4" 
               fill="rgba(255, 255, 255, 0.8)"
-              style={{
-                opacity: Math.sin(breathPhase * 0.12) * 0.4 + 0.6
-              }}
+              style={{ opacity: Math.sin(breathPhase * 0.12) * 0.4 + 0.6 }}
             />
 
             {/* Gradients for cursor */}
@@ -171,34 +103,7 @@ const FudiSignatureComponent: React.FC = () => {
               </linearGradient>
             </defs>
           </svg>
-          
-          {/* Cursor glow effect */}
-          <div 
-            className="absolute inset-0 w-3 h-4 rounded-full transition-all duration-300 pointer-events-none"
-            style={{
-              background: `radial-gradient(ellipse, rgba(6, 182, 212, ${cursorIntensity * 0.3}) 0%, transparent 70%)`,
-              transform: `scale(${1 + cursorIntensity * 0.5})`
-            }}
-          />
         </div>
-      </div>
-
-      {/* Subtle connection line */}
-      <div className="mt-2 flex items-center space-x-1">
-        {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="w-1 h-px transition-all duration-300"
-            style={{
-              backgroundColor: `rgba(6, 182, 212, ${
-                Math.sin(breathPhase * 0.04 + i * 0.5) > 0 ? glowIntensity * 0.8 : glowIntensity * 0.3
-              })`,
-              boxShadow: Math.sin(breathPhase * 0.04 + i * 0.5) > 0 
-                ? `0 0 1px rgba(6, 182, 212, ${glowIntensity})` 
-                : 'none'
-            }}
-          />
-        ))}
       </div>
 
       <style jsx>{`
@@ -206,23 +111,9 @@ const FudiSignatureComponent: React.FC = () => {
           position: relative;
         }
 
-        .fudi-signature-container::before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 120px;
-          height: 80px;
-          background: radial-gradient(ellipse, rgba(6, 182, 212, 0.02) 0%, transparent 70%);
-          pointer-events: none;
-          z-index: -1;
-        }
-
         @media (max-width: 768px) {
-          .fudi-signature-container svg {
-            width: 28px;
-            height: 42px;
+          .fudi-signature-container {
+            transform: scale(0.9);
           }
         }
       `}</style>
@@ -241,7 +132,7 @@ const FudiSignature: React.FC<FudiSignatureProps> = ({ content }) => {
       {/* MAIN CONTENT WITH CLAUDE-STYLE FORMATTING */}
       <ReactMarkdown
         components={{
-          // 🎯 CLAUDE-STYLE HEADERS
+          // CLAUDE-STYLE HEADERS
           h1: ({ children }) => (
             <h1 className="text-2xl font-semibold text-white mb-4 leading-relaxed">
               {children}
@@ -260,14 +151,14 @@ const FudiSignature: React.FC<FudiSignatureProps> = ({ content }) => {
             </h3>
           ),
 
-          // 💬 CLAUDE-STYLE PARAGRAPHS
+          // CLAUDE-STYLE PARAGRAPHS
           p: ({ children }) => (
             <p className="text-base text-gray-200 mb-4 leading-relaxed">
               {children}
             </p>
           ),
 
-          // 🔥 CLAUDE-STYLE LISTS
+          // CLAUDE-STYLE LISTS
           ul: ({ children }) => (
             <ul className="space-y-2 mb-4 ml-2">
               {children}
@@ -283,7 +174,7 @@ const FudiSignature: React.FC<FudiSignatureProps> = ({ content }) => {
             </li>
           ),
 
-          // 🎯 CLAUDE-STYLE EMPHASIS
+          // CLAUDE-STYLE EMPHASIS
           strong: ({ children }) => (
             <strong className="font-semibold text-white">
               {children}
@@ -296,48 +187,27 @@ const FudiSignature: React.FC<FudiSignatureProps> = ({ content }) => {
             </em>
           ),
 
-          // 💻 CLAUDE-STYLE CODE
+          // CLAUDE-STYLE CODE
           code: ({ children }) => (
             <code className="bg-gray-800/60 text-blue-300 px-1.5 py-0.5 rounded text-sm font-mono">
               {children}
             </code>
           ),
 
-          // 📋 CLAUDE-STYLE BLOCKQUOTES
+          // CLAUDE-STYLE BLOCKQUOTES
           blockquote: ({ children }) => (
             <blockquote className="border-l-2 border-gray-600 pl-4 py-2 my-4 bg-gray-800/30 rounded-r">
               <div className="text-gray-300 italic">
                 {children}
               </div>
             </blockquote>
-          ),
-
-          // 📊 CLAUDE-STYLE TABLES
-          table: ({ children }) => (
-            <div className="overflow-x-auto my-4">
-              <table className="min-w-full border-collapse border border-gray-600 rounded-lg">
-                {children}
-              </table>
-            </div>
-          ),
-
-          th: ({ children }) => (
-            <th className="border border-gray-600 px-4 py-2 bg-gray-800 text-left font-medium text-gray-200">
-              {children}
-            </th>
-          ),
-
-          td: ({ children }) => (
-            <td className="border border-gray-600 px-4 py-2 text-gray-300">
-              {children}
-            </td>
           )
         }}
       >
         {mainContent}
       </ReactMarkdown>
 
-      {/* 🔥 FUDI SIGNATURE - MINIMAL & ELEGANT */}
+      {/* FUDI SIGNATURE - MINIMAL TYPEWRITER + FLAME CURSOR */}
       {hasSeparator && <FudiSignatureComponent />}
 
       <style jsx global>{`
@@ -346,23 +216,19 @@ const FudiSignature: React.FC<FudiSignatureProps> = ({ content }) => {
           line-height: 1.6;
         }
 
-        /* Ensure clean spacing */
         .claude-fudi-content > * + * {
           margin-top: 1rem;
         }
 
-        /* Clean paragraph spacing */
         .claude-fudi-content p + p {
           margin-top: 1rem;
         }
 
-        /* Clean list spacing */
         .claude-fudi-content ul + p,
         .claude-fudi-content ol + p {
           margin-top: 1rem;
         }
 
-        /* Clean header spacing */
         .claude-fudi-content h1 + p,
         .claude-fudi-content h2 + p,
         .claude-fudi-content h3 + p {
