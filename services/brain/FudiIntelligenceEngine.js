@@ -146,11 +146,11 @@ class FudiIntelligenceEngine {
   }
 
   // 🧠 THE MAGIC: Perform data alchemy
-  performDataAlchemy(rawData) {
+  async performDataAlchemy(rawData) {
     console.log('🔮 ALCHEMY IN PROGRESS: Converting raw data into pure intelligence...');
     
     // 📊 GENERATE INTELLIGENCE FROM RAW DATA
-    const productIntelligence = this.generateProductIntelligence(rawData.transactions, rawData.products);
+    const productIntelligence = await this.generateProductIntelligence(rawData.transactions, rawData.products, rawData.restaurant.id);
     const salesIntelligence = this.generateSalesIntelligence(rawData.transactions);
     const temporalIntelligence = this.generateTemporalIntelligence(rawData.transactions);
     const customerIntelligence = this.generateCustomerIntelligence(rawData.transactions);
@@ -226,14 +226,47 @@ class FudiIntelligenceEngine {
   }
 
   // 🍽️ GENERATE PRODUCT INTELLIGENCE
-  generateProductIntelligence(transactions, products) {
-    console.log('🍽️ GENERATING: Product intelligence from raw data...');
+  async generateProductIntelligence(transactions, products, restaurantId) {
+    console.log('🍽️ GENERATING: Product intelligence...');
+    
+    // 🧠 PRIORITY 1: Try intelligent tables first (SCALABLE SOLUTION)
+    try {
+      const intelligentData = await this.getIntelligentProductData(restaurantId);
+      if (intelligentData && intelligentData.length > 0) {
+        console.log('🧠 Using INTELLIGENT TABLES (pre-calculated, real names)');
+        
+        const topProducts = intelligentData.map(item => ({
+          product_id: item.product_id,
+          product_name: item.product_name, // REAL NAMES from intelligent tables
+          total_quantity: item.total_quantity,
+          total_revenue: parseFloat(item.total_revenue),
+          avg_price: item.avg_price || (parseFloat(item.total_revenue) / item.total_quantity)
+        })).sort((a, b) => b.total_revenue - a.total_revenue);
+
+        console.log('🧠 INTELLIGENT PRODUCT DATA USED:', topProducts.length, 'products with real names');
+        
+        return {
+          available: true,
+          totalProducts: topProducts.length,
+          topPerformers: topProducts.slice(0, 10),
+          allProducts: topProducts,
+          summary: `${topProducts.length} products with intelligent data (real names)`,
+          insights: this.generateProductInsights(topProducts),
+          dataSource: 'intelligent_tables'
+        };
+      }
+    } catch (error) {
+      console.log('⚠️ Intelligent tables not available, falling back to raw processing');
+    }
+    
+    // 🔄 FALLBACK: Use raw transactions (EXISTING LOGIC - PRESERVED)
+    console.log('🔄 FALLBACK: Generating from raw data...');
     
     if (!transactions || transactions.length === 0) {
       return { available: false, message: 'No transaction data for product analysis' };
     }
 
-    // Extract products from transaction items
+    // Extract products from transaction items (EXISTING LOGIC)
     const productSales = {};
     const productRevenue = {};
     
@@ -255,7 +288,7 @@ class FudiIntelligenceEngine {
       }
     });
 
-    // Sort by revenue to find top performers
+    // Sort by revenue to find top performers (EXISTING LOGIC)
     const topProducts = Object.entries(productSales)
       .map(([id, data]) => ({
         product_id: id,
@@ -266,7 +299,7 @@ class FudiIntelligenceEngine {
       }))
       .sort((a, b) => b.total_revenue - a.total_revenue);
 
-    console.log('🍽️ PRODUCT INTELLIGENCE GENERATED:', topProducts.length, 'products analyzed');
+    console.log('🍽️ RAW PRODUCT INTELLIGENCE GENERATED:', topProducts.length, 'products analyzed');
 
     return {
       available: true,
@@ -274,7 +307,8 @@ class FudiIntelligenceEngine {
       topPerformers: topProducts.slice(0, 10),
       allProducts: topProducts,
       summary: `${topProducts.length} products with complete sales intelligence`,
-      insights: this.generateProductInsights(topProducts)
+      insights: this.generateProductInsights(topProducts),
+      dataSource: 'raw_transactions'
     };
   }
 
@@ -541,6 +575,36 @@ class FudiIntelligenceEngine {
     }
     
     return insights;
+  }
+
+  // 🧠 GET INTELLIGENT PRODUCT DATA (scalable solution)
+  async getIntelligentProductData(restaurantId) {
+    console.log('🧠 CHECKING: Intelligent product tables...');
+    
+    try {
+      const { data: intelligentData, error } = await this.supabase
+        .from('intelligent_product_daily')
+        .select('*')
+        .eq('restaurant_id', restaurantId)
+        .order('total_revenue', { ascending: false });
+
+      if (error) {
+        console.log('⚠️ Intelligent tables error:', error.message);
+        return null;
+      }
+
+      if (!intelligentData || intelligentData.length === 0) {
+        console.log('⚠️ No intelligent data available');
+        return null;
+      }
+
+      console.log('✅ Intelligent data found:', intelligentData.length, 'records');
+      return intelligentData;
+
+    } catch (error) {
+      console.log('⚠️ Error accessing intelligent tables:', error.message);
+      return null;
+    }
   }
 
   // 🔧 UTILITY METHODS

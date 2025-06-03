@@ -25,18 +25,23 @@ class FudiClaudeDirect {
     console.log('🏪 Restaurant:', restaurantId);
 
     try {
-      // 🎯 STEP 1: Get restaurant context for Claude
+      // 🎯 STEP 1: Detect temporal context (SCALABLE SOLUTION)
+      const temporalContext = this.detectTemporalContext(message);
+      console.log('⏰ Temporal context detected:', temporalContext);
+
+      // 🎯 STEP 2: Get restaurant context for Claude
       const restaurantContext = await this.getRestaurantContext(restaurantId);
       
-      // 🧠 STEP 2: Claude analyzes query and gets needed data
+      // 🧠 STEP 3: Claude analyzes query and gets needed data (with temporal filter)
       const intelligenceData = await this.engine.transformRestaurantData(restaurantId);
 
       
-      // 🤖 STEP 3: Claude processes everything and responds
+      // 🤖 STEP 4: Claude processes everything and responds
       const claudeResponse = await this.claudeDirectProcessing(
         message,
         restaurantContext,
         intelligenceData,
+        temporalContext,
         context
       );
 
@@ -50,7 +55,8 @@ class FudiClaudeDirect {
           processingMode: 'unlimited_intelligence',
           adaptability: 'infinite',
           functionsUsed: 0,
-          claudePowered: true
+          claudePowered: true,
+          temporalContext: temporalContext
         }
       };
 
@@ -93,6 +99,92 @@ class FudiClaudeDirect {
         totalProducts: 0
       };
     }
+  }
+
+  // ⏰ DETECT TEMPORAL CONTEXT (scalable solution)
+  detectTemporalContext(message) {
+    console.log('⏰ DETECTING: Temporal context in message...');
+    
+    const lowerMessage = message.toLowerCase();
+    const today = new Date();
+    
+    // SEMANA PASADA
+    if (lowerMessage.includes('semana pasada') || lowerMessage.includes('semana anterior')) {
+      const lastWeekStart = new Date(today);
+      lastWeekStart.setDate(today.getDate() - 7);
+      const lastWeekEnd = new Date(today);
+      lastWeekEnd.setDate(today.getDate() - 1);
+      
+      return {
+        type: 'last_week',
+        description: 'Semana pasada',
+        dateRange: `${lastWeekStart.toISOString().split('T')[0]} to ${lastWeekEnd.toISOString().split('T')[0]}`,
+        startDate: lastWeekStart.toISOString().split('T')[0],
+        endDate: lastWeekEnd.toISOString().split('T')[0]
+      };
+    }
+    
+    // AYER
+    if (lowerMessage.includes('ayer')) {
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      
+      return {
+        type: 'yesterday',
+        description: 'Ayer',
+        dateRange: yesterday.toISOString().split('T')[0],
+        startDate: yesterday.toISOString().split('T')[0],
+        endDate: yesterday.toISOString().split('T')[0]
+      };
+    }
+    
+    // HOY
+    if (lowerMessage.includes('hoy') || lowerMessage.includes('día de hoy')) {
+      return {
+        type: 'today',
+        description: 'Hoy',
+        dateRange: today.toISOString().split('T')[0],
+        startDate: today.toISOString().split('T')[0],
+        endDate: today.toISOString().split('T')[0]
+      };
+    }
+    
+    // ESTE MES
+    if (lowerMessage.includes('este mes') || lowerMessage.includes('mes actual')) {
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      
+      return {
+        type: 'this_month',
+        description: 'Este mes',
+        dateRange: `${monthStart.toISOString().split('T')[0]} to ${monthEnd.toISOString().split('T')[0]}`,
+        startDate: monthStart.toISOString().split('T')[0],
+        endDate: monthEnd.toISOString().split('T')[0]
+      };
+    }
+    
+    // MES PASADO
+    if (lowerMessage.includes('mes pasado') || lowerMessage.includes('mes anterior')) {
+      const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+      
+      return {
+        type: 'last_month',
+        description: 'Mes pasado',
+        dateRange: `${lastMonthStart.toISOString().split('T')[0]} to ${lastMonthEnd.toISOString().split('T')[0]}`,
+        startDate: lastMonthStart.toISOString().split('T')[0],
+        endDate: lastMonthEnd.toISOString().split('T')[0]
+      };
+    }
+    
+    // DEFAULT: General analysis
+    return {
+      type: 'general',
+      description: 'Análisis general',
+      dateRange: 'All available data',
+      startDate: null,
+      endDate: null
+    };
   }
 
   // 📊 GET DATA CONTEXT FOR CLAUDE
@@ -183,7 +275,7 @@ class FudiClaudeDirect {
   }
 
   // 🤖 CLAUDE DIRECT PROCESSING - THE MAGIC HAPPENS HERE
-  async claudeDirectProcessing(message, restaurantContext, intelligenceData, userContext) {
+  async claudeDirectProcessing(message, restaurantContext, intelligenceData, temporalContext, userContext) {
     console.log('🤖 CLAUDE-DIRECT: Engaging unlimited intelligence...');
 
     try {
@@ -194,13 +286,23 @@ class FudiClaudeDirect {
       const { generateText } = require('ai');
       const { anthropic } = require('@ai-sdk/anthropic');
 
-      // 🧠 SYSTEM PROMPT: Give Claude restaurant intelligence superpowers
+      // 🧠 SYSTEM PROMPT: Give Claude restaurant intelligence superpowers (TEMPORAL AWARE)
     const systemPrompt = `Eres Claude Sonnet 4, pero especializado en restaurantes. Respondes EXACTAMENTE como Claude - mismo estilo, mismo pensamiento, misma estructura visual.
 
 IDENTIDAD: Soy Claude, con conocimiento especializado en análisis de restaurantes.
 
+CONSULTA TEMPORAL DETECTADA: ${temporalContext.type}
+PERÍODO ESPECÍFICO: ${temporalContext.description}
+FECHAS RELEVANTES: ${temporalContext.dateRange}
+
 DATOS DEL RESTAURANTE:
 ${this.formatDataContextForClaude(restaurantContext, intelligenceData)}
+
+INSTRUCCIONES CRÍTICAS:
+- Si el usuario pregunta por "semana pasada", analiza SOLO datos de semana pasada
+- Si pregunta por "ayer", analiza SOLO datos de ayer  
+- Si pregunta por "este mes", analiza SOLO datos del mes actual
+- NUNCA mezcles períodos - sé específico al período solicitado
 
 ESTILO CLAUDE - CARACTERÍSTICAS EXACTAS:
 
@@ -242,6 +344,7 @@ INSTRUCCIONES ESTRICTAS:
 - SIN emojis decorativos
 - SIN formato colorido
 - SIN jerga de consultor genérico
+- Respondo ESPECÍFICAMENTE al período temporal solicitado
 - Terminar SIEMPRE con ---`;
 
 
@@ -250,9 +353,11 @@ INSTRUCCIONES ESTRICTAS:
         system: systemPrompt,
         prompt: `Pregunta del usuario: "${message}"
 
-Contexto adicional: El usuario está preguntando sobre su restaurante. Usa los datos disponibles para dar una respuesta específica, inteligente y accionable. Si hay datos de intelligence tables úsalos preferentemente, si no usa las transacciones recientes.
+Contexto temporal: ${temporalContext.description}
 
-Responde como FUDI con datos específicos y insights valiosos.`,
+Contexto adicional: El usuario está preguntando sobre su restaurante para el período específico detectado. Usa los datos disponibles para dar una respuesta específica, inteligente y accionable para ESE período exacto.
+
+Responde como FUDI con datos específicos del período solicitado e insights valiosos.`,
         temperature: 0.7,
         maxTokens: 1500,
       });
@@ -283,6 +388,7 @@ Responde como FUDI con datos específicos y insights valiosos.`,
 
     if (intelligenceData.generatedIntelligence.products.available) {
       formattedContext += `🍽️ Product Intelligence: ${intelligenceData.generatedIntelligence.products.totalProducts} productos\n`;
+      formattedContext += `Data Source: ${intelligenceData.generatedIntelligence.products.dataSource}\n`;
       formattedContext += `Top performers: ${JSON.stringify(intelligenceData.generatedIntelligence.products.topPerformers?.slice(0, 3), null, 2)}\n\n`;
     }
 
