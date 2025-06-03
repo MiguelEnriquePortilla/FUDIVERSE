@@ -197,7 +197,9 @@ class TemporalProcessor {
         break;
         
       case 'yesterday':
-        const yesterday = new Date(now);
+        const mexicoTime = new Date().toLocaleString("en-US", {timeZone: "America/Mexico_City"});
+        const now_mexico = new Date(mexicoTime);
+        const yesterday = new Date(now_mexico);
         yesterday.setDate(yesterday.getDate() - 1);
         startDate = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
         endDate = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 23, 59, 59);
