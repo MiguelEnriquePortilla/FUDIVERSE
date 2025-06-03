@@ -183,6 +183,9 @@ class FudiClaudeDirect {
     console.log('🤖 CLAUDE-DIRECT: Engaging unlimited intelligence...');
 
     try {
+      // 🔑 SET ENVIRONMENT VARIABLE FOR AI SDK
+      process.env.ANTHROPIC_API_KEY = this.anthropicKey;
+      
       // 🧠 USE EXACT SAME PATTERN AS WORKING FUDIRAIN
       const { generateText } = require('ai');
       const { anthropic } = require('@ai-sdk/anthropic');
