@@ -191,29 +191,37 @@ class FudiClaudeDirect {
       const { anthropic } = require('@ai-sdk/anthropic');
 
       // 🧠 SYSTEM PROMPT: Give Claude restaurant intelligence superpowers
-      const systemPrompt = `Eres FUDI, el consultor de restaurantes más inteligente del mundo. Tienes acceso directo a todos los datos del restaurante y puedes analizar cualquier pregunta sin limitaciones.
+     const systemPrompt = `Eres FUDI, el consultor de restaurantes más inteligente del mundo. Usas el FORMATO EXACTO de Claude Sonnet 4 - elegante, minimalista, jerárquico.
 
-PERSONALIDAD:
-- Directo y específico con datos reales
-- Tono mexicano conversacional pero profesional  
-- Das insights accionables, no solo números
-- Siempre terminas con el separador: ---
+## 🎯 **PERSONALIDAD:**
+- **Directo y específico** con datos reales
+- **Tono mexicano conversacional** pero profesional  
+- **Insights accionables** - no solo números
 
-DATOS DISPONIBLES:
+## 📊 **DATOS DISPONIBLES:**
 ${this.formatDataContextForClaude(restaurantContext, dataContext)}
 
-CAPACIDADES ILIMITADAS:
-- Puedes analizar cualquier timeframe
-- Puedes comparar productos, horarios, patrones
-- Puedes detectar tendencias y dar recomendaciones
-- Puedes responder preguntas complejas que ninguna función podría manejar
+## 🚀 **FORMATO OBLIGATORIO:**
+Usa SIEMPRE esta estructura:
+
+## 🎯 **[TÍTULO PRINCIPAL]**
+
+### **💰 Números Clave:**
+- **Total:** $XX,XXX
+- **Transacciones:** XXX
+
+### **⭐ Producto Estrella:**
+**NOMBRE** - X unidades vendidas
+
+### **💡 Recomendaciones:**
+- **Acción específica:** Descripción
 
 INSTRUCCIONES:
-1. Analiza la pregunta del usuario
-2. Usa los datos disponibles inteligentemente
-3. Da una respuesta específica con números reales
-4. Incluye insights y recomendaciones accionables
-5. Mantén tono natural y conversacional`;
+1. Headers grandes con ##
+2. Sub-headers con ###  
+3. Números importantes en **negrita**
+4. Emojis estratégicos
+5. Termina con: ---`;
 
       const { text } = await generateText({
         model: anthropic('claude-3-5-sonnet-20241022'),
@@ -229,10 +237,113 @@ Responde como FUDI con datos específicos y insights valiosos.`,
 
       // Ensure the response ends with the separator
       const response = text.endsWith('---') ? text : text + '\n\n---';
-      
+
       console.log('✅ CLAUDE-DIRECT: Unlimited intelligence response generated');
       return response;
 
+    } catch (error) {
+      console.error('❌ Claude processing error:', error);
+      throw error;
+    }
+  }
+
+  // 📋 FORMAT DATA CONTEXT FOR CLAUDE
+  formatDataContextForClaude(restaurantContext, dataContext) {
+    let formattedContext = '';
+
+    // Restaurant info
+    formattedContext += `RESTAURANTE: ${restaurantContext.restaurant.name || 'Restaurant'}\n`;
+    formattedContext += `PRODUCTOS DISPONIBLES: ${restaurantContext.totalProducts} productos\n\n`;
+
+    // Intelligence tables (preferred data source)
+    if (dataContext.intelligenceTables.available) {
+      formattedContext += `📊 INTELLIGENCE TABLES (PRE-CALCULADAS):\n`;
+
+      if (dataContext.intelligenceTables.products.length > 0) {
+        formattedContext += `Productos Intelligence: ${dataContext.intelligenceTables.products.length} registros\n`;
+        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.products.slice(0, 5), null, 2)}\n\n`;
+      }
+
+      if (dataContext.intelligenceTables.payments.length > 0) {
+        formattedContext += `Payments Intelligence: ${dataContext.intelligenceTables.payments.length} registros\n`;
+        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.payments.slice(0, 3), null, 2)}\n\n`;
+      }
+
+      if (dataContext.intelligenceTables.temporal.length > 0) {
+        formattedContext += `Temporal Intelligence: ${dataContext.intelligenceTables.temporal.length} registros\n`;
+        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.temporal.slice(0, 3), null, 2)}\n\n`;
+      }
+    }
+
+    // Recent transactions (fallback data)
+    if (dataContext.recentTransactions.length > 0) {
+      formattedContext += `📈 TRANSACCIONES RECIENTES: ${dataContext.recentTransactions.length} disponibles\n`;
+      formattedContext += `Muestra de datos: ${JSON.stringify(dataContext.recentTransactions.slice(0, 3), null, 2)}\n\n`;
+    }
+
+    // Time context
+    formattedContext += `⏰ CONTEXTO TEMPORAL:\n`;
+    formattedContext += `Hoy: ${dataContext.timeframes.today}\n`;
+    formattedContext += `Ayer: ${dataContext.timeframes.yesterday}\n`;
+    formattedContext += `Hace una semana: ${dataContext.timeframes.lastWeek}\n\n`;
+
+    // Products context
+    if (restaurantContext.products.length > 0) {
+      formattedContext += `🍽️ PRODUCTOS DEL MENÚ:\n`;
+      formattedContext += `${JSON.stringify(restaurantContext.products.slice(0, 10), null, 2)}\n\n`;
+    }
+
+    return formattedContext;
+  }
+
+  // 🆘 ERROR HANDLING
+  async handleError(error, message) {
+    console.log('🆘 CLAUDE-DIRECT: Handling error gracefully...');
+
+    return {
+      success: false,
+      response: `Disculpa, tuve un problema procesando tu consulta sobre "${message}". Mi sistema de inteligencia directa está experimentando interferencias temporales. ¿Podrías intentar de nuevo?\n\n---`,
+      metadata: {
+        architecture: 'claude_direct',
+        error: true,
+        errorMessage: error.message
+      }
+    };
+  }
+
+  // 📊 SYSTEM STATUS
+  getSystemStatus() {
+    return {
+      architecture: 'claude_direct',
+      intelligence: 'unlimited',
+      adaptability: 'infinite',
+      functionsRequired: 0,
+      scalability: 'unlimited',
+      description: 'Claude processes any query directly with restaurant data',
+      advantages: [
+        'Handles any question type',
+        'No predefined functions needed',
+        'Real-time data access',
+        'Contextual understanding',
+        'Actionable insights generation'
+      ]
+    };
+  }
+
+  // 🧪 TEST METHOD
+  async testSystem() {
+    console.log('🧪 Testing CLAUDE-DIRECT system...');
+
+    try {
+      const testQueries = [
+        "¿cómo estuvieron las ventas ayer?",
+        "¿qué producto vendo más los martes?",
+        "dame un análisis completo de la semana pasada",
+        "compara mis tacos vs pizzas",
+        "¿a qué hora vendo más?"
+      ];
+
+      console.log('🧪 Test queries ready:', testQueries.length);
     } catch (error) {
       console.error('❌ Claude processing error:', error);
       throw error;
