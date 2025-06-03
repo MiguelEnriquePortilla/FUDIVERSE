@@ -33,8 +33,7 @@ class FudiClaudeDirect {
       const restaurantContext = await this.getRestaurantContext(restaurantId);
       
       // 🧠 STEP 3: Claude analyzes query and gets needed data (with temporal filter)
-      const intelligenceData = await this.engine.transformRestaurantData(restaurantId);
-
+      const intelligenceData = await this.engine.transformRestaurantData(restaurantId, temporalContext);
       
       // 🤖 STEP 4: Claude processes everything and responds
       const claudeResponse = await this.claudeDirectProcessing(
