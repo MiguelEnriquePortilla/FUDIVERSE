@@ -5,115 +5,260 @@ interface FudiSignatureProps {
   content: string;
 }
 
-// FUDI SIGNATURE COMPONENT - TYPEWRITER ONLY
+// ENHANCED FUDI SIGNATURE COMPONENT - MATRIX DIGITAL REVEAL
 const FudiSignatureComponent: React.FC = () => {
-  const [breathPhase, setBreathPhase] = useState(0);
-  const [typewriterText, setTypewriterText] = useState('');
+  const [mainText, setMainText] = useState('');
+  const [subText, setSubText] = useState('');
+  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, opacity: number}>>([]);
+  const [glitchPhase, setGlitchPhase] = useState(0);
   
-  const fullText = 'JOIN_THE_FUDIVERSE';
+  const mainFullText = 'FudiGPT';
+  const subFullText = 'join_the_fudiverse';
+  const randomChars = '01フウディGPT人工知能×◊∆◇□■▣▤▥▦▧▨▩0101110011';
 
-  // Breathing animation for cursor
+  // Glitch animation
   useEffect(() => {
     const interval = setInterval(() => {
-      setBreathPhase(prev => (prev + 1) % 360);
+      setGlitchPhase(prev => (prev + 1) % 360);
     }, 50);
-
     return () => clearInterval(interval);
   }, []);
 
-  // Typewriter effect
+  // Matrix reveal effect for main text
   useEffect(() => {
     let currentIndex = 0;
-    const typingInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setTypewriterText(fullText.substring(0, currentIndex));
-        currentIndex++;
+    let revealedText = '';
+    
+    const revealInterval = setInterval(() => {
+      if (currentIndex < mainFullText.length) {
+        // Show random characters for 3-5 cycles before revealing
+        let cycles = 0;
+        const charReveal = setInterval(() => {
+          if (cycles < 4) {
+            const randomChar = randomChars[Math.floor(Math.random() * randomChars.length)];
+            setMainText(revealedText + randomChar + mainFullText.substring(currentIndex + 1).split('').map(() => 
+              Math.random() > 0.7 ? randomChars[Math.floor(Math.random() * randomChars.length)] : ' '
+            ).join(''));
+            cycles++;
+          } else {
+            revealedText += mainFullText[currentIndex];
+            setMainText(revealedText + mainFullText.substring(currentIndex + 1).split('').map(() => ' ').join(''));
+            currentIndex++;
+            clearInterval(charReveal);
+          }
+        }, 80);
       } else {
-        clearInterval(typingInterval);
+        clearInterval(revealInterval);
+        // Start subtitle after main text is done
+        setTimeout(startSubtitle, 500);
       }
-    }, 120); // 120ms per character
+    }, 300);
 
-    return () => clearInterval(typingInterval);
+    return () => clearInterval(revealInterval);
   }, []);
 
-  const cursorIntensity = 0.6 + Math.sin(breathPhase * 0.08) * 0.4;
+  const startSubtitle = () => {
+    let currentIndex = 0;
+    let revealedText = '';
+    
+    const revealInterval = setInterval(() => {
+      if (currentIndex < subFullText.length) {
+        let cycles = 0;
+        const charReveal = setInterval(() => {
+          if (cycles < 3) {
+            const randomChar = randomChars[Math.floor(Math.random() * randomChars.length)];
+            setSubText(revealedText + randomChar);
+            cycles++;
+          } else {
+            revealedText += subFullText[currentIndex];
+            setSubText(revealedText);
+            currentIndex++;
+            clearInterval(charReveal);
+          }
+        }, 60);
+      } else {
+        clearInterval(revealInterval);
+      }
+    }, 150);
+  };
+
+  // Particle system
+  useEffect(() => {
+    const particleInterval = setInterval(() => {
+      if (Math.random() > 0.7) {
+        const newParticle = {
+          id: Date.now(),
+          x: Math.random() * 300,
+          y: Math.random() * 100,
+          opacity: 1
+        };
+        
+        setParticles(prev => [...prev.slice(-8), newParticle]);
+        
+        setTimeout(() => {
+          setParticles(prev => prev.filter(p => p.id !== newParticle.id));
+        }, 2000);
+      }
+    }, 800);
+
+    return () => clearInterval(particleInterval);
+  }, []);
+
+  const glitchIntensity = Math.sin(glitchPhase * 0.05) * 0.3 + 0.7;
+  const shouldGlitch = Math.random() > 0.95;
 
   return (
-    <div className="fudi-signature-container flex items-center justify-center py-6 mt-4">
+    <div className="fudi-signature-container relative flex flex-col items-center justify-center py-8 mt-6 overflow-hidden">
       
-      {/* TYPEWRITER TEXT + FLAME CURSOR */}
-      <div className="flex items-center space-x-1">
-        {/* Typewriter text */}
+      {/* Digital Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                           radial-gradient(circle at 75% 75%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)`,
+          backgroundSize: '100px 100px',
+          animation: 'float 20s infinite linear'
+        }} />
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {particles.map(particle => (
+          <div
+            key={particle.id}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full"
+            style={{
+              left: `${particle.x}px`,
+              top: `${particle.y}px`,
+              opacity: particle.opacity,
+              animation: 'particleFloat 2s ease-out forwards',
+              boxShadow: '0 0 4px rgba(6, 182, 212, 0.8)'
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Main Title - FudiGPT */}
+      <div className="relative mb-3">
         <div 
-          className="text-xs font-mono tracking-[0.15em] transition-all duration-300"
+          className="text-3xl font-bold tracking-wider font-mono transition-all duration-200"
           style={{
-            color: 'rgba(6, 182, 212, 0.8)',
-            textShadow: '0 0 2px rgba(6, 182, 212, 0.3)'
+            color: 'rgba(6, 182, 212, 0.95)',
+            textShadow: `
+              0 0 10px rgba(6, 182, 212, 0.6),
+              0 0 20px rgba(6, 182, 212, 0.4),
+              0 0 30px rgba(6, 182, 212, 0.2)
+            `,
+            filter: shouldGlitch ? `hue-rotate(${Math.random() * 30}deg) saturate(${1.2 + Math.random() * 0.3})` : 'none',
+            transform: shouldGlitch ? `translateX(${Math.random() * 4 - 2}px)` : 'none'
           }}
         >
-          {typewriterText}
+          {mainText}
+          
+          {/* Scanning line effect */}
+          <div 
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
+            style={{
+              background: `linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.3) 50%, transparent 100%)`,
+              transform: `translateX(${Math.sin(glitchPhase * 0.02) * 200}%)`,
+              opacity: glitchIntensity * 0.5
+            }}
+          />
         </div>
         
-        {/* Animated Flame Cursor */}
-        <div className="relative">
-          <svg 
-            width="12" 
-            height="18" 
-            viewBox="0 0 12 18" 
-            className="transition-all duration-200"
-            style={{
-              opacity: cursorIntensity,
-              filter: `drop-shadow(0 0 ${1 + cursorIntensity}px rgba(6, 182, 212, ${cursorIntensity * 0.8}))`,
-              transform: `scale(${0.8 + cursorIntensity * 0.2}) translateY(${Math.sin(breathPhase * 0.06) * 0.5}px)`
-            }}
-          >
-            {/* Flame cursor shape */}
-            <path
-              d="M6 1 C 4.5 3, 3 6, 3.5 9 C 4 12, 7.5 13.5, 9 10.5 C 9.5 9, 9 7.5, 8.5 6.75 C 8 6, 7.5 5.25, 6 1 Z"
-              fill="url(#flameCursorGradient)"
-              style={{ opacity: cursorIntensity }}
-            />
-            
-            {/* Inner flame core */}
-            <path
-              d="M6 2.5 C 5.25 4.5, 4.5 6.75, 5 9 C 5.25 10.5, 7 11.25, 7.75 9.75 C 8 9, 7.75 8.25, 7.5 7.5 C 7.25 6.75, 7 6, 6 2.5 Z"
-              fill="url(#innerFlameCursor)"
-              style={{ opacity: cursorIntensity * 0.9 }}
-            />
-
-            {/* Cursor particle */}
-            <circle 
-              cx="6" 
-              cy={11 + Math.sin(breathPhase * 0.09) * 0.8}
-              r="0.4" 
-              fill="rgba(255, 255, 255, 0.8)"
-              style={{ opacity: Math.sin(breathPhase * 0.12) * 0.4 + 0.6 }}
-            />
-
-            {/* Gradients for cursor */}
-            <defs>
-              <linearGradient id="flameCursorGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-                <stop offset="0%" stopColor="rgba(6, 182, 212, 1)" />
-                <stop offset="50%" stopColor="rgba(56, 189, 248, 0.9)" />
-                <stop offset="100%" stopColor="rgba(147, 197, 253, 0.7)" />
-              </linearGradient>
-              <linearGradient id="innerFlameCursor" x1="0%" y1="100%" x2="0%" y2="0%">
-                <stop offset="0%" stopColor="rgba(6, 182, 212, 0.8)" />
-                <stop offset="100%" stopColor="rgba(255, 255, 255, 0.6)" />
-              </linearGradient>
-            </defs>
-          </svg>
+        {/* Glow effect behind main text */}
+        <div 
+          className="absolute inset-0 text-3xl font-bold tracking-wider font-mono blur-sm -z-10"
+          style={{
+            color: 'rgba(6, 182, 212, 0.3)',
+            transform: 'scale(1.1)'
+          }}
+        >
+          {mainText}
         </div>
+      </div>
+
+      {/* Subtitle - join_the_fudiverse */}
+      <div className="relative">
+        <div 
+          className="text-sm font-mono tracking-[0.2em] uppercase transition-all duration-300"
+          style={{
+            color: 'rgba(56, 189, 248, 0.8)',
+            textShadow: '0 0 8px rgba(56, 189, 248, 0.4)',
+            letterSpacing: '0.2em'
+          }}
+        >
+          {subText}
+          
+          {/* Blinking cursor for subtitle */}
+          {subText && subText.length <= subFullText.length && (
+            <span 
+              className="inline-block w-2 h-4 ml-1 bg-cyan-400"
+              style={{
+                opacity: Math.sin(glitchPhase * 0.1) * 0.5 + 0.5,
+                boxShadow: '0 0 8px rgba(6, 182, 212, 0.8)'
+              }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Code streaming effect in corners */}
+      <div className="absolute top-0 left-0 text-xs font-mono opacity-20 text-cyan-300">
+        {Array.from({length: 5}).map((_, i) => (
+          <div key={i} style={{
+            transform: `translateY(${Math.sin(glitchPhase * 0.03 + i) * 10}px)`,
+            opacity: Math.sin(glitchPhase * 0.02 + i) * 0.3 + 0.7
+          }}>
+            {randomChars.slice(i * 3, i * 3 + 8)}
+          </div>
+        ))}
+      </div>
+
+      <div className="absolute bottom-0 right-0 text-xs font-mono opacity-20 text-cyan-300">
+        {Array.from({length: 3}).map((_, i) => (
+          <div key={i} style={{
+            transform: `translateY(${Math.sin(glitchPhase * 0.025 + i + 10) * 8}px)`,
+            opacity: Math.sin(glitchPhase * 0.03 + i + 10) * 0.3 + 0.7
+          }}>
+            {randomChars.slice(i * 4 + 10, i * 4 + 18)}
+          </div>
+        ))}
       </div>
 
       <style jsx>{`
         .fudi-signature-container {
           position: relative;
+          min-height: 120px;
+        }
+
+        @keyframes float {
+          0% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(180deg); }
+          100% { transform: translateY(0px) rotate(360deg); }
+        }
+
+        @keyframes particleFloat {
+          0% { 
+            opacity: 1; 
+            transform: translateY(0px) scale(1);
+          }
+          100% { 
+            opacity: 0; 
+            transform: translateY(-30px) scale(0.5);
+          }
         }
 
         @media (max-width: 768px) {
           .fudi-signature-container {
-            transform: scale(0.9);
+            transform: scale(0.8);
+            min-height: 100px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .fudi-signature-container {
+            transform: scale(0.7);
+            min-height: 90px;
           }
         }
       `}</style>
@@ -207,7 +352,7 @@ const FudiSignature: React.FC<FudiSignatureProps> = ({ content }) => {
         {mainContent}
       </ReactMarkdown>
 
-      {/* FUDI SIGNATURE - MINIMAL TYPEWRITER + FLAME CURSOR */}
+      {/* ENHANCED FUDI SIGNATURE - MATRIX DIGITAL REVEAL */}
       {hasSeparator && <FudiSignatureComponent />}
 
       <style jsx global>{`
