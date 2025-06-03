@@ -27,7 +27,6 @@ const FudiSignatureComponent: React.FC = () => {
   // Matrix reveal effect for main text
   useEffect(() => {
     let currentIndex = 0;
-    let revealedText = '';
     
     const revealInterval = setInterval(() => {
       if (currentIndex < mainFullText.length) {
@@ -36,17 +35,18 @@ const FudiSignatureComponent: React.FC = () => {
         const charReveal = setInterval(() => {
           if (cycles < 4) {
             const randomChar = randomChars[Math.floor(Math.random() * randomChars.length)];
-            setMainText(revealedText + randomChar);
+            const revealedPart = mainFullText.substring(0, currentIndex);
+            setMainText(revealedPart + randomChar);
             cycles++;
           } else {
-            revealedText += mainFullText[currentIndex];
-            setMainText(revealedText);
+            const revealedPart = mainFullText.substring(0, currentIndex + 1);
+            setMainText(revealedPart);
             currentIndex++;
             clearInterval(charReveal);
           }
         }, 80);
       } else {
-        setMainText(mainFullText); // Ensure final text is set correctly
+        setMainText(mainFullText);
         clearInterval(revealInterval);
         // Start subtitle after main text is done
         setTimeout(startSubtitle, 500);
@@ -58,7 +58,6 @@ const FudiSignatureComponent: React.FC = () => {
 
   const startSubtitle = () => {
     let currentIndex = 0;
-    let revealedText = '';
     
     const revealInterval = setInterval(() => {
       if (currentIndex < subFullText.length) {
@@ -66,17 +65,18 @@ const FudiSignatureComponent: React.FC = () => {
         const charReveal = setInterval(() => {
           if (cycles < 3) {
             const randomChar = randomChars[Math.floor(Math.random() * randomChars.length)];
-            setSubText(revealedText + randomChar);
+            const revealedPart = subFullText.substring(0, currentIndex);
+            setSubText(revealedPart + randomChar);
             cycles++;
           } else {
-            revealedText += subFullText[currentIndex];
-            setSubText(revealedText);
+            const revealedPart = subFullText.substring(0, currentIndex + 1);
+            setSubText(revealedPart);
             currentIndex++;
             clearInterval(charReveal);
           }
         }, 60);
       } else {
-        setSubText(subFullText); // Ensure final text is set correctly
+        setSubText(subFullText);
         clearInterval(revealInterval);
       }
     }, 150);
