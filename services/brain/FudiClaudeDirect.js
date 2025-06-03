@@ -183,14 +183,9 @@ class FudiClaudeDirect {
     console.log('🤖 CLAUDE-DIRECT: Engaging unlimited intelligence...');
 
     try {
-      // 🧠 USE SAME API PATTERN AS FUDIVERSE
+      // 🧠 USE EXACT SAME PATTERN AS WORKING FUDIRAIN
       const { generateText } = require('ai');
       const { anthropic } = require('@ai-sdk/anthropic');
-
-      // 🔑 CREATE ANTHROPIC CLIENT WITH API KEY
-      const anthropicClient = anthropic({
-        apiKey: this.anthropicKey
-      });
 
       // 🧠 SYSTEM PROMPT: Give Claude restaurant intelligence superpowers
       const systemPrompt = `Eres FUDI, el consultor de restaurantes más inteligente del mundo. Tienes acceso directo a todos los datos del restaurante y puedes analizar cualquier pregunta sin limitaciones.
@@ -218,7 +213,7 @@ INSTRUCCIONES:
 5. Mantén tono natural y conversacional`;
 
       const { text } = await generateText({
-        model: anthropicClient('claude-3-5-sonnet-20241022'),
+        model: anthropic('claude-3-5-sonnet-20241022'),
         system: systemPrompt,
         prompt: `Pregunta del usuario: "${message}"
 
