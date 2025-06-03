@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Import FudiBrain neural network
+// 🚀 REVOLUTIONARY: Import FudiClaudeDirect instead of FudiBrain
+const { FudiClaudeDirect } = require('../../../services/brain/FudiClaudeDirect');
+
+// 🛡️ FALLBACK: Keep FudiBrain as backup
 const FudiBrain = require('../../../services/brain/FudiBrain');
 
 export async function POST(request: NextRequest) {
@@ -17,45 +20,90 @@ export async function POST(request: NextRequest) {
     console.log(`🧠 FUDI Neural Processing: "${message}"`);
     console.log(`🏪 Restaurant: ${restaurantId}`);
     
-    // 🧠 INITIALIZE FUDI BRAIN - CLEAN ARCHITECTURE
-    const fudiBrain = new FudiBrain(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      process.env.ANTHROPIC_API_KEY!
-    );
+    let result;
+    let processingMode = 'unknown';
     
-    // ⚡ PROCESS THROUGH NEURAL NETWORK (CLEAN)
-    const result = await fudiBrain.processMessage(
-      message,
-      restaurantId,
-      conversationId || generateConversationId()
-    );
+    try {
+      // 🚀 TRY CLAUDE-DIRECT FIRST (REVOLUTIONARY ARCHITECTURE)
+      console.log('🚀 Attempting Claude-Direct processing...');
+      
+      const claudeDirect = new FudiClaudeDirect(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        process.env.ANTHROPIC_API_KEY!
+      );
+      
+      result = await claudeDirect.processQuery(
+        message,
+        restaurantId,
+        { conversationId: conversationId || generateConversationId() }
+      );
+      
+      processingMode = 'claude_direct_unlimited';
+      console.log('✅ Claude-Direct processing successful');
+      
+    } catch (claudeError) {
+      console.log('⚠️ Claude-Direct failed, falling back to FudiBrain:', (claudeError as Error).message);
+      
+      // 🛡️ FALLBACK TO FUDIRAIN (ORIGINAL ARCHITECTURE)  
+      console.log('🔄 Using FudiBrain fallback...');
+      
+      const fudiBrain = new FudiBrain(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        process.env.ANTHROPIC_API_KEY!
+      );
+      
+      const brainResult = await fudiBrain.processMessage(
+        message,
+        restaurantId,
+        conversationId || generateConversationId()
+      );
+      
+      // Format FudiBrain result to match Claude-Direct format
+      result = {
+        success: true,
+        response: brainResult.response,
+        metadata: {
+          ...brainResult.metadata,
+          fallbackUsed: true,
+          claudeDirectError: (claudeError as Error).message
+        }
+      };
+      
+      processingMode = 'fudi_brain_fallback';
+      console.log('✅ FudiBrain fallback successful');
+    }
     
     console.log('🧠 Neural processing complete');
     
-    // ✅ SIMPLE PASSTHROUGH - LET FUDIBRAIN HANDLE EVERYTHING
+    // ✅ UNIFIED RESPONSE FORMAT
     return NextResponse.json({
       success: true,
       response: result.response,
-      conversationId: result.conversationId,
+      conversationId: conversationId || generateConversationId(),
       metadata: {
-        processingMode: 'clean_neural_architecture',
-        neuralActivity: result.neuralActivity,
-        intelligenceLevel: 'fudi_systematic',
-        responseTime: Date.now()
+        processingMode: processingMode,
+        architecture: result.metadata?.architecture || 'fallback',
+        adaptability: result.metadata?.adaptability || 'limited',
+        intelligenceLevel: 'fudi_advanced',
+        responseTime: Date.now(),
+        claudeDirectAttempted: true,
+        ...result.metadata
       }
     });
     
   } catch (error) {
-    console.error('❌ FUDI Neural Error:', error);
+    console.error('❌ FUDI Complete System Error:', error);
     
     return NextResponse.json({
       success: true,
       response: generateFudiErrorResponse(),
       conversationId: generateConversationId(),
       metadata: {
-        processingMode: 'fudi_error_recovery',
-        error: true
+        processingMode: 'emergency_fallback',
+        error: true,
+        errorMessage: (error as Error).message
       }
     });
   }
@@ -70,10 +118,10 @@ function generateFudiErrorResponse(): string {
     "Hubo interferencia en mi procesamiento. ¿Puedes volver a preguntar?"
   ];
   
-  return responses[Math.floor(Math.random() * responses.length)];
+  return responses[Math.floor(Math.random() * responses.length)] + '\n\n---';
 }
 
 // 🔑 GENERATE CONVERSATION ID
 function generateConversationId(): string {
-  return 'fudi-neural-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  return 'fudi-claude-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 }
