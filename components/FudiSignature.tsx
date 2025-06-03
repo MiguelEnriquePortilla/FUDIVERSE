@@ -152,7 +152,7 @@ const FudiSignatureComponent: React.FC = () => {
             transform: shouldGlitch ? `translateX(${Math.random() * 2 - 1}px)` : 'none'
           }}
         >
-          {mainText}
+                    {mainText || ''}
           
           {/* Scanning line effect */}
           <div 
@@ -173,7 +173,7 @@ const FudiSignatureComponent: React.FC = () => {
             transform: 'scale(1.05)'
           }}
         >
-          {mainText}
+                    {mainText || ''}
         </div>
       </div>
 
@@ -187,7 +187,7 @@ const FudiSignatureComponent: React.FC = () => {
             letterSpacing: '0.15em'
           }}
         >
-          {subText}
+                    {subText || ''}
           
           {/* Subtle flame cursor */}
           {subText && subText.length <= subFullText.length && (
