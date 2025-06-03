@@ -1,16 +1,16 @@
 // 🧠 services/brain/RestaurantDataVectorizer.js
 // REVOLUTIONARY ARCHITECTURE: Pre-process ALL restaurant data for FUDI
-// NO MORE SEARCHING - EVERYTHING VECTORIZED AND READY
+// FIXED VERSION - Compatible with real Chicken Chicanito data
 
 const { createClient } = require('@supabase/supabase-js');
 
 class RestaurantDataVectorizer {
   constructor(supabaseUrl, supabaseKey) {
-    console.log('🧠 RestaurantDataVectorizer: Initializing REVOLUTIONARY data processing...');
+    console.log('🧠 RestaurantDataVectorizer: Initializing FIXED data processing...');
     
     this.supabase = createClient(supabaseUrl, supabaseKey);
     
-    console.log('🔥 DATA-VECTORIZER: Organizing chaos into intelligence');
+    console.log('🔥 DATA-VECTORIZER: Organizing chaos into intelligence (FIXED VERSION)');
     console.log('✅ RestaurantDataVectorizer initialized - Ready to vectorize restaurant universe');
   }
 
@@ -25,10 +25,10 @@ class RestaurantDataVectorizer {
       // 📊 GET INTELLIGENCE TABLES (pre-calculated insights)
       const intelligenceData = await this.getIntelligenceData(restaurantId);
       
-      // 📈 GET HISTORICAL TRANSACTIONS
+      // 📈 GET HISTORICAL TRANSACTIONS (FIXED)
       const transactionData = await this.getTransactionData(restaurantId);
       
-      // 🍽️ GET PRODUCT CATALOG
+      // 🍽️ GET PRODUCT CATALOG (FIXED)
       const productData = await this.getProductData(restaurantId);
       
       // ⏰ GET TEMPORAL PATTERNS
@@ -85,9 +85,9 @@ class RestaurantDataVectorizer {
     }
   }
 
-  // 📊 GET INTELLIGENCE TABLES DATA
+  // 📊 GET INTELLIGENCE TABLES DATA (FIXED - All available data)
   async getIntelligenceData(restaurantId) {
-    console.log('📊 VECTORIZING: Intelligence tables...');
+    console.log('📊 VECTORIZING: Intelligence tables (ALL available data)...');
     
     const intelligenceData = {
       products: [],
@@ -97,41 +97,71 @@ class RestaurantDataVectorizer {
     };
 
     try {
-      // Product intelligence
-      const { data: productIntelligence } = await this.supabase
+      // Product intelligence - GET ALL AVAILABLE DATA
+      const { data: productIntelligence, error: productError } = await this.supabase
         .from('intelligent_product_daily')
         .select('*')
         .eq('restaurant_id', restaurantId)
-        .order('date', { ascending: false })
-        .limit(60); // Last 2 months
+        .order('date', { ascending: false });
 
-      // Payment intelligence  
-      const { data: paymentIntelligence } = await this.supabase
+      if (productError) {
+        console.log('⚠️ Product intelligence error:', productError.message);
+      }
+
+      // Payment intelligence - GET ALL AVAILABLE DATA
+      const { data: paymentIntelligence, error: paymentError } = await this.supabase
         .from('intelligent_payment_daily')
         .select('*')
         .eq('restaurant_id', restaurantId)
-        .order('date', { ascending: false })
-        .limit(60);
+        .order('date', { ascending: false });
 
-      // Temporal intelligence
-      const { data: temporalIntelligence } = await this.supabase
+      if (paymentError) {
+        console.log('⚠️ Payment intelligence error:', paymentError.message);
+      }
+
+      // Temporal intelligence - GET ALL AVAILABLE DATA
+      const { data: temporalIntelligence, error: temporalError } = await this.supabase
         .from('intelligent_temporal_daily')
         .select('*')
         .eq('restaurant_id', restaurantId)
-        .order('date', { ascending: false })
-        .limit(60);
+        .order('date', { ascending: false });
+
+      if (temporalError) {
+        console.log('⚠️ Temporal intelligence error:', temporalError.message);
+      }
 
       intelligenceData.products = productIntelligence || [];
       intelligenceData.payments = paymentIntelligence || [];
       intelligenceData.temporal = temporalIntelligence || [];
-      intelligenceData.available = (productIntelligence?.length || 0) > 0;
+      intelligenceData.available = (productIntelligence?.length || 0) > 0 || 
+                                   (paymentIntelligence?.length || 0) > 0 || 
+                                   (temporalIntelligence?.length || 0) > 0;
 
-      console.log('📊 Intelligence data vectorized:', {
+      console.log('📊 Intelligence data vectorized (ALL DATES):', {
         products: intelligenceData.products.length,
         payments: intelligenceData.payments.length,
         temporal: intelligenceData.temporal.length,
         available: intelligenceData.available
       });
+
+      // Log date ranges for debugging
+      if (intelligenceData.products.length > 0) {
+        const productDates = intelligenceData.products.map(p => p.date);
+        const uniqueDates = [...new Set(productDates)];
+        console.log('📅 Product intelligence dates:', uniqueDates.slice(0, 5), '...(total:', uniqueDates.length, 'dates)');
+      }
+
+      if (intelligenceData.payments.length > 0) {
+        const paymentDates = intelligenceData.payments.map(p => p.date);
+        const uniqueDates = [...new Set(paymentDates)];
+        console.log('📅 Payment intelligence dates:', uniqueDates.slice(0, 5), '...(total:', uniqueDates.length, 'dates)');
+      }
+
+      if (intelligenceData.temporal.length > 0) {
+        const temporalDates = intelligenceData.temporal.map(p => p.date);
+        const uniqueDates = [...new Set(temporalDates)];
+        console.log('📅 Temporal intelligence dates:', uniqueDates.slice(0, 5), '...(total:', uniqueDates.length, 'dates)');
+      }
 
       return intelligenceData;
 
@@ -141,27 +171,52 @@ class RestaurantDataVectorizer {
     }
   }
 
-  // 📈 GET TRANSACTION DATA  
+  // 📈 GET TRANSACTION DATA (FIXED - All available data)
   async getTransactionData(restaurantId) {
-    console.log('📈 VECTORIZING: Transaction history...');
+    console.log('📈 VECTORIZING: Transaction history (ALL available data)...');
     
     try {
-      const { data: transactions } = await this.supabase
+      // FIXED: Get ALL transactions, no limit - FudiGPT needs complete picture
+      const { data: transactions, error } = await this.supabase
         .from('transactions')
         .select(`
           id,
           transaction_date,
           items,
           total_amount,
+          amount,
           payment_method,
-          customer_count,
+          guest_count,
+          employee_id,
+          employee_name,
           created_at
         `)
         .eq('restaurant_id', restaurantId)
-        .order('transaction_date', { ascending: false })
-        .limit(1000); // Last 1000 transactions
+        .order('transaction_date', { ascending: false });
 
-      console.log('📈 Transaction data vectorized:', transactions?.length || 0, 'transactions');
+      if (error) {
+        console.error('❌ Transaction query error:', error.message);
+        return [];
+      }
+
+      console.log('📈 Transaction data vectorized (ALL DATA):', transactions?.length || 0, 'transactions');
+      
+      // Log date range for debugging
+      if (transactions && transactions.length > 0) {
+        const dates = transactions.map(t => t.transaction_date?.split('T')[0]).filter(Boolean);
+        const uniqueDates = [...new Set(dates)];
+        const firstDate = dates[dates.length - 1]; // Oldest (because ordered desc)
+        const lastDate = dates[0]; // Most recent
+        
+        console.log('📅 Transaction date range:', firstDate, 'to', lastDate, `(${uniqueDates.length} unique dates)`);
+        console.log('📋 Sample transaction:', {
+          id: transactions[0].id,
+          date: transactions[0].transaction_date,
+          amount: transactions[0].total_amount,
+          items_count: transactions[0].items ? (Array.isArray(transactions[0].items) ? transactions[0].items.length : 'not_array') : 'null'
+        });
+      }
+      
       return transactions || [];
 
     } catch (error) {
@@ -170,16 +225,32 @@ class RestaurantDataVectorizer {
     }
   }
 
-  // 🍽️ GET PRODUCT DATA
+  // 🍽️ GET PRODUCT DATA (FIXED - Remove category column)
   async getProductData(restaurantId) {
     console.log('🍽️ VECTORIZING: Product catalog...');
     
     try {
-      const { data: products } = await this.supabase
+      // FIXED: Remove category column that doesn't exist
+      const { data: products, error } = await this.supabase
         .from('products')
-        .select('*')
+        .select(`
+          id,
+          name,
+          price,
+          cost,
+          category_id,
+          visible,
+          barcode,
+          unit,
+          created_at
+        `)
         .eq('restaurant_id', restaurantId)
         .order('name', { ascending: true });
+
+      if (error) {
+        console.error('❌ Product query error:', error.message);
+        return [];
+      }
 
       console.log('🍽️ Product data vectorized:', products?.length || 0, 'products');
       return products || [];
@@ -222,8 +293,6 @@ class RestaurantDataVectorizer {
   async getFinancialData(restaurantId) {
     console.log('💰 VECTORIZING: Financial intelligence...');
     
-    // This would be calculated from transactions and intelligence tables
-    // For now, return structure ready for financial analysis
     return {
       currency: 'MXN',
       taxRate: 0.16,
@@ -287,7 +356,7 @@ class RestaurantDataVectorizer {
         dataPoints: this.countDataPoints(rawData),
         qualityScore: this.calculateQualityScore(rawData),
         architecture: 'restaurant_data_vectorizer',
-        version: '1.0.0'
+        version: '2.0.0_fixed'
       }
     };
 
@@ -297,22 +366,42 @@ class RestaurantDataVectorizer {
     return vectorizedData;
   }
 
-  // 🔍 PROCESS INTELLIGENCE METHODS
+  // 🔍 PROCESS INTELLIGENCE METHODS (Enhanced for complete data)
   processProductIntelligence(productIntelligence) {
     if (!productIntelligence || productIntelligence.length === 0) {
       return { available: false, message: 'No product intelligence available' };
     }
 
+    // Group by date to show coverage
+    const dateGroups = {};
+    productIntelligence.forEach(product => {
+      const date = product.date;
+      if (!dateGroups[date]) dateGroups[date] = [];
+      dateGroups[date].push(product);
+    });
+
+    const dates = Object.keys(dateGroups).sort();
+    const latestDate = dates[0]; // Most recent (desc order)
+    const oldestDate = dates[dates.length - 1]; // Oldest
+
     return {
       available: true,
       totalRecords: productIntelligence.length,
-      latestDate: productIntelligence[0]?.date,
-      topProducts: productIntelligence.slice(0, 10),
-      summary: `${productIntelligence.length} days of product intelligence available`,
+      totalDates: dates.length,
+      latestDate: latestDate,
+      oldestDate: oldestDate,
+      topProducts: productIntelligence.slice(0, 20), // More products for complete picture
+      summary: `${productIntelligence.length} product records across ${dates.length} dates`,
       dataRange: {
-        from: productIntelligence[productIntelligence.length - 1]?.date,
-        to: productIntelligence[0]?.date
-      }
+        from: oldestDate,
+        to: latestDate,
+        totalDays: dates.length
+      },
+      dateBreakdown: Object.keys(dateGroups).map(date => ({
+        date: date,
+        productCount: dateGroups[date].length,
+        totalRevenue: dateGroups[date].reduce((sum, p) => sum + (parseFloat(p.total_revenue) || 0), 0)
+      })).slice(0, 10) // Show first 10 dates for context
     };
   }
 
@@ -344,31 +433,72 @@ class RestaurantDataVectorizer {
     };
   }
 
+  // FIXED: Better transaction history processing
   processTransactionHistory(transactions) {
     if (!transactions || transactions.length === 0) {
       return { available: false, message: 'No transaction history available' };
     }
 
-    const totalRevenue = transactions.reduce((sum, t) => sum + (t.total_amount || 0), 0);
+    const totalRevenue = transactions.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0);
     const avgTicket = totalRevenue / transactions.length;
+
+    // Extract date range
+    const dates = transactions.map(t => t.transaction_date).filter(Boolean).sort();
+    const dateRange = dates.length > 0 ? {
+      from: dates[dates.length - 1], // Oldest (because sorted desc)
+      to: dates[0] // Most recent
+    } : null;
 
     return {
       available: true,
       totalTransactions: transactions.length,
       totalRevenue: totalRevenue,
       averageTicket: avgTicket,
-      dateRange: {
-        from: transactions[transactions.length - 1]?.transaction_date,
-        to: transactions[0]?.transaction_date
-      },
-      summary: `${transactions.length} transactions totaling $${totalRevenue.toFixed(2)}`
+      dateRange: dateRange,
+      summary: `${transactions.length} transactions totaling $${totalRevenue.toFixed(2)}`,
+      // Additional useful metrics
+      paymentMethods: this.analyzePaymentMethods(transactions),
+      dailyAverage: this.calculateDailyAverage(transactions),
+      recentActivity: this.getRecentActivity(transactions)
     };
   }
 
+  // NEW: Analyze payment methods from transactions
+  analyzePaymentMethods(transactions) {
+    const methods = {};
+    transactions.forEach(t => {
+      const method = t.payment_method || 'unknown';
+      methods[method] = (methods[method] || 0) + 1;
+    });
+    return methods;
+  }
+
+  // NEW: Calculate daily average
+  calculateDailyAverage(transactions) {
+    if (transactions.length === 0) return 0;
+    
+    const dates = [...new Set(transactions.map(t => t.transaction_date?.split('T')[0]).filter(Boolean))];
+    return dates.length > 0 ? transactions.length / dates.length : 0;
+  }
+
+  // NEW: Get recent activity
+  getRecentActivity(transactions) {
+    const recent = transactions.slice(0, 10); // Last 10 transactions
+    return {
+      count: recent.length,
+      totalAmount: recent.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0),
+      avgAmount: recent.length > 0 ? recent.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0) / recent.length : 0
+    };
+  }
+
+  // FIXED: Better product catalog processing
   processProductCatalog(products) {
     if (!products || products.length === 0) {
       return { available: false, message: 'No product catalog available' };
     }
+
+    // Extract categories from category_id
+    const categoryIds = [...new Set(products.map(p => p.category_id).filter(Boolean))];
 
     return {
       available: true,
@@ -377,37 +507,94 @@ class RestaurantDataVectorizer {
         id: p.id,
         name: p.name,
         price: p.price,
-        category: p.category
+        cost: p.cost,
+        category_id: p.category_id,
+        visible: p.visible,
+        margin: p.price && p.cost ? ((p.price - p.cost) / p.price * 100).toFixed(2) : null
       })),
-      categories: [...new Set(products.map(p => p.category).filter(Boolean))],
-      summary: `${products.length} products in catalog`
+      categoryIds: categoryIds,
+      summary: `${products.length} products in catalog with ${categoryIds.length} categories`,
+      priceRange: this.calculatePriceRange(products),
+      activeProducts: products.filter(p => p.visible !== false).length
     };
   }
 
-  // 📊 UTILITY METHODS
-  assessDataQuality(rawData) {
-    let score = 0;
-    if (rawData.intelligence.available) score += 40;
-    if (rawData.transactions.length > 0) score += 30;
-    if (rawData.products.length > 0) score += 30;
+  // NEW: Calculate price range
+  calculatePriceRange(products) {
+    const prices = products.map(p => parseFloat(p.price || 0)).filter(p => p > 0);
+    if (prices.length === 0) return { min: 0, max: 0, avg: 0 };
     
     return {
-      score: score,
-      level: score >= 80 ? 'excellent' : score >= 60 ? 'good' : score >= 40 ? 'fair' : 'poor',
+      min: Math.min(...prices),
+      max: Math.max(...prices),
+      avg: prices.reduce((sum, p) => sum + p, 0) / prices.length
+    };
+  }
+
+  // 📊 UTILITY METHODS (IMPROVED - Better scoring for complete data)
+  assessDataQuality(rawData) {
+    let score = 0;
+    
+    // Intelligence tables scoring (more comprehensive)
+    if (rawData.intelligence.available) {
+      score += 40; // Base for having intelligence tables
+      
+      // Bonus for volume of intelligence data
+      if (rawData.intelligence.products.length > 20) score += 10;
+      if (rawData.intelligence.payments.length > 5) score += 5;
+      if (rawData.intelligence.temporal.length > 5) score += 5;
+    }
+    
+    // Transaction scoring (more nuanced)
+    if (rawData.transactions.length > 5000) score += 30; // Excellent volume
+    else if (rawData.transactions.length > 1000) score += 25; // Good volume
+    else if (rawData.transactions.length > 100) score += 15; // Moderate volume
+    else if (rawData.transactions.length > 0) score += 5; // Some data
+    
+    // Product catalog scoring
+    if (rawData.products.length > 100) score += 10;
+    else if (rawData.products.length > 50) score += 8;
+    else if (rawData.products.length > 0) score += 5;
+    
+    return {
+      score: Math.min(score, 100), // Cap at 100
+      level: score >= 85 ? 'excellent' : score >= 70 ? 'very_good' : score >= 60 ? 'good' : score >= 40 ? 'fair' : 'poor',
       components: {
         intelligence: rawData.intelligence.available,
+        intelligenceVolume: {
+          products: rawData.intelligence.products.length,
+          payments: rawData.intelligence.payments.length,
+          temporal: rawData.intelligence.temporal.length
+        },
         transactions: rawData.transactions.length > 0,
-        products: rawData.products.length > 0
+        transactionVolume: rawData.transactions.length,
+        products: rawData.products.length > 0,
+        productVolume: rawData.products.length
       }
     };
   }
 
   calculateMetrics(rawData) {
-    // Calculate key business metrics from available data
     return {
       dataPoints: this.countDataPoints(rawData),
       timespan: this.calculateTimespan(rawData),
-      completeness: this.calculateCompleteness(rawData)
+      completeness: this.calculateCompleteness(rawData),
+      businessMetrics: this.calculateBusinessMetrics(rawData)
+    };
+  }
+
+  // NEW: Calculate business metrics
+  calculateBusinessMetrics(rawData) {
+    if (rawData.transactions.length === 0) return {};
+    
+    const totalRevenue = rawData.transactions.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0);
+    const avgTicket = totalRevenue / rawData.transactions.length;
+    
+    return {
+      totalRevenue: totalRevenue,
+      avgTicket: avgTicket,
+      transactionCount: rawData.transactions.length,
+      productsOffered: rawData.products.length
     };
   }
 
@@ -418,12 +605,23 @@ class RestaurantDataVectorizer {
       insights.push('Intelligence tables available for advanced analysis');
     }
     
-    if (rawData.transactions.length > 100) {
+    if (rawData.transactions.length > 1000) {
       insights.push(`Rich transaction history with ${rawData.transactions.length} records`);
+    } else if (rawData.transactions.length > 100) {
+      insights.push(`Moderate transaction history with ${rawData.transactions.length} records`);
+    } else if (rawData.transactions.length > 0) {
+      insights.push(`Limited transaction history with ${rawData.transactions.length} records`);
     }
     
     if (rawData.products.length > 0) {
       insights.push(`Product catalog with ${rawData.products.length} items`);
+    }
+
+    // Business insights
+    if (rawData.transactions.length > 0) {
+      const totalRevenue = rawData.transactions.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0);
+      const avgTicket = totalRevenue / rawData.transactions.length;
+      insights.push(`Average ticket: $${avgTicket.toFixed(2)}`);
     }
 
     return insights;
@@ -434,7 +632,8 @@ class RestaurantDataVectorizer {
       productNames: rawData.products.map(p => p.name),
       hasIntelligence: rawData.intelligence.available,
       transactionCount: rawData.transactions.length,
-      dataAvailable: true
+      dataAvailable: true,
+      revenueTotal: rawData.transactions.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0)
     };
   }
 
@@ -442,7 +641,8 @@ class RestaurantDataVectorizer {
     return {
       dataPatterns: 'identified',
       temporalPatterns: 'analyzed',
-      productPatterns: 'processed'
+      productPatterns: 'processed',
+      transactionVolume: rawData.transactions.length > 1000 ? 'high' : rawData.transactions.length > 100 ? 'medium' : 'low'
     };
   }
 
@@ -453,8 +653,14 @@ class RestaurantDataVectorizer {
       recommendations.push('Consider running intelligence table generation for deeper insights');
     }
     
-    if (rawData.transactions.length < 50) {
+    if (rawData.transactions.length < 100) {
       recommendations.push('More transaction data would improve analysis quality');
+    } else if (rawData.transactions.length > 1000) {
+      recommendations.push('Excellent transaction volume - ready for advanced analytics');
+    }
+
+    if (rawData.products.length > 100) {
+      recommendations.push('Large product catalog - consider ABC analysis for optimization');
     }
 
     return recommendations;
@@ -472,14 +678,14 @@ class RestaurantDataVectorizer {
   calculateTimespan(rawData) {
     if (rawData.transactions.length === 0) return 'No timespan data';
     
-    const dates = rawData.transactions.map(t => new Date(t.transaction_date)).filter(d => !isNaN(d));
+    const dates = rawData.transactions.map(t => new Date(t.transaction_date)).filter(d => !isNaN(d.getTime()));
     if (dates.length === 0) return 'No valid dates';
     
     const earliest = new Date(Math.min(...dates));
     const latest = new Date(Math.max(...dates));
     const days = Math.ceil((latest - earliest) / (1000 * 60 * 60 * 24));
     
-    return `${days} days of data`;
+    return `${days} days of data (${earliest.toISOString().split('T')[0]} to ${latest.toISOString().split('T')[0]})`;
   }
 
   calculateCompleteness(rawData) {
@@ -545,13 +751,23 @@ class RestaurantDataVectorizer {
   getSystemStatus() {
     return {
       architecture: 'restaurant_data_vectorizer',
+      version: '2.0.0_fixed',
       purpose: 'Pre-process ALL restaurant data for FUDI',
+      fixes: [
+        'Removed customer_count column reference',
+        'Removed products.category column reference', 
+        'Added better error handling',
+        'Improved transaction processing',
+        'Enhanced data quality assessment',
+        'Added business metrics calculation'
+      ],
       advantages: [
         'Guarantees correct restaurant data',
         'Pre-organized intelligence',
         'Scalable to millions of restaurants',
         'No data mixing between restaurants',
-        'Optimized for AI consumption'
+        'Optimized for AI consumption',
+        'Fixed column compatibility issues'
       ],
       dataProcessed: [
         'Restaurant identity',
@@ -567,24 +783,3 @@ class RestaurantDataVectorizer {
 }
 
 module.exports = { RestaurantDataVectorizer };
-
-// 🎯 USAGE EXAMPLE:
-/*
-const { RestaurantDataVectorizer } = require('./RestaurantDataVectorizer');
-
-const vectorizer = new RestaurantDataVectorizer(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-// Vectorize ALL restaurant data
-const vectorizedData = await vectorizer.vectorizeRestaurantData(restaurantId);
-
-// Now FUDI receives PERFECT data - no searching, no confusion
-const fudiResponse = await claudeDirect.processWithVectorizedData(
-  userQuery,
-  vectorizedData
-);
-
-// RESULT: FUDI has PERFECT data about the RIGHT restaurant!
-*/
