@@ -97,7 +97,7 @@ class FudiIntelligenceEngine {
         `)
         .eq('restaurant_id', restaurantId)
         .order('transaction_date', { ascending: false })
-        .limit(999); // Remove default 1000 limit - get ALL transactions
+        .limit(null); // Remove default 1000 limit - get ALL transactions
 
       if (error) {
         console.error('❌ Transaction mining error:', error.message);
@@ -105,7 +105,11 @@ class FudiIntelligenceEngine {
       }
 
       console.log('💎 MINED:', transactions?.length || 0, 'transaction gems');
-      
+      // Log date range for debugging
+      if (transactions && transactions.length > 0) {
+        const dates = transactions.map(t => t.transaction_date?.split('T')[0]).filter(Boolean);
+        console.log('📅 Transaction dates:', [...new Set(dates)].slice(0, 5), '...(total:', new Set(dates).size, 'dates)');
+      }
       return transactions || [];
 
     } catch (error) {
