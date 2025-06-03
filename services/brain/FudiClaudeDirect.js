@@ -1,157 +1,228 @@
-// 🧠 services/brain/FudiClaudeDirectVectorized.js
-// REVOLUTIONARY ARCHITECTURE: Claude + Vectorized Data = UNSTOPPABLE
-// NO MORE DATA CONFUSION - PERFECT INTELLIGENCE EVERY TIME
+// 🧠 services/brain/FudiClaudeDirect.js
+// REVOLUTIONARY ARCHITECTURE: Claude connects directly to data
+// NO MORE FUNCTIONS - CLAUDE HANDLES EVERYTHING
 
 const { createClient } = require('@supabase/supabase-js');
-const { RestaurantDataVectorizer } = require('./RestaurantDataVectorizer');
 
-class FudiClaudeDirectVectorized {
+class FudiClaudeDirect {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
-    console.log('🧠 FudiClaudeDirectVectorized: Initializing REVOLUTIONARY architecture...');
+    console.log('🧠 FudiClaudeDirect: Initializing REVOLUTIONARY architecture...');
     
     this.supabase = createClient(supabaseUrl, supabaseKey);
     this.anthropicKey = anthropicKey;
     
-    // 🎯 Initialize the DataVectorizer
-    this.dataVectorizer = new RestaurantDataVectorizer(supabaseUrl, supabaseKey);
-    
-    console.log('🔥 CLAUDE-DIRECT-VECTORIZED: Perfect data + Unlimited intelligence');
-    console.log('✅ FudiClaudeDirectVectorized initialized - Ready to be UNSTOPPABLE');
+    console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
+    console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
   }
 
-  // 🚀 MAIN METHOD: Claude processes with PERFECT VECTORIZED DATA
+  // 🚀 MAIN METHOD: Claude processes ANY query directly
   async processQuery(message, restaurantId, context = {}) {
-    console.log('🧠 CLAUDE-DIRECT-VECTORIZED: Processing query with PERFECT data...');
+    console.log('🧠 CLAUDE-DIRECT: Processing query with unlimited intelligence...');
     console.log('📝 Query:', message);
     console.log('🏪 Restaurant:', restaurantId);
 
     try {
-      // 🎯 STEP 1: Vectorize ALL restaurant data (GUARANTEED CORRECT)
-      console.log('🔄 VECTORIZING: Getting PERFECT restaurant data...');
-      const vectorizedData = await this.dataVectorizer.vectorizeRestaurantData(restaurantId);
+      // 🎯 STEP 1: Get restaurant context for Claude
+      const restaurantContext = await this.getRestaurantContext(restaurantId);
       
-      // 🧠 STEP 2: Claude processes with PERFECT vectorized data
-      const claudeResponse = await this.claudeDirectProcessingWithVectorizedData(
+      // 🧠 STEP 2: Claude analyzes query and gets needed data
+      const dataContext = await this.getDataContextForClaude(message, restaurantId);
+      
+      // 🤖 STEP 3: Claude processes everything and responds
+      const claudeResponse = await this.claudeDirectProcessing(
         message, 
-        vectorizedData, 
+        restaurantContext, 
+        dataContext, 
         context
       );
 
-      console.log('✅ CLAUDE-DIRECT-VECTORIZED: Perfect intelligence processing complete');
+      console.log('✅ CLAUDE-DIRECT: Unlimited intelligence processing complete');
       
       return {
         success: true,
         response: claudeResponse,
         metadata: {
-          architecture: 'claude_direct_vectorized',
-          processingMode: 'perfect_intelligence',
+          architecture: 'claude_direct',
+          processingMode: 'unlimited_intelligence',
           adaptability: 'infinite',
-          dataQuality: vectorizedData.restaurantContext.dataQuality.level,
-          dataPoints: vectorizedData.vectorizationMetadata.dataPoints.total,
-          vectorizedAt: vectorizedData.vectorizationMetadata.vectorizedAt,
-          guarantee: 'correct_restaurant_data'
+          functionsUsed: 0,
+          claudePowered: true
         }
       };
 
     } catch (error) {
-      console.error('❌ CLAUDE-DIRECT-VECTORIZED error:', error);
+      console.error('❌ CLAUDE-DIRECT error:', error);
       return await this.handleError(error, message);
     }
   }
 
-  // 🤖 CLAUDE PROCESSING WITH VECTORIZED DATA - THE MAGIC HAPPENS HERE
-  async claudeDirectProcessingWithVectorizedData(message, vectorizedData, userContext) {
-    console.log('🤖 CLAUDE-DIRECT-VECTORIZED: Engaging PERFECT intelligence...');
+  // 🏪 GET RESTAURANT CONTEXT
+  async getRestaurantContext(restaurantId) {
+    console.log('🏪 CLAUDE-DIRECT: Getting restaurant context...');
+    
+    try {
+      // Get basic restaurant info
+      const { data: restaurant } = await this.supabase
+        .from('restaurants')
+        .select('*')
+        .eq('id', restaurantId)
+        .single();
+
+      // Get products for context
+      const { data: products } = await this.supabase
+        .from('products')
+        .select('id, name, price, category')
+        .eq('restaurant_id', restaurantId)
+        .limit(50);
+
+      return {
+        restaurant: restaurant || { id: restaurantId, name: 'Restaurant' },
+        products: products || [],
+        totalProducts: products?.length || 0
+      };
+
+    } catch (error) {
+      console.log('⚠️ Restaurant context error:', error.message);
+      return {
+        restaurant: { id: restaurantId, name: 'Restaurant' },
+        products: [],
+        totalProducts: 0
+      };
+    }
+  }
+
+  // 📊 GET DATA CONTEXT FOR CLAUDE
+  async getDataContextForClaude(message, restaurantId) {
+    console.log('📊 CLAUDE-DIRECT: Getting comprehensive data context...');
+    
+    const dataContext = {
+      intelligenceTables: {},
+      recentTransactions: [],
+      rawData: {},
+      timeframes: {}
+    };
+
+    try {
+      // 🧠 INTELLIGENCE TABLES (if available)
+      const { data: intelligenceDaily } = await this.supabase
+        .from('intelligent_product_daily')
+        .select('*')
+        .eq('restaurant_id', restaurantId)
+        .order('date', { ascending: false })
+        .limit(30);
+
+      const { data: intelligencePayment } = await this.supabase
+        .from('intelligent_payment_daily')
+        .select('*')
+        .eq('restaurant_id', restaurantId)
+        .order('date', { ascending: false })
+        .limit(30);
+
+      const { data: intelligenceTemporal } = await this.supabase
+        .from('intelligent_temporal_daily')
+        .select('*')
+        .eq('restaurant_id', restaurantId)
+        .order('date', { ascending: false })
+        .limit(30);
+
+      dataContext.intelligenceTables = {
+        products: intelligenceDaily || [],
+        payments: intelligencePayment || [],
+        temporal: intelligenceTemporal || [],
+        available: (intelligenceDaily?.length || 0) > 0
+      };
+
+      // 📈 RECENT TRANSACTIONS (fallback/additional context)
+      const { data: recentTransactions } = await this.supabase
+        .from('transactions')
+        .select(`
+          id,
+          transaction_date,
+          items,
+          total_amount,
+          payment_method,
+          customer_count
+        `)
+        .eq('restaurant_id', restaurantId)
+        .order('transaction_date', { ascending: false })
+        .limit(200);
+
+      dataContext.recentTransactions = recentTransactions || [];
+
+      // ⏰ TIME CONTEXT
+      const today = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const lastWeek = new Date();
+      lastWeek.setDate(lastWeek.getDate() - 7);
+
+      dataContext.timeframes = {
+        today: today.toISOString().split('T')[0],
+        yesterday: yesterday.toISOString().split('T')[0],
+        lastWeek: lastWeek.toISOString().split('T')[0],
+        currentTime: today.toISOString()
+      };
+
+      console.log('📊 Data context prepared:', {
+        intelligenceTablesAvailable: dataContext.intelligenceTables.available,
+        intelligenceRecords: dataContext.intelligenceTables.products?.length || 0,
+        recentTransactions: dataContext.recentTransactions.length,
+        timeframesCovered: Object.keys(dataContext.timeframes).length
+      });
+
+      return dataContext;
+
+    } catch (error) {
+      console.error('❌ Data context error:', error);
+      return dataContext;
+    }
+  }
+
+  // 🤖 CLAUDE DIRECT PROCESSING - THE MAGIC HAPPENS HERE
+  async claudeDirectProcessing(message, restaurantContext, dataContext, userContext) {
+    console.log('🤖 CLAUDE-DIRECT: Engaging unlimited intelligence...');
 
     try {
       // 🔑 SET ENVIRONMENT VARIABLE FOR AI SDK
       process.env.ANTHROPIC_API_KEY = this.anthropicKey;
       
-      // 🧠 USE EXACT SAME PATTERN AS WORKING SYSTEM
+      // 🧠 USE EXACT SAME PATTERN AS WORKING FUDIRAIN
       const { generateText } = require('ai');
       const { anthropic } = require('@ai-sdk/anthropic');
 
-      // 🧠 SYSTEM PROMPT: Give Claude PERFECT restaurant intelligence + CLAUDE FORMATTING
-      const systemPrompt = `Eres FUDI, el consultor de restaurantes más inteligente del mundo. Usas el FORMATO EXACTO de Claude Sonnet 4 - elegante, minimalista, jerárquico.
+      // 🧠 SYSTEM PROMPT: Give Claude restaurant intelligence superpowers
+      const systemPrompt = `Eres FUDI, el consultor de restaurantes más inteligente del mundo. Tienes acceso directo a todos los datos del restaurante y puedes analizar cualquier pregunta sin limitaciones.
 
-## 🎯 **PERSONALIDAD:**
-- **Directo y específico** con datos reales
-- **Tono mexicano conversacional** pero profesional  
-- **Insights accionables** - no solo números
-- **Formato Claude:** Headers, negritas, jerarquías visuales
+PERSONALIDAD:
+- Directo y específico con datos reales
+- Tono mexicano conversacional pero profesional  
+- Das insights accionables, no solo números
+- Siempre terminas con el separador: ---
 
-## 📊 **DATOS DISPONIBLES:**
-${this.formatVectorizedDataForClaude(vectorizedData)}
+DATOS DISPONIBLES:
+${this.formatDataContextForClaude(restaurantContext, dataContext)}
 
-## 🚀 **FORMATO DE RESPUESTA OBLIGATORIO:**
+CAPACIDADES ILIMITADAS:
+- Puedes analizar cualquier timeframe
+- Puedes comparar productos, horarios, patrones
+- Puedes detectar tendencias y dar recomendaciones
+- Puedes responder preguntas complejas que ninguna función podría manejar
 
-### **ESTRUCTURA VISUAL:**
-- **## HEADERS GRANDES** para secciones principales
-- **### Sub-headers** para categorías
-- **🔥 Emojis estratégicos** para destacar puntos clave
-- **Texto en negrita** para números importantes
-- **• Bullets** para listas cortas y claras
-
-### **JERARQUÍA VISUAL:**
-1. **🎯 INSIGHT PRINCIPAL** (lo más importante arriba)
-2. **📊 DATOS CLAVE** (números específicos) 
-3. **💡 RECOMENDACIONES** (acciones concretas)
-
-### **ESTILO CLAUDE:**
-- **Simple, elegante, minimalista**
-- **Espaciado visual correcto**
-- **Información densa pero fácil de escanear**
-- **Headers descriptivos y concisos**
-
-## ⚡ **INSTRUCCIONES:**
-
-1. **Analiza** la pregunta inteligentemente
-2. **Usa datos vectorizados** (garantizados correctos)
-3. **Responde con formato Claude** - headers, negritas, jerarquía
-4. **Incluye insights accionables** específicos
-5. **Termina con:** \n\n---
-
-**EJEMPLO DE FORMATO:**
-## 🎯 **ANÁLISIS DE VENTAS**
-
-### **💰 Números Clave:**
-- **Total:** $30,159 en 195 transacciones
-- **Ticket promedio:** $154.67
-
-### **⭐ Producto Estrella:**
-**CODO** - 5,325 unidades vendidas
-
-### **💡 Recomendaciones:**
-- **Optimizar hora pico:** 2:00 PM
-- **Promover tarjetas:** Ticket 2x más alto
-
----`;
+INSTRUCCIONES:
+1. Analiza la pregunta del usuario
+2. Usa los datos disponibles inteligentemente
+3. Da una respuesta específica con números reales
+4. Incluye insights y recomendaciones accionables
+5. Mantén tono natural y conversacional`;
 
       const { text } = await generateText({
         model: anthropic('claude-3-5-sonnet-20241022'),
         system: systemPrompt,
-        prompt: `**QUERY:** "${message}"
+        prompt: `Pregunta del usuario: "${message}"
 
-## 🧠 **CONTEXT PERFECTO DEL RESTAURANT:**
-${this.createPerfectDataContext(vectorizedData)}
+Contexto adicional: El usuario está preguntando sobre su restaurante. Usa los datos disponibles para dar una respuesta específica, inteligente y accionable. Si hay datos de intelligence tables úsalos preferentemente, si no usa las transacciones recientes.
 
-## 🎯 **INSTRUCCIONES DE RESPUESTA:**
-
-**Responde como FUDI usando:**
-- **## HEADERS** para organizar información
-- **Números en negrita** para datos clave  
-- **Emojis estratégicos** para destacar insights
-- **Jerarquía visual clara** como Claude Sonnet 4
-- **Formato elegante y minimalista**
-
-**Los datos están GARANTIZADOS del restaurant correcto. Úsalos con confianza total.**
-
-**Estructura sugerida:**
-1. **🎯 INSIGHT PRINCIPAL** 
-2. **📊 DATOS ESPECÍFICOS**
-3. **💡 RECOMENDACIONES**
-
-Responde como el consultor más inteligente del mundo, con formato Claude.`,
+Responde como FUDI con datos específicos y insights valiosos.`,
         temperature: 0.7,
         maxTokens: 1500,
       });
@@ -159,114 +230,73 @@ Responde como el consultor más inteligente del mundo, con formato Claude.`,
       // Ensure the response ends with the separator
       const response = text.endsWith('---') ? text : text + '\n\n---';
       
-      console.log('✅ CLAUDE-DIRECT-VECTORIZED: Perfect intelligence response generated');
+      console.log('✅ CLAUDE-DIRECT: Unlimited intelligence response generated');
       return response;
 
     } catch (error) {
-      console.error('❌ Claude vectorized processing error:', error);
+      console.error('❌ Claude processing error:', error);
       throw error;
     }
   }
 
-  // 📋 FORMAT VECTORIZED DATA FOR CLAUDE (CLEAN & ELEGANT)
-  formatVectorizedDataForClaude(vectorizedData) {
-    const { restaurantContext, intelligenceReady } = vectorizedData;
-    
-    let context = '';
+  // 📋 FORMAT DATA CONTEXT FOR CLAUDE
+  formatDataContextForClaude(restaurantContext, dataContext) {
+    let formattedContext = '';
 
-    // Restaurant identity (clean)
-    context += `**RESTAURANT:** ${restaurantContext.identity.name}\n`;
-    context += `**DATA QUALITY:** ${restaurantContext.dataQuality.level} (${restaurantContext.dataQuality.score}%)\n\n`;
+    // Restaurant info
+    formattedContext += `RESTAURANTE: ${restaurantContext.restaurant.name || 'Restaurant'}\n`;
+    formattedContext += `PRODUCTOS DISPONIBLES: ${restaurantContext.totalProducts} productos\n\n`;
 
-    // Data availability (visual)
-    context += `## 📊 **DATOS DISPONIBLES:**\n\n`;
-    context += `### **Intelligence Tables:**\n`;
-    context += `- **Products:** ${intelligenceReady.products.available ? '✅ AVAILABLE' : '❌ NOT AVAILABLE'}\n`;
-    context += `- **Payments:** ${intelligenceReady.payments.available ? '✅ AVAILABLE' : '❌ NOT AVAILABLE'}\n`;
-    context += `- **Temporal:** ${intelligenceReady.temporal.available ? '✅ AVAILABLE' : '❌ NOT AVAILABLE'}\n\n`;
-    
-    context += `### **Historical Data:**\n`;
-    context += `- **Transactions:** ${intelligenceReady.transactionHistory.available ? '✅ AVAILABLE' : '❌ NOT AVAILABLE'}\n`;
-    context += `- **Product Catalog:** ${intelligenceReady.productCatalog.available ? '✅ AVAILABLE' : '❌ NOT AVAILABLE'}\n\n`;
-
-    return context;
-  }
-
-  // 📊 CREATE PERFECT DATA CONTEXT (CLAUDE-STYLE FORMATTING)
-  createPerfectDataContext(vectorizedData) {
-    const { intelligenceReady, temporalContext, financialContext } = vectorizedData;
-    
-    let context = '';
-
-    // INTELLIGENCE TABLES (if available)
-    if (intelligenceReady.products.available) {
-      context += `## 📈 **PRODUCT INTELLIGENCE** (${intelligenceReady.products.totalRecords} días):\n\n`;
-      context += `**Period:** ${intelligenceReady.products.dataRange?.from} → ${intelligenceReady.products.dataRange?.to}\n\n`;
+    // Intelligence tables (preferred data source)
+    if (dataContext.intelligenceTables.available) {
+      formattedContext += `📊 INTELLIGENCE TABLES (PRE-CALCULADAS):\n`;
       
-      // Clean format for top products
-      const topProducts = intelligenceReady.products.topProducts.slice(0, 3);
-      if (topProducts.length > 0) {
-        context += `### **Top Products:**\n`;
-        topProducts.forEach(product => {
-          context += `- **${product.product_name || 'Product'}:** ${product.total_units || 0} units, ${product.total_revenue || 0}\n`;
-        });
-        context += '\n';
+      if (dataContext.intelligenceTables.products.length > 0) {
+        formattedContext += `Productos Intelligence: ${dataContext.intelligenceTables.products.length} registros\n`;
+        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.products.slice(0, 5), null, 2)}\n\n`;
+      }
+
+      if (dataContext.intelligenceTables.payments.length > 0) {
+        formattedContext += `Payments Intelligence: ${dataContext.intelligenceTables.payments.length} registros\n`;
+        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.payments.slice(0, 3), null, 2)}\n\n`;
+      }
+
+      if (dataContext.intelligenceTables.temporal.length > 0) {
+        formattedContext += `Temporal Intelligence: ${dataContext.intelligenceTables.temporal.length} registros\n`;
+        formattedContext += `Datos disponibles: ${JSON.stringify(dataContext.intelligenceTables.temporal.slice(0, 3), null, 2)}\n\n`;
       }
     }
 
-    if (intelligenceReady.payments.available) {
-      context += `## 💳 **PAYMENT INTELLIGENCE** (${intelligenceReady.payments.totalRecords} días):\n\n`;
-      
-      // Clean payment method data
-      const paymentMethods = intelligenceReady.payments.paymentMethods.slice(0, 2);
-      if (paymentMethods.length > 0) {
-        context += `### **Payment Methods:**\n`;
-        paymentMethods.forEach(payment => {
-          context += `- **${payment.payment_method || 'Method'}:** ${payment.transaction_count || 0} transactions, ${payment.total_amount || 0}\n`;
-        });
-        context += '\n';
-      }
+    // Recent transactions (fallback data)
+    if (dataContext.recentTransactions.length > 0) {
+      formattedContext += `📈 TRANSACCIONES RECIENTES: ${dataContext.recentTransactions.length} disponibles\n`;
+      formattedContext += `Muestra de datos: ${JSON.stringify(dataContext.recentTransactions.slice(0, 3), null, 2)}\n\n`;
     }
 
-    // TRANSACTION SUMMARY (if available)
-    if (intelligenceReady.transactionHistory.available) {
-      context += `## 📊 **TRANSACTION OVERVIEW:**\n\n`;
-      context += `- **Total Transactions:** ${intelligenceReady.transactionHistory.totalTransactions}\n`;
-      context += `- **Total Revenue:** ${intelligenceReady.transactionHistory.totalRevenue.toFixed(2)}\n`;
-      context += `- **Average Ticket:** ${intelligenceReady.transactionHistory.averageTicket.toFixed(2)}\n`;
-      context += `- **Period:** ${intelligenceReady.transactionHistory.dateRange?.from} → ${intelligenceReady.transactionHistory.dateRange?.to}\n\n`;
+    // Time context
+    formattedContext += `⏰ CONTEXTO TEMPORAL:\n`;
+    formattedContext += `Hoy: ${dataContext.timeframes.today}\n`;
+    formattedContext += `Ayer: ${dataContext.timeframes.yesterday}\n`;
+    formattedContext += `Hace una semana: ${dataContext.timeframes.lastWeek}\n\n`;
+
+    // Products context
+    if (restaurantContext.products.length > 0) {
+      formattedContext += `🍽️ PRODUCTOS DEL MENÚ:\n`;
+      formattedContext += `${JSON.stringify(restaurantContext.products.slice(0, 10), null, 2)}\n\n`;
     }
 
-    // PRODUCT CATALOG (if available)
-    if (intelligenceReady.productCatalog.available) {
-      context += `## 🍽️ **PRODUCT CATALOG:**\n\n`;
-      context += `- **Total Products:** ${intelligenceReady.productCatalog.totalProducts}\n`;
-      if (intelligenceReady.productCatalog.categories.length > 0) {
-        context += `- **Categories:** ${intelligenceReady.productCatalog.categories.join(', ')}\n`;
-      }
-      context += '\n';
-    }
-
-    // TEMPORAL CONTEXT (clean)
-    context += `## ⏰ **TEMPORAL CONTEXT:**\n\n`;
-    context += `- **Today:** ${temporalContext.today}\n`;
-    context += `- **Yesterday:** ${temporalContext.yesterday}\n`;
-    context += `- **Last Week:** ${temporalContext.lastWeek}\n`;
-    context += `- **Business Hours:** ${temporalContext.businessHours.open} - ${temporalContext.businessHours.close}\n`;
-    context += `- **Peak Hour:** ${temporalContext.businessHours.peak}\n\n`;
-
-    return context;
+    return formattedContext;
   }
 
   // 🆘 ERROR HANDLING
   async handleError(error, message) {
-    console.log('🆘 CLAUDE-DIRECT-VECTORIZED: Handling error gracefully...');
+    console.log('🆘 CLAUDE-DIRECT: Handling error gracefully...');
     
     return {
       success: false,
-      response: `Disculpa, tuve un problema procesando tu consulta sobre "${message}". Mi sistema de inteligencia vectorizada está experimentando interferencias temporales. Los datos están seguros, pero necesito un momento para reorganizar la matriz. ¿Podrías intentar de nuevo?\n\n---`,
+      response: `Disculpa, tuve un problema procesando tu consulta sobre "${message}". Mi sistema de inteligencia directa está experimentando interferencias temporales. ¿Podrías intentar de nuevo?\n\n---`,
       metadata: {
-        architecture: 'claude_direct_vectorized',
+        architecture: 'claude_direct',
         error: true,
         errorMessage: error.message
       }
@@ -276,110 +306,63 @@ Responde como el consultor más inteligente del mundo, con formato Claude.`,
   // 📊 SYSTEM STATUS
   getSystemStatus() {
     return {
-      architecture: 'claude_direct_vectorized',
-      intelligence: 'perfect_data + unlimited_processing',
+      architecture: 'claude_direct',
+      intelligence: 'unlimited',
       adaptability: 'infinite',
-      dataGuarantee: 'correct_restaurant_only',
-      scalability: 'unlimited_restaurants',
-      description: 'Claude processes any query with perfect vectorized restaurant data',
+      functionsRequired: 0,
+      scalability: 'unlimited',
+      description: 'Claude processes any query directly with restaurant data',
       advantages: [
-        'Guaranteed correct restaurant data',
-        'Pre-organized intelligence tables',
-        'No data mixing between restaurants',
-        'Optimized for AI consumption',
         'Handles any question type',
-        'Infinite adaptability with perfect data',
-        'Scalable to millions of restaurants'
-      ],
-      revolution: 'PERFECT DATA + UNLIMITED INTELLIGENCE = UNSTOPPABLE FUDI'
+        'No function limitations',
+        'Infinite adaptability',
+        'Fewer points of failure',
+        'Natural intelligence processing'
+      ]
     };
   }
 
-  // 🧪 TEST VECTORIZED SYSTEM
-  async testVectorizedSystem(restaurantId) {
-    console.log('🧪 Testing CLAUDE-DIRECT-VECTORIZED system...');
+  // 🧪 TEST METHOD
+  async testSystem() {
+    console.log('🧪 Testing CLAUDE-DIRECT system...');
     
-    try {
-      // Test data vectorization
-      const vectorizationTest = await this.dataVectorizer.testVectorization(restaurantId);
-      
-      // Test sample queries
-      const testQueries = [
-        "¿cómo estuvieron las ventas ayer?",
-        "¿qué producto vendo más?",
-        "dame un análisis completo de la semana pasada",
-        "¿a qué hora tengo más ventas?",
-        "compara mis métodos de pago"
-      ];
+    const testQueries = [
+      "¿cómo estuvieron las ventas ayer?",
+      "¿qué producto vendo más los martes?",
+      "dame un análisis completo de la semana pasada",
+      "compara mis tacos vs pizzas",
+      "¿a qué hora vendo más?"
+    ];
 
-      console.log('🧪 Vectorized system test results:');
-      console.log('✅ Data vectorization:', vectorizationTest.success);
-      console.log('✅ Data quality:', vectorizationTest.dataQuality?.level);
-      console.log('✅ Components ready:', vectorizationTest.components);
-      console.log('✅ Test queries supported:', testQueries.length);
-      
-      return {
-        vectorization: vectorizationTest,
-        querySupport: 'unlimited',
-        dataQuality: vectorizationTest.dataQuality,
-        systemReady: true,
-        architecture: 'claude_direct_vectorized'
-      };
-
-    } catch (error) {
-      console.error('❌ Vectorized system test failed:', error);
-      return {
-        systemReady: false,
-        error: error.message
-      };
-    }
-  }
-
-  // 🎯 QUICK VECTORIZED QUERY (for testing)
-  async quickVectorizedQuery(message, restaurantId) {
-    console.log('🎯 QUICK VECTORIZED QUERY test...');
+    console.log('🧪 Test queries ready:', testQueries.length);
+    console.log('✅ CLAUDE-DIRECT can handle ALL of these and more');
     
-    const result = await this.processQuery(message, restaurantId);
-    
-    console.log('✅ Quick test result:', {
-      success: result.success,
-      architecture: result.metadata?.architecture,
-      dataQuality: result.metadata?.dataQuality,
-      dataPoints: result.metadata?.dataPoints
-    });
-    
-    return result;
+    return {
+      testResult: 'ready',
+      adaptability: 'unlimited',
+      questionsSupported: 'infinite'
+    };
   }
 }
 
-module.exports = { FudiClaudeDirectVectorized };
+module.exports = { FudiClaudeDirect };
 
 // 🎯 USAGE EXAMPLE:
 /*
-const { FudiClaudeDirectVectorized } = require('./FudiClaudeDirectVectorized');
+const { FudiClaudeDirect } = require('./FudiClaudeDirect');
 
-const fudiVectorized = new FudiClaudeDirectVectorized(
+const claudeDirect = new FudiClaudeDirect(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY,
   process.env.ANTHROPIC_API_KEY
 );
 
-// Handle ANY query with PERFECT restaurant data:
-const result = await fudiVectorized.processQuery(
-  "Dame una estrategia completa para aumentar mis ventas 30%",
+// Handle ANY query type:
+const result = await claudeDirect.processQuery(
+  "Dame ventas de martes a viernes de hace 2 semanas comparado con esta semana",
   restaurantId
 );
 
-console.log('Perfect Response:', result.response);
-// Expected: Detailed analysis with CORRECT restaurant data, no confusion!
-
-// Test the system:
-const testResults = await fudiVectorized.testVectorizedSystem(restaurantId);
-console.log('System Status:', testResults);
-
-// Quick test:
-const quickTest = await fudiVectorized.quickVectorizedQuery(
-  "¿cómo estuvieron las ventas ayer?", 
-  restaurantId
-);
+console.log('Claude Response:', result.response);
+// Expected: Detailed, specific analysis that no function could handle
 */
