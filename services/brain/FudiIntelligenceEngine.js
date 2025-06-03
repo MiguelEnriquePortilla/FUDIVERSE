@@ -97,7 +97,7 @@ class FudiIntelligenceEngine {
         `)
         .eq('restaurant_id', restaurantId)
         .order('transaction_date', { ascending: false })
-        .limit(null); // Remove default 1000 limit - get ALL transactions
+        .limit(999999); // Remove default 1000 limit - get ALL transactions
 
       if (error) {
         console.error('❌ Transaction mining error:', error.message);
