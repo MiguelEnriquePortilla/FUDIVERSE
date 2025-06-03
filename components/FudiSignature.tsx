@@ -46,6 +46,7 @@ const FudiSignatureComponent: React.FC = () => {
           }
         }, 80);
       } else {
+        setMainText(mainFullText); // Ensure final text is set correctly
         clearInterval(revealInterval);
         // Start subtitle after main text is done
         setTimeout(startSubtitle, 500);
@@ -75,6 +76,7 @@ const FudiSignatureComponent: React.FC = () => {
           }
         }, 60);
       } else {
+        setSubText(subFullText); // Ensure final text is set correctly
         clearInterval(revealInterval);
       }
     }, 150);
