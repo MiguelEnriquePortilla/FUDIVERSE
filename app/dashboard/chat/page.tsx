@@ -133,10 +133,10 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 500);
+          }, 1500);
         } else {
           setIsComplete(true);
-        } 3000; // 3 segundos extra
+        } 5000; // 5 segundos extra
       }
     };
 
