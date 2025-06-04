@@ -16,23 +16,80 @@ interface InsightCard {
 }
 
 export default function DashboardPage() {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      type: 'assistant',
-      content: '¡Hola! Soy Fudi, tu asistente restaurantero inteligente. ¿En qué puedo ayudarte hoy?',
-      timestamp: new Date()
-    }
-  ]);
+// Saludos dinámicos casuales
+const getRandomGreeting = (restaurantName: string) => {
+  const greetings = [
+    `¿Qué promo chida aventamos hoy en ${restaurantName}?`,
+    `¿Cómo le sacamos más jugo a ${restaurantName} hoy?`,
+    `Listo para hacer que ${restaurantName} rompa récords`,
+    `¿Qué estrategia genial implementamos hoy?`,
+    `Hora de hacer que ${restaurantName} se ponga bueno`,
+    `¿Con qué movimiento inteligente arrancamos?`,
+    `De vuelta a hacer lana con ${restaurantName}`,
+    `¿Cómo hacemos ${restaurantName} aún más rentable HOY?`,
+    `Listo para maximizar las ganancias de ${restaurantName}`,
+    `¿Qué movimiento chido le damos a ${restaurantName}?`
+  ];
+  
+  return greetings[Math.floor(Math.random() * greetings.length)];
+};
+
+const [messages, setMessages] = useState([
+  {
+    id: 1,
+    type: 'assistant',
+    content: '', // Vacío inicialmente
+    timestamp: new Date()
+  }
+]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showQuickActions, setShowQuickActions] = useState(true);
   const [currentInsightIndex, setCurrentInsightIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // Estado para stats con useState
-  const [stats, setStats] = useState([
+
+  const [userData, setUserData] = useState({
+  restaurantName: 'Cargando...',
+  ownerName: 'Usuario',
+  restaurantId: '13207c90-2ea6-4aa0-bfac-349753d24ea4'
+});
+
+// Obtener datos del token
+useEffect(() => {
+  const token = localStorage.getItem('fudi_token');
+  if (token) {
+    try {
+      const decoded = JSON.parse(atob(token));
+      setUserData({
+        restaurantName: decoded.restaurantName || 'Mi Restaurante',
+        ownerName: decoded.ownerName || 'Usuario',
+        restaurantId: decoded.restaurantId || '13207c90-2ea6-4aa0-bfac-349753d24ea4'
+      });
+      
+      // NUEVA LÍNEA - Actualizar saludo
+      setMessages([{
+        id: 1,
+        type: 'assistant',
+        content: getRandomGreeting(decoded.restaurantName || 'Tu Restaurante'),
+        timestamp: new Date()
+      }]);
+    // En el useEffect, agrega al final:
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      // NUEVO: Si no hay token, usar saludo genérico
+      setMessages([{
+        id: 1,
+        type: 'assistant',
+        content: getRandomGreeting('Tu Restaurante'),
+        timestamp: new Date()
+      }]);
+    }
+  }
+}, []);
+
+// Estado para stats con useState
+const [stats, setStats] = useState([
     { label: 'Ventas Hoy', value: '$15,234', change: '+12%', positive: true },
     { label: 'Tickets', value: '47', change: '+5', positive: true },
     { label: 'Ticket Promedio', value: '$324', change: '-2%', positive: false },
@@ -42,7 +99,7 @@ export default function DashboardPage() {
   // Función para obtener stats reales
   const fetchDashboardStats = async () => {
     try {
-      const response = await fudiAPI.getDashboardStats('13207c90-2ea6-4aa0-bfac-349753d24ea4');
+      const response = await fudiAPI.getDashboardStats(userData.restaurantId);
       
       if (response.success && response.stats) {
         // Actualizar los stats con datos reales
@@ -219,7 +276,7 @@ export default function DashboardPage() {
     try {
       // CONEXIÓN REAL CON CLAUDE
       const response = await fudiAPI.chat(
-        '13207c90-2ea6-4aa0-bfac-349753d24ea4', // Restaurant ID
+        userData.restaurantId, // Cambiar de hardcodeado a dinámico
         inputMessage
       );
 
@@ -282,11 +339,11 @@ export default function DashboardPage() {
               
               <div className="flex items-center gap-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium">Tacos El Paisa</p>
+                  <p className="text-sm font-medium">{userData.restaurantName}</p>
                   <p className="text-xs text-gray-400">Plan Pro</p>
                 </div>
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
-                  <span className="text-sm font-medium">TP</span>
+                  <span className="text-sm font-medium">{userData.restaurantName.substring(0, 2).toUpperCase()}</span>
                 </div>
               </div>
             </div>

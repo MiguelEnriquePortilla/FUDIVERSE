@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { fudiAPI } from '@/lib/api'; // Agregar esta línea al top
+
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -11,9 +13,21 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Implementar login
-    console.log('Login:', { email, password });
-    setTimeout(() => setIsLoading(false), 2000);
+
+    try {
+      const result = await fudiAPI.login(email, password);
+
+      if (result.success) {
+        // Login exitoso, redirigir al dashboard
+        window.location.href = '/dashboard/chat';
+      } else {
+        alert(result.error || 'Error al iniciar sesión');
+      }
+    } catch (error) {
+      alert('Error de conexión');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

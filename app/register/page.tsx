@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { fudiAPI } from '@/lib/api'; // Agregar esta línea al top
+
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -52,9 +54,28 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Implementar registro
-    console.log('Register:', formData);
-    setTimeout(() => setIsLoading(false), 2000);
+
+    try {
+      const result = await fudiAPI.register({
+        name: formData.restaurantName,
+        ownerName: formData.ownerName,
+        email: formData.email,
+        password: formData.password,
+        posType: formData.posType,
+        phoneNumber: formData.phoneNumber
+      });
+
+      if (result.success) {
+        // Registro exitoso, redirigir al dashboard
+        window.location.href = '/dashboard/chat';
+      } else {
+        alert(result.error || 'Error al registrar');
+      }
+    } catch (error) {
+      alert('Error de conexión');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
