@@ -79,9 +79,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
     // Create phases array once, with current restaurantName
     const phases = [
       `SISTEMA FUDIGPT ACTIVADO...`,
-      `CONECTANDO A ${restaurantName.toUpperCase()}...`,
-      `ANALIZANDO DATOS RESTAURANTEROS...`,
-      `INTELIGENCIA LISTA PARA OPERAR...`,
+      `CONECTANDO A ${restaurantName.toUpperCase()}...`,  
       `READY TO JOIN THE FUDIVERSE?`
     ];
 
