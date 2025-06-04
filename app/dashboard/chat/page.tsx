@@ -78,7 +78,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
   useEffect(() => {
     // Create phases array once, with current restaurantName
     const phases = [
-      `SISTEMA FUDIGPT ACTIVADO...`,
+      `BIENVENIDO A FUDIGPT, ${restaurantName.toUpperCase()}!`,
       `CONECTANDO A ${restaurantName.toUpperCase()}...`,  
       `READY TO JOIN THE FUDIVERSE?`
     ];
@@ -121,9 +121,9 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             clearInterval(matrixReveal);
             
             // Continue with next character
-            setTimeout(typeNextCharacter, 20);
+            setTimeout(typeNextCharacter, 10);
           }
-        }, 30);
+        }, 20);
       } else {
         // Finished current phase, move to next
         if (currentPhase < phases.length - 1) {
@@ -133,7 +133,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 1500);
+          }, 1000);
         } else {
           setIsComplete(true);
         } 5000; // 5 segundos extra
@@ -145,7 +145,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       if (!isDestroyed) {
         typeNextCharacter();
       }
-    }, 900);
+    }, 100);
 
     // Cleanup function
     return () => {
