@@ -34,6 +34,76 @@ const getRandomGreeting = (restaurantName: string) => {
   return greetings[Math.floor(Math.random() * greetings.length)];
 };
 
+// Matrix Welcome Ticker Component
+const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => {
+  const [currentPhase, setCurrentPhase] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
+
+  const phases = [
+    `SISTEMA FUDIGPT ACTIVADO...`,
+    `CONECTANDO A ${restaurantName.toUpperCase()}...`,
+    `ANALIZANDO DATOS RESTAURANTEROS...`,
+    `INTELIGENCIA LISTA PARA OPERAR`,
+    `¿EN QUÉ PUEDO AYUDARTE HOY?`
+  ];
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    if (currentPhase < phases.length) {
+      const text = phases[currentPhase];
+      let charIndex = 0;
+      
+      const typeText = () => {
+        if (charIndex < text.length) {
+          setDisplayText(text.substring(0, charIndex + 1));
+          charIndex++;
+          timeoutId = setTimeout(typeText, 50);
+        } else {
+          if (currentPhase < phases.length - 1) {
+            timeoutId = setTimeout(() => {
+              setCurrentPhase(prev => prev + 1);
+              setDisplayText('');
+            }, 1500);
+          } else {
+            setIsComplete(true);
+          }
+        }
+      };
+      
+      typeText();
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [currentPhase, restaurantName]);
+
+  return (
+    <div className="relative overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60 animate-pulse" />
+      
+      <div className="relative text-center">
+        <div className="text-cyan-400 font-mono text-lg mb-4 h-8 flex items-center justify-center">
+          {displayText}
+          {!isComplete && <span className="animate-pulse ml-1">|</span>}
+        </div>
+        
+        {isComplete && (
+          <div className="animate-fade-in">
+            <p className="text-gray-400 text-sm mb-6">
+              Sistema de inteligencia restaurantera activado para {restaurantName}
+            </p>
+            <div className="flex justify-center">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2" />
+              <span className="text-green-400 text-xs font-mono">ONLINE</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const [messages, setMessages] = useState([
   {
     id: 1,
@@ -540,22 +610,11 @@ const [stats, setStats] = useState([
 
           {/* Bottom Section */}
           <div className="border-t border-white/10">
-            {/* Quick Actions - Only show when showQuickActions is true */}
+            {/* Matrix Welcome Ticker - Only show when showQuickActions is true */}
             {showQuickActions && (
-              <div className="px-6 py-4">
+              <div className="px-6 py-8">
                 <div className="max-w-3xl mx-auto">
-                  <div className="flex gap-3 flex-wrap justify-center">
-                    {quickActions.map((action, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleQuickAction(action)}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-[#2d2d2d] hover:bg-[#363636] rounded-full text-sm transition-all"
-                      >
-                        <span className="text-base">{action.icon}</span>
-                        <span>{action.text}</span>
-                      </button>
-                    ))}
-                  </div>
+                  <MatrixWelcomeTicker restaurantName={userData.restaurantName} />
                 </div>
               </div>
             )}
