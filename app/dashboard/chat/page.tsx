@@ -123,9 +123,9 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             clearInterval(matrixReveal);
             
             // Continue with next character
-            setTimeout(typeNextCharacter, 10);
+            setTimeout(typeNextCharacter, 20);
           }
-        }, 20);
+        }, 30);
       } else {
         // Finished current phase, move to next
         if (currentPhase < phases.length - 1) {
@@ -135,10 +135,10 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 250);
+          }, 200);
         } else {
           setIsComplete(true);
-        }
+        } 3000; // 3 segundos extra
       }
     };
 
@@ -147,7 +147,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       if (!isDestroyed) {
         typeNextCharacter();
       }
-    }, 100);
+    }, 300);
 
     // Cleanup function
     return () => {
