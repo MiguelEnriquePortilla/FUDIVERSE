@@ -34,25 +34,17 @@ const getRandomGreeting = (restaurantName: string) => {
   return greetings[Math.floor(Math.random() * greetings.length)];
 };
 
-// Enhanced Matrix Welcome Ticker - FudiSignature Style
+// WORLD CLASS Matrix Welcome Ticker - Zero Dependencies Issues
+// Constants moved outside component to prevent re-creation
+const RANDOM_CHARS = '01フウディGPT人工知能×◊∆◇□■▣▤▥▦▧▨▩0101110011';
+
 const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => {
-  const [currentPhase, setCurrentPhase] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [glitchPhase, setGlitchPhase] = useState(0);
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, opacity: number}>>([]);
 
-  const randomChars = '01フウディGPT人工知能×◊∆◇□■▣▤▥▦▧▨▩0101110011';
-  
-  const phases = [
-    `SISTEMA FUDIGPT ACTIVADO...`,
-    `CONECTANDO A ${restaurantName.toUpperCase()}...`,
-    `ANALIZANDO DATOS RESTAURANTEROS...`,
-    `INTELIGENCIA LISTA PARA OPERAR...`,
-    `READY TO JOIN THE FUDIVERSE?`
-  ];
-
-  // Glitch animation
+  // Glitch animation - stable, no dependencies
   useEffect(() => {
     const interval = setInterval(() => {
       setGlitchPhase(prev => (prev + 1) % 360);
@@ -60,7 +52,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
     return () => clearInterval(interval);
   }, []);
 
-  // Particle system
+  // Particle system - stable, no dependencies  
   useEffect(() => {
     const particleInterval = setInterval(() => {
       if (Math.random() > 0.7) {
@@ -82,48 +74,87 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
     return () => clearInterval(particleInterval);
   }, []);
 
-  // Matrix reveal effect
+  // WORLD CLASS typing animation - single useEffect, no loops
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
-    if (currentPhase < phases.length) {
-      const text = phases[currentPhase];
-      let charIndex = 0;
-      
-      const typeText = () => {
-        if (charIndex < text.length) {
-          // Show random characters for matrix effect
-          let cycles = 0;
-          const charReveal = setInterval(() => {
-            if (cycles < 4) {
-              const randomChar = randomChars[Math.floor(Math.random() * randomChars.length)];
-              const revealedPart = text.substring(0, charIndex);
-              setDisplayText(revealedPart + randomChar);
-              cycles++;
-            } else {
-              const revealedPart = text.substring(0, charIndex + 1);
-              setDisplayText(revealedPart);
-              charIndex++;
-              clearInterval(charReveal);
-            }
-          }, 80);
-        } else {
-          if (currentPhase < phases.length - 1) {
-            timeoutId = setTimeout(() => {
-              setCurrentPhase(prev => prev + 1);
-              setDisplayText('');
-            }, 2500);
-          } else {
-            setIsComplete(true);
-          }
-        }
-      };
-      
-      timeoutId = setTimeout(typeText, 400);
-    }
+    // Create phases array once, with current restaurantName
+    const phases = [
+      `SISTEMA FUDIGPT ACTIVADO...`,
+      `CONECTANDO A ${restaurantName.toUpperCase()}...`,
+      `ANALIZANDO DATOS RESTAURANTEROS...`,
+      `INTELIGENCIA LISTA PARA OPERAR...`,
+      `READY TO JOIN THE FUDIVERSE?`
+    ];
 
-    return () => clearTimeout(timeoutId);
-  }, [currentPhase, restaurantName]);
+    let currentPhase = 0;
+    let currentChar = 0;
+    let isDestroyed = false;
+    
+    const typeNextCharacter = () => {
+      if (isDestroyed) return;
+      
+      // Check if we're done with all phases
+      if (currentPhase >= phases.length) {
+        setIsComplete(true);
+        return;
+      }
+
+      const currentText = phases[currentPhase];
+      
+      if (currentChar < currentText.length) {
+        // Matrix reveal effect with random characters
+        let matrixCycles = 0;
+        const matrixReveal = setInterval(() => {
+          if (isDestroyed) {
+            clearInterval(matrixReveal);
+            return;
+          }
+          
+          if (matrixCycles < 3) {
+            // Show random character
+            const randomChar = RANDOM_CHARS[Math.floor(Math.random() * RANDOM_CHARS.length)];
+            const revealedPart = currentText.substring(0, currentChar);
+            setDisplayText(revealedPart + randomChar);
+            matrixCycles++;
+          } else {
+            // Reveal actual character
+            const revealedPart = currentText.substring(0, currentChar + 1);
+            setDisplayText(revealedPart);
+            currentChar++;
+            clearInterval(matrixReveal);
+            
+            // Continue with next character
+            setTimeout(typeNextCharacter, 60);
+          }
+        }, 80);
+      } else {
+        // Finished current phase, move to next
+        if (currentPhase < phases.length - 1) {
+          setTimeout(() => {
+            if (isDestroyed) return;
+            currentPhase++;
+            currentChar = 0;
+            setDisplayText('');
+            typeNextCharacter();
+          }, 2500);
+        } else {
+          setIsComplete(true);
+        }
+      }
+    };
+
+    // Start the animation after initial delay
+    const startTimeout = setTimeout(() => {
+      if (!isDestroyed) {
+        typeNextCharacter();
+      }
+    }, 500);
+
+    // Cleanup function
+    return () => {
+      isDestroyed = true;
+      clearTimeout(startTimeout);
+    };
+  }, [restaurantName]); // Only depend on restaurantName
 
   const glitchIntensity = Math.sin(glitchPhase * 0.05) * 0.3 + 0.7;
   const shouldGlitch = Math.random() > 0.95;
@@ -142,7 +173,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       </div>
 
       {/* Code streaming effect - background */}
-      {currentPhase < 3 && (
+      {!isComplete && (
         <>
           <div className="absolute top-8 left-8 text-xs font-mono opacity-10 text-cyan-300">
             {Array.from({length: 3}).map((_, i) => (
@@ -150,7 +181,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
                 transform: `translateY(${Math.sin(glitchPhase * 0.03 + i) * 8}px)`,
                 opacity: Math.sin(glitchPhase * 0.02 + i) * 0.3 + 0.7
               }}>
-                {randomChars.slice(i * 6, i * 6 + 12)}
+                {RANDOM_CHARS.slice(i * 6, i * 6 + 12)}
               </div>
             ))}
           </div>
@@ -161,7 +192,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
                 transform: `translateY(${Math.sin(glitchPhase * 0.025 + i + 5) * 8}px)`,
                 opacity: Math.sin(glitchPhase * 0.03 + i + 5) * 0.3 + 0.7
               }}>
-                {randomChars.slice(i * 5 + 15, i * 5 + 25)}
+                {RANDOM_CHARS.slice(i * 5 + 15, i * 5 + 25)}
               </div>
             ))}
           </div>
@@ -172,7 +203,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
                 transform: `translateY(${Math.sin(glitchPhase * 0.04 + i + 10) * 6}px)`,
                 opacity: Math.sin(glitchPhase * 0.025 + i + 10) * 0.3 + 0.7
               }}>
-                {randomChars.slice(i * 4 + 30, i * 4 + 38)}
+                {RANDOM_CHARS.slice(i * 4 + 30, i * 4 + 38)}
               </div>
             ))}
           </div>
@@ -199,7 +230,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       {/* Main Matrix Text */}
       <div className="relative mb-6">
         <div 
-          className="text-5xl md:text-6xl font-bold tracking-wide font-mono transition-all duration-200 text-center"
+          className="text-5xl md:text-6xl font-bold tracking-wide font-mono transition-all duration-200 text-center min-h-[4rem] flex items-center justify-center"
           style={{
             color: 'rgba(6, 182, 212, 0.95)',
             textShadow: `
@@ -212,7 +243,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             transform: shouldGlitch ? `translateX(${Math.random() * 3 - 1.5}px)` : 'none'
           }}
         >
-          {displayText || ''}
+          {displayText}
           
           {/* Matrix cursor */}
           {!isComplete && (
@@ -245,7 +276,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             transform: 'scale(1.1)'
           }}
         >
-          {displayText || ''}
+          {displayText}
         </div>
       </div>
 
