@@ -78,7 +78,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
   useEffect(() => {
     // Create phases array once, with current restaurantName
     const phases = [
-      `BIENVENIDO A FUDIGPT, ${restaurantName.toUpperCase()}!`,
+      `BIENVENIDO, ${restaurantName.toUpperCase()}!`,
       `CONECTANDO A ${restaurantName.toUpperCase()}...`,  
       `READY TO JOIN THE FUDIVERSE?`
     ];
@@ -136,7 +136,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
           }, 1000);
         } else {
           setIsComplete(true);
-        } 5000; // 5 segundos extra
+        } 9000; // 9 segundos extra
       }
     };
 
