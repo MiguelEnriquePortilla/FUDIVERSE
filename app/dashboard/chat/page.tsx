@@ -109,7 +109,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             return;
           }
           
-          if (matrixCycles < 3) {
+          if (matrixCycles < 1) {
             // Show random character
             const randomChar = RANDOM_CHARS[Math.floor(Math.random() * RANDOM_CHARS.length)];
             const revealedPart = currentText.substring(0, currentChar);
@@ -123,9 +123,9 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             clearInterval(matrixReveal);
             
             // Continue with next character
-            setTimeout(typeNextCharacter, 20);
+            setTimeout(typeNextCharacter, 10);
           }
-        }, 40);
+        }, 20);
       } else {
         // Finished current phase, move to next
         if (currentPhase < phases.length - 1) {
@@ -135,7 +135,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 1000);
+          }, 250);
         } else {
           setIsComplete(true);
         }
@@ -147,7 +147,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       if (!isDestroyed) {
         typeNextCharacter();
       }
-    }, 500);
+    }, 100);
 
     // Cleanup function
     return () => {
@@ -234,10 +234,10 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
           style={{
             color: 'rgba(6, 182, 212, 0.95)',
             textShadow: `
-              0 0 30px rgba(6, 182, 212, 0.7),
-              0 0 40px rgba(6, 182, 212, 0.5),
-              0 0 50px rgba(6, 182, 212, 0.3),
-              0 0 60px rgba(6, 182, 212, 0.1)
+              0 0 50px rgba(6, 182, 212, 0.7),
+              0 0 60px rgba(6, 182, 212, 0.5),
+              0 0 70px rgba(6, 182, 212, 0.3),
+              0 0 80px rgba(6, 182, 212, 0.1)
             `,
             filter: shouldGlitch ? `hue-rotate(${Math.random() * 30}deg) saturate(${1.2 + Math.random() * 0.3})` : 'none',
             transform: shouldGlitch ? `translateX(${Math.random() * 3 - 1.5}px)` : 'none'
