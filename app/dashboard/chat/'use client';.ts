@@ -34,363 +34,72 @@ const getRandomGreeting = (restaurantName: string) => {
   return greetings[Math.floor(Math.random() * greetings.length)];
 };
 
-// WORLD CLASS Matrix Welcome Ticker - Zero Dependencies Issues
-// Constants moved outside component to prevent re-creation
-const RANDOM_CHARS = '01フウディGPT人工知能×◊∆◇□■▣▤▥▦▧▨▩0101110011';
-
+// Matrix Welcome Ticker Component
 const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => {
+  const [currentPhase, setCurrentPhase] = useState(0);
   const [displayText, setDisplayText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
-  const [glitchPhase, setGlitchPhase] = useState(0);
-  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, opacity: number}>>([]);
 
-  // Glitch animation - stable, no dependencies
+  const phases = [
+    `SISTEMA FUDIGPT ACTIVADO...`,
+    `CONECTANDO A ${restaurantName.toUpperCase()}...`,
+    `ANALIZANDO DATOS RESTAURANTEROS...`,
+    `INTELIGENCIA LISTA PARA OPERAR`,
+    `¿EN QUÉ PUEDO AYUDARTE HOY?`
+  ];
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setGlitchPhase(prev => (prev + 1) % 360);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Particle system - stable, no dependencies  
-  useEffect(() => {
-    const particleInterval = setInterval(() => {
-      if (Math.random() > 0.7) {
-        const newParticle = {
-          id: Date.now(),
-          x: Math.random() * 800,
-          y: Math.random() * 300,
-          opacity: 1
-        };
-        
-        setParticles(prev => [...prev.slice(-12), newParticle]);
-        
-        setTimeout(() => {
-          setParticles(prev => prev.filter(p => p.id !== newParticle.id));
-        }, 3000);
-      }
-    }, 600);
-
-    return () => clearInterval(particleInterval);
-  }, []);
-
-  // WORLD CLASS typing animation - single useEffect, no loops
-  useEffect(() => {
-    // Create phases array once, with current restaurantName
-    const phases = [
-      `SISTEMA FUDIGPT ACTIVADO...`,
-      `CONECTANDO A ${restaurantName.toUpperCase()}...`,
-      `ANALIZANDO DATOS RESTAURANTEROS...`,
-      `INTELIGENCIA LISTA PARA OPERAR...`,
-      `READY TO JOIN THE FUDIVERSE?`
-    ];
-
-    let currentPhase = 0;
-    let currentChar = 0;
-    let isDestroyed = false;
+    let timeoutId: NodeJS.Timeout;
     
-    const typeNextCharacter = () => {
-      if (isDestroyed) return;
+    if (currentPhase < phases.length) {
+      const text = phases[currentPhase];
+      let charIndex = 0;
       
-      // Check if we're done with all phases
-      if (currentPhase >= phases.length) {
-        setIsComplete(true);
-        return;
-      }
-
-      const currentText = phases[currentPhase];
-      
-      if (currentChar < currentText.length) {
-        // Matrix reveal effect with random characters
-        let matrixCycles = 0;
-        const matrixReveal = setInterval(() => {
-          if (isDestroyed) {
-            clearInterval(matrixReveal);
-            return;
-          }
-          
-          if (matrixCycles < 3) {
-            // Show random character
-            const randomChar = RANDOM_CHARS[Math.floor(Math.random() * RANDOM_CHARS.length)];
-            const revealedPart = currentText.substring(0, currentChar);
-            setDisplayText(revealedPart + randomChar);
-            matrixCycles++;
-          } else {
-            // Reveal actual character
-            const revealedPart = currentText.substring(0, currentChar + 1);
-            setDisplayText(revealedPart);
-            currentChar++;
-            clearInterval(matrixReveal);
-            
-            // Continue with next character
-            setTimeout(typeNextCharacter, 20);
-          }
-        }, 40);
-      } else {
-        // Finished current phase, move to next
-        if (currentPhase < phases.length - 1) {
-          setTimeout(() => {
-            if (isDestroyed) return;
-            currentPhase++;
-            currentChar = 0;
-            setDisplayText('');
-            typeNextCharacter();
-          }, 1000);
+      const typeText = () => {
+        if (charIndex < text.length) {
+          setDisplayText(text.substring(0, charIndex + 1));
+          charIndex++;
+          timeoutId = setTimeout(typeText, 50);
         } else {
-          setIsComplete(true);
+          if (currentPhase < phases.length - 1) {
+            timeoutId = setTimeout(() => {
+              setCurrentPhase(prev => prev + 1);
+              setDisplayText('');
+            }, 1500);
+          } else {
+            setIsComplete(true);
+          }
         }
-      }
-    };
+      };
+      
+      typeText();
+    }
 
-    // Start the animation after initial delay
-    const startTimeout = setTimeout(() => {
-      if (!isDestroyed) {
-        typeNextCharacter();
-      }
-    }, 500);
-
-    // Cleanup function
-    return () => {
-      isDestroyed = true;
-      clearTimeout(startTimeout);
-    };
-  }, [restaurantName]); // Only depend on restaurantName
-
-  const glitchIntensity = Math.sin(glitchPhase * 0.05) * 0.3 + 0.7;
-  const shouldGlitch = Math.random() > 0.95;
+    return () => clearTimeout(timeoutId);
+  }, [currentPhase, restaurantName]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center py-24 overflow-hidden min-h-[500px]">
+    <div className="relative overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60 animate-pulse" />
       
-      {/* Digital Background Pattern */}
-      <div className="absolute inset-0 opacity-8">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25% 25%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
-                           radial-gradient(circle at 75% 75%, rgba(56, 189, 248, 0.08) 0%, transparent 50%)`,
-          backgroundSize: '120px 120px',
-          animation: 'matrixFloat 25s infinite linear'
-        }} />
-      </div>
-
-      {/* Code streaming effect - background */}
-      {!isComplete && (
-        <>
-          <div className="absolute top-8 left-8 text-xs font-mono opacity-10 text-cyan-300">
-            {Array.from({length: 3}).map((_, i) => (
-              <div key={i} style={{
-                transform: `translateY(${Math.sin(glitchPhase * 0.03 + i) * 8}px)`,
-                opacity: Math.sin(glitchPhase * 0.02 + i) * 0.3 + 0.7
-              }}>
-                {RANDOM_CHARS.slice(i * 6, i * 6 + 12)}
-              </div>
-            ))}
-          </div>
-
-          <div className="absolute top-8 right-8 text-xs font-mono opacity-10 text-cyan-300">
-            {Array.from({length: 3}).map((_, i) => (
-              <div key={i} style={{
-                transform: `translateY(${Math.sin(glitchPhase * 0.025 + i + 5) * 8}px)`,
-                opacity: Math.sin(glitchPhase * 0.03 + i + 5) * 0.3 + 0.7
-              }}>
-                {RANDOM_CHARS.slice(i * 5 + 15, i * 5 + 25)}
-              </div>
-            ))}
-          </div>
-
-          <div className="absolute bottom-8 left-8 text-xs font-mono opacity-10 text-cyan-300">
-            {Array.from({length: 2}).map((_, i) => (
-              <div key={i} style={{
-                transform: `translateY(${Math.sin(glitchPhase * 0.04 + i + 10) * 6}px)`,
-                opacity: Math.sin(glitchPhase * 0.025 + i + 10) * 0.3 + 0.7
-              }}>
-                {RANDOM_CHARS.slice(i * 4 + 30, i * 4 + 38)}
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {particles.map(particle => (
-          <div
-            key={particle.id}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full"
-            style={{
-              left: `${particle.x}px`,
-              top: `${particle.y}px`,
-              opacity: particle.opacity,
-              animation: 'particleFloat 3s ease-out forwards',
-              boxShadow: '0 0 6px rgba(6, 182, 212, 0.8)'
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Main Matrix Text */}
-      <div className="relative mb-6">
-        <div 
-          className="text-5xl md:text-6xl font-bold tracking-wide font-mono transition-all duration-200 text-center min-h-[4rem] flex items-center justify-center"
-          style={{
-            color: 'rgba(6, 182, 212, 0.95)',
-            textShadow: `
-              0 0 30px rgba(6, 182, 212, 0.7),
-              0 0 40px rgba(6, 182, 212, 0.5),
-              0 0 50px rgba(6, 182, 212, 0.3),
-              0 0 60px rgba(6, 182, 212, 0.1)
-            `,
-            filter: shouldGlitch ? `hue-rotate(${Math.random() * 30}deg) saturate(${1.2 + Math.random() * 0.3})` : 'none',
-            transform: shouldGlitch ? `translateX(${Math.random() * 3 - 1.5}px)` : 'none'
-          }}
-        >
+      <div className="relative text-center">
+        <div className="text-cyan-400 font-mono text-lg mb-4 h-8 flex items-center justify-center">
           {displayText}
-          
-          {/* Matrix cursor */}
-          {!isComplete && (
-            <span 
-              className="inline-block ml-3 w-1 h-12 md:h-16 bg-cyan-400"
-              style={{
-                opacity: Math.sin(glitchPhase * 0.1) * 0.4 + 0.6,
-                boxShadow: '0 0 12px rgba(6, 182, 212, 0.9)',
-                animation: 'pulse 1.5s infinite'
-              }}
-            />
-          )}
-          
-          {/* Scanning line effect */}
-          <div 
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            style={{
-              background: `linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.3) 50%, transparent 100%)`,
-              transform: `translateX(${Math.sin(glitchPhase * 0.02) * 300}%)`,
-              opacity: glitchIntensity * 0.4
-            }}
-          />
+          {!isComplete && <span className="animate-pulse ml-1">|</span>}
         </div>
         
-        {/* Glow effect behind main text */}
-        <div 
-          className="absolute inset-0 text-5xl md:text-6xl font-bold tracking-wide font-mono blur-lg -z-10"
-          style={{
-            color: 'rgba(6, 182, 212, 0.3)',
-            transform: 'scale(1.1)'
-          }}
-        >
-          {displayText}
-        </div>
+        {isComplete && (
+          <div className="animate-fade-in">
+            <p className="text-gray-400 text-sm mb-6">
+              Sistema de inteligencia restaurantera activado para {restaurantName}
+            </p>
+            <div className="flex justify-center">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2" />
+              <span className="text-green-400 text-xs font-mono">ONLINE</span>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Final state */}
-      {isComplete && (
-        <div className="text-center animate-fade-in">
-          <div 
-            className="text-lg font-mono tracking-[0.2em] uppercase mb-12"
-            style={{
-              color: 'rgba(56, 189, 248, 0.8)',
-              textShadow: '0 0 8px rgba(56, 189, 248, 0.4)',
-              letterSpacing: '0.2em'
-            }}
-          >
-            join_the_fudiverse
-          </div>
-          
-          {/* Flame cursor like in FudiSignature */}
-          <div className="flex justify-center items-center gap-4 mb-8">
-            <svg 
-              width="20" 
-              height="28" 
-              viewBox="0 0 20 28" 
-              className="transition-all duration-200"
-              style={{
-                opacity: Math.sin(glitchPhase * 0.1) * 0.4 + 0.6,
-                filter: `drop-shadow(0 0 ${4 + Math.sin(glitchPhase * 0.08) * 2}px rgba(6, 182, 212, 0.8))`,
-                transform: `translateY(${Math.sin(glitchPhase * 0.06) * 2}px)`
-              }}
-            >
-              <path
-                d="M10 2 C 7 6, 5 10, 6 15 C 7 20, 13 22, 15 17 C 16 14, 15 11, 14 9 C 13 7, 12 5, 10 2 Z"
-                fill="url(#flameGradient)"
-              />
-              <path
-                d="M10 5 C 8 8, 7 12, 8 15 C 8.5 17, 11.5 18, 13 15 C 14 12, 13 11, 12 9 C 11 7, 10.5 6, 10 5 Z"
-                fill="url(#flameInner)"
-              />
-              <defs>
-                <linearGradient id="flameGradient" x1="0%" y1="100%" x2="0%" y2="0%">
-                  <stop offset="0%" stopColor="rgba(6, 182, 212, 1)" />
-                  <stop offset="50%" stopColor="rgba(56, 189, 248, 0.9)" />
-                  <stop offset="100%" stopColor="rgba(147, 197, 253, 0.7)" />
-                </linearGradient>
-                <linearGradient id="flameInner" x1="0%" y1="100%" x2="0%" y2="0%">
-                  <stop offset="0%" stopColor="rgba(6, 182, 212, 0.8)" />
-                  <stop offset="100%" stopColor="rgba(255, 255, 255, 0.8)" />
-                </linearGradient>
-              </defs>
-            </svg>
-            
-            <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse" 
-                 style={{boxShadow: '0 0 12px rgba(34, 197, 94, 0.7)'}} />
-            <span className="text-green-400 text-base font-mono tracking-wider font-medium">SISTEMA ONLINE</span>
-          </div>
-          
-          {/* Subtitle */}
-          <div 
-            className="text-base text-gray-400 font-light max-w-md mx-auto"
-            style={{
-              textShadow: '0 0 4px rgba(156, 163, 175, 0.3)'
-            }}
-          >
-            Sistema de inteligencia restaurantera activado para {restaurantName}
-          </div>
-        </div>
-      )}
-
-      <style jsx>{`
-        @keyframes matrixFloat {
-          0% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(180deg); }
-          100% { transform: translateY(0px) rotate(360deg); }
-        }
-
-        @keyframes particleFloat {
-          0% { 
-            opacity: 1; 
-            transform: translateY(0px) scale(1);
-          }
-          100% { 
-            opacity: 0; 
-            transform: translateY(-50px) scale(0.3);
-          }
-        }
-
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 1.2s ease-out;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
-        }
-
-        @media (max-width: 768px) {
-          .text-5xl {
-            font-size: 3rem;
-            line-height: 1;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .text-5xl {
-            font-size: 2.25rem;
-            line-height: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 };
@@ -937,7 +646,7 @@ const [stats, setStats] = useState([
                       >
                         <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-        </svg>
+                        </svg>
                       </button>
                       <button
                         type="submit"
