@@ -124,21 +124,23 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
           }
         }, 20);
       } else {
-        // Finished current phase, move to next
-        if (currentPhase < phases.length - 1) {
+        // Finished current phase, move to next or complete
+        if (currentPhase === 0) {
+          // First phrase finished - wait 2 seconds
           setTimeout(() => {
             if (isDestroyed) return;
             currentPhase++;
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 500);
-        } else {
-          // Esperar más tiempo antes de mostrar el estado final
+          }, 2000);
+        } else if (currentPhase === 1) {
+          // Second phrase finished - wait 5 seconds then show final state
           setTimeout(() => {
+            if (isDestroyed) return;
             setIsComplete(true);
-          }, 5000); // 5 segundos extra
-        } 
+          }, 5000);
+        }
       }
     };
 
