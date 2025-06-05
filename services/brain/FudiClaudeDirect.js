@@ -4,7 +4,8 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const { FudiIntelligenceEngine } = require('./FudiIntelligenceEngine');
-
+const { ContextDetector } = require('../intelligence/ContextDetector');
+const { PromptManager } = require('../intelligence/PromptManager');
 class FudiClaudeDirect {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
     console.log('🧠 FudiClaudeDirect: Initializing REVOLUTIONARY architecture...');
@@ -12,8 +13,9 @@ class FudiClaudeDirect {
     this.supabase = createClient(supabaseUrl, supabaseKey);
     this.anthropicKey = anthropicKey;
     this.engine = new FudiIntelligenceEngine(supabaseUrl, supabaseKey);
+    this.contextDetector = new ContextDetector();
+    this.promptManager = new PromptManager();
 
-    
     console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
     console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
   }
