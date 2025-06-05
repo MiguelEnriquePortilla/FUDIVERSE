@@ -80,7 +80,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
     const phases = [
       `BIENVENIDO, ${restaurantName.toUpperCase()}!`,
       `CONECTANDO A ${restaurantName.toUpperCase()}...`,  
-      `READY TO JOIN THE FUDIVERSE?`
+      `READY TO JOIN THE FUDIVERSE...?`
     ];
 
     let currentPhase = 0;
@@ -121,9 +121,9 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             clearInterval(matrixReveal);
             
             // Continue with next character
-            setTimeout(typeNextCharacter, 10);
+            setTimeout(typeNextCharacter, 40);
           }
-        }, 20);
+        }, 40);
       } else {
         // Finished current phase, move to next
         if (currentPhase < phases.length - 1) {
@@ -133,7 +133,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 500);
+          }, 100);
         } else {
           // Esperar más tiempo antes de mostrar el estado final
           setTimeout(() => {
