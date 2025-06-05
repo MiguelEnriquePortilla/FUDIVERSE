@@ -7,9 +7,6 @@ const { FudiIntelligenceEngine } = require('./FudiIntelligenceEngine');
 const { ContextDetector } = require('../intelligence/ContextDetector');
 const { PromptManager } = require('../intelligence/PromptManager');
 const { NeuralConversationEngine } = require('./enigmatic/neural/NeuralConversationEngine');
-const EnigmaticBrainMaster = require('./enigmatic/orchestrator/EnigmaticBrainMaster');
-
-
 
 class FudiClaudeDirect {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
@@ -21,8 +18,6 @@ class FudiClaudeDirect {
     this.contextDetector = new ContextDetector();
     this.promptManager = new PromptManager();
     this.neuralEngine = new NeuralConversationEngine(supabaseUrl, supabaseKey);
-    this.enigmaticBrain = new EnigmaticBrainMaster();
-    console.log('👹 FRANKENSTEIN MONSTER INTEGRATED AND READY!');
 
     console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
     console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
