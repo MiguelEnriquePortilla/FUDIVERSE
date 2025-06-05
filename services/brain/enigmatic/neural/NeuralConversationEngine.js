@@ -1182,6 +1182,34 @@ class NeuralConversationEngine {
   async updateEpisodicMemory(message, response, analysis, userId) { return true; }
   async performCrossConversationLearning(userId, restaurantId) { return true; }
   async updatePatternRecognition(analysis, emotional, userId) { return true; }
+
+  // ================================================================
+// MORPHOLOGICAL ANALYSIS METHODS
+// ================================================================
+
+extractRootWords(message) {
+  const words = message.toLowerCase().split(' ');
+  return words.map(word => 
+    word.replace(/ación$|iento$|ando$|iendo$|mente$|oso$|osa$|able$/, '')
+  ).filter(w => w.length > 2);
+}
+
+identifyPrefixes(message) {
+  const prefixes = ['pre', 'anti', 'des', 'sub', 'super', 'inter'];
+  const words = message.split(' ');
+  return prefixes.filter(prefix => 
+    words.some(word => word.startsWith(prefix))
+  );
+}
+
+identifySuffixes(message) {
+  const suffixes = ['ación', 'iento', 'ando', 'iendo', 'mente'];
+  return suffixes.filter(suffix => message.includes(suffix));
+}
+
+analyzeWordFormations(message) {
+  return { formations: message.split(' ').length };
+}
 }
 
 module.exports = { NeuralConversationEngine };
