@@ -139,7 +139,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
           setTimeout(() => {
             if (isDestroyed) return;
             setIsComplete(true);
-          }, 5000);
+          }, 10000);
         }
       }
     };
