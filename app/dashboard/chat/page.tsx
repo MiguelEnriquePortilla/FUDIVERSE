@@ -133,12 +133,12 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 1000);
+          }, 500);
         } else {
           // Esperar más tiempo antes de mostrar el estado final
           setTimeout(() => {
             setIsComplete(true);
-          }, 3000); // 3 segundos extra
+          }, 5000); // 5 segundos extra
         } 
       }
     };
@@ -148,7 +148,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       if (!isDestroyed) {
         typeNextCharacter();
       } 
-    }, 500);
+    }, 100);
 
     // Cleanup function
     return () => {
@@ -235,10 +235,10 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
           style={{
             color: 'rgba(6, 182, 212, 0.95)',
             textShadow: `
-              0 0 50px rgba(6, 182, 212, 0.7),
-              0 0 60px rgba(6, 182, 212, 0.5),
-              0 0 70px rgba(6, 182, 212, 0.3),
-              0 0 80px rgba(6, 182, 212, 0.1)
+              0 0 70px rgba(6, 182, 212, 0.7),
+              0 0 80px rgba(6, 182, 212, 0.5),
+              0 0 90px rgba(6, 182, 212, 0.3),
+              0 0 100px rgba(6, 182, 212, 0.1)
             `,
             filter: shouldGlitch ? `hue-rotate(${Math.random() * 30}deg) saturate(${1.2 + Math.random() * 0.3})` : 'none',
             transform: shouldGlitch ? `translateX(${Math.random() * 3 - 1.5}px)` : 'none'
