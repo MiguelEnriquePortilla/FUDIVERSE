@@ -22,8 +22,12 @@ class FudiClaudeDirect {
     this.promptManager = new PromptManager();
     this.neuralEngine = new NeuralConversationEngine(supabaseUrl, supabaseKey);
     this.enigmaticBrain = new EnigmaticBrainMaster();
-    console.log('👹 FRANKENSTEIN MONSTER INTEGRATED AND READY!');
 
+    // 🧠 FEATURE FLAG PARA ENIGMATIC BRAIN
+    this.useEnigmaticBrain = process.env.USE_ENIGMATIC_BRAIN === 'true' || false;
+    console.log(`🧠 EnigmaticBrain Mode: ${this.useEnigmaticBrain ? 'ACTIVE' : 'STANDBY'}`);
+    
+    console.log('👹 FRANKENSTEIN MONSTER INTEGRATED AND READY!');
     console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
     console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
     console.log('🔧 Testing ContextDetector import...');   
