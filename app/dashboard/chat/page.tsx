@@ -78,7 +78,6 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
   useEffect(() => {
     // Create phases array once, with current restaurantName
     const phases = [
-      `BIENVENIDO, ${restaurantName.toUpperCase()}!`,
       `CONECTANDO A ${restaurantName.toUpperCase()}...`,  
       `READY TO JOIN THE FUDIVERSE...?`
     ];
