@@ -11255,7 +11255,7 @@ identifyScalarImplicature(message) {
     };
 
     // High stress = need calming and reassurance
-    if (stressIndicators.stressLevel === 'very_high' || stressIndicators.stressLevel === 'high') {
+    if (stressIndicators?.stressLevel === 'very_high' || stressIndicators?.stressLevel === 'high') {
       needs.calming = true;
       needs.reassurance = true;
       needs.guidance = true;
@@ -11275,13 +11275,13 @@ identifyScalarImplicature(message) {
     }
 
     // Business stress = need guidance
-    if (stressIndicators.stressCategories?.business?.level === 'high') {
+    if (stressIndicators?.stressCategories?.business?.level === 'high') {
       needs.guidance = true;
       needs.reassurance = true;
     }
 
     // Emotional volatility = need calming
-    if (userMood.moodStability === 'volatile') {
+    if (userMood?.moodStability === 'volatile') {
       needs.calming = true;
       needs.validation = true;
     }
@@ -11294,13 +11294,13 @@ identifyScalarImplicature(message) {
     let empathyScore = 0;
 
     // High stress requires high empathy
-    if (stressIndicators.stressLevel === 'very_high') empathyScore += 3;
-    else if (stressIndicators.stressLevel === 'high') empathyScore += 2;
-    else if (stressIndicators.stressLevel === 'moderate') empathyScore += 1;
+    if (stressIndicators?.stressLevel === 'very_high') empathyScore += 3;
+    else if (stressIndicators?.stressLevel === 'high') empathyScore += 2;
+    else if (stressIndicators?.stressLevel === 'moderate') empathyScore += 1;
 
     // Negative mood requires increased empathy
-    if (userMood.currentMood === 'negative' && userMood.moodIntensity === 'high') empathyScore += 2;
-    else if (userMood.currentMood === 'negative') empathyScore += 1;
+    if (userMood?.currentMood === 'negative' && userMood?.moodIntensity === 'high') empathyScore += 2;
+    else if (userMood?.currentMood === 'negative') empathyScore += 1;
 
     // Multiple emotional needs require higher empathy
     const needsCount = Object.values(emotionalNeeds).filter(Boolean).length;
@@ -11321,7 +11321,7 @@ identifyScalarImplicature(message) {
     }
 
     // Emotional empathy: Sharing feelings
-    if (userMood.currentMood === 'negative' && userMood.moodIntensity === 'high') {
+    if (userMood?.currentMood === 'negative' && userMood?.moodIntensity === 'high') {
       return 'emotional';
     }
 
