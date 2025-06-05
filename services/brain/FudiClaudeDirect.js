@@ -31,6 +31,8 @@ class FudiClaudeDirect {
     console.log('🧠 CLAUDE-DIRECT: Processing query with unlimited intelligence...');
     console.log('📝 Query:', message);
     console.log('🏪 Restaurant:', restaurantId);
+    console.log('🔧 DEBUG: Checking if enigmaticBrain exists:', !!this.enigmaticBrain);
+
 
     try {
       // 🎯 STEP 1: Detect temporal context (SCALABLE SOLUTION)
