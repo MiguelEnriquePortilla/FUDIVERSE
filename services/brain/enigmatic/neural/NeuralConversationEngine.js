@@ -323,7 +323,13 @@ class NeuralConversationEngine {
         conventional: this.identifyConventionalImplicature(message),
         conversational: this.identifyConversationalImplicature(message, conversationHistory),
         scalar: this.identifyScalarImplicature(message),
-        presuppositions: this.identifyPresuppositions(message)
+        presuppositions: this.identifyPresuppositions(message),
+        identifyConventionalImplicature(message) {
+          const implicatures = [];
+          if (message.includes('por favor')) implicatures.push('politeness');
+          if (message.includes('gracias')) implicatures.push('gratitude');
+          return implicatures;
+        }
       },
 
       // POLITENESS STRATEGIES
