@@ -133,7 +133,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 100);
+          }, 500);
         } else {
           // Esperar más tiempo antes de mostrar el estado final
           setTimeout(() => {
@@ -148,7 +148,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       if (!isDestroyed) {
         typeNextCharacter();
       } 
-    }, 500);
+    }, 1000);
 
     // Cleanup function
     return () => {
