@@ -138,7 +138,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
           // Esperar más tiempo antes de mostrar el estado final
           setTimeout(() => {
             setIsComplete(true);
-          }, 2000); // 2 segundos extra
+          }, 5000); // 5 segundos extra
         } 
       }
     };
