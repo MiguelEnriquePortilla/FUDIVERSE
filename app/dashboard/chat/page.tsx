@@ -133,13 +133,13 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
             currentChar = 0;
             setDisplayText('');
             typeNextCharacter();
-          }, 2000);
+          }, 1000);
         } else if (currentPhase === 1) {
           // Second phrase finished - wait 5 seconds then show final state
           setTimeout(() => {
             if (isDestroyed) return;
             setIsComplete(true);
-          }, 10000);
+          }, 9000);
         }
       }
     };
@@ -149,7 +149,7 @@ const MatrixWelcomeTicker = ({ restaurantName }: { restaurantName: string }) => 
       if (!isDestroyed) {
         typeNextCharacter();
       } 
-    }, 1000);
+    }, 500);
 
     // Cleanup function
     return () => {
