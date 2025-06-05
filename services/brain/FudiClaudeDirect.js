@@ -18,6 +18,10 @@ class FudiClaudeDirect {
 
     console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
     console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
+    console.log('🔧 Testing ContextDetector import...');
+    this.contextDetector.test();
+    console.log('🔧 Testing PromptManager import...');
+    this.promptManager.test();
   }
 
   // 🚀 MAIN METHOD: Claude processes ANY query directly
