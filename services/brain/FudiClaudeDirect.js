@@ -6,8 +6,8 @@ const { createClient } = require('@supabase/supabase-js');
 const { FudiIntelligenceEngine } = require('./FudiIntelligenceEngine');
 const { ContextDetector } = require('../intelligence/ContextDetector');
 const { PromptManager } = require('../intelligence/PromptManager');
-const { NeuralConversationEngine } = require('./enigmatic/neural/NeuralConversationEngine');
-const EnigmaticBrainMaster = require('./enigmatic/orchestrator/EnigmaticBrainMaster');
+// REMOVED: const { NeuralConversationEngine } = require('./enigmatic/neural/NeuralConversationEngine');
+// REMOVED: const EnigmaticBrainMaster = require('./enigmatic/orchestrator/EnigmaticBrainMaster');
 
 
 
@@ -20,11 +20,11 @@ class FudiClaudeDirect {
     this.engine = new FudiIntelligenceEngine(supabaseUrl, supabaseKey);
     this.contextDetector = new ContextDetector();
     this.promptManager = new PromptManager();
-    this.neuralEngine = new NeuralConversationEngine(supabaseUrl, supabaseKey);
-    this.enigmaticBrain = new EnigmaticBrainMaster();
+        // REMOVED:     this.neuralEngine = new NeuralConversationEngine(supabaseUrl, supabaseKey);
+        // REMOVED:     this.enigmaticBrain = new EnigmaticBrainMaster();
 
     // 🧠 FEATURE FLAG PARA ENIGMATIC BRAIN
-    this.useEnigmaticBrain = process.env.USE_ENIGMATIC_BRAIN === 'true' || false;
+        // REMOVED:     this.useEnigmaticBrain = process.env.USE_ENIGMATIC_BRAIN === 'true' || false;
     console.log(`🧠 EnigmaticBrain Mode: ${this.useEnigmaticBrain ? 'ACTIVE' : 'STANDBY'}`);
 
     console.log('👹 FRANKENSTEIN MONSTER INTEGRATED AND READY!');
@@ -55,7 +55,7 @@ class FudiClaudeDirect {
     console.log('🏪 Restaurant:', restaurantId);
     console.log('🔧 DEBUG: Checking if neuralEngine exists:', !!this.neuralEngine);
 
-    const enigmaticResponse = await this.neuralEngine.processConversation(
+    // REMOVED:         // REMOVED:     const enigmaticResponse = await this.neuralEngine.processConversation(
       message,
       restaurantId,
       context.userId || 'default_user',
