@@ -62,40 +62,9 @@ class FudiClaudeDirect {
       context.conversationHistory || []
     );
 
+
     try {
-        // 🧠 ENIGMATIC BRAIN INTEGRATION
-        if (this.useEnigmaticBrain) {
-            console.log('🧠 Using ENIGMATIC BRAIN for response...');
-
-            try {
-                // Use the full 25-lobule brain
-                const enigmaticResponse = await this.neuralEngine.processConversation(
-                    message,
-                    restaurantId,
-                      context.userId || 'default_user'
-                  );
-
-                  // 🔍 AGREGAR ESTE LOG PARA DEBUGGEAR
-                  console.log('🔍 ENIGMATIC RESPONSE STRUCTURE:', JSON.stringify(enigmaticResponse, null, 2));
-
-                  const adaptedResponse = this.adaptEnigmaticResponse(enigmaticResponse);
-
-                  return {
-                      success: true,
-                      response: adaptedResponse,
-                      metadata: {
-                          architecture: 'enigmatic_brain',
-                          lobulesActive: 25,
-                          processingMode: 'neural_complete'
-                      }
-                  };
-              } catch (error) {
-                  console.error('❌ EnigmaticBrain error, falling back:', error);
-                  // Fall through to Claude Direct
-              }
-          }
-
-          // 🎯 STEP 1: Detect temporal context (SCALABLE SOLUTION)
+      // 🎯 STEP 1: Detect temporal context (SCALABLE SOLUTION)
       const temporalContext = this.detectTemporalContext(message);
       console.log('⏰ Temporal context detected:', temporalContext);
 
