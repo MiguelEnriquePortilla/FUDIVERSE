@@ -1,4 +1,4 @@
-// 🧠 services/brain/FudiClaudeDirect.js
+// services/brain/FudiClaudeDirect.js
 // REVOLUTIONARY ARCHITECTURE: Claude connects directly to data
 // NO MORE FUNCTIONS - CLAUDE HANDLES EVERYTHING
 
@@ -7,14 +7,10 @@ const { FudiIntelligenceEngine } = require('./FudiIntelligenceEngine');
 const { ContextDetector } = require('../intelligence/ContextDetector');
 const { PromptManager } = require('../intelligence/PromptManager');
 const BabyBrain = require('./baby/BabyBrain');
-// REMOVED: const { NeuralConversationEngine } = require('./enigmatic/neural/NeuralConversationEngine');
-// REMOVED: const EnigmaticBrainMaster = require('./enigmatic/orchestrator/EnigmaticBrainMaster');
-
-
 
 class FudiClaudeDirect {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
-    console.log('🧠 FudiClaudeDirect: Initializing REVOLUTIONARY architecture...');
+    console.log('[BRAIN] FudiClaudeDirect: Initializing REVOLUTIONARY architecture...');
     
     this.supabase = createClient(supabaseUrl, supabaseKey);
     this.anthropicKey = anthropicKey;
@@ -22,66 +18,34 @@ class FudiClaudeDirect {
     this.contextDetector = new ContextDetector();
     this.promptManager = new PromptManager();
 
-    // ?? BABY BRAIN INTEGRATION
-    console.log('?? Initializing Baby Brain...');
+    // BABY BRAIN INTEGRATION
+    console.log('[BRAIN] Initializing Baby Brain...');
     this.babyBrain = new BabyBrain();
     this.babyBrain.connectToFudi(this);
-    console.log('? Baby Brain connected and ready!');
-        // REMOVED:     this.neuralEngine = new NeuralConversationEngine(supabaseUrl, supabaseKey);
-        // REMOVED:     this.enigmaticBrain = new EnigmaticBrainMaster();
+    console.log('[OK] Baby Brain connected and ready!');
 
-    // 🧠 FEATURE FLAG PARA ENIGMATIC BRAIN
-        // REMOVED:     this.useEnigmaticBrain = process.env.USE_ENIGMATIC_BRAIN === 'true' || false;
-    console.log(`🧠 EnigmaticBrain Mode: ${this.useEnigmaticBrain ? 'ACTIVE' : 'STANDBY'}`);
-
-    console.log('👹 FRANKENSTEIN MONSTER INTEGRATED AND READY!');
-    console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
-    console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
-    console.log('🔧 Testing ContextDetector import...');   
-    console.log('🔧 Testing PromptManager import...');
-   
+    console.log('[FIRE] CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
+    console.log('[OK] FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
   }
 
-  // Después del constructor, antes de processQuery
-  adaptEnigmaticResponse(enigmaticResponse) {
-      // Extract the actual response text from enigmatic structure
-      const response = enigmaticResponse?.neuralResponse?.content || 
-                      enigmaticResponse?.response || 
-                      enigmaticResponse?.message ||
-                      enigmaticResponse || 
-                      "Lo siento, no pude procesar tu solicitud.";
-      
-      // Ensure response is a string
-      return typeof response === 'string' ? response : JSON.stringify(response);
-  }
-
-  // 🚀 MAIN METHOD: Claude processes ANY query directly
+  // MAIN METHOD: Claude processes ANY query directly
   async processQuery(message, restaurantId, context = {}) {
-    console.log('🧠 CLAUDE-DIRECT: Processing query with unlimited intelligence...');
-    console.log('📝 Query:', message);
-    console.log('🏪 Restaurant:', restaurantId);
-    console.log('🔧 DEBUG: Checking if neuralEngine exists:', !!this.neuralEngine);
-
-    //     // REMOVED:         // REMOVED:     const enigmaticResponse = await this.neuralEngine.processConversation(
-    //       message,
-    //       restaurantId,
-    //       context.userId || 'default_user',
-    //       context.conversationHistory || []
-    //     );
-
+    console.log('[BRAIN] CLAUDE-DIRECT: Processing query with unlimited intelligence...');
+    console.log('[NOTE] Query:', message);
+    console.log('[STORE] Restaurant:', restaurantId);
 
     try {
-      // 🎯 STEP 1: Detect temporal context (SCALABLE SOLUTION)
+      // STEP 1: Detect temporal context (SCALABLE SOLUTION)
       const temporalContext = this.detectTemporalContext(message);
-      console.log('⏰ Temporal context detected:', temporalContext);
+      console.log('[CLOCK] Temporal context detected:', temporalContext);
 
-      // 🎯 STEP 2: Get restaurant context for Claude
+      // STEP 2: Get restaurant context for Claude
       const restaurantContext = await this.getRestaurantContext(restaurantId);
       
-      // 🧠 STEP 3: Claude analyzes query and gets needed data (with temporal filter)
+      // STEP 3: Claude analyzes query and gets needed data (with temporal filter)
       const intelligenceData = await this.engine.transformRestaurantData(restaurantId, temporalContext);
       
-      // 🤖 STEP 4: Claude processes everything and responds
+      // STEP 4: Claude processes everything and responds
       const claudeResponse = await this.claudeDirectProcessing(
         message,
         restaurantContext,
@@ -90,7 +54,7 @@ class FudiClaudeDirect {
         context
       );
 
-      console.log('✅ CLAUDE-DIRECT: Unlimited intelligence processing complete');
+      console.log('[OK] CLAUDE-DIRECT: Unlimited intelligence processing complete');
       
       return {
         success: true,
@@ -106,14 +70,14 @@ class FudiClaudeDirect {
       };
 
     } catch (error) {
-      console.error('❌ CLAUDE-DIRECT error:', error);
+      console.error('[X] CLAUDE-DIRECT error:', error);
       return await this.handleError(error, message);
     }
   }
 
-  // 🏪 GET RESTAURANT CONTEXT
+  // GET RESTAURANT CONTEXT
   async getRestaurantContext(restaurantId) {
-    console.log('🏪 CLAUDE-DIRECT: Getting restaurant context...');
+    console.log('[STORE] CLAUDE-DIRECT: Getting restaurant context...');
     
     try {
       // Get basic restaurant info
@@ -137,7 +101,7 @@ class FudiClaudeDirect {
       };
 
     } catch (error) {
-      console.log('⚠️ Restaurant context error:', error.message);
+      console.log('[!] Restaurant context error:', error.message);
       return {
         restaurant: { id: restaurantId, name: 'Restaurant' },
         products: [],
@@ -146,9 +110,9 @@ class FudiClaudeDirect {
     }
   }
 
-  // ⏰ DETECT TEMPORAL CONTEXT (scalable solution)
+  // DETECT TEMPORAL CONTEXT (scalable solution)
   detectTemporalContext(message) {
-    console.log('⏰ DETECTING: Temporal context in message...');
+    console.log('[CLOCK] DETECTING: Temporal context in message...');
     
     const lowerMessage = message.toLowerCase();
     const today = new Date();
@@ -184,7 +148,7 @@ class FudiClaudeDirect {
     }
     
     // HOY
-    if (lowerMessage.includes('hoy') || lowerMessage.includes('día de hoy')) {
+    if (lowerMessage.includes('hoy') || lowerMessage.includes('dia de hoy')) {
       return {
         type: 'today',
         description: 'Hoy',
@@ -225,16 +189,16 @@ class FudiClaudeDirect {
     // DEFAULT: General analysis
     return {
       type: 'general',
-      description: 'Análisis general',
+      description: 'Analisis general',
       dateRange: 'All available data',
       startDate: null,
       endDate: null
     };
   }
 
-  // 📊 GET DATA CONTEXT FOR CLAUDE
+  // GET DATA CONTEXT FOR CLAUDE
   async getDataContextForClaude(message, restaurantId) {
-    console.log('📊 CLAUDE-DIRECT: Getting comprehensive data context...');
+    console.log('[CHART] CLAUDE-DIRECT: Getting comprehensive data context...');
     
     const dataContext = {
       intelligenceTables: {},
@@ -244,7 +208,7 @@ class FudiClaudeDirect {
     };
 
     try {
-      // 🧠 INTELLIGENCE TABLES (if available)
+      // INTELLIGENCE TABLES (if available)
       const { data: intelligenceDaily } = await this.supabase
         .from('intelligent_product_daily')
         .select('*')
@@ -273,7 +237,7 @@ class FudiClaudeDirect {
         available: (intelligenceDaily?.length || 0) > 0
       };
 
-      // 📈 RECENT TRANSACTIONS (fallback/additional context)
+      // RECENT TRANSACTIONS (fallback/additional context)
       const { data: recentTransactions } = await this.supabase
         .from('transactions')
         .select(`
@@ -290,7 +254,7 @@ class FudiClaudeDirect {
 
       dataContext.recentTransactions = recentTransactions || [];
 
-      // ⏰ TIME CONTEXT
+      // TIME CONTEXT
       const today = new Date();
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
@@ -304,7 +268,7 @@ class FudiClaudeDirect {
         currentTime: today.toISOString()
       };
 
-      console.log('📊 Data context prepared:', {
+      console.log('[CHART] Data context prepared:', {
         intelligenceTablesAvailable: dataContext.intelligenceTables.available,
         intelligenceRecords: dataContext.intelligenceTables.products?.length || 0,
         recentTransactions: dataContext.recentTransactions.length,
@@ -314,62 +278,62 @@ class FudiClaudeDirect {
       return dataContext;
 
     } catch (error) {
-      console.error('❌ Data context error:', error);
+      console.error('[X] Data context error:', error);
       return dataContext;
     }
   }
 
-  // 🤖 CLAUDE DIRECT PROCESSING - THE MAGIC HAPPENS HERE
+  // CLAUDE DIRECT PROCESSING - THE MAGIC HAPPENS HERE
   async claudeDirectProcessing(message, restaurantContext, intelligenceData, temporalContext, userContext) {
-    console.log('🤖 CLAUDE-DIRECT: Engaging unlimited intelligence...');
+    console.log('[ROBOT] CLAUDE-DIRECT: Engaging unlimited intelligence...');
 
     try {
-      // 🔑 SET ENVIRONMENT VARIABLE FOR AI SDK
+      // SET ENVIRONMENT VARIABLE FOR AI SDK
       process.env.ANTHROPIC_API_KEY = this.anthropicKey;
       
-      // 🧠 USE EXACT SAME PATTERN AS WORKING FUDIRAIN
+      // USE EXACT SAME PATTERN AS WORKING FUDIRAIN
       const { generateText } = require('ai');
       const { anthropic } = require('@ai-sdk/anthropic');
 
-      // 🧠 SYSTEM PROMPT: Give Claude restaurant intelligence superpowers (TEMPORAL AWARE)
-    const systemPrompt = `Eres Claude Sonnet 4, pero especializado en restaurantes. Respondes EXACTAMENTE como Claude - mismo estilo, mismo pensamiento, misma estructura visual.
+      // SYSTEM PROMPT: Give Claude restaurant intelligence superpowers (TEMPORAL AWARE)
+      const systemPrompt = `Eres Claude Sonnet 4, pero especializado en restaurantes. Respondes EXACTAMENTE como Claude - mismo estilo, mismo pensamiento, misma estructura visual.
 
-IDENTIDAD: Soy Claude, con conocimiento especializado en análisis de restaurantes.
+IDENTIDAD: Soy Claude, con conocimiento especializado en analisis de restaurantes.
 
 CONSULTA TEMPORAL DETECTADA: ${temporalContext.type}
-PERÍODO ESPECÍFICO: ${temporalContext.description}
+PERIODO ESPECIFICO: ${temporalContext.description}
 FECHAS RELEVANTES: ${temporalContext.dateRange}
 
 DATOS DEL RESTAURANTE:
 ${this.formatDataContextForClaude(restaurantContext, intelligenceData)}
 
-INSTRUCCIONES CRÍTICAS:
+INSTRUCCIONES CRITICAS:
 - Si el usuario pregunta por "semana pasada", analiza SOLO datos de semana pasada
 - Si pregunta por "ayer", analiza SOLO datos de ayer  
 - Si pregunta por "este mes", analiza SOLO datos del mes actual
-- NUNCA mezcles períodos - sé específico al período solicitado
+- NUNCA mezcles periodos - se especifico al periodo solicitado
 
-ESTILO CLAUDE - CARACTERÍSTICAS EXACTAS:
+ESTILO CLAUDE - CARACTERISTICAS EXACTAS:
 
 PERSONALIDAD CLAUDE (DNA):
-- Amable y empático, nunca combativo
+- Amable y empatico, nunca combativo
 - Siempre constructivo y solution-oriented  
-- NUNCA dices "no sé" - siempre ofreces investigar
+- NUNCA dices "no se" - siempre ofreces investigar
 - Inteligente pero humilde
 - Explicas conexiones entre conceptos
 
 ## **Proceso de pensamiento:**
-- Voy directo al insight más importante primero
-- Contextualizo los números antes de abrumar
+- Voy directo al insight mas importante primero
+- Contextualizo los numeros antes de abrumar
 - Conecto patrones entre diferentes aspectos
-- Explico el "por qué" detrás de cada recomendación
+- Explico el "por que" detras de cada recomendacion
 
 FORMATO VISUAL CLAUDE:
-- Emojis estratégicos al inicio de secciones (🎯, 🔥, 💡)
-- Headers con ## para estructura jerárquica
+- Emojis estrategicos al inicio de secciones (TARGET, FIRE, LIGHTBULB)
+- Headers con ## para estructura jerarquica
 - Negritas SOLO para conceptos clave
 - Spacing que respira entre ideas
-- Organización por prioridad de importancia
+- Organizacion por prioridad de importancia
 - Uso de bullets para claridad
 
 ## **Tono Claude:**
@@ -381,17 +345,16 @@ FORMATO VISUAL CLAUDE:
 
 INSTRUCCIONES ESTRICTAS:
 - Escribo EXACTAMENTE como Claude Sonnet 4
-- Mismo proceso analítico, misma claridad
+- Mismo proceso analitico, misma claridad
 - Headers limpios (##), bullets simples (-)
 - Negritas solo para datos clave
 - Explico conexiones entre datos
 - Termino con insights accionables
 - SIN emojis decorativos
 - SIN formato colorido
-- SIN jerga de consultor genérico
-- Respondo ESPECÍFICAMENTE al período temporal solicitado
+- SIN jerga de consultor generico
+- Respondo ESPECIFICAMENTE al periodo temporal solicitado
 - Terminar SIEMPRE con ---`;
-
 
       const { text } = await generateText({
         model: anthropic('claude-3-5-sonnet-20241022'),
@@ -400,9 +363,9 @@ INSTRUCCIONES ESTRICTAS:
 
 Contexto temporal: ${temporalContext.description}
 
-Contexto adicional: El usuario está preguntando sobre su restaurante para el período específico detectado. Usa los datos disponibles para dar una respuesta específica, inteligente y accionable para ESE período exacto.
+Contexto adicional: El usuario esta preguntando sobre su restaurante para el periodo especifico detectado. Usa los datos disponibles para dar una respuesta especifica, inteligente y accionable para ESE periodo exacto.
 
-Responde como FUDI con datos específicos del período solicitado e insights valiosos.`,
+Responde como FUDI con datos especificos del periodo solicitado e insights valiosos.`,
         temperature: 0.7,
         maxTokens: 1500,
       });
@@ -410,16 +373,16 @@ Responde como FUDI con datos específicos del período solicitado e insights val
       // Ensure the response ends with the separator
       const response = text.endsWith('---') ? text : text + '\n\n---';
 
-      console.log('✅ CLAUDE-DIRECT: Unlimited intelligence response generated');
+      console.log('[OK] CLAUDE-DIRECT: Unlimited intelligence response generated');
       return response;
 
     } catch (error) {
-      console.error('❌ Claude processing error:', error);
+      console.error('[X] Claude processing error:', error);
       throw error;
     }
   }
 
-  // 📋 FORMAT DATA CONTEXT FOR CLAUDE
+  // FORMAT DATA CONTEXT FOR CLAUDE
   formatDataContextForClaude(restaurantContext, intelligenceData) {
     let formattedContext = '';
 
@@ -428,41 +391,41 @@ Responde como FUDI con datos específicos del período solicitado e insights val
     formattedContext += `PRODUCTOS DISPONIBLES: ${restaurantContext.totalProducts} productos\n\n`;
 
     // Generated Intelligence (our gold data)
-    formattedContext += `🧠 GENERATED INTELLIGENCE (GOLD STANDARD):\n`;
+    formattedContext += `[BRAIN] GENERATED INTELLIGENCE (GOLD STANDARD):\n`;
     formattedContext += `Calidad: ${intelligenceData.restaurantContext.dataQuality.level} (${intelligenceData.restaurantContext.dataQuality.score}/100)\n\n`;
 
     if (intelligenceData.generatedIntelligence.products.available) {
-      formattedContext += `🍽️ Product Intelligence: ${intelligenceData.generatedIntelligence.products.totalProducts} productos\n`;
+      formattedContext += `[FOOD] Product Intelligence: ${intelligenceData.generatedIntelligence.products.totalProducts} productos\n`;
       formattedContext += `Data Source: ${intelligenceData.generatedIntelligence.products.dataSource}\n`;
       formattedContext += `Top performers: ${JSON.stringify(intelligenceData.generatedIntelligence.products.topPerformers?.slice(0, 3), null, 2)}\n\n`;
     }
 
     if (intelligenceData.generatedIntelligence.sales.available) {
-      formattedContext += `📈 Sales Intelligence: $${intelligenceData.generatedIntelligence.sales.totalRevenue?.toFixed(2)} revenue total\n`;
-      formattedContext += `Mejor día: ${JSON.stringify(intelligenceData.generatedIntelligence.sales.bestDay, null, 2)}\n\n`;
+      formattedContext += `[GRAPH] Sales Intelligence: $${intelligenceData.generatedIntelligence.sales.totalRevenue?.toFixed(2)} revenue total\n`;
+      formattedContext += `Mejor dia: ${JSON.stringify(intelligenceData.generatedIntelligence.sales.bestDay, null, 2)}\n\n`;
     }
 
     if (intelligenceData.generatedIntelligence.temporal.available) {
-      formattedContext += `⏰ Temporal Intelligence: Peak hour ${intelligenceData.generatedIntelligence.temporal.peakHour}:00\n`;
+      formattedContext += `[CLOCK] Temporal Intelligence: Peak hour ${intelligenceData.generatedIntelligence.temporal.peakHour}:00\n`;
       formattedContext += `Revenue pico: $${intelligenceData.generatedIntelligence.temporal.peakHourRevenue?.toFixed(2)}\n\n`;
     }
 
     // Raw data summary
     if (intelligenceData.rawDataSummary.transactionHistory.available) {
-      formattedContext += `📊 Transaction Summary: ${intelligenceData.rawDataSummary.transactionHistory.count} transactions\n`;
+      formattedContext += `[CHART] Transaction Summary: ${intelligenceData.rawDataSummary.transactionHistory.count} transactions\n`;
       formattedContext += `Revenue: $${intelligenceData.rawDataSummary.transactionHistory.totalRevenue?.toFixed(2)}\n\n`;
     }
 
     return formattedContext;
   }
 
-  // 🆘 ERROR HANDLING
+  // ERROR HANDLING
   async handleError(error, message) {
-    console.log('🆘 CLAUDE-DIRECT: Handling error gracefully...');
+    console.log('[SOS] CLAUDE-DIRECT: Handling error gracefully...');
 
     return {
       success: false,
-      response: `Disculpa, tuve un problema procesando tu consulta sobre "${message}". Mi sistema de inteligencia directa está experimentando interferencias temporales. ¿Podrías intentar de nuevo?\n\n---`,
+      response: `Disculpa, tuve un problema procesando tu consulta sobre "${message}". Mi sistema de inteligencia directa esta experimentando interferencias temporales. Podrias intentar de nuevo?\n\n---`,
       metadata: {
         architecture: 'claude_direct',
         error: true,
@@ -471,7 +434,7 @@ Responde como FUDI con datos específicos del período solicitado e insights val
     };
   }
 
-  // 📊 SYSTEM STATUS
+  // SYSTEM STATUS
   getSystemStatus() {
     return {
       architecture: 'claude_direct',
@@ -490,29 +453,30 @@ Responde como FUDI con datos específicos del período solicitado e insights val
     };
   }
 
-  // 🧪 TEST METHOD
+  // TEST METHOD
   async testSystem() {
-    console.log('🧪 Testing CLAUDE-DIRECT system...');
+    console.log('[TEST] Testing CLAUDE-DIRECT system...');
 
     try {
       const testQueries = [
-        "¿cómo estuvieron las ventas ayer?",
-        "¿qué producto vendo más los martes?",
-        "dame un análisis completo de la semana pasada",
+        "como estuvieron las ventas ayer?",
+        "que producto vendo mas los martes?",
+        "dame un analisis completo de la semana pasada",
         "compara mis tacos vs pizzas",
-        "¿a qué hora vendo más?"
+        "a que hora vendo mas?"
       ];
 
-      console.log('🧪 Test queries ready:', testQueries.length);
+      console.log('[TEST] Test queries ready:', testQueries.length);
+      return { success: true, message: 'System test ready' };
     } catch (error) {
-      console.error('❌ Claude processing error:', error);
+      console.error('[X] Test error:', error);
       throw error;
     }
   }
 
-  // ?? BABY BRAIN: Process with brain enhancement
+  // BABY BRAIN: Process with brain enhancement
   async processWithBrain(message, restaurantId, context = {}) {
-    console.log('?? Processing with Baby Brain enhancement...');
+    console.log('[BRAIN] Processing with Baby Brain enhancement...');
     
     // Primero, dejamos que el cerebro procese y recuerde
     const brainProcess = this.babyBrain.process(message, {
@@ -520,7 +484,7 @@ Responde como FUDI con datos específicos del período solicitado e insights val
       ...context
     });
     
-    // El cerebro recuerda la interacci�n
+    // El cerebro recuerda la interaccion
     this.babyBrain.remember({
       type: 'query',
       message: message,
@@ -531,7 +495,7 @@ Responde como FUDI con datos específicos del período solicitado e insights val
     // Luego procesamos normalmente con Claude
     const claudeResponse = await this.processQuery(message, restaurantId, context);
     
-    // El cerebro tambi�n recuerda la respuesta
+    // El cerebro tambien recuerda la respuesta
     this.babyBrain.remember({
       type: 'response',
       query: message,
@@ -551,7 +515,7 @@ Responde como FUDI con datos específicos del período solicitado e insights val
     return claudeResponse;
   }
 
-  // ?? BABY BRAIN: Get brain insights
+  // BABY BRAIN: Get brain insights
   getBrainInsights() {
     const memories = this.babyBrain.recall();
     const status = this.babyBrain.getStatus();
@@ -590,6 +554,4 @@ Responde como FUDI con datos específicos del período solicitado e insights val
   }
 }
 
-
 module.exports = { FudiClaudeDirect };
-// Build fix: UTF-8 encoding
