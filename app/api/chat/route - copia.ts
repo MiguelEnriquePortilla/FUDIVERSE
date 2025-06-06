@@ -1,9 +1,7 @@
-// 📦 FUDI COMPLETE SYSTEM: Next.js API Route for Claude-Powered Restaurant Intelligence
-
 import { NextRequest, NextResponse } from 'next/server';
 
-// 🧠 FUDI MIND: The Claude-powered restaurant intelligence
-const { FudiMind } = require('../../../services/brain/FudiMind');
+// 🚀 REVOLUTIONARY: Import FudiClaudeDirect instead of FudiBrain
+const { FudiDirect } = require('../../../services/brain/FudiDirect');
 
 // 🛡️ FALLBACK: Keep FudiBrain as backup
 const FudiBrain = require('../../../services/brain/FudiBrain');
@@ -26,26 +24,26 @@ export async function POST(request: NextRequest) {
     let processingMode = 'unknown';
     
     try {
-      // 🧠 TRY FUDI MIND FIRST (CLAUDE-POWERED ARCHITECTURE)
-      console.log('🚀 Attempting FudiMind processing...');
+      // 🚀 TRY CLAUDE-DIRECT FIRST (REVOLUTIONARY ARCHITECTURE)
+      console.log('🚀 Attempting Claude-Direct processing...');
       
-      const fudiMind = new FudiMind(
+      const claudeDirect = new FudiDirect(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!,
         process.env.ANTHROPIC_API_KEY!
       );
       
-      result = await fudiMind.chat(
+      result = await claudeDirect.chat(
         message,
         restaurantId,
         { conversationId: conversationId || generateConversationId() }
       );
       
-      processingMode = 'fudi_mind';
-      console.log('✅ FudiMind processing successful');
+      processingMode = 'claude_direct_unlimited';
+      console.log('✅ Claude-Direct processing successful');
       
-    } catch (mindError) {
-      console.log('⚠️ FudiMind failed, falling back to FudiBrain:', (mindError as Error).message);
+    } catch (claudeError) {
+      console.log('⚠️ Claude-Direct failed, falling back to FudiBrain:', (claudeError as Error).message);
       
       // 🛡️ FALLBACK TO FUDIRAIN (ORIGINAL ARCHITECTURE)  
       console.log('🔄 Using FudiBrain fallback...');
@@ -62,14 +60,14 @@ export async function POST(request: NextRequest) {
         conversationId || generateConversationId()
       );
       
-      // Format FudiBrain result to match FudiMind format
+      // Format FudiBrain result to match Claude-Direct format
       result = {
         success: true,
         response: brainResult.response,
         metadata: {
           ...brainResult.metadata,
           fallbackUsed: true,
-          fudiMindError: (mindError as Error).message
+          claudeDirectError: (claudeError as Error).message
         }
       };
       
@@ -90,7 +88,7 @@ export async function POST(request: NextRequest) {
         adaptability: result.metadata?.adaptability || 'limited',
         intelligenceLevel: 'fudi_advanced',
         responseTime: Date.now(),
-        fudiMindAttempted: true,
+        claudeDirectAttempted: true,
         ...result.metadata
       }
     });
@@ -127,3 +125,4 @@ function generateFudiErrorResponse(): string {
 function generateConversationId(): string {
   return 'fudi-claude-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 }
+

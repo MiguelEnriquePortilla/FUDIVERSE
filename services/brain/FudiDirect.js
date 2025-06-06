@@ -1,4 +1,4 @@
-const { createClient } = require('@supabase/supabase-js');
+﻿const { createClient } = require('@supabase/supabase-js');
 const { generateText } = require('ai');
 
 class FudiDirect {
@@ -38,7 +38,7 @@ class FudiDirect {
       console.error('[FUDI] Error:', error);
       return {
         success: false,
-        response: "Disculpa, tuve un problema. ¿Puedes intentar de nuevo?",
+        response: "Disculpa, tuve un problema. �Puedes intentar de nuevo?",
         error: error.message
       };
     }
@@ -66,32 +66,33 @@ class FudiDirect {
     }
     
     // 2. Analyze the message to determine what data we need
-    const needsSalesData = /venta|ingreso|dinero|ganancia|revenue/i.test(message);
+    const needsSalesData = /venta|vendí|vendimos|ventas|ingreso|dinero|ganancia|revenue|facturé|cobré/i.test(message);
     const needsProductData = /producto|platillo|comida|menu|vendido|popular/i.test(message);
     const needsTimeData = /ayer|hoy|semana|mes|hora|cuando/i.test(message);
     
     // 3. Get sales data if needed
     if (needsSalesData || needsProductData) {
       // Get recent transactions
-      const { data: transactions } = await this.supabase
+      const { data: transactions, error: transError } = await this.supabase
         .from('transactions')
         .select('*')
         .eq('restaurant_id', restaurantId)
-        .order('created_at', { ascending: false })
+        .order('transaction_date', { ascending: false })
         .limit(1000);
         
+      console.log('[FUDI] Transactions query result:', { count: transactions?.length, error: transError });
       if (transactions) {
         // Calculate basic metrics
         context.sales = {
-          totalRevenue: transactions.reduce((sum, t) => sum + (t.total || 0), 0),
+          totalRevenue: transactions.reduce((sum, t) => sum + (t.total_amount || 0), 0),
           transactionCount: transactions.length,
           averageTicket: transactions.length > 0 
-            ? transactions.reduce((sum, t) => sum + (t.total || 0), 0) / transactions.length 
+            ? transactions.reduce((sum, t) => sum + (t.total_amount || 0), 0) / transactions.length 
             : 0,
           recentTransactions: transactions.slice(0, 10).map(t => ({
             date: t.created_at,
-            total: t.total,
-            items: t.items_count
+            total: t.total_amount,
+            items: t.item_count
           }))
         };
         
@@ -99,10 +100,10 @@ class FudiDirect {
         if (/hoy/i.test(message)) {
           const today = new Date().toISOString().split('T')[0];
           const todayTransactions = transactions.filter(t => 
-            t.created_at.startsWith(today)
+            t.transaction_date.substring(0, 10) === today
           );
           context.todaySales = {
-            revenue: todayTransactions.reduce((sum, t) => sum + (t.total || 0), 0),
+            revenue: todayTransactions.reduce((sum, t) => sum + (t.total_amount || 0), 0),
             count: todayTransactions.length
           };
         }
@@ -113,10 +114,10 @@ class FudiDirect {
           yesterday.setDate(yesterday.getDate() - 1);
           const yesterdayStr = yesterday.toISOString().split('T')[0];
           const yesterdayTransactions = transactions.filter(t => 
-            t.created_at.startsWith(yesterdayStr)
+            t.transaction_date.substring(0, 10) === yesterdayStr
           );
           context.yesterdaySales = {
-            revenue: yesterdayTransactions.reduce((sum, t) => sum + (t.total || 0), 0),
+            revenue: yesterdayTransactions.reduce((sum, t) => sum + (t.total_amount || 0), 0),
             count: yesterdayTransactions.length
           };
         }
@@ -160,6 +161,7 @@ class FudiDirect {
       }
     }
     
+    console.log('[FUDI] Context gathered:', JSON.stringify(context, null, 2));
     console.log('[FUDI] Context gathered successfully');
     return context;
   }
@@ -171,12 +173,12 @@ class FudiDirect {
 CONTEXTO DEL RESTAURANTE:
 ${context.restaurant ? `
 - Nombre: ${context.restaurant.name}
-- Dueño: ${context.restaurant.owner}
+- Due�o: ${context.restaurant.owner}
 - Moneda: ${context.restaurant.currency}
 ` : ''}
 
 ${context.sales ? `
-MÉTRICAS GENERALES:
+M�TRICAS GENERALES:
 - Ventas totales: $${context.sales.totalRevenue.toFixed(2)}
 - Total de transacciones: ${context.sales.transactionCount}
 - Ticket promedio: $${context.sales.averageTicket.toFixed(2)}
@@ -195,7 +197,7 @@ VENTAS DE AYER:
 ` : ''}
 
 ${context.topProducts ? `
-PRODUCTOS MÁS VENDIDOS:
+PRODUCTOS M�S VENDIDOS:
 ${context.topProducts.map((p, i) => 
   `${i + 1}. ${p.name} - $${p.revenue.toFixed(2)} (${p.quantity} vendidos)`
 ).join('\n')}
@@ -211,9 +213,9 @@ PREGUNTA DEL USUARIO: "${message}"
 
 INSTRUCCIONES:
 - Responde de manera natural y amigable
-- Sé específico con los datos cuando los tengas
-- Si no tienes algún dato, sé honesto al respecto
-- Mantén un tono profesional pero cercano
+- S� espec�fico con los datos cuando los tengas
+- Si no tienes alg�n dato, s� honesto al respecto
+- Mant�n un tono profesional pero cercano
 - NO te presentes como Claude
 - Ve directo al grano con la respuesta`;
 
@@ -244,3 +246,6 @@ INSTRUCCIONES:
 }
 
 module.exports = { FudiDirect };
+
+
+
