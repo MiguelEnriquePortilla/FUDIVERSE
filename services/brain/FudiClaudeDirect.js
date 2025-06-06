@@ -55,12 +55,12 @@ class FudiClaudeDirect {
     console.log('🏪 Restaurant:', restaurantId);
     console.log('🔧 DEBUG: Checking if neuralEngine exists:', !!this.neuralEngine);
 
-    // REMOVED:         // REMOVED:     const enigmaticResponse = await this.neuralEngine.processConversation(
-      message,
-      restaurantId,
-      context.userId || 'default_user',
-      context.conversationHistory || []
-    );
+    //     // REMOVED:         // REMOVED:     const enigmaticResponse = await this.neuralEngine.processConversation(
+    //       message,
+    //       restaurantId,
+    //       context.userId || 'default_user',
+    //       context.conversationHistory || []
+    //     );
 
 
     try {
