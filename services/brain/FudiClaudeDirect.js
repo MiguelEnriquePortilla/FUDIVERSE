@@ -592,3 +592,4 @@ Responde como FUDI con datos específicos del período solicitado e insights val
 
 
 module.exports = { FudiClaudeDirect };
+// Build fix: UTF-8 encoding
