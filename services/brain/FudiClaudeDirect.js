@@ -26,13 +26,26 @@ class FudiClaudeDirect {
     // 🧠 FEATURE FLAG PARA ENIGMATIC BRAIN
     this.useEnigmaticBrain = process.env.USE_ENIGMATIC_BRAIN === 'true' || false;
     console.log(`🧠 EnigmaticBrain Mode: ${this.useEnigmaticBrain ? 'ACTIVE' : 'STANDBY'}`);
-    
+
     console.log('👹 FRANKENSTEIN MONSTER INTEGRATED AND READY!');
     console.log('🔥 CLAUDE-DIRECT: No functions, no limits, infinite adaptability');
     console.log('✅ FudiClaudeDirect initialized - Ready to revolutionize restaurant AI');
     console.log('🔧 Testing ContextDetector import...');   
     console.log('🔧 Testing PromptManager import...');
    
+  }
+
+  // Después del constructor, antes de processQuery
+  adaptEnigmaticResponse(enigmaticResponse) {
+      // Extract the actual response text from enigmatic structure
+      const response = enigmaticResponse?.neuralResponse?.content || 
+                      enigmaticResponse?.response || 
+                      enigmaticResponse?.message ||
+                      enigmaticResponse || 
+                      "Lo siento, no pude procesar tu solicitud.";
+      
+      // Ensure response is a string
+      return typeof response === 'string' ? response : JSON.stringify(response);
   }
 
   // 🚀 MAIN METHOD: Claude processes ANY query directly
