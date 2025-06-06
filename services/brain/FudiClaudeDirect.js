@@ -75,6 +75,9 @@ class FudiClaudeDirect {
                       context.userId || 'default_user'
                   );
 
+                  // 🔍 AGREGAR ESTE LOG PARA DEBUGGEAR
+                  console.log('🔍 ENIGMATIC RESPONSE STRUCTURE:', JSON.stringify(enigmaticResponse, null, 2));
+
                   const adaptedResponse = this.adaptEnigmaticResponse(enigmaticResponse);
 
                   return {
