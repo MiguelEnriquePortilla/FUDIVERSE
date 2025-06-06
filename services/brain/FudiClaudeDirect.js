@@ -69,7 +69,7 @@ class FudiClaudeDirect {
 
             try {
                 // Use the full 25-lobule brain
-                const enigmaticResponse = await this.enigmaticBrain.processQuery(
+                const enigmaticResponse = await this.neuralEngine.processConversation(
                     message,
                     restaurantId,
                       context.userId || 'default_user'
