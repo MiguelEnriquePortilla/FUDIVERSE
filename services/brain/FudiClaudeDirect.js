@@ -6,6 +6,7 @@ const { createClient } = require('@supabase/supabase-js');
 const { FudiIntelligenceEngine } = require('./FudiIntelligenceEngine');
 const { ContextDetector } = require('../intelligence/ContextDetector');
 const { PromptManager } = require('../intelligence/PromptManager');
+const BabyBrain = require('./baby/BabyBrain');
 // REMOVED: const { NeuralConversationEngine } = require('./enigmatic/neural/NeuralConversationEngine');
 // REMOVED: const EnigmaticBrainMaster = require('./enigmatic/orchestrator/EnigmaticBrainMaster');
 
@@ -20,6 +21,12 @@ class FudiClaudeDirect {
     this.engine = new FudiIntelligenceEngine(supabaseUrl, supabaseKey);
     this.contextDetector = new ContextDetector();
     this.promptManager = new PromptManager();
+
+    // ?? BABY BRAIN INTEGRATION
+    console.log('?? Initializing Baby Brain...');
+    this.babyBrain = new BabyBrain();
+    this.babyBrain.connectToFudi(this);
+    console.log('? Baby Brain connected and ready!');
         // REMOVED:     this.neuralEngine = new NeuralConversationEngine(supabaseUrl, supabaseKey);
         // REMOVED:     this.enigmaticBrain = new EnigmaticBrainMaster();
 
@@ -502,6 +509,86 @@ Responde como FUDI con datos especÃ­ficos del perÃ­odo solicitado e insights val
       throw error;
     }
   }
+
+  // ?? BABY BRAIN: Process with brain enhancement
+  async processWithBrain(message, restaurantId, context = {}) {
+    console.log('?? Processing with Baby Brain enhancement...');
+    
+    // Primero, dejamos que el cerebro procese y recuerde
+    const brainProcess = this.babyBrain.process(message, {
+      restaurantId,
+      ...context
+    });
+    
+    // El cerebro recuerda la interacción
+    this.babyBrain.remember({
+      type: 'query',
+      message: message,
+      restaurantId: restaurantId,
+      timestamp: new Date()
+    });
+    
+    // Luego procesamos normalmente con Claude
+    const claudeResponse = await this.processQuery(message, restaurantId, context);
+    
+    // El cerebro también recuerda la respuesta
+    this.babyBrain.remember({
+      type: 'response',
+      query: message,
+      response: claudeResponse.response,
+      success: claudeResponse.success,
+      timestamp: new Date()
+    });
+    
+    // Enriquecer la respuesta con info del cerebro
+    claudeResponse.metadata = {
+      ...claudeResponse.metadata,
+      brainEnhanced: true,
+      brainMemories: this.babyBrain.recall().length,
+      brainStatus: this.babyBrain.getStatus().status
+    };
+    
+    return claudeResponse;
+  }
+
+  // ?? BABY BRAIN: Get brain insights
+  getBrainInsights() {
+    const memories = this.babyBrain.recall();
+    const status = this.babyBrain.getStatus();
+    
+    // Analizar patrones en las memorias
+    const queryTypes = {};
+    const successRate = { success: 0, total: 0 };
+    
+    memories.forEach(memory => {
+      if (memory.data.type === 'query') {
+        const words = memory.data.message.toLowerCase().split(' ');
+        words.forEach(word => {
+          if (word.length > 3) { // Palabras significativas
+            queryTypes[word] = (queryTypes[word] || 0) + 1;
+          }
+        });
+      }
+      
+      if (memory.data.type === 'response') {
+        successRate.total++;
+        if (memory.data.success) successRate.success++;
+      }
+    });
+    
+    return {
+      totalMemories: memories.length,
+      memoryCapacity: status.connector.lobesStatus.memory.maxCapacity,
+      successRate: successRate.total > 0 ? (successRate.success / successRate.total) * 100 : 0,
+      commonWords: Object.entries(queryTypes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5),
+      oldestMemory: memories[0]?.timestamp || null,
+      newestMemory: memories[memories.length - 1]?.timestamp || null,
+      brainStatus: status
+    };
+  }
 }
+
 
 module.exports = { FudiClaudeDirect };
