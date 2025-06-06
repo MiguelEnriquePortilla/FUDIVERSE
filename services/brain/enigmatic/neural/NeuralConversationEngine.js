@@ -11141,21 +11141,21 @@ identifyScalarImplicature(message) {
       // Assess user's emotional needs based on comprehensive analysis
       const emotionalNeeds = this.assessEmotionalNeeds(
         emotionalStates, 
-        userMood, 
-        stressIndicators
+        userMood || {}, 
+        stressIndicators || {}
       );
 
       // Determine appropriate empathy level
       analysis.empathyLevel = this.determineEmpathyLevel(
         emotionalNeeds, 
-        userMood, 
-        stressIndicators
+        userMood || {}, 
+        stressIndicators || {}
       );
 
       // Determine empathy type needed
       analysis.empathyType = this.determineEmpathyType(
         emotionalStates, 
-        userMood, 
+        userMood || {}, 
         messageText
       );
 
@@ -11187,7 +11187,7 @@ identifyScalarImplicature(message) {
       // Identify support needs
       analysis.supportNeeds = this.identifyEmpathyBasedSupportNeeds(
         emotionalStates,
-        userMood,
+        userMood || {},
         stressIndicators,
         emotionalNeeds
       );
@@ -11202,32 +11202,32 @@ identifyScalarImplicature(message) {
 
       // Model response timing and delivery
       analysis.responseDelivery = this.modelResponseDelivery(
-        stressIndicators,
-        userMood,
-        emotionalStates
+        stressIndicators || {},
+        userMood || {},
+        emotionalStates || {}
       );
 
       // Cultural and contextual empathy adjustments
       analysis.contextualEmpathy = this.modelContextualEmpathy(
         messageText,
-        emotionalStates,
-        conversationHistory
+        emotionalStates || {},
+        conversationHistory || []
       );
 
       // Empathy effectiveness prediction
       analysis.empathyEffectiveness = this.predictEmpathyEffectiveness(
         analysis.empathyLevel,
         analysis.empathyType,
-        emotionalNeeds,
-        userMood
+        emotionalNeeds || {},
+        userMood || {}
       );
 
       // Long-term empathy relationship modeling
       if (conversationHistory && conversationHistory.length > 0) {
         analysis.relationshipEmpathy = this.modelRelationshipEmpathy(
           conversationHistory,
-          emotionalStates,
-          userMood
+          emotionalStates || {},
+          userMood || {}
         );
       }
 
@@ -11393,7 +11393,7 @@ identifyScalarImplicature(message) {
       mindfulnessGuidance: false
     };
 
-    if (stressIndicators.stressLevel === 'very_high' || stressIndicators.stressLevel === 'high') {
+    if (stressIndicators?.stressLevel === 'very_high' || stressIndicators?.stressLevel === 'high') {
       regulation.calmingSupport = true;
       regulation.copingStrategies = true;
     }
@@ -11420,7 +11420,7 @@ identifyScalarImplicature(message) {
       compassion.provideGuidance = true;
     }
 
-    if (stressIndicators.stressLevel === 'high' || stressIndicators.stressLevel === 'very_high') {
+    if (stressIndicators?.stressLevel === 'high' || stressIndicators?.stressLevel === 'very_high') {
       compassion.suggestResources = true;
       compassion.encourageActions = true;
     }
@@ -11505,7 +11505,7 @@ identifyScalarImplicature(message) {
       information_density: 'normal'
     };
 
-    if (stressIndicators.stressLevel === 'very_high' || stressIndicators.stressLevel === 'high') {
+    if (stressIndicators?.stressLevel === 'very_high' || stressIndicators?.stressLevel === 'high') {
       paceAdjustment.speed = 'slow';
       paceAdjustment.complexity = 'simple';
       paceAdjustment.information_density = 'low';
@@ -11562,7 +11562,7 @@ identifyScalarImplicature(message) {
       structureAdjustment.include_summaries = true;
     }
 
-    if (stressIndicators.stressLevel === 'high') {
+    if (stressIndicators?.stressLevel === 'high') {
       structureAdjustment.use_bullet_points = true;
       structureAdjustment.prioritize_information = true;
     }
@@ -11599,7 +11599,7 @@ identifyScalarImplicature(message) {
     // Identify specific support needs based on empathy analysis
     const supportNeeds = [];
 
-    if (emotionalNeeds.calming && stressIndicators.stressLevel === 'high') {
+    if (emotionalNeeds.calming && stressIndicators?.stressLevel === 'high') {
       supportNeeds.push('stress_reduction_techniques');
     }
 
@@ -11650,7 +11650,7 @@ identifyScalarImplicature(message) {
       emphasis: 'supportive'
     };
 
-    if (stressIndicators.stressLevel === 'very_high') {
+    if (stressIndicators?.stressLevel === 'very_high') {
       delivery.timing = 'immediate';
       delivery.priority = 'calming_first';
       delivery.emphasis = 'reassuring';
@@ -11790,7 +11790,7 @@ identifyScalarImplicature(message) {
       // Set time horizon based on trajectory volatility
       analysis.timeHorizon = this.determineTimeHorizon(
         userMood.moodStability,
-        stressIndicators.stressLevel,
+        stressIndicators?.stressLevel,
         analysis.trajectoryConfidence
       );
 
@@ -11834,8 +11834,8 @@ identifyScalarImplicature(message) {
     }
 
     // High stress creates downward momentum
-    if (stressIndicators.stressLevel === 'very_high') momentumScore -= 2;
-    else if (stressIndicators.stressLevel === 'high') momentumScore -= 1;
+    if (stressIndicators?.stressLevel === 'very_high') momentumScore -= 2;
+    else if (stressIndicators?.stressLevel === 'high') momentumScore -= 1;
 
     // Energetic mood creates dynamic momentum
     if (userMood.currentMood === 'energetic') momentumScore += 1;
@@ -11869,10 +11869,10 @@ identifyScalarImplicature(message) {
 
   assessStressProgressionTrend(stressIndicators) {
     // Assess stress progression trend
-    if (stressIndicators.stressLevel === 'very_high') return -0.4;
-    if (stressIndicators.stressLevel === 'high') return -0.3;
-    if (stressIndicators.stressLevel === 'moderate') return -0.1;
-    if (stressIndicators.stressLevel === 'low') return 0.1;
+    if (stressIndicators?.stressLevel === 'very_high') return -0.4;
+    if (stressIndicators?.stressLevel === 'high') return -0.3;
+    if (stressIndicators?.stressLevel === 'moderate') return -0.1;
+    if (stressIndicators?.stressLevel === 'low') return 0.1;
     return 0.2; // minimal stress
   }
 
@@ -11948,7 +11948,7 @@ identifyScalarImplicature(message) {
     }
 
     // Clear stress level increases confidence
-    if (stressIndicators.stressLevel === 'very_high' || stressIndicators.stressLevel === 'minimal') {
+    if (stressIndicators?.stressLevel === 'very_high' || stressIndicators?.stressLevel === 'minimal') {
       confidenceScore += 2;
     }
 
@@ -11967,7 +11967,7 @@ identifyScalarImplicature(message) {
     const inflectionPoints = [];
 
     // High stress as potential inflection point
-    if (stressIndicators.stressLevel === 'very_high') {
+    if (stressIndicators?.stressLevel === 'very_high') {
       inflectionPoints.push({
         type: 'stress_peak',
         urgency: 'immediate',
@@ -12016,7 +12016,7 @@ identifyScalarImplicature(message) {
       });
     }
 
-    if (stressIndicators.stressLevel === 'high' || stressIndicators.stressLevel === 'very_high') {
+    if (stressIndicators?.stressLevel === 'high' || stressIndicators?.stressLevel === 'very_high') {
       opportunities.push({
         type: 'coping_strategy_introduction',
         timing: 'short_term',
@@ -12067,7 +12067,7 @@ identifyScalarImplicature(message) {
       impact.communication = 'strained';
     }
 
-    if (stressIndicators.stressLevel === 'very_high') {
+    if (stressIndicators?.stressLevel === 'very_high') {
       impact.leadership = 'impaired';
       impact.decision_quality = 'compromised';
     }
