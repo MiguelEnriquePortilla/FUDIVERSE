@@ -6,10 +6,10 @@ import {
   ChefHat, TrendingUp, Users, Target, 
   Sparkles, Code, BarChart, Heart,
   Globe, Zap, Award, Rocket,
-  MessageSquare
+  MessageSquare,
+  Glasses
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-import { FudiEntity } from '@/components/fudiverse/FudiEntity';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
 import { FudiAura } from '@/components/fudiverse/FudiAura';
 import styles from './about.module.css';
@@ -92,7 +92,7 @@ export default function AboutPage() {
       <section className={styles.origin}>
         <div className={styles.originContent}>
           <div className={styles.sectionHeader}>
-            <ChefHat size={48} className={styles.sectionIcon} />
+            <Glasses size={48} className={styles.sectionIcon} />
             <h2 className={styles.sectionTitle}>EL ORIGEN</h2>
             <h3 className={styles.sectionSubtitle}>30 AÑOS EN LAS TRINCHERAS</h3>
           </div>
@@ -130,8 +130,10 @@ export default function AboutPage() {
       <section className={styles.mission}>
         <div className={styles.missionContent}>
           <div className={styles.sectionHeader}>
-            <Target size={48} className={styles.sectionIcon} />
-            <h2 className={styles.sectionTitle}>LA MISIÓN</h2>
+            <div className={styles.sectionHeaderTitleRow}>
+              <Target size={48} className={styles.sectionIcon} />
+              <h2 className={styles.sectionTitle}>LA MISIÓN</h2>
+            </div>
             <h3 className={styles.sectionSubtitle}>DEMOCRATIZAR EL PODER DE LOS DATOS</h3>
           </div>
 
@@ -271,16 +273,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* FUDI Entity */}
-      <div className={styles.fudiEntity}>
-        <FudiEntity 
-          variant="corner"
-          mood="inspired"
-          size="medium"
-          followCursor={true}
-          showDataStreams={true}
-        />
+ 
       </div>
-    </div>
+    
   );
 }
