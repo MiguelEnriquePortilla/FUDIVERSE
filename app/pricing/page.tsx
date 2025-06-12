@@ -8,7 +8,7 @@ import {
   Zap, Star, TrendingUp, Award, ChevronRight
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-import { FudiEntity } from '@/components/fudiverse/FudiEntity';
+
 import { FudiButton } from '@/components/fudiverse/FudiButton';
 import styles from './pricing.module.css';
 
@@ -101,7 +101,7 @@ export default function PricingPage() {
   return (
     <div className={styles.container}>
       <FudiBackground 
-        variant="dots"
+        variant="grid"
         intensity={0.2}
         speed={0.5}
         color="mixed"
@@ -241,16 +241,6 @@ export default function PricingPage() {
           </FudiButton>
         </div>
       </section>
-
-      {/* Floating FUDI */}
-      <div className={styles.floatingFudi}>
-        <FudiEntity 
-          variant="corner"
-          mood="happy"
-          size="small"
-          followCursor={false}
-        />
       </div>
-    </div>
   );
 }
