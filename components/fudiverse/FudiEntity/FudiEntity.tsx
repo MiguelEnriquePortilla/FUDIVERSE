@@ -4,12 +4,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './FudiEntity.module.css';
 
-export type FudiEntityVariant = 'fullscreen' | 'corner' | 'mini' | 'hero';
-export type FudiEntityMood = 'neutral' | 'watching' | 'thinking' | 'excited' | 'sleeping';
+export type FudiEntityVariant = 'fullscreen' | 'corner' | 'mini' | 'hero' | 'floating';
+export type FudiEntityMood = 'neutral' | 'watching' | 'thinking' | 'excited' | 'sleeping' | 'happy' | 'inspired';
+export type FudiEntitySize = 'small' | 'medium' | 'large';
 
 interface FudiEntityProps {
   variant?: FudiEntityVariant;
   mood?: FudiEntityMood;
+  size?: FudiEntitySize;
   followCursor?: boolean;
   showDataStreams?: boolean;
   showParticles?: boolean;
@@ -34,6 +36,7 @@ interface DataStream {
 export const FudiEntity: React.FC<FudiEntityProps> = ({
   variant = 'fullscreen',
   mood = 'neutral',
+  size = 'medium',
   followCursor = true,
   showDataStreams = true,
   showParticles = true,
@@ -79,6 +82,15 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
           dataStreamLayers: 3,
           canvasSize: 'fixed',
           gridSize: 30
+        };
+      case 'floating':
+        return {
+          eyeRadius: 50,
+          ringCount: 4,
+          particleCount: 30,
+          dataStreamLayers: 4,
+          canvasSize: 'fixed',
+          gridSize: 0
         };
       case 'mini':
         return {
@@ -162,14 +174,20 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size based on variant
+    // Set canvas size based on variant and size prop
     const updateCanvasSize = () => {
       if (config.canvasSize === 'full') {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
       } else if (config.canvasSize === 'fixed') {
-        canvas.width = 400;
-        canvas.height = 400;
+        // Apply size prop for fixed variants
+        const sizeMap = {
+          small: { width: 200, height: 200 },
+          medium: { width: 400, height: 400 },
+          large: { width: 600, height: 600 }
+        };
+        canvas.width = sizeMap[size].width;
+        canvas.height = sizeMap[size].height;
       } else if (config.canvasSize === 'mini') {
         canvas.width = 150;
         canvas.height = 150;
@@ -515,7 +533,7 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [dataStreams, mousePos, followCursor, showCircuits, showScanBeam, showNeuralNet, showParticles, variant, mood, intensity, config, onBlink]);
+  }, [dataStreams, mousePos, followCursor, showCircuits, showScanBeam, showNeuralNet, showParticles, variant, mood, size, intensity, config, onBlink]);
 
   return (
     <div 
