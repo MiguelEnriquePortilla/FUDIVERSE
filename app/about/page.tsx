@@ -3,71 +3,98 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
-  ChefHat, TrendingUp, Users, Target, 
-  Sparkles, Code, BarChart, Heart,
-  Globe, Zap, Award, Rocket,
-  MessageSquare,
-  Glasses
+  Brain, TrendingUp, Vault, Users, ShoppingCart, 
+  Truck, Sparkles, Zap, Target, ChevronRight,
+  BarChart3, MessageSquare, Rocket, Award
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
+import { FudiEntity } from '@/components/fudiverse/FudiEntity';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
-import { FudiAura } from '@/components/fudiverse/FudiAura';
-import styles from './about.module.css';
+import { FudiCard } from '@/components/fudiverse/FudiCard';
 
-export default function AboutPage() {
-  const [activeValue, setActiveValue] = useState(0);
+// Import the new CSS file
+import '@/styles/pages/fudi.features.css';
 
-  const values = [
+export default function FeaturesPage() {
+  const [activeFeature, setActiveFeature] = useState(0);
+
+  const features = [
     {
-      icon: Globe,
-      title: 'DEMOCRATIZAR',
-      description: 'Todo restaurantero merece acceso a inteligencia de negocios'
+      icon: Brain,
+      title: 'FUDI NO ES TU EMPLEADO. ES TU CEREBRO EXTRA.',
+      description: 'Mientras duermes, FUDI analiza. Mientras cocinas, FUDI calcula. Mientras atiendes, FUDI aprende.',
+      quote: '"Chef, los viernes a las 8PM siempre piden 3 Margaritas... ¿preparamos?"',
+      color: '#fbbf24'
     },
     {
-      icon: Target,
-      title: 'SIMPLIFICAR',
-      description: 'Todo dato tiene una historia que contar'
+      icon: BarChart3,
+      title: 'DASHBOARDS QUE TE HACEN DECIR "WOW"',
+      description: 'Olvídate de Excel estático. Mira tu negocio LATIR en tiempo real.',
+      quote: '"Tu pizza #7 genera 340% más profit que la #3... ¿por qué sigues promoviendo la #3?"',
+      color: '#3b82f6'
     },
     {
-      icon: Rocket,
-      title: 'EVOLUCIONAR',
-      description: 'Toda decisión puede ser más inteligente'
+      icon: Vault,
+      title: 'VAULT: TU OFICINA QUE NUNCA CIERRA',
+      description: 'Propuestas que cierran deals. Reportes que enamoran inversionistas. Templates que te ahorran HORAS.',
+      quote: 'Click. Edit. LISTO. Profesional.',
+      color: '#8b5cf6'
     },
     {
-      icon: Heart,
-      title: 'EMPODERAR',
-      description: 'Todo sueño culinario merece herramientas para crecer'
+      icon: Users,
+      title: 'DISCOVERY: DONDE LOS PROS SE CONECTAN',
+      description: 'Red social SIN ruido, PURO restaurantero PRO.',
+      quote: 'Los secretos del gremio, AL FIN compartidos',
+      color: '#10b981'
+    },
+    {
+      icon: ShoppingCart,
+      title: 'POS INTELIGENTE: VENDE MÁS, PIENSA MENOS',
+      description: 'Te avisa ANTES del problema. Sugiere combos que FUNCIONAN. Reconoce clientes VIP automático.',
+      quote: '"Juan viene cada martes. Ya tiene 47 visitas. ¿Le damos su 50ava gratis?"',
+      color: '#ef4444'
+    },
+    {
+      icon: Truck,
+      title: 'PRÓXIMAMENTE: FUDELIVERY',
+      description: 'Adiós comisiones del 30%. Hola ganancias REALES.',
+      quote: 'Coming Soon',
+      color: '#f59e0b',
+      comingSoon: true
     }
   ];
 
+  // Auto-rotate active feature every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveValue((prev) => (prev + 1) % values.length);
-    }, 3000);
+      setActiveFeature((prev) => (prev + 1) % features.length);
+    }, 5000);
     return () => clearInterval(interval);
-  }, [values.length]);
+  }, [features.length]);
 
   return (
-    <div className={styles.container}>
+    <div className="features-container">
+      {/* FUDI Background Effects - Neural Network representing "Extra Brain" */}
       <FudiBackground 
         variant="neural"
-        intensity={0.3}
-        speed={0.3}
+        intensity={0.7}
+        speed={0.6}
         color="mixed"
-        opacity={0.4}
+        opacity={0.35}
+        fixed={true}
       />
 
-      {/* Header */}
-      <header className={styles.header}>
-        <nav className={styles.nav}>
-          <Link href="/" className={styles.logo}>
+      {/* Premium Header */}
+      <header className="features-header">
+        <nav className="features-nav">
+          <Link href="/" className="features-logo">
             <span>FUDIVERSE</span>
           </Link>
-          <div className={styles.navLinks}>
-            <Link href="/features" className={styles.navLink}>Características</Link>
-            <Link href="/pricing" className={styles.navLink}>Precios</Link>
-            <Link href="/about" className={styles.navLink}>Nosotros</Link>
-            <Link href="/login" className={styles.navLink}>Entrar</Link>
+          <div className="nav-links">
+            <Link href="/features" className="nav-link active">Características</Link>
+            <Link href="/pricing" className="nav-link">Precios</Link>
+            <Link href="/about" className="nav-link">Nosotros</Link>
+            <Link href="/login" className="nav-link">Entrar</Link>
             <FudiButton variant="primary" size="small" href="/register">
               ÚNETE
             </FudiButton>
@@ -75,206 +102,219 @@ export default function AboutPage() {
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            NO SOMOS OTRO SOFTWARE.
-            <span className={styles.highlight}> SOMOS LA REVOLUCIÓN.</span>
+      {/* Hero Section - Evolution Manifesto */}
+      <section className="features-hero">
+        <div className="hero-content">
+          <h1 className="hero-title">
+            DEJA DE SOBREVIVIR. 
+            <span className="hero-highlight"> EMPIEZA A DOMINAR.</span>
           </h1>
-          <p className={styles.heroSubtitle}>
-            La historia de cómo 30 años de experiencia se convirtieron en tu ventaja competitiva
+          <p className="hero-subtitle">
+            Tu restaurante está a 1 click de la evolución
           </p>
+          
+          {/* Hero CTA */}
+          <div className="hero-cta">
+            <FudiButton 
+              variant="primary" 
+              size="large" 
+              href="/register"
+              icon={<Rocket size={20} />}
+            >
+              EVOLUCIONA AHORA
+            </FudiButton>
+          </div>
+        </div>
+
+        {/* FUDI Entity - Excitement Mode */}
+        <div className="hero-entity">
+          <FudiEntity 
+            variant="floating"
+            mood="excited"
+            size="large"
+            followCursor={true}
+            showParticles={true}
+            showDataStreams={true}
+            intensity={0.8}
+          />
         </div>
       </section>
 
-      {/* Origin Story */}
-      <section className={styles.origin}>
-        <div className={styles.originContent}>
-          <div className={styles.sectionHeader}>
-            <Glasses size={48} className={styles.sectionIcon} />
-            <h2 className={styles.sectionTitle}>EL ORIGEN</h2>
-            <h3 className={styles.sectionSubtitle}>30 AÑOS EN LAS TRINCHERAS</h3>
-          </div>
-
-          <div className={styles.storyGrid}>
-            <div className={styles.storyCard}>
-              <p className={styles.storyText}>
-                No nació en un garage de Silicon Valley.<br/>
-                Nació entre comandas, horas pico y decisiones a las 3AM.
-              </p>
-            </div>
-
-            <div className={styles.storyCard}>
-              <h4>Nuestro fundador vivió cada dolor del restaurantero:</h4>
-              <ul className={styles.painPoints}>
-                <li><Zap size={16} /> Las ventas que no cuadran</li>
-                <li><Zap size={16} /> Los inventarios misteriosos</li>
-                <li><Zap size={16} /> Los reportes que nadie entiende</li>
-                <li><Zap size={16} /> La tecnología que promete y NO cumple</li>
-              </ul>
-            </div>
-
-            <blockquote className={styles.quote}>
-              <Sparkles size={24} />
-              <p>
-                "Después de 30 años entre cocinas y datos, entre Excel y expeditors, 
-                entre BI y bistecs... era hora de crear algo REAL"
-              </p>
-            </blockquote>
-          </div>
-        </div>
-      </section>
-
-      {/* Mission Section */}
-      <section className={styles.mission}>
-        <div className={styles.missionContent}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionHeaderTitleRow}>
-              <Target size={48} className={styles.sectionIcon} />
-              <h2 className={styles.sectionTitle}>LA MISIÓN</h2>
-            </div>
-            <h3 className={styles.sectionSubtitle}>DEMOCRATIZAR EL PODER DE LOS DATOS</h3>
-          </div>
-
-          <div className={styles.missionStatement}>
-            <h3 className={styles.bigStatement}>
-              We want to put a dent in the FUDIVERSE 🌍
-            </h3>
-          </div>
-
-          <div className={styles.noMoreGrid}>
-            <div className={styles.noMoreItem}>
-              <span className={styles.noMore}>NO MÁS</span>
-              <p>consultorías de $10,000 que te dejan igual</p>
-            </div>
-            <div className={styles.noMoreItem}>
-              <span className={styles.noMore}>NO MÁS</span>
-              <p>dashboards que necesitan PhD para entenderse</p>
-            </div>
-            <div className={styles.noMoreItem}>
-              <span className={styles.noMore}>NO MÁS</span>
-              <p>"soluciones" que crean más problemas</p>
-            </div>
-          </div>
-
-          <div className={styles.fudiSpeaks}>
-            <h3>FUDI SPEAKS RESTO - Habla tu idioma:</h3>
-            <div className={styles.examplesGrid}>
-              <div className={styles.example}>
-                <MessageSquare size={20} />
-                <p>"Oye, tu merma de papa está 3% arriba del mes pasado"</p>
-              </div>
-              <div className={styles.example}>
-                <MessageSquare size={20} />
-                <p>"Tus meseros top venden 40% más postres, ¿los premiamos?"</p>
-              </div>
-              <div className={styles.example}>
-                <MessageSquare size={20} />
-                <p>"Este proveedor te está cobrando 15% más que el promedio"</p>
-              </div>
-            </div>
-            <p className={styles.consultancy}>
-              Consultoría de clase mundial. En un chat. A tu alcance.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Why We Exist */}
-      <section className={styles.why}>
-        <div className={styles.whyContent}>
-          <div className={styles.sectionHeader}>
-            <Heart size={48} className={styles.sectionIcon} />
-            <h2 className={styles.sectionTitle}>POR QUÉ EXISTIMOS</h2>
-            <h3 className={styles.sectionSubtitle}>PORQUE CADA RESTAURANTE MERECE BRILLAR</h3>
-          </div>
-
-          <div className={styles.valuesGrid}>
-            {values.map((value, index) => {
-              const Icon = value.icon;
-              return (
-                <div 
-                  key={index}
-                  className={`${styles.valueCard} ${activeValue === index ? styles.active : ''}`}
-                  onClick={() => setActiveValue(index)}
-                >
+      {/* Features Showcase Grid */}
+      <section className="features-section">
+        <div className="features-grid">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            const isActive = activeFeature === index;
+            
+            return (
+              <div
+                key={index}
+                className={`feature-card ${isActive ? 'active' : ''}`}
+                onClick={() => setActiveFeature(index)}
+                style={{ '--feature-color': feature.color } as React.CSSProperties}
+              >
+                {/* Feature Icon with Glow */}
+                <div className="feature-icon">
                   <Icon size={32} />
-                  <h4>{value.title}</h4>
-                  <p>{value.description}</p>
+                  {feature.comingSoon && (
+                    <span className="coming-soon-badge">PRONTO</span>
+                  )}
                 </div>
-              );
-            })}
-          </div>
 
-          <div className={styles.manifesto}>
-            <p>"No vinimos a hacer software. Vinimos a cambiar VIDAS"</p>
+                {/* Feature Content */}
+                <div className="feature-content">
+                  <h3 className="feature-title">{feature.title}</h3>
+                  <p className="feature-description">{feature.description}</p>
+                  
+                  {/* AI Quote with Sparkles */}
+                  <blockquote className="feature-quote">
+                    <Sparkles size={16} className="quote-icon" />
+                    <span className="quote-text">{feature.quote}</span>
+                  </blockquote>
+                </div>
+
+                {/* Interactive Elements */}
+                <div className="feature-meta">
+                  <div className="feature-status">
+                    {feature.comingSoon ? (
+                      <span className="status-badge coming-soon">Próximamente</span>
+                    ) : (
+                      <span className="status-badge available">Disponible</span>
+                    )}
+                  </div>
+                  
+                  <button className="feature-action">
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Feature Navigator */}
+        <div className="feature-navigator">
+          {features.map((_, index) => (
+            <button
+              key={index}
+              className={`nav-dot ${activeFeature === index ? 'active' : ''}`}
+              onClick={() => setActiveFeature(index)}
+              aria-label={`Ir a característica ${index + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="features-stats">
+        <div className="stats-grid">
+          <div className="stat-item">
+            <div className="stat-icon">
+              <Target size={32} />
+            </div>
+            <div className="stat-content">
+              <div className="stat-value">+340%</div>
+              <div className="stat-label">ROI Promedio</div>
+            </div>
+          </div>
+          
+          <div className="stat-item">
+            <div className="stat-icon">
+              <TrendingUp size={32} />
+            </div>
+            <div className="stat-content">
+              <div className="stat-value">15min</div>
+              <div className="stat-label">Setup Completo</div>
+            </div>
+          </div>
+          
+          <div className="stat-item">
+            <div className="stat-icon">
+              <Award size={32} />
+            </div>
+            <div className="stat-content">
+              <div className="stat-value">24/7</div>
+              <div className="stat-label">FUDI Trabajando</div>
+            </div>
+          </div>
+          
+          <div className="stat-item">
+            <div className="stat-icon">
+              <Zap size={32} />
+            </div>
+            <div className="stat-content">
+              <div className="stat-value">∞</div>
+              <div className="stat-label">Potencial</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className={styles.team}>
-        <div className={styles.teamContent}>
-          <div className={styles.sectionHeader}>
-            <Users size={48} className={styles.sectionIcon} />
-            <h2 className={styles.sectionTitle}>NUESTRO EQUIPO</h2>
-            <h3 className={styles.sectionSubtitle}>VETERANOS CON VISIÓN</h3>
-          </div>
-
-          <div className={styles.statsGrid}>
-            <div className={styles.stat}>
-              <span className={styles.statNumber}>100+</span>
-              <span className={styles.statLabel}>años de experiencia COMBINADA en restaurantes</span>
-            </div>
-            <div className={styles.stat}>
-              <span className={styles.statNumber}>30</span>
-              <span className={styles.statLabel}>años solo del fundador en las trincheras</span>
-            </div>
-            <div className={styles.stat}>
-              <span className={styles.statNumber}>24/7</span>
-              <span className={styles.statLabel}>OBSESIONADOS con tu éxito</span>
-            </div>
-          </div>
-
-          <div className={styles.teamValues}>
-            <div className={styles.teamValue}>
-              <Award size={24} />
-              <p>Líderes en inteligencia de negocios y análisis</p>
-            </div>
-            <div className={styles.teamValue}>
-              <Code size={24} />
-              <p>Visionarios que entienden tecnología Y servicio</p>
-            </div>
-            <div className={styles.teamValue}>
-              <Heart size={24} />
-              <p>Obsesionados con tu éxito (no es marketing, es verdad)</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className={styles.cta}>
-        <FudiAura intensity={0.8} />
-        <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>¿LISTO PARA SER PARTE DE LA HISTORIA?</h2>
-          <p className={styles.ctaSubtitle}>
-            El futuro de los restaurantes se escribe HOY. Y tú eres el protagonista.
+      {/* Evolution CTA Section */}
+      <section className="features-cta">
+        <div className="cta-content">
+          <h2 className="cta-title">¿LISTO PARA EVOLUCIONAR?</h2>
+          <p className="cta-description">
+            Únete a los restauranteros que ya dominan su industria
           </p>
-          <FudiButton 
-            variant="primary" 
-            size="large" 
-            href="/register"
-            icon={<Rocket size={20} />}
-          >
-            ÚNETE A LA REVOLUCIÓN
-          </FudiButton>
+          
+          <div className="cta-actions">
+            <FudiButton 
+              variant="primary" 
+              size="large" 
+              href="/register"
+              icon={<Rocket size={20} />}
+            >
+              ÚNETE AL FUDIVERSE
+            </FudiButton>
+            
+            <FudiButton 
+              variant="secondary" 
+              size="large" 
+              href="/demo"
+              icon={<MessageSquare size={20} />}
+            >
+              VER DEMO
+            </FudiButton>
+          </div>
+          
+          {/* Trust Indicators */}
+          <div className="trust-indicators">
+            <div className="trust-item">
+              <span className="trust-value">500+</span>
+              <span className="trust-label">Restaurantes</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-value">98%</span>
+              <span className="trust-label">Satisfacción</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-value">$2M+</span>
+              <span className="trust-label">Ahorrados</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Background Effects */}
+        <div className="cta-effects">
+          <div className="effect-orb orb-1"></div>
+          <div className="effect-orb orb-2"></div>
+          <div className="effect-orb orb-3"></div>
         </div>
       </section>
 
- 
-      </div>
-    
+      {/* Footer Preview */}
+      <footer className="features-footer">
+        <div className="footer-content">
+          <p>&copy; 2024 FudiVerse. El futuro de la restauración.</p>
+          <div className="footer-links">
+            <Link href="/terms">Términos</Link>
+            <Link href="/privacy">Privacidad</Link>
+            <Link href="/contact">Contacto</Link>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
