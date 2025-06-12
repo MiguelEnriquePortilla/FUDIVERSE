@@ -1,0 +1,346 @@
+/* components/fudiverse/FudiNav/FudiNav.module.css */
+
+.fudiNav {
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* Position variants */
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
+
+.relative {
+  position: relative;
+}
+
+/* Style variants */
+.transparent {
+  background: transparent;
+}
+
+.transparent.scrolled {
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(251, 191, 36, 0.1);
+}
+
+.solid {
+  background: #0a0a0a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass {
+  background: rgba(32, 34, 34, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(62, 62, 62, 0.3);
+}
+
+.minimal {
+  background: transparent;
+  padding: 1rem 0;
+}
+
+/* Nav container */
+.navContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  transition: padding 0.3s ease;
+}
+
+.scrolled .navContainer {
+  padding: 1rem 2rem;
+}
+
+.navContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.logoLink:hover {
+  transform: translateX(-5px);
+}
+
+.logoImage {
+  filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
+  transition: transform 0.3s ease;
+}
+
+.logoLink:hover .logoImage {
+  transform: rotate(-10deg) scale(1.1);
+}
+
+.logoText {
+  font-family: 'Courier New', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fbbf24, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Navigation links */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #fbbf24, #00ffff);
+  transition: width 0.3s ease;
+}
+
+.navLink:hover {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.navLink.highlight {
+  color: #00ffff;
+}
+
+/* CTA Button */
+.navCta {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #000;
+  font-weight: 700;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(251, 191, 36, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.navCta::after {
+  display: none;
+}
+
+.navCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5);
+}
+
+.ctaGlow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #00ffff, #fbbf24, #00ffff);
+  border-radius: 8px;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  animation: rotateGradient 3s linear infinite;
+}
+
+@keyframes rotateGradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.navCta:hover .ctaGlow {
+  opacity: 1;
+}
+
+.ctaText {
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile menu button */
+.mobileMenuButton {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.menuIcon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 24px;
+}
+
+.menuIcon span {
+  display: block;
+  height: 2px;
+  background: #fbbf24;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.mobileOpen .menuIcon span:nth-child(1) {
+  transform: rotate(45deg) translateY(6px);
+}
+
+.mobileOpen .menuIcon span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.mobileOpen .menuIcon span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-6px);
+}
+
+/* Mobile menu */
+.mobileMenu {
+  position: fixed;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(10, 10, 10, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(251, 191, 36, 0.2);
+  transform: translateY(0);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.mobileOpen .mobileMenu {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  max-height: 80vh;
+}
+
+.mobileMenuContent {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.mobileLink {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 1.125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mobileLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #fbbf24, #00ffff);
+  transition: width 0.3s ease;
+}
+
+.mobileLink:hover {
+  color: #fbbf24;
+  padding-left: 1rem;
+}
+
+.mobileLink:hover::after {
+  width: 100%;
+}
+
+.mobileCta {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #000;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.mobileCta:hover {
+  transform: scale(1.05);
+}
+
+/* Extra content slot */
+.navExtra {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .navLinks {
+    gap: 1.5rem;
+  }
+  
+  .navLink {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navContainer {
+    padding: 1rem;
+  }
+  
+  .navLinks {
+    display: none;
+  }
+  
+  .mobileMenuButton {
+    display: block;
+  }
+  
+  .navExtra {
+    display: none;
+  }
+}

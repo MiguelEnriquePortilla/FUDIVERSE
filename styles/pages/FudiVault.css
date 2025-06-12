@@ -1,0 +1,727 @@
+/* styles/pages/FudiVault.css */
+/* =============================================
+   FUDI VAULT - KNOWLEDGE NEXUS STYLES
+   ============================================= */
+
+/* CSS Variables - FUDI Color Palette */
+:root {
+  --fudi-void: #0a0a0a;
+  --fudi-dark: #111111;
+  --fudi-surface: #1a1a1a;
+  --fudi-primary: #fbbf24; /* Matrix Gold */
+  --fudi-secondary: #00ffff; /* Cyan */
+  --fudi-accent: #a78bfa; /* Purple */
+  --fudi-violet: #667eea;
+  --fudi-success: #10b981;
+  --fudi-danger: #ef4444;
+  --fudi-glass: rgba(255, 255, 255, 0.03);
+  --fudi-glass-border: rgba(255, 255, 255, 0.08);
+  --fudi-text-primary: rgba(231, 233, 234, 1);
+  --fudi-text-secondary: rgba(113, 118, 123, 1);
+  --fudi-border: rgb(47, 51, 54);
+  
+  /* Vault specific colors */
+  --vault-recipe: #f97316;
+  --vault-knowledge: #3b82f6;
+  --vault-report: #10b981;
+  --vault-playbook: #8b5cf6;
+  --vault-supplier: #eab308;
+  --vault-idea: #ec4899;
+}
+
+/* =============================================
+   VAULT CONTAINER
+   ============================================= */
+.vault-container {
+  min-height: 100vh;
+  background: var(--fudi-void);
+  color: var(--fudi-text-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* =============================================
+   VAULT HEADER
+   ============================================= */
+.vault-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--fudi-glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Logo Section */
+.vault-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.vault-logo-icon {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--fudi-primary) 0%, var(--fudi-secondary) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--fudi-void);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.2);
+  transition: all 0.3s ease;
+}
+
+.vault-logo-icon:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 30px rgba(251, 191, 36, 0.4);
+}
+
+.vault-logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.vault-subtitle {
+  font-size: 0.75rem;
+  color: var(--fudi-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.25rem;
+}
+
+/* Search Section */
+.vault-search {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 2rem;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 12px;
+  padding: 0 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+  border-color: var(--fudi-primary);
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--fudi-text-primary);
+  font-size: 0.875rem;
+  padding: 0.75rem 0;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--fudi-text-secondary);
+}
+
+.search-hotkey {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: var(--fudi-text-secondary);
+}
+
+/* Header Actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.new-vault-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--fudi-primary);
+  color: var(--fudi-void);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+}
+
+.new-vault-btn:hover {
+  background: #e3ac1e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+}
+
+/* =============================================
+   MAIN LAYOUT
+   ============================================= */
+.vault-main {
+  display: flex;
+  height: calc(100vh - 85px);
+}
+
+/* =============================================
+   SIDEBAR
+   ============================================= */
+.vault-sidebar {
+  width: 280px;
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid var(--fudi-glass-border);
+  padding: 2rem 1rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.vault-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebar-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--fudi-text-secondary);
+  margin-bottom: 0.75rem;
+  padding: 0 0.75rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--fudi-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--fudi-primary);
+}
+
+.nav-item.active {
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--fudi-primary);
+}
+
+.nav-icon {
+  flex-shrink: 0;
+}
+
+.nav-item span:not(.nav-count) {
+  flex: 1;
+}
+
+.nav-count {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--fudi-text-secondary);
+}
+
+/* Sidebar Stats */
+.sidebar-stats {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid var(--fudi-glass-border);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.stat-row:last-child {
+  margin-bottom: 0;
+}
+
+.stat-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--fudi-text-secondary);
+}
+
+.stat-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fudi-primary);
+}
+
+/* =============================================
+   CONTENT AREA
+   ============================================= */
+.vault-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.content-header {
+  margin-bottom: 2rem;
+}
+
+.content-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content-title h1 {
+  font-size: 1.875rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.view-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.25rem;
+}
+
+.view-toggle button {
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--fudi-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-toggle button:hover {
+  color: var(--fudi-text-primary);
+}
+
+.view-toggle button.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--fudi-primary);
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 8px;
+  color: var(--fudi-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--fudi-primary);
+}
+
+/* =============================================
+   VAULT GRID
+   ============================================= */
+.vault-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.vault-grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Vault Card */
+.vault-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.vault-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--fudi-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Type Badge */
+.card-type {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: currentColor;
+  opacity: 0.1;
+}
+
+.card-type svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color);
+  opacity: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.type-recipe { --color: var(--vault-recipe); }
+.type-knowledge { --color: var(--vault-knowledge); }
+.type-report { --color: var(--vault-report); }
+.type-playbook { --color: var(--vault-playbook); }
+.type-supplier { --color: var(--vault-supplier); }
+.type-idea { --color: var(--vault-idea); }
+
+/* Favorite Indicator */
+.favorite-indicator {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 20px;
+  height: 20px;
+  color: var(--fudi-primary);
+}
+
+/* Card Content */
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: var(--fudi-text-primary);
+  padding-right: 2rem;
+}
+
+.card-description {
+  font-size: 0.875rem;
+  color: var(--fudi-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Card Tags */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--fudi-primary);
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Card Metrics */
+.card-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+.metric {
+  text-align: center;
+}
+
+.metric-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fudi-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.metric-label {
+  font-size: 0.625rem;
+  color: var(--fudi-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Card Footer */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--fudi-glass-border);
+}
+
+.update-time {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--fudi-text-secondary);
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 6px;
+  color: var(--fudi-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--fudi-primary);
+  border-color: var(--fudi-primary);
+}
+
+/* List View Specific */
+.list-view .vault-card {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+}
+
+.list-view .card-type {
+  position: static;
+  margin-right: 1rem;
+}
+
+.list-view .card-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  align-items: center;
+  gap: 2rem;
+}
+
+.list-view .card-title {
+  margin: 0;
+  padding-right: 0;
+}
+
+.list-view .card-description {
+  display: none;
+}
+
+.list-view .card-tags {
+  margin: 0;
+}
+
+.list-view .card-metrics {
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.list-view .card-footer {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* =============================================
+   FUDI ENTITY CONTAINER
+   ============================================= */
+.fudi-container {
+  position: fixed;
+  bottom: -100px;
+  right: 2rem;
+  width: 400px;
+  height: 400px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.fudi-container > * {
+  pointer-events: all;
+}
+
+/* Center FudiEntity inside the Aura */
+.fudi-container > div:last-child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
+@media (max-width: 1200px) {
+  .vault-sidebar {
+    width: 240px;
+  }
+  
+  .vault-search {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .vault-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .vault-logo-text {
+    font-size: 1.25rem;
+  }
+  
+  .vault-search {
+    order: 3;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .vault-main {
+    flex-direction: column;
+  }
+  
+  .vault-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--fudi-glass-border);
+    padding: 1rem;
+  }
+  
+  .vault-content {
+    padding: 1rem;
+  }
+  
+  .vault-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .fudi-container {
+    bottom: 1rem;
+    right: 1rem;
+    width: 80px;
+    height: 80px;
+    opacity: 0.4;
+  }
+}
+
+/* =============================================
+   ANIMATIONS
+   ============================================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* =============================================
+   UTILITIES
+   ============================================= */
+::selection {
+  background: rgba(251, 191, 36, 0.3);
+  color: var(--fudi-text-primary);
+}
+
+/* Hide scrollbar for Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
+}

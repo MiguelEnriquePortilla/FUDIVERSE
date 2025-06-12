@@ -1,0 +1,989 @@
+/* FUDIVAULT - THE KNOWLEDGE NEXUS */
+/* Where Notion meets GitHub in the Fudiverse */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.root {
+  /* Fudi Signature Palette */
+  --fudi-cyan: #06b6d4;
+  --fudi-blue: #3b82f6;
+  --fudi-orange: #f97316;
+  --fudi-pink: #ec4899;
+  --fudi-purple: #8b5cf6;
+  --fudi-green: #10b981;
+  
+  /* Dark Theme Base */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1a1a1a;
+  --bg-elevated: #242424;
+  
+  /* Glass & Glow */
+  --glass-bg: rgba(20, 20, 20, 0.8);
+  --glass-border: rgba(6, 182, 212, 0.2);
+  --glow-primary: 0 0 40px rgba(6, 182, 212, 0.3);
+  --glow-intense: 0 0 60px rgba(6, 182, 212, 0.5);
+  
+  /* Text Hierarchy */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #666666;
+  
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(6, 182, 212, 0.3);
+}
+
+/* Base Container with Animated Background */
+.vaultContainer {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Grid Background */
+.vaultContainer::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-shift 10s linear infinite;
+  z-index: 0;
+}
+
+@keyframes grid-shift {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+/* Gradient Orbs */
+.vaultContainer::after {
+  content: '';
+  position: fixed;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+  top: -400px;
+  right: -400px;
+  animation: orb-float 20s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-100px, 100px) scale(1.2); }
+}
+
+/* Premium Header Bar */
+.vaultHeader {
+  position: relative;
+  z-index: 100;
+  height: 64px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 32px;
+}
+
+/* Glowing accent line */
+.vaultHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--fudi-cyan) 20%, 
+    var(--fudi-blue) 50%, 
+    var(--fudi-cyan) 80%, 
+    transparent
+  );
+  opacity: 0.5;
+  animation: accent-pulse 3s ease-in-out infinite;
+}
+
+@keyframes accent-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Logo Area */
+.vaultLogo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.vaultLogoIcon {
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+/* Animated Cube Logo */
+.vaultCube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: cube-rotate 20s linear infinite;
+}
+
+@keyframes cube-rotate {
+  0% { transform: rotateX(-25deg) rotateY(0deg); }
+  100% { transform: rotateX(-25deg) rotateY(360deg); }
+}
+
+.cubeFace {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(59, 130, 246, 0.05));
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fudi-cyan);
+  text-shadow: 0 0 10px currentColor;
+}
+
+.cubeFace:nth-child(1) { transform: translateZ(20px); }
+.cubeFace:nth-child(2) { transform: rotateY(180deg) translateZ(20px); }
+.cubeFace:nth-child(3) { transform: rotateY(90deg) translateZ(20px); }
+.cubeFace:nth-child(4) { transform: rotateY(-90deg) translateZ(20px); }
+.cubeFace:nth-child(5) { transform: rotateX(90deg) translateZ(20px); }
+.cubeFace:nth-child(6) { transform: rotateX(-90deg) translateZ(20px); }
+
+.vaultLogoText {
+  font-size: 20px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--fudi-cyan), var(--fudi-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.vaultSubtitle {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* Search Command Center */
+.vaultSearch {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 40px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.searchContainer:hover {
+  border-color: var(--border-default);
+}
+
+.searchContainer:focus-within {
+  border-color: var(--border-hover);
+  box-shadow: 
+    0 0 0 4px rgba(6, 182, 212, 0.1),
+    var(--glow-primary);
+}
+
+.searchInput {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0 12px;
+}
+
+.searchInput::placeholder {
+  color: var(--text-tertiary);
+}
+
+.searchHotkey {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+/* Action Buttons */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.newVaultBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--fudi-cyan), var(--fudi-blue));
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.newVaultBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.newVaultBtn:hover::before {
+  transform: translateX(100%);
+}
+
+.newVaultBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 20px rgba(6, 182, 212, 0.3),
+    var(--glow-primary);
+}
+
+/* Main Layout */
+.vaultMain {
+  display: flex;
+  height: calc(100vh - 64px);
+  position: relative;
+  z-index: 10;
+}
+
+/* Sidebar Navigation */
+.vaultSidebar {
+  width: 260px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scanning line effect */
+.vaultSidebar::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(6, 182, 212, 0.1),
+    transparent
+  );
+  animation: scan-down 8s linear infinite;
+}
+
+@keyframes scan-down {
+  to { top: 100%; }
+}
+
+.sidebarSection {
+  padding: 20px 16px;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitle::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 2px 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 100%;
+  text-align: left;
+}
+
+.navItem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: linear-gradient(to bottom, var(--fudi-cyan), var(--fudi-blue));
+  transition: height 0.3s ease;
+  border-radius: 3px;
+}
+
+.navItem:hover {
+  background: rgba(6, 182, 212, 0.05);
+  color: var(--text-primary);
+}
+
+.navItem.active {
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--fudi-cyan);
+}
+
+.navItem.active::before {
+  height: 70%;
+}
+
+.navIcon {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+
+.navItem:hover .navIcon,
+.navItem.active .navIcon {
+  opacity: 1;
+}
+
+.navCount {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  background: var(--bg-elevated);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Quick Stats */
+.sidebarStats {
+  margin-top: auto;
+  padding: 20px 16px;
+  border-top: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.statRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statValue {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fudi-cyan);
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* Content Area */
+.vaultContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+/* Content Header */
+.contentHeader {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+}
+
+.contentTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.contentTitle h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0;
+  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.viewControls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.viewToggle {
+  display: flex;
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  padding: 2px;
+  border: 1px solid var(--border-subtle);
+}
+
+.viewToggle button {
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewToggle button:hover {
+  color: var(--text-secondary);
+}
+
+.viewToggle button.active {
+  background: var(--bg-secondary);
+  color: var(--fudi-cyan);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.filterBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterBtn:hover {
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+/* Vault Grid */
+.vaultGrid {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* Custom Scrollbar */
+.vaultGrid::-webkit-scrollbar {
+  width: 10px;
+}
+
+.vaultGrid::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+.vaultGrid::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+  border-radius: 5px;
+  border: 2px solid var(--bg-primary);
+}
+
+.vaultGrid::-webkit-scrollbar-thumb:hover {
+  background: var(--border-default);
+}
+
+/* Vault Cards - The Knowledge Artifacts */
+.vaultCard {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Holographic effect on hover */
+.vaultCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    transparent 0%,
+    rgba(6, 182, 212, 0.05) 40%,
+    rgba(59, 130, 246, 0.05) 60%,
+    transparent 100%
+  );
+  transform: translateX(-100%) translateY(-100%);
+  transition: transform 0.6s ease;
+}
+
+.vaultCard:hover::before {
+  transform: translateX(100%) translateY(100%);
+}
+
+.vaultCard:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    var(--glow-primary);
+}
+
+/* Card Type Badge */
+.cardType {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.typeRecipe { background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.1)); }
+.typeKnowledge { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1)); }
+.typeReport { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1)); }
+.typePlaybook { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1)); }
+.typeSupplier { background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.1)); }
+.typeIdea { background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1)); }
+
+.vaultCard:hover .cardType {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cardType svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Favorite Indicator */
+.favoriteIndicator {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 20px;
+  height: 20px;
+  color: var(--fudi-orange);
+  filter: drop-shadow(0 0 8px currentColor);
+  animation: favorite-pulse 2s ease-in-out infinite;
+}
+
+@keyframes favorite-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+/* Card Content */
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.cardDescription {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Tags System */
+.cardTags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 12px;
+  color: var(--fudi-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: rgba(6, 182, 212, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Metrics Display */
+.cardMetrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 16px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.metric {
+  text-align: center;
+}
+
+.metricValue {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--fudi-cyan), var(--fudi-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metricLabel {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Card Footer */
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.updateTime {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cardActions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  border-color: var(--border-hover);
+  color: var(--fudi-cyan);
+  background: rgba(6, 182, 212, 0.05);
+  transform: translateY(-2px);
+}
+
+/* FUDI Assistant - The Knowledge Guardian */
+.fudiAssistant {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 320px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    var(--glow-primary);
+  z-index: 1000;
+  animation: assistant-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes assistant-enter {
+  from {
+    transform: translateY(100px) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* FUDI Orb */
+.fudiOrb {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.orbCore {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--fudi-cyan), var(--fudi-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  position: relative;
+  animation: orb-float 4s ease-in-out infinite;
+}
+
+@keyframes orb-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.orbCore::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+  animation: orb-pulse 2s ease-in-out infinite;
+}
+
+@keyframes orb-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+.assistantContent {
+  text-align: center;
+}
+
+.assistantTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.assistantMessage {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.assistantSuggestion {
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.assistantSuggestion:hover {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
+  transform: translateX(-4px);
+}
+
+.suggestionIcon {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fudi-cyan);
+}
+
+.suggestionText {
+  flex: 1;
+  text-align: left;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+/* List View Adjustments */
+.vaultGrid.listView {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vaultGrid.listView .vaultCard {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  gap: 20px;
+}
+
+.vaultGrid.listView .cardType {
+  margin: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.vaultGrid.listView .cardContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.vaultGrid.listView .cardTitle {
+  margin: 0;
+  font-size: 16px;
+  min-width: 200px;
+}
+
+.vaultGrid.listView .cardDescription {
+  display: none;
+}
+
+.vaultGrid.listView .cardTags {
+  margin: 0;
+  gap: 6px;
+}
+
+.vaultGrid.listView .cardMetrics {
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: flex;
+  gap: 24px;
+}
+
+.vaultGrid.listView .metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.vaultGrid.listView .metricValue {
+  font-size: 16px;
+}
+
+.vaultGrid.listView .cardFooter {
+  margin: 0;
+  margin-left: auto;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .vaultGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .vaultSidebar {
+    display: none;
+  }
+  
+  .vaultContent {
+    margin-left: 0;
+  }
+  
+  .fudiAssistant {
+    width: calc(100vw - 32px);
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+  }
+}

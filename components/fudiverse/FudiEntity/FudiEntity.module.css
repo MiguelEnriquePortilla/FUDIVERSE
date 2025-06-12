@@ -1,0 +1,181 @@
+/* components/fudiverse/FudiEntity/FudiEntity.module.css */
+
+.fudiEntity {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Variant: Fullscreen */
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.fullscreen .canvas {
+  pointer-events: all;
+}
+
+/* Variant: Corner */
+.corner {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 400px;
+  height: 400px;
+  z-index: 100;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 
+    0 0 100px rgba(251, 191, 36, 0.3),
+    0 0 200px rgba(0, 255, 255, 0.2),
+    inset 0 0 50px rgba(0, 0, 0, 0.5);
+  animation: cornerFloat 6s ease-in-out infinite;
+}
+
+@keyframes cornerFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Variant: Mini */
+.mini {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 
+    0 0 30px rgba(251, 191, 36, 0.4),
+    0 0 60px rgba(0, 255, 255, 0.2);
+}
+
+/* Variant: Hero */
+.hero {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 800px;
+  height: 800px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hero .canvas {
+  pointer-events: all;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .corner {
+    bottom: 1rem;
+    right: 1rem;
+    width: 200px;
+    height: 200px;
+  }
+  
+  .hero {
+    max-width: 90vw;
+    height: 90vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .corner {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Loading state */
+.fudiEntity::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(251, 191, 36, 0.2);
+  border-top-color: #fbbf24;
+  border-radius: 50%;
+  animation: loading 1s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.fudiEntity.loading::before {
+  opacity: 1;
+}
+
+@keyframes loading {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Glow effects for special states */
+.fudiEntity.excited {
+  filter: brightness(1.2) contrast(1.1);
+}
+
+.fudiEntity.thinking::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 40%, rgba(167, 139, 250, 0.1) 100%);
+  animation: thinkingPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes thinkingPulse {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Sleeping state */
+.fudiEntity.sleeping {
+  filter: brightness(0.6) sepia(0.2);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .fudiEntity,
+  .fudiEntity * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Dark mode optimization */
+@media (prefers-color-scheme: dark) {
+  .fudiEntity {
+    filter: brightness(0.9);
+  }
+}
+
+/* Performance optimization for low-end devices */
+@media (max-width: 768px) and (max-height: 768px) {
+  .fullscreen {
+    /* Reduce canvas resolution on mobile */
+    transform: scale(0.8);
+    transform-origin: center;
+  }
+}

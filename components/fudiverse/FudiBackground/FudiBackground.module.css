@@ -1,0 +1,282 @@
+/* components/fudiverse/FudiBackground/FudiBackground.module.css */
+
+.fudiBackground {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.fudiBackground.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Gradient Blobs */
+.gradientContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.05;
+  animation: blobFloat 25s ease-in-out infinite;
+}
+
+.blob1 {
+  top: -20%;
+  left: -20%;
+  width: 70%;
+  height: 70%;
+}
+
+.blob2 {
+  bottom: -20%;
+  right: -20%;
+  width: 80%;
+  height: 80%;
+  animation-direction: reverse;
+}
+
+.blob3 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  animation-delay: -10s;
+}
+
+@keyframes blobFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  25% {
+    transform: translate(50px, -50px) scale(1.1) rotate(90deg);
+  }
+  50% {
+    transform: translate(-30px, 30px) scale(0.9) rotate(180deg);
+  }
+  75% {
+    transform: translate(-50px, -30px) scale(1.05) rotate(270deg);
+  }
+}
+
+/* Grid Pattern */
+.gridPattern {
+  position: absolute;
+  inset: 0;
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+/* Data Streams Container */
+.dataStreamsContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.dataStream {
+  position: absolute;
+  top: -100px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  opacity: 0.7;
+  animation: dataStreamFall 10s linear infinite;
+  white-space: nowrap;
+}
+
+.streamText {
+  display: inline-block;
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+@keyframes dataStreamFall {
+  0% {
+    top: -100px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    top: 100vh;
+    opacity: 0;
+  }
+}
+
+/* Matrix Rain Effect */
+.matrixColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.matrixColumn span {
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  text-shadow: 0 0 8px currentColor;
+  animation: matrixGlow 2s ease-in-out infinite;
+}
+
+@keyframes matrixGlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Canvas for particles and neural */
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Scan Lines Effect */
+.scanLines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.01) 50%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  animation: scanLineMove 8s linear infinite;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.scanLines::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 255, 0.1) 0%,
+    transparent 100%
+  );
+  animation: scanBeam 4s ease-in-out infinite;
+}
+
+@keyframes scanLineMove {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 10px;
+  }
+}
+
+@keyframes scanBeam {
+  0%, 100% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(100vh);
+    opacity: 1;
+  }
+}
+
+/* Variant-specific styles */
+.dataStreams {
+  background: #000;
+}
+
+.particles {
+  background: radial-gradient(ellipse at center, #0a0a0a 0%, #000 100%);
+}
+
+.gradientBlobs {
+  background: #0a0a0a;
+}
+
+.grid {
+  background: #050505;
+}
+
+.matrix {
+  background: #000;
+  color: #00ff00;
+}
+
+.neural {
+  background: radial-gradient(circle at center, #0a0a0a 0%, #000 70%);
+}
+
+.combined {
+  background: #000;
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .blob,
+  .dataStream,
+  .gridPattern,
+  .scanLines,
+  .matrixColumn span {
+    animation: none !important;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .dataStream {
+    font-size: 12px;
+  }
+  
+  .matrixColumn span {
+    font-size: 14px;
+  }
+  
+  .blob {
+    filter: blur(80px);
+  }
+  
+  .gridPattern {
+    background-size: 30px 30px;
+  }
+}
