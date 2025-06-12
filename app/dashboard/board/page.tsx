@@ -12,7 +12,7 @@ import {
 import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
 import { FudiAura } from '@/components/fudiverse/FudiAura';
 import { FudiEntity } from '@/components/fudiverse/FudiEntity';
-import '@/app/styles/fudi-utilities.css';
+/*import '@/styles/fudi-utilities.css'*/
 import '@/styles/pages/dashboard.css';
 
 // Initialize Supabase
