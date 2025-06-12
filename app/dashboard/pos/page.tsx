@@ -55,7 +55,7 @@ export default function FudiPOSPage() {
   const [fudiGhostPosition, setFudiGhostPosition] = useState({ x: 0, y: 0, visible: false });
   const [fudiWhisper, setFudiWhisper] = useState({ text: '', visible: false });
   const [currentCustomer, setCurrentCustomer] = useState<CustomerData | null>(null);
-  const [blackHole, setBlackHole] = useState({ active: true, x: window.innerWidth - 150, y: window.innerHeight - 150 });
+  const [blackHole, setBlackHole] = useState({ active: true, x: 0, y: 0 });
 
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>(null);
