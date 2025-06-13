@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { 
   Check, Sparkles, Rocket, Crown, Building2,
   MessageSquare, BarChart3, Vault, Users, ShoppingCart,
-  Zap, Star, TrendingUp, Award, ChevronRight
+  Zap, Star, TrendingUp, Award, ChevronRight, Flame
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-
+import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
-import styles from './pricing.module.css';
+import { InfinitoCard } from '@/components/fudiverse/InfinitoCard';
+import '@/styles/pages/fudi.pricing.css';
 
 export default function PricingPage() {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
@@ -99,26 +100,36 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className={styles.container}>
+    <div className="pricing-container">
+      {/* FUDI Background Effects */}
+      <FudiChatGrid 
+        opacity={0.15}
+        gridSize={80}
+        color="#4a4a4a"
+        animated={true}
+        showGradient={true}
+        pulseSpeed={1.5}
+      />
+      
       <FudiBackground 
         variant="grid"
-        intensity={0.2}
+        intensity={0.3}
         speed={0.5}
         color="mixed"
         opacity={0.4}
       />
 
       {/* Header */}
-      <header className={styles.header}>
-        <nav className={styles.nav}>
-          <Link href="/" className={styles.logo}>
+      <header className="pricing-header">
+        <nav className="pricing-nav">
+          <Link href="/" className="pricing-logo">
             <span>FUDIVERSE</span>
           </Link>
-          <div className={styles.navLinks}>
-            <Link href="/features" className={styles.navLink}>Características</Link>
-            <Link href="/pricing" className={styles.navLink}>Precios</Link>
-            <Link href="/about" className={styles.navLink}>Nosotros</Link>
-            <Link href="/login" className={styles.navLink}>Entrar</Link>
+          <div className="nav-links">
+            <Link href="/features" className="nav-link">Características</Link>
+            <Link href="/pricing" className="nav-link active">Precios</Link>
+            <Link href="/about" className="nav-link">Nosotros</Link>
+            <Link href="/login" className="nav-link">Entrar</Link>
             <FudiButton variant="primary" size="small" href="/register">
               ÚNETE
             </FudiButton>
@@ -127,83 +138,94 @@ export default function PricingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            ELIGE TU NIVEL DE <span className={styles.highlight}>EVOLUCIÓN</span>
+      <section className="pricing-hero">
+        <div className="hero-content">
+          <div className="hero-badge">
+            <Crown size={16} />
+            <span>NIVELES DE EVOLUCIÓN</span>
+          </div>
+          
+          <h1 className="hero-title">
+            ELIGE TU NIVEL DE <span className="hero-highlight">EVOLUCIÓN</span>
           </h1>
-          <p className={styles.heroSubtitle}>
-            Todos los planes incluyen el poder de FUDI. La diferencia es cuánto quieres DOMINAR.
+          <p className="hero-subtitle">
+            Todos los planes incluyen el poder de FUDI. La diferencia es cuánto quieres <strong>DOMINAR</strong>.
           </p>
         </div>
 
         {/* Billing Toggle */}
-        <div className={styles.billingToggle}>
+        <div className="billing-toggle">
           <button 
-            className={`${styles.toggleBtn} ${billingCycle === 'monthly' ? styles.active : ''}`}
+            className={`toggle-btn ${billingCycle === 'monthly' ? 'active' : ''}`}
             onClick={() => setBillingCycle('monthly')}
           >
             Mensual
           </button>
           <button 
-            className={`${styles.toggleBtn} ${billingCycle === 'annual' ? styles.active : ''}`}
+            className={`toggle-btn ${billingCycle === 'annual' ? 'active' : ''}`}
             onClick={() => setBillingCycle('annual')}
           >
             Anual
-            <span className={styles.discount}>-20%</span>
+            <span className="discount">-20%</span>
           </button>
         </div>
       </section>
 
       {/* Pricing Cards */}
-      <section className={styles.pricing}>
-        <div className={styles.pricingGrid}>
+      <section className="pricing-section">
+        <div className="pricing-grid">
           {plans.map((plan) => {
             const Icon = plan.icon;
             return (
               <div 
                 key={plan.id} 
-                className={`${styles.pricingCard} ${plan.popular ? styles.popular : ''}`}
-                style={{ '--plan-color': plan.color } as any}
+                className={`pricing-card ${plan.popular ? 'popular' : ''}`}
+                style={{ '--plan-color': plan.color } as React.CSSProperties}
               >
                 {plan.popular && (
-                  <div className={styles.popularBadge}>
+                  <div className="popular-badge">
                     <Star size={16} />
-                    MÁS POPULAR
+                    <span>MÁS POPULAR</span>
                   </div>
                 )}
 
-                <div className={styles.planHeader}>
-                  <div className={styles.planIcon}>
+                <div className="plan-header">
+                  <div className="plan-icon">
                     <Icon size={32} />
+                    <div className="icon-rings">
+                      <div className="ring ring-1"></div>
+                      <div className="ring ring-2"></div>
+                    </div>
                   </div>
-                  <h3 className={styles.planName}>{plan.name}</h3>
-                  <p className={styles.planTagline}>{plan.tagline}</p>
+                  <h3 className="plan-name">{plan.name}</h3>
+                  <p className="plan-tagline">{plan.tagline}</p>
                 </div>
 
-                <div className={styles.planPrice}>
+                <div className="plan-price">
                   {plan.isEnterprise ? (
-                    <span className={styles.priceCustom}>Hablemos</span>
+                    <span className="price-custom">Hablemos</span>
                   ) : (
                     <>
-                      <span className={styles.currency}>$</span>
-                      <span className={styles.amount}>{plan.price}</span>
-                      <span className={styles.period}>/mes</span>
+                      <span className="currency">$</span>
+                      <span className="amount">{plan.price}</span>
+                      <span className="period">/mes</span>
                     </>
                   )}
                 </div>
 
-                <p className={styles.planDescription}>{plan.description}</p>
+                <p className="plan-description">{plan.description}</p>
 
-                <div className={styles.perfectFor}>
+                <div className="perfect-for">
                   <Award size={16} />
                   <span>{plan.perfectFor}</span>
                 </div>
 
-                <ul className={styles.features}>
+                <ul className="features">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className={styles.feature}>
-                      <Check size={16} />
+                    <li key={index} className="feature">
+                      <div className="check-icon">
+                        <Check size={16} />
+                      </div>
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -213,7 +235,7 @@ export default function PricingPage() {
                   variant={plan.popular ? 'primary' : 'secondary'}
                   size="medium"
                   href={plan.isEnterprise ? '/contact' : '/register'}
-                  fullWidth
+                  className="plan-cta"
                 >
                   {plan.isEnterprise ? 'CONTACTAR' : 'EMPIEZA HOY'}
                   <ChevronRight size={16} />
@@ -224,23 +246,106 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className={styles.bottomCta}>
-        <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>¿CUÁL ES TU NIVEL?</h2>
-          <p className={styles.ctaSubtitle}>
-            🎁 Primer mes con 20% OFF en cualquier plan anual
-          </p>
-          <FudiButton 
-            variant="primary" 
-            size="large" 
-            href="/register"
-            icon={<Rocket size={20} />}
-          >
-            EMPIEZA HOY
-          </FudiButton>
+      {/* Social Proof Section */}
+      <section className="social-proof-section">
+        <div className="social-proof-content">
+          <h2 className="social-proof-title">
+            <Users size={32} />
+            ÚNETE A LA ÉLITE RESTAURANTERA
+          </h2>
+          
+          <div className="proof-stats">
+            <div className="proof-stat">
+              <div className="stat-value">+500</div>
+              <div className="stat-label">Restaurantes</div>
+              <div className="stat-description">Ya dominan con FUDI</div>
+            </div>
+            <div className="proof-stat">
+              <div className="stat-value">98%</div>
+              <div className="stat-label">Satisfacción</div>
+              <div className="stat-description">Clientes felices</div>
+            </div>
+            <div className="proof-stat">
+              <div className="stat-value">$2M+</div>
+              <div className="stat-label">Ahorrados</div>
+              <div className="stat-description">En costos operativos</div>
+            </div>
+          </div>
         </div>
       </section>
-      </div>
+
+      {/* Infinito Card - Potential Section */}
+      <section className="potential-section">
+        <InfinitoCard 
+          variant="cosmic"
+          title="TU POTENCIAL INFINITO"
+          subtitle="NO HAY LÍMITES"
+          description="Cada plan es un escalón hacia la grandeza, y aún más importante, hacia el crecimiento de tu gente!"
+          icon={<Rocket size={60} />}
+          size="large"
+          glow={true}
+          animated={true}
+        />
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="bottom-cta">
+        <div className="cta-background">
+          <div className="cta-orb orb-1"></div>
+          <div className="cta-orb orb-2"></div>
+          <div className="cta-orb orb-3"></div>
+        </div>
+        
+        <div className="cta-content">
+          <div className="cta-badge">
+            <Flame size={16} />
+            <span>TU MOMENTO</span>
+          </div>
+          
+          <h2 className="cta-title">¿CUÁL ES TU <span className="highlight">NIVEL</span>?</h2>
+          <p className="cta-subtitle">
+            🎁 <strong>Primer mes con 20% OFF</strong> en cualquier plan anual
+          </p>
+          
+          <div className="cta-actions">
+            <FudiButton 
+              variant="primary" 
+              size="large" 
+              href="/register"
+              icon={<Rocket size={20} />}
+            >
+              EMPIEZA HOY
+            </FudiButton>
+            
+            <FudiButton 
+              variant="secondary" 
+              size="large" 
+              href="/features"
+              icon={<MessageSquare size={20} />}
+            >
+              VER FEATURES
+            </FudiButton>
+          </div>
+          
+          <div className="trust-quote">
+            <blockquote>
+              "La evolución empieza con una decisión. <strong>¿Cuál será la tuya?</strong>"
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="pricing-footer">
+        <div className="footer-content">
+          <p>&copy; 2024 FUDIVERSE. Todos los niveles disponibles.</p>
+          <div className="footer-links">
+            <Link href="/terms">Términos</Link>
+            <Link href="/privacy">Privacidad</Link>
+            <Link href="/contact">Contacto</Link>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
