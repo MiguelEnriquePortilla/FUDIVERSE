@@ -1,0 +1,423 @@
+
+
+/* FUDILOGO - HOLOGRAPHIC LOGO COMPONENT */
+/* Inspirado en el diseño DALL-E épico */
+
+/* ========================================
+   CSS VARIABLES & BASE
+======================================== */
+
+.fudiLogo {
+  --fudi-cyan-primary: #06b6d4;
+  --fudi-cyan-secondary: #0891b2;
+  --fudi-cyan-accent: #67e8f9;
+  
+  --fudi-gold-primary: #fbbf24;
+  --fudi-gold-secondary: #f59e0b;
+  --fudi-gold-accent: #fde047;
+  
+  --fudi-green-primary: #10b981;
+  --fudi-green-secondary: #059669;
+  --fudi-green-accent: #34d399;
+  
+  --fudi-purple-primary: #8b5cf6;
+  --fudi-purple-secondary: #7c3aed;
+  --fudi-purple-accent: #a78bfa;
+  
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ========================================
+   SIZE VARIANTS
+======================================== */
+
+.size-mini {
+  width: 40px;
+  height: 40px;
+  --logo-size: 40px;
+}
+
+.size-small {
+  width: 60px;
+  height: 60px;
+  --logo-size: 60px;
+}
+
+.size-medium {
+  width: 100px;
+  height: 100px;
+  --logo-size: 100px;
+}
+
+.size-large {
+  width: 150px;
+  height: 150px;
+  --logo-size: 150px;
+}
+
+.size-xl {
+  width: 200px;
+  height: 200px;
+  --logo-size: 200px;
+}
+
+/* ========================================
+   COLOR VARIANTS
+======================================== */
+
+.color-cyan {
+  --primary-color: var(--fudi-cyan-primary);
+  --secondary-color: var(--fudi-cyan-secondary);
+  --accent-color: var(--fudi-cyan-accent);
+}
+
+.color-gold {
+  --primary-color: var(--fudi-gold-primary);
+  --secondary-color: var(--fudi-gold-secondary);
+  --accent-color: var(--fudi-gold-accent);
+}
+
+.color-mixed {
+  --primary-color: var(--fudi-cyan-primary);
+  --secondary-color: var(--fudi-gold-primary);
+  --accent-color: var(--fudi-green-primary);
+}
+
+.color-green {
+  --primary-color: var(--fudi-green-primary);
+  --secondary-color: var(--fudi-green-secondary);
+  --accent-color: var(--fudi-green-accent);
+}
+
+.color-purple {
+  --primary-color: var(--fudi-purple-primary);
+  --secondary-color: var(--fudi-purple-secondary);
+  --accent-color: var(--fudi-purple-accent);
+}
+
+/* ========================================
+   BACKGROUND GLOW
+======================================== */
+
+.backgroundGlow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary-color) 20%, transparent), transparent 70%);
+  border-radius: 50%;
+  filter: blur(15px);
+  opacity: calc(var(--logo-intensity) * 0.8);
+}
+
+.animated .backgroundGlow {
+  animation: fudiPulse 3s ease-in-out infinite;
+}
+
+/* ========================================
+   CONCENTRIC RINGS
+======================================== */
+
+.ringsContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--ring-size);
+  height: var(--ring-size);
+  border: 1px solid color-mix(in srgb, var(--primary-color) calc(30% + var(--ring-index) * 10%), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 calc(10px + var(--ring-index) * 2px) color-mix(in srgb, var(--primary-color) 30%, transparent);
+}
+
+.animated .ring {
+  animation: fudiRingRotate calc(8s + var(--ring-index) * 1s) linear infinite;
+  animation-delay: var(--ring-delay);
+}
+
+/* ========================================
+   DATA POINTS (BINARY)
+======================================== */
+
+.dataPointsContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dataPoint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 6px;
+  color: var(--accent-color);
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  opacity: 0.7;
+  transform: translate(-50%, -50%) rotate(var(--point-angle)) translateY(calc(var(--point-radius) * -1px));
+  text-shadow: 0 0 4px var(--accent-color);
+}
+
+.animated .dataPoint {
+  animation: fudiDataFloat var(--point-speed) ease-in-out infinite;
+  animation-delay: var(--point-delay);
+}
+
+/* ========================================
+   NEURAL NETWORK
+======================================== */
+
+.neuralNetwork {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.neuralLine {
+  stroke: var(--primary-color);
+  stroke-width: 0.5;
+  opacity: 0.4;
+}
+
+.animated .neuralLine {
+  animation: fudiNeuralPulse calc(1s + var(--neural-delay)) ease-in-out infinite alternate;
+}
+
+/* ========================================
+   CENTER LOGO
+======================================== */
+
+.centerLogo {
+  position: relative;
+  width: calc(var(--logo-size) * 0.4);
+  height: calc(var(--logo-size) * 0.4);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--logo-size) * 0.15);
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  border: 2px solid color-mix(in srgb, var(--accent-color) 40%, transparent);
+  box-shadow: 
+    0 0 20px color-mix(in srgb, var(--primary-color) 60%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  z-index: 10;
+}
+
+.hovered .centerLogo {
+  transform: scale(1.1);
+}
+
+/* ========================================
+   QUANTUM PARTICLES
+======================================== */
+
+.quantumParticles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.quantumParticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--accent-color);
+  transform-origin: var(--particle-radius) 0px;
+}
+
+.animated .quantumParticle {
+  animation: fudiQuantumOrbit var(--particle-speed) linear infinite;
+  animation-delay: var(--particle-delay);
+}
+
+/* ========================================
+   SCANNING BEAM
+======================================== */
+
+.scanBeam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+  border-radius: 1px;
+  opacity: 0.8;
+}
+
+.animated .scanBeam {
+  animation: fudiScanBeam 2s ease-in-out infinite;
+}
+
+/* ========================================
+   HOLOGRAPHIC DISTORTION
+======================================== */
+
+.holographicDistortion {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(45deg, transparent 49%, color-mix(in srgb, var(--primary-color) 10%, transparent) 50%, transparent 51%),
+    linear-gradient(-45deg, transparent 49%, color-mix(in srgb, var(--secondary-color) 10%, transparent) 50%, transparent 51%);
+  border-radius: 50%;
+  opacity: 0.1;
+  transition: opacity 0.3s ease;
+}
+
+.animated .holographicDistortion {
+  animation: fudiHologram 4s ease-in-out infinite;
+}
+
+.hovered .holographicDistortion {
+  opacity: 0.3;
+}
+
+/* ========================================
+   VARIANT SPECIFIC STYLES
+======================================== */
+
+.variant-simple .backgroundGlow,
+.variant-simple .ringsContainer,
+.variant-simple .dataPointsContainer,
+.variant-simple .scanBeam,
+.variant-simple .holographicDistortion {
+  display: none;
+}
+
+.variant-neural .dataPointsContainer,
+.variant-neural .quantumParticles,
+.variant-neural .scanBeam {
+  display: none;
+}
+
+.variant-quantum .dataPointsContainer,
+.variant-quantum .neuralNetwork,
+.variant-quantum .scanBeam,
+.variant-quantum .holographicDistortion {
+  display: none;
+}
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes fudiPulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: calc(var(--logo-intensity) * 0.6);
+  }
+  50% { 
+    transform: scale(1.1);
+    opacity: var(--logo-intensity);
+  }
+}
+
+@keyframes fudiRingRotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes fudiDataFloat {
+  0%, 100% { 
+    opacity: 0.4;
+    transform: translate(-50%, -50%) rotate(var(--point-angle)) translateY(var(--point-radius)) scale(0.8);
+  }
+  50% { 
+    opacity: 0.8;
+    transform: translate(-50%, -50%) rotate(var(--point-angle)) translateY(calc(var(--point-radius) - 5px)) scale(1);
+  }
+}
+
+@keyframes fudiNeuralPulse {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.8; }
+}
+
+@keyframes fudiQuantumOrbit {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes fudiScanBeam {
+  0% { transform: translateY(var(--logo-size)); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10px); opacity: 0; }
+}
+
+@keyframes fudiHologram {
+  0%, 100% { 
+    background-position: 0% 0%, 100% 100%;
+  }
+  50% { 
+    background-position: 100% 100%, 0% 0%;
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 768px) {
+  .size-xl {
+    width: 150px;
+    height: 150px;
+    --logo-size: 150px;
+  }
+  
+  .size-large {
+    width: 120px;
+    height: 120px;
+    --logo-size: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .size-xl {
+    width: 120px;
+    height: 120px;
+    --logo-size: 120px;
+  }
+  
+  .size-large {
+    width: 100px;
+    height: 100px;
+    --logo-size: 100px;
+  }
+  
+  .dataPoint {
+    font-size: 4px;
+  }
+}
+
+/* ========================================
+   MOTION PREFERENCES
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .fudiLogo * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
