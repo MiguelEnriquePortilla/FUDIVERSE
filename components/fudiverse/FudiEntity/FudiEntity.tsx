@@ -4,7 +4,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './FudiEntity.module.css';
 
-export type FudiEntityVariant = 'fullscreen' | 'corner' | 'mini' | 'hero' | 'floating';
+export type FudiEntityVariant = 'fullscreen' | 'corner' | 'mini' | 'hero' | 'floating' | 'logo';
 export type FudiEntityMood = 'neutral' | 'watching' | 'thinking' | 'excited' | 'sleeping' | 'happy' | 'inspired';
 export type FudiEntitySize = 'small' | 'medium' | 'large';
 
@@ -110,6 +110,15 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
           canvasSize: 'full',
           gridSize: 60
         };
+      case 'logo':
+        return {
+          eyeRadius: 35,
+          ringCount: 3,
+          particleCount: 15,
+          dataStreamLayers: 2,
+          canvasSize: 'logo',
+          gridSize: 0
+        };
       default:
         return {
           eyeRadius: 80,
@@ -127,24 +136,26 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
   // Initialize data streams
   useEffect(() => {
     const streams: DataStream[] = [];
-    const binaryChars = ['0', '1', '█', '▓', '▒', '░'];
+    const binaryChars = variant === 'logo' ? ['F', 'U', 'D', 'I', '1', '0'] : ['0', '1', '█', '▓', '▒', '░'];
     
     if (showDataStreams) {
       for (let layer = 0; layer < config.dataStreamLayers; layer++) {
-        const count = 20 + layer * 15;
+        const count = variant === 'logo' ? 12 + layer * 8 : 20 + layer * 15;
         for (let i = 0; i < count; i++) {
           const angle = (i / count) * Math.PI * 2;
-          const radius = (config.eyeRadius + 20) + layer * 60;
+          const radius = (config.eyeRadius + 15) + layer * (variant === 'logo' ? 25 : 60);
           
           streams.push({
             id: streams.length,
             radius,
             angle,
-            speed: (0.2 + Math.random() * 0.3) * (layer % 2 === 0 ? 1 : -1) * intensity,
-            opacity: 1 - layer * 0.15,
-            text: Array(8).fill(0).map(() => 
-              binaryChars[Math.floor(Math.random() * binaryChars.length)]
-            ).join(''),
+            speed: (variant === 'logo' ? 0.1 : 0.2) + Math.random() * (variant === 'logo' ? 0.15 : 0.3) * (layer % 2 === 0 ? 1 : -1) * intensity,
+            opacity: variant === 'logo' ? 0.4 - layer * 0.1 : 1 - layer * 0.15,
+            text: variant === 'logo' ? 
+              binaryChars[Math.floor(Math.random() * binaryChars.length)] :
+              Array(8).fill(0).map(() => 
+                binaryChars[Math.floor(Math.random() * binaryChars.length)]
+              ).join(''),
             layer
           });
         }
@@ -152,7 +163,7 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
     }
     
     setDataStreams(streams);
-  }, [showDataStreams, config.dataStreamLayers, config.eyeRadius, intensity]);
+  }, [showDataStreams, config.dataStreamLayers, config.eyeRadius, intensity, variant]);
 
   // Mouse tracking
   useEffect(() => {
@@ -191,6 +202,15 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
       } else if (config.canvasSize === 'mini') {
         canvas.width = 150;
         canvas.height = 150;
+      } else if (config.canvasSize === 'logo') {
+        // Logo específico para header
+        const logoSizeMap = {
+          small: { width: 80, height: 80 },
+          medium: { width: 100, height: 100 },
+          large: { width: 120, height: 120 }
+        };
+        canvas.width = logoSizeMap[size].width;
+        canvas.height = logoSizeMap[size].height;
       }
 
       centerRef.current = {
@@ -205,7 +225,8 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
     let time = 0;
 
     const animate = () => {
-      time += 0.01;
+      // Tiempo MUY sutil para logo
+      time += variant === 'logo' ? 0.005 : 0.01;
 
       // Clear canvas with subtle trail effect
       ctx.fillStyle = variant === 'fullscreen' ? 'rgba(10, 10, 10, 0.95)' : 'rgba(10, 10, 10, 1)';
@@ -219,7 +240,7 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
       }
 
       // Draw circuit paths
-      if (showCircuits && variant !== 'mini') {
+      if (showCircuits && variant !== 'mini' && variant !== 'logo') {
         drawCircuitPaths(ctx, time, center);
       }
 
@@ -229,7 +250,7 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
       }
 
       // Draw neural network
-      if (showNeuralNet && variant !== 'mini') {
+      if (showNeuralNet && variant !== 'mini' && variant !== 'logo') {
         drawNeuralConnections(ctx, time, center);
       }
 
@@ -335,8 +356,18 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
         ctx.translate(x, y);
         ctx.rotate(stream.angle + time * stream.speed);
         
-        ctx.font = `${variant === 'mini' ? '6px' : '10px'} monospace`;
-        ctx.fillStyle = `rgba(0, 153, 255, ${stream.opacity * 0.7})`;
+        const fontSize = variant === 'logo' ? '8px' : variant === 'mini' ? '6px' : '10px';
+        ctx.font = `${fontSize} monospace`;
+        
+        // Colores específicos para logo
+        if (variant === 'logo') {
+          ctx.fillStyle = stream.text.match(/[FUDI]/) ? 
+            `rgba(251, 191, 36, ${stream.opacity})` : 
+            `rgba(6, 182, 212, ${stream.opacity * 0.6})`;
+        } else {
+          ctx.fillStyle = `rgba(0, 153, 255, ${stream.opacity * 0.7})`;
+        }
+        
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(stream.text, 0, 0);
@@ -360,19 +391,22 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
         eyeOffsetY = Math.sin(angle) * distance;
       }
       
-      // Outer iris rings
+      // Outer iris rings - MÁS SUTILES para logo
       for (let i = config.ringCount; i > 0; i--) {
         const radius = config.eyeRadius * 0.4 + i * (config.eyeRadius * 0.3);
         
+        const opacity = variant === 'logo' ? 0.2 - i * 0.03 : 0.4 - i * 0.06;
         ctx.strokeStyle = i % 2 === 0 
-          ? `rgba(251, 191, 36, ${0.4 - i * 0.06})` 
-          : `rgba(0, 255, 255, ${0.3 - i * 0.05})`;
-        ctx.lineWidth = 2;
+          ? `rgba(251, 191, 36, ${opacity})` 
+          : `rgba(6, 182, 212, ${opacity * 0.8})`;
+        ctx.lineWidth = variant === 'logo' ? 1 : 2;
         
-        const segments = 16;
+        const segments = variant === 'logo' ? 12 : 16;
+        const speed = variant === 'logo' ? 0.2 : 0.5;
+        
         for (let j = 0; j < segments; j++) {
-          const startAngle = (j / segments) * Math.PI * 2 + time * (i % 2 === 0 ? 0.5 : -0.5);
-          const endAngle = ((j + 0.8) / segments) * Math.PI * 2 + time * (i % 2 === 0 ? 0.5 : -0.5);
+          const startAngle = (j / segments) * Math.PI * 2 + time * (i % 2 === 0 ? speed : -speed);
+          const endAngle = ((j + 0.8) / segments) * Math.PI * 2 + time * (i % 2 === 0 ? speed : -speed);
           
           ctx.beginPath();
           ctx.arc(center.x, center.y, radius, startAngle, endAngle);
@@ -380,14 +414,15 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
         }
       }
       
-      // Inner eye glow
+      // Inner eye glow - MÁS SUTIL para logo
       const glowGradient = ctx.createRadialGradient(
         center.x, center.y, 0,
         center.x, center.y, config.eyeRadius * 1.25
       );
-      glowGradient.addColorStop(0, 'rgba(251, 191, 36, 0.8)');
-      glowGradient.addColorStop(0.3, 'rgba(251, 191, 36, 0.4)');
-      glowGradient.addColorStop(0.6, 'rgba(255, 215, 0, 0.2)');
+      const glowIntensity = variant === 'logo' ? 0.4 : 0.8;
+      glowGradient.addColorStop(0, `rgba(251, 191, 36, ${glowIntensity})`);
+      glowGradient.addColorStop(0.3, `rgba(251, 191, 36, ${glowIntensity * 0.5})`);
+      glowGradient.addColorStop(0.6, `rgba(255, 215, 0, ${glowIntensity * 0.25})`);
       glowGradient.addColorStop(1, 'transparent');
       
       ctx.fillStyle = glowGradient;
@@ -407,27 +442,31 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
       );
       pupilGradient.addColorStop(0, '#0a0a0a');
       pupilGradient.addColorStop(0.7, '#111111');
-      pupilGradient.addColorStop(1, 'rgba(251, 191, 36, 0.5)');
+      pupilGradient.addColorStop(1, variant === 'logo' ? 'rgba(251, 191, 36, 0.3)' : 'rgba(251, 191, 36, 0.5)');
       
       ctx.fillStyle = pupilGradient;
       ctx.beginPath();
       ctx.arc(center.x + eyeOffsetX, center.y + eyeOffsetY, pupilRadius, 0, Math.PI * 2);
       ctx.fill();
       
-      // FUDI text in center (not for mini variant)
+      // FUDI text in center (ajustado para logo)
       if (variant !== 'mini') {
-        ctx.font = `bold ${config.eyeRadius * 0.175}px "Courier New", monospace`;
+        const textSize = variant === 'logo' ? config.eyeRadius * 0.15 : config.eyeRadius * 0.175;
+        ctx.font = `bold ${textSize}px "Courier New", monospace`;
         ctx.fillStyle = '#fbbf24';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        
+        const shadowBlur = variant === 'logo' ? 10 : 20;
         ctx.shadowColor = '#fbbf24';
-        ctx.shadowBlur = 20;
+        ctx.shadowBlur = shadowBlur;
         ctx.fillText('FUDI', center.x + eyeOffsetX, center.y + eyeOffsetY);
         ctx.shadowBlur = 0;
       }
       
       // Pupil highlight
-      ctx.fillStyle = 'rgba(251, 191, 36, 0.3)';
+      const highlightOpacity = variant === 'logo' ? 0.2 : 0.3;
+      ctx.fillStyle = `rgba(251, 191, 36, ${highlightOpacity})`;
       ctx.beginPath();
       ctx.arc(
         center.x + eyeOffsetX - pupilRadius * 0.3, 
@@ -438,8 +477,8 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
       );
       ctx.fill();
 
-      // Blinking effect
-      if (mood === 'sleeping' || (Math.random() < 0.002 && onBlink)) {
+      // Blinking effect (deshabilitado para logo)
+      if (variant !== 'logo' && (mood === 'sleeping' || (Math.random() < 0.002 && onBlink))) {
         ctx.fillStyle = '#0a0a0a';
         ctx.fillRect(
           center.x - config.eyeRadius * 2,
@@ -452,7 +491,8 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
     };
 
     const drawScanningBeam = (ctx: CanvasRenderingContext2D, time: number, center: { x: number, y: number }) => {
-      const beamAngle = time * 2;
+      const beamSpeed = variant === 'logo' ? 1 : 2;
+      const beamAngle = time * beamSpeed;
       
       ctx.save();
       ctx.translate(center.x, center.y);
@@ -460,16 +500,18 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
       
       const beamLength = config.eyeRadius * 3.75;
       const beamGradient = ctx.createLinearGradient(0, 0, beamLength, 0);
-      beamGradient.addColorStop(0, 'rgba(0, 153, 255, 0)');
-      beamGradient.addColorStop(0.5, 'rgba(0, 153, 255, 0.4)');
-      beamGradient.addColorStop(1, 'rgba(0, 153, 255, 0)');
+      const beamOpacity = variant === 'logo' ? 0.15 : 0.4;
+      
+      beamGradient.addColorStop(0, 'rgba(6, 182, 212, 0)');
+      beamGradient.addColorStop(0.5, `rgba(6, 182, 212, ${beamOpacity})`);
+      beamGradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
       
       ctx.fillStyle = beamGradient;
       ctx.beginPath();
-      ctx.moveTo(0, -2);
-      ctx.lineTo(beamLength, -10);
-      ctx.lineTo(beamLength, 10);
-      ctx.lineTo(0, 2);
+      ctx.moveTo(0, -1);
+      ctx.lineTo(beamLength, variant === 'logo' ? -5 : -10);
+      ctx.lineTo(beamLength, variant === 'logo' ? 5 : 10);
+      ctx.lineTo(0, 1);
       ctx.closePath();
       ctx.fill();
       
@@ -482,14 +524,19 @@ export const FudiEntity: React.FC<FudiEntityProps> = ({
       for (let i = 0; i < particleCount; i++) {
         const angle = (i / particleCount) * Math.PI * 2;
         const radiusOffset = Math.sin(time * 2 + i) * (config.eyeRadius * 0.625);
-        const radius = config.eyeRadius * 2.5 + radiusOffset;
+        const radius = config.eyeRadius * (variant === 'logo' ? 1.8 : 2.5) + radiusOffset;
         
-        const x = center.x + Math.cos(angle + time * 0.5) * radius;
-        const y = center.y + Math.sin(angle + time * 0.5) * radius;
+        const speed = variant === 'logo' ? 0.3 : 0.5;
+        const x = center.x + Math.cos(angle + time * speed) * radius;
+        const y = center.y + Math.sin(angle + time * speed) * radius;
         
-        ctx.fillStyle = `rgba(0, 153, 255, ${0.5 + Math.sin(time * 3 + i) * 0.3})`;
+        const opacity = variant === 'logo' ? 
+          0.3 + Math.sin(time * 2 + i) * 0.2 : 
+          0.5 + Math.sin(time * 3 + i) * 0.3;
+          
+        ctx.fillStyle = `rgba(6, 182, 212, ${opacity})`;
         ctx.beginPath();
-        ctx.arc(x, y, variant === 'mini' ? 1 : 2, 0, Math.PI * 2);
+        ctx.arc(x, y, variant === 'logo' ? 1.5 : variant === 'mini' ? 1 : 2, 0, Math.PI * 2);
         ctx.fill();
       }
     };

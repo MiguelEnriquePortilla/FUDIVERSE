@@ -7,6 +7,7 @@ import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
 import { FudiAura } from '@/components/fudiverse/FudiAura';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiLogo } from '@/components/fudiverse/FudiLogo';
 import styles from './page.module.css';
 
 
@@ -506,18 +507,20 @@ export default function ChatPage() {
         <header className={styles.header}>
           <div className={styles.headerLeft}>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-              <FudiAura 
-                variant="energy"
-                color="#06b6d4"
-                intensity={0.4}
-                size={60}
-                pulseSpeed={3}
+              <FudiLogo 
+                size="small"
+                variant="holographic"
+                animated={true}
+                color="mixed"
+                intensity={0.9}
+                showRings={true}
+                showData={true}
+                showPulse={true}
               />
-              <img src="/images/logo.png" alt="Fudi" className={styles.fudiLogo} style={{ position: 'relative', zIndex: 1 }} />
             </div>
             <div>
               <span className={styles.fudiTitle}>FudiGPT</span>
-              <div className={styles.fudiSubtitle}>Powered by FudiVerse AI</div>
+              <div className={styles.fudiSubtitle}>Powered by FUDIVERSE AI</div>
             </div>
           </div>
           

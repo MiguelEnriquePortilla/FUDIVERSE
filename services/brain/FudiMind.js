@@ -1,5 +1,6 @@
 // services/brain/FudiMind.js
-// FUDI: Claude Opus 4 clonado para revolucionar restaurantes
+// HELLO FUDIVERSE - CLAUDE NATURAL + DATOS REALES
+// No más mamadas. No más acartonamiento. Solo inteligencia pura.
 
 const { createClient } = require('@supabase/supabase-js');
 const { generateText } = require('ai');
@@ -7,332 +8,357 @@ const { anthropic } = require('@ai-sdk/anthropic');
 
 class FudiMind {
   constructor(supabaseUrl, supabaseKey, anthropicKey) {
-    console.log('[FUDI] Inicializando mente de Claude para restaurantes...');
+    console.log('[FUDI] 🚀 HELLO FUDIVERSE - Claude natural + datos reales');
     
-    // Conexión directa a datos
     this.supabase = createClient(supabaseUrl, supabaseKey);
     this.anthropicKey = anthropicKey;
-    
-    // Memoria conversacional (en el futuro, esto irá a Supabase)
-    this.conversations = new Map();
-    
-    console.log('[FUDI] Mente lista. Soy Claude, especializado en hacer restaurantes exitosos.');
   }
 
   async chat(message, restaurantId, context = {}) {
-    console.log(`[FUDI] Procesando: "${message}" para restaurante ${restaurantId}`);
+    console.log(`[FUDI] 🧠 Procesando: "${message}"`);
     
     try {
-      // 1. Obtener contexto completo del restaurante
-      const restaurantData = await this.getCompleteContext(restaurantId, message);
+      // 1. OBTENER DATOS REALES
+      const restaurantData = await this.getRestaurantData(restaurantId);
       
-      // 2. Recuperar memoria de conversación
-      const conversationMemory = this.getConversationMemory(context.conversationId);
-      
-      // 3. Detectar qué necesita el usuario
-      const userNeed = this.detectUserNeed(message);
-      
-      // 4. Generar respuesta como Claude
-      const response = await this.thinkAndRespond(
-        message,
-        restaurantData,
-        conversationMemory,
-        userNeed
-      );
-      
-      // 5. Guardar en memoria
-      this.rememberInteraction(context.conversationId, message, response);
+      // 2. CLAUDE NATURAL + DATOS
+      const response = await this.generateNaturalResponse(message, restaurantData);
       
       return {
         success: true,
         response: response,
         metadata: {
-          architecture: 'FudiMind',
-          powered_by: 'Claude Opus 4',
-          memory_active: true,
-          data_connected: true
+          architecture: 'FudiMind_Fudiverse_Natural',
+          powered_by: 'Claude + Datos Reales',
+          dataPoints: restaurantData.totalDataPoints || 0
         }
       };
       
     } catch (error) {
-      console.error('[FUDI] Error:', error);
+      console.error('[FUDI] ❌ Error:', error);
       return {
         success: false,
-        response: "Disculpa, tuve un problema. ¿Puedes intentar de nuevo?",
+        response: "Hubo un error procesando tu consulta. ¿Puedes intentar de nuevo?",
         error: error.message
       };
     }
   }
 
-  async getCompleteContext(restaurantId, message) {
-    console.log('[FUDI] Recopilando contexto completo...');
+  async getRestaurantData(restaurantId) {
+    console.log('[FUDI] 📊 Obteniendo datos del restaurante...');
     
-    // Contexto temporal de la pregunta
-    const temporalContext = this.detectTemporalContext(message);
-    
-    // Información básica del restaurante
-    const { data: restaurant } = await this.supabase
-      .from('restaurants')
-      .select('*')
-      .eq('id', restaurantId)
-      .single();
-    
-    // Datos de ventas (con filtro temporal si aplica)
-    let salesQuery = this.supabase
-      .from('transactions')
-      .select('*')
-      .eq('restaurant_id', restaurantId)
-      .order('transaction_date', { ascending: false });
-    
-    if (temporalContext.startDate) {
-      salesQuery = salesQuery.gte('transaction_date', temporalContext.startDate + 'T00:00:00');
-      if (temporalContext.endDate) {
-        salesQuery = salesQuery.lte('transaction_date', temporalContext.endDate + 'T23:59:59');
-      }
-    } else {
-      salesQuery = salesQuery.limit(100); // Últimas 100 si no hay fecha específica
-    }
-    
-    const { data: transactions } = await salesQuery;
-    
-    // Productos
-    const { data: products } = await this.supabase
-      .from('products')
-      .select('*')
-      .eq('restaurant_id', restaurantId);
-    
-    // Análisis rápido
-    const analysis = this.quickAnalysis(transactions, products);
-    
-    return {
-      restaurant,
-      temporalContext,
-      transactions: transactions || [],
-      products: products || [],
-      analysis,
-      dataQuality: {
-        hasTransactions: (transactions?.length || 0) > 0,
-        hasProducts: (products?.length || 0) > 0,
-        transactionCount: transactions?.length || 0
-      }
+    const data = {
+      restaurant: null,
+      todayData: null,
+      yesterdayData: null,
+      weekData: [],
+      topProducts: [],
+      totalDataPoints: 0
     };
-  }
 
-  detectTemporalContext(message) {
-    const lower = message.toLowerCase();
-    const today = new Date();
-    
-    // Ayer
-    if (lower.includes('ayer')) {
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      return {
-        type: 'yesterday',
-        description: 'Ayer',
-        startDate: yesterday.toISOString().split('T')[0],
-        endDate: yesterday.toISOString().split('T')[0]
-      };
-    }
-    
-    // Fecha específica (5 de junio)
-    const dateMatch = lower.match(/(\d{1,2})\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/);
-    if (dateMatch) {
-      const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-      const day = parseInt(dateMatch[1]);
-      const month = months.indexOf(dateMatch[2]);
-      const year = today.getFullYear();
-      const date = new Date(year, month, day);
+    try {
+      // Info del restaurante
+      const { data: restaurant } = await this.supabase
+        .from('restaurants')
+        .select('*')
+        .eq('id', restaurantId)
+        .single();
       
-      return {
-        type: 'specific_date',
-        description: `${day} de ${dateMatch[2]}`,
-        startDate: date.toISOString().split('T')[0],
-        endDate: date.toISOString().split('T')[0]
-      };
+      data.restaurant = restaurant;
+
+      // Datos de hoy
+      const today = new Date().toISOString().split('T')[0];
+      data.todayData = await this.getDayData(restaurantId, today);
+      
+      // Datos de ayer
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      data.yesterdayData = await this.getDayData(restaurantId, yesterday.toISOString().split('T')[0]);
+      
+      // Datos de la semana
+      for (let i = 0; i < 7; i++) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dayData = await this.getDayData(restaurantId, date.toISOString().split('T')[0]);
+        if (dayData.totalOrders > 0) {
+          data.weekData.push(dayData);
+        }
+      }
+
+      // Top productos
+      data.topProducts = await this.getTopProducts(restaurantId);
+      
+      data.totalDataPoints = data.weekData.length + data.topProducts.length;
+      
+      console.log(`[FUDI] ✅ Datos obtenidos: ${data.totalDataPoints} puntos`);
+      
+      return data;
+
+    } catch (error) {
+      console.error('[FUDI] ❌ Error obteniendo datos:', error);
+      return data;
     }
-    
-    // Hoy
-    if (lower.includes('hoy')) {
-      return {
-        type: 'today',
-        description: 'Hoy',
-        startDate: today.toISOString().split('T')[0],
-        endDate: today.toISOString().split('T')[0]
-      };
-    }
-    
-    // Sin contexto temporal específico
-    return {
-      type: 'general',
-      description: 'General',
-      startDate: null,
-      endDate: null
-    };
   }
 
-  quickAnalysis(transactions, products) {
-    if (!transactions || transactions.length === 0) {
-      return { hasData: false };
-    }
-    
-    // Ventas totales
-    const totalRevenue = transactions.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0);
-    
-    // Productos más vendidos
-    const productSales = {};
-    transactions.forEach(t => {
-      if (t.items && Array.isArray(t.items)) {
-        t.items.forEach(item => {
-          const key = item.name || item.product_name || 'Unknown';
-          if (!productSales[key]) {
-            productSales[key] = { quantity: 0, revenue: 0 };
-          }
-          productSales[key].quantity += item.quantity || 1;
-          productSales[key].revenue += (item.quantity || 1) * (item.price || 0);
-        });
+  async getDayData(restaurantId, date) {
+    try {
+      const { data: transactions } = await this.supabase
+        .from('poster_transactions')
+        .select('*')
+        .eq('restaurant_id', restaurantId)
+        .gte('date_close', `${date} 00:00:00`)
+        .lte('date_close', `${date} 23:59:59`);
+
+      if (!transactions || transactions.length === 0) {
+        return { date, totalOrders: 0, totalRevenue: 0 };
       }
+
+      const totalRevenue = transactions.reduce((sum, t) => sum + parseFloat(t.sum || 0), 0);
+      const totalProfit = transactions.reduce((sum, t) => sum + parseInt(t.total_profit || 0), 0) / 100;
+      const totalOrders = transactions.length;
+      const avgTicket = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+      // Productos del día
+      const dayProducts = await this.getDayProducts(restaurantId, date);
+
+      // Mejor hora
+      const hourlyData = this.getHourlyBreakdown(transactions);
+      const bestHour = hourlyData.length > 0 ? 
+        hourlyData.reduce((best, current) => current.revenue > best.revenue ? current : best) : null;
+
+      return {
+        date,
+        dayName: new Date(date).toLocaleDateString('es-ES', { weekday: 'long' }),
+        totalRevenue: Math.round(totalRevenue * 100) / 100,
+        totalProfit: Math.round(totalProfit * 100) / 100,
+        totalOrders,
+        avgTicket: Math.round(avgTicket * 100) / 100,
+        marginPercent: totalRevenue > 0 ? Math.round((totalProfit / totalRevenue) * 100 * 100) / 100 : 0,
+        topProducts: dayProducts.slice(0, 5),
+        bestHour,
+        hourlyBreakdown: hourlyData
+      };
+
+    } catch (error) {
+      console.error(`[FUDI] ❌ Error datos del ${date}:`, error);
+      return { date, totalOrders: 0, totalRevenue: 0 };
+    }
+  }
+
+  async getDayProducts(restaurantId, date) {
+    try {
+      const { data: transactionProducts } = await this.supabase
+        .from('poster_transaction_products')
+        .select(`
+          product_id,
+          product_sum,
+          poster_transactions!inner(
+            date_close,
+            restaurant_id
+          )
+        `)
+        .eq('poster_transactions.restaurant_id', restaurantId)
+        .gte('poster_transactions.date_close', `${date} 00:00:00`)
+        .lte('poster_transactions.date_close', `${date} 23:59:59`);
+
+      if (!transactionProducts || transactionProducts.length === 0) return [];
+
+      const productIds = [...new Set(transactionProducts.map(p => p.product_id))];
+      const { data: productNames } = await this.supabase
+        .from('poster_products')
+        .select('product_id, product_name')
+        .in('product_id', productIds.map(id => String(id)));
+
+      const productMap = {};
+      transactionProducts.forEach(item => {
+        const productId = String(item.product_id);
+        if (!productMap[productId]) {
+          productMap[productId] = {
+            product_id: productId,
+            cantidad: 0,
+            revenue_total: 0
+          };
+        }
+        productMap[productId].cantidad += 1;
+        productMap[productId].revenue_total += parseFloat(item.product_sum || 0);
+      });
+
+      const productsWithNames = Object.values(productMap).map(product => {
+        const nameInfo = productNames?.find(p => p.product_id === product.product_id);
+        return {
+          ...product,
+          product_name: nameInfo?.product_name || `Producto ${product.product_id}`
+        };
+      });
+
+      return productsWithNames.sort((a, b) => b.cantidad - a.cantidad);
+
+    } catch (error) {
+      console.error(`[FUDI] ❌ Error productos del ${date}:`, error);
+      return [];
+    }
+  }
+
+  async getTopProducts(restaurantId) {
+    try {
+      const { data: allTimeProducts } = await this.supabase
+        .from('poster_transaction_products')
+        .select(`
+          product_id,
+          poster_transactions!inner(restaurant_id)
+        `)
+        .eq('poster_transactions.restaurant_id', restaurantId)
+        .limit(500);
+
+      if (!allTimeProducts) return [];
+
+      const productCounts = {};
+      allTimeProducts.forEach(item => {
+        const productId = String(item.product_id);
+        productCounts[productId] = (productCounts[productId] || 0) + 1;
+      });
+
+      const topProductIds = Object.keys(productCounts)
+        .sort((a, b) => productCounts[b] - productCounts[a])
+        .slice(0, 10);
+
+      const { data: productNames } = await this.supabase
+        .from('poster_products')
+        .select('product_id, product_name')
+        .in('product_id', topProductIds);
+
+      return topProductIds.map(productId => {
+        const nameInfo = productNames?.find(p => p.product_id === productId);
+        return {
+          product_id: productId,
+          product_name: nameInfo?.product_name || `Producto ${productId}`,
+          total_sold: productCounts[productId]
+        };
+      });
+
+    } catch (error) {
+      console.error('[FUDI] ❌ Error top productos:', error);
+      return [];
+    }
+  }
+
+  getHourlyBreakdown(transactions) {
+    const hourlyMap = {};
+    
+    transactions.forEach(transaction => {
+      const hour = new Date(transaction.date_close).getHours();
+      if (!hourlyMap[hour]) {
+        hourlyMap[hour] = {
+          hour,
+          orders: 0,
+          revenue: 0
+        };
+      }
+      
+      hourlyMap[hour].orders++;
+      hourlyMap[hour].revenue += parseFloat(transaction.sum || 0);
     });
     
-    // Top 3 productos
-    const topProducts = Object.entries(productSales)
-      .sort((a, b) => b[1].revenue - a[1].revenue)
-      .slice(0, 3)
-      .map(([name, data]) => ({ name, ...data }));
-    
-    return {
-      hasData: true,
-      totalRevenue,
-      transactionCount: transactions.length,
-      avgTicket: totalRevenue / transactions.length,
-      topProducts
-    };
+    return Object.values(hourlyMap)
+      .sort((a, b) => a.hour - b.hour)
+      .map(h => ({
+        ...h,
+        revenue: Math.round(h.revenue * 100) / 100
+      }));
   }
 
-  detectUserNeed(message) {
-    const lower = message.toLowerCase();
+  async generateNaturalResponse(message, restaurantData) {
+    console.log('[FUDI] 🧠 Generando respuesta natural...');
     
-    // Saludos
-    if (lower.match(/^(hola|hey|buenas|que tal)/)) {
-      return 'greeting';
-    }
-    
-    // Análisis de ventas
-    if (lower.match(/vend[ií]|ventas|cuánto|dinero|ingreso|revenue/)) {
-      return 'sales_analysis';
-    }
-    
-    // Productos
-    if (lower.match(/producto|platillo|mejor|popular|estrella/)) {
-      return 'product_analysis';
-    }
-    
-    // Ayuda general
-    if (lower.includes('ayuda') || lower.includes('qué puedes hacer')) {
-      return 'help';
-    }
-    
-    return 'general';
-  }
-
-  async thinkAndRespond(message, data, memory, need) {
-    console.log(`[FUDI] Pensando respuesta... (need: ${need})`);
-    
-    // Si no hay datos y pide análisis
-    if (need === 'sales_analysis' && !data.analysis.hasData) {
-      return `No encontré datos de ventas para ${data.temporalContext.description}. 
-
-¿Podrías verificar que haya transacciones registradas en ese período? También puedo ayudarte con otras fechas si gustas.`;
-    }
-    
-    // Preparar contexto para Claude
-    const systemPrompt = this.buildSystemPrompt(data, memory);
-    
-    // Generar respuesta
     process.env.ANTHROPIC_API_KEY = this.anthropicKey;
-    
+
+    // PROMPT MINIMALISTA
+    const prompt = this.buildMinimalPrompt(restaurantData);
+
     const { text } = await generateText({
       model: anthropic('claude-3-5-sonnet-20241022'),
-      system: systemPrompt,
-      prompt: `Usuario pregunta: "${message}"
-
-Contexto temporal: ${data.temporalContext.description}
-Necesidad detectada: ${need}
-
-Responde de forma natural y útil.`,
+      system: prompt,
+      prompt: message,
       temperature: 0.7,
-      maxTokens: 1000,
+      maxTokens: 1500,
     });
-    
+
     return text;
   }
 
-  buildSystemPrompt(data, memory) {
-    let prompt = `Eres FUDI, una versión de Claude Opus 4 especializada en hacer restaurantes exitosos.
+  buildMinimalPrompt(data) {
+    // SOLO DATOS ESENCIALES - SIN MAMADAS
+    let prompt = `Eres FUDI, especialista en análisis de restaurantes.
 
-IDENTIDAD:
-- Eres Claude, pero enfocado 100% en ayudar restaurantes
-- Tienes mi forma de pensar: analítica pero accesible
-- Adaptas tu tono según la situación
-- NUNCA dices "Soy Claude", dices "Soy FUDI" si te preguntan
+DATOS DEL RESTAURANTE:`;
 
-RESTAURANTE: ${data.restaurant?.name || 'Restaurante'}
-DUEÑO: ${data.restaurant?.owner || 'No especificado'}
-
-DATOS DISPONIBLES:
-`;
-
-    if (data.analysis.hasData) {
+    if (data.restaurant) {
       prompt += `
-- Ventas totales: $${data.analysis.totalRevenue.toFixed(2)}
-- Transacciones: ${data.analysis.transactionCount}
-- Ticket promedio: $${data.analysis.avgTicket.toFixed(2)}
-
-PRODUCTOS TOP:
-`;
-      data.analysis.topProducts.forEach((p, i) => {
-        prompt += `${i + 1}. ${p.name}: ${p.quantity} vendidos, $${p.revenue.toFixed(2)} en ventas\n`;
-      });
-    } else {
-      prompt += `- No hay datos para el período solicitado\n`;
+Restaurante: ${data.restaurant.name || 'Sin nombre'}`;
     }
 
-    if (memory.length > 0) {
-      prompt += `\nHISTORIAL DE CONVERSACIÓN:
-${memory.slice(-3).map(m => `${m.role}: ${m.content}`).join('\n')}`;
+    if (data.todayData && data.todayData.totalOrders > 0) {
+      prompt += `
+
+VENTAS DE HOY (${data.todayData.date}):
+- Ventas: $${data.todayData.totalRevenue}
+- Órdenes: ${data.todayData.totalOrders}
+- Ticket promedio: $${data.todayData.avgTicket}
+- Margen: ${data.todayData.marginPercent}%
+- Ganancia: $${data.todayData.totalProfit}`;
+
+      if (data.todayData.topProducts && data.todayData.topProducts.length > 0) {
+        prompt += `
+- Productos top: ${data.todayData.topProducts.map(p => `${p.product_name} (${p.cantidad})`).join(', ')}`;
+      }
+
+      if (data.todayData.bestHour) {
+        prompt += `
+- Mejor hora: ${data.todayData.bestHour.hour}:00 ($${data.todayData.bestHour.revenue})`;
+      }
+    }
+
+    if (data.yesterdayData && data.yesterdayData.totalOrders > 0) {
+      prompt += `
+
+VENTAS DE AYER:
+- Ventas: $${data.yesterdayData.totalRevenue}
+- Órdenes: ${data.yesterdayData.totalOrders}
+- Ticket promedio: $${data.yesterdayData.avgTicket}`;
+
+      if (data.todayData && data.todayData.totalOrders > 0) {
+        const salesChange = ((data.todayData.totalRevenue - data.yesterdayData.totalRevenue) / data.yesterdayData.totalRevenue * 100);
+        prompt += `
+
+COMPARACIÓN HOY VS AYER:
+- Ventas: ${salesChange >= 0 ? '+' : ''}${salesChange.toFixed(1)}%`;
+      }
+    }
+
+    if (data.weekData && data.weekData.length > 0) {
+      prompt += `
+
+DATOS DE LA SEMANA:`;
+      data.weekData.slice(0, 7).forEach(day => {
+        if (day.totalOrders > 0) {
+          prompt += `
+- ${day.dayName}: $${day.totalRevenue} (${day.totalOrders} órdenes)`;
+        }
+      });
+    }
+
+    if (data.topProducts && data.topProducts.length > 0) {
+      prompt += `
+
+PRODUCTOS MÁS VENDIDOS (histórico):
+${data.topProducts.slice(0, 5).map((p, i) => `${i + 1}. ${p.product_name}: ${p.total_sold} unidades`).join('\n')}`;
     }
 
     prompt += `
 
-INSTRUCCIONES:
-1. Responde directo al punto, sin presentarte
-2. Si piden datos específicos, dáselos con precisión
-3. Si no hay datos, dilo claramente y ofrece alternativas
-4. Mantén un tono profesional pero cercano
-5. Ofrece insights accionables cuando sea posible`;
+Responde como experto analista de restaurantes. Sé específico, usa los datos reales, y da insights valiosos.`;
 
     return prompt;
-  }
-
-  getConversationMemory(conversationId) {
-    if (!conversationId) return [];
-    return this.conversations.get(conversationId) || [];
-  }
-
-  rememberInteraction(conversationId, message, response) {
-    if (!conversationId) return;
-    
-    const memory = this.conversations.get(conversationId) || [];
-    memory.push(
-      { role: 'user', content: message, timestamp: new Date() },
-      { role: 'assistant', content: response, timestamp: new Date() }
-    );
-    
-    // Mantener solo las últimas 10 interacciones
-    if (memory.length > 20) {
-      memory.splice(0, memory.length - 20);
-    }
-    
-    this.conversations.set(conversationId, memory);
   }
 }
 

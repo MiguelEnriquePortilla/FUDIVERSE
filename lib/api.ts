@@ -20,6 +20,7 @@ interface AuthResponse {
 // Cliente API
 class FudiAPI {
   private token: string | null = null;
+  conversations: any;
 
   // Configurar token de autenticación
   setToken(token: string) {
@@ -213,6 +214,30 @@ class FudiAPI {
       };
     }
   }
+
+    conversations = {
+    getAll: async (restaurantId: string) => {
+      return { success: true, conversations: [] };
+    },
+
+    create: async (restaurantId: string, title: string, firstMessage?: string) => {
+      return { 
+        success: true, 
+        conversation: { 
+          id: 'conv-' + Date.now(), 
+          title: title 
+        } 
+      };
+    },
+
+    saveInteraction: async (data: any) => {
+      return { success: true };
+    },
+
+    update: async (conversationId: string, data: any) => {
+      return { success: true };
+    }
+  };
 
   // Cerrar sesión
   logout() {
