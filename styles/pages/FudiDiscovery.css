@@ -1,10 +1,10 @@
 /* styles/pages/FudiDiscovery.css */
 /* =============================================
-   FUDISCOVERY - THE FUDIVERSE SOCIAL NETWORK
-   LinkedIn soul • Twitter face • TikTok heart
+   FUDIFLOW REVOLUTION - CYBERPUNK SOCIAL NETWORK
+   NO MORE TWITTER CLONES - PURE FUDIVERSE DNA
    ============================================= */
 
-/* CSS Variables - UNIFIED FUDIVERSE PALETTE */
+/* CSS Variables - FUDIVERSE CYBERPUNK PALETTE */
 :root {
   --fudi-void: #0a0a0a;
   --fudi-dark: #111111;
@@ -12,7 +12,6 @@
   --fudi-primary: #fbbf24; /* Matrix Gold */
   --fudi-secondary: #00ffff; /* Cyan */
   --fudi-accent: #a78bfa; /* Purple */
-  --fudi-violet: #667eea;
   --fudi-success: #10b981;
   --fudi-danger: #ef4444;
   --fudi-glass: rgba(255, 255, 255, 0.03);
@@ -21,32 +20,26 @@
   --fudi-text-secondary: rgba(113, 118, 123, 1);
   --fudi-border: rgb(47, 51, 54);
   --fudi-neural-glow: rgba(0, 255, 255, 0.1);
-  
-  /* Layout dimensions matching Twitter */
-  --sidebar-width: 275px;
-  --feed-width: 600px;
-  --right-sidebar-width: 350px;
-  --header-height: 53px;
 }
 
 /* =============================================
-   BASE CONTAINER - FUDIVERSE NEURAL BACKGROUND
+   FUDIFLOW REVOLUTION CONTAINER
    ============================================= */
-.discovery-container {
+.fudiflow-container {
   min-height: 100vh;
   background: var(--fudi-void);
-  /* Neural atmosphere gradients */
   background-image: 
-    radial-gradient(circle at 15% 85%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 85% 15%, rgba(251, 191, 36, 0.02) 0%, transparent 50%),
-    radial-gradient(circle at 45% 45%, rgba(167, 139, 250, 0.01) 0%, transparent 60%);
+    radial-gradient(circle at 15% 85%, rgba(0, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 85% 15%, rgba(251, 191, 36, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 45% 45%, rgba(167, 139, 250, 0.02) 0%, transparent 60%);
   color: var(--fudi-text-primary);
   position: relative;
   overflow: hidden;
+  font-family: 'Courier New', monospace;
 }
 
-/* NEURAL GRID BACKGROUND - VISIBLE EVERYWHERE */
-.discovery-container::before {
+/* NEURAL GRID BACKGROUND */
+.fudiflow-container::before {
   content: '';
   position: fixed;
   top: 0;
@@ -54,36 +47,43 @@
   right: 0;
   bottom: 0;
   background-image: 
-    linear-gradient(rgba(0, 255, 255, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 80px 80px;
+    linear-gradient(rgba(0, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 100px 100px;
   pointer-events: none;
   z-index: 1;
-  animation: neuralFloat 20s linear infinite;
+  animation: neuralFloat 25s linear infinite;
 }
 
 @keyframes neuralFloat {
   0% { transform: translate(0, 0); }
-  100% { transform: translate(80px, 80px); }
+  100% { transform: translate(100px, 100px); }
 }
 
-/* HERO BANNER - FUDISCOVERY INTRO */
+/* =============================================
+   HERO BANNER - COMING SOON EPIC
+   ============================================= */
 .hero-banner {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 2px solid var(--fudi-glass-border);
-  padding: 1rem 2rem;
+  background: linear-gradient(135deg, 
+    rgba(10, 10, 10, 0.98) 0%, 
+    rgba(26, 26, 26, 0.95) 100%
+  );
+  backdrop-filter: blur(25px);
+  border-bottom: 3px solid var(--fudi-secondary);
+  padding: 2rem 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 
-    0 4px 30px rgba(0, 0, 0, 0.5),
-    inset 0 -1px 0 rgba(0, 255, 255, 0.1);
+    0 8px 40px rgba(0, 0, 0, 0.8),
+    inset 0 -2px 0 rgba(0, 255, 255, 0.3);
+  min-height: 120px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hero-content {
@@ -92,164 +92,180 @@
   gap: 2rem;
 }
 
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, var(--fudi-secondary), var(--fudi-primary));
+  color: var(--fudi-void);
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 .hero-logo {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 900;
   background: linear-gradient(135deg, var(--fudi-secondary), var(--fudi-primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
   text-transform: uppercase;
   letter-spacing: 2px;
+  line-height: 1;
 }
 
 .hero-tagline {
   color: var(--fudi-text-secondary);
-  font-size: 0.875rem;
-  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.hero-description {
-  color: var(--fudi-text-primary);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  font-weight: 600;
 }
 
 .hero-stats {
   display: flex;
   align-items: center;
   gap: 2rem;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--fudi-text-secondary);
-  font-family: 'Courier New', monospace;
 }
 
 .hero-stat {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-direction: column;
+  text-align: center;
 }
 
 .stat-value {
   color: var(--fudi-primary);
-  font-weight: 700;
+  font-weight: 900;
+  font-size: 1.25rem;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.stat-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .hero-cta {
   background: linear-gradient(135deg, var(--fudi-secondary), var(--fudi-primary));
   color: var(--fudi-void);
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
+  padding: 1rem 2rem;
+  border-radius: 16px;
   border: none;
   font-weight: 700;
   font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: 'Courier New', monospace;
+  box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
 }
 
 .hero-cta:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.6);
 }
 
 /* =============================================
-   MAIN LAYOUT - SHIFTED FOR HERO BANNER
+   MAIN LAYOUT
    ============================================= */
 .main-layout {
-  display: block;
-  max-width: 1265px;
+  display: grid;
+  grid-template-columns: 320px 1fr 380px;
+  gap: 3rem;
+  max-width: 1400px;
   margin: 0 auto;
   position: relative;
   z-index: 10;
-  margin-top: 80px; /* Space for hero banner */
+  margin-top: 140px;
+  padding: 2rem 3rem;
+  min-height: calc(100vh - 140px);
 }
 
 /* =============================================
-   LEFT SIDEBAR
+   LEFT COMMAND CENTER - NOT SIDEBAR!
    ============================================= */
-.left-sidebar {
-  position: fixed;
-  left: 0;
-  top: 80px; /* Below hero banner */
-  width: var(--sidebar-width);
-  height: calc(100vh - 80px);
-  padding: 0 12px;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.left-sidebar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Logo */
-.sidebar-logo {
-  height: var(--header-height);
-  display: flex;
-  align-items: center;
-  padding: 0 12px;
-}
-
-.logo-icon {
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(135deg, var(--fudi-primary) 0%, var(--fudi-secondary) 100%);
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 900;
-  color: var(--fudi-void);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.2);
-  font-family: 'Courier New', monospace;
+.command-center {
+  background: var(--fudi-glass);
   border: 2px solid var(--fudi-glass-border);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 2rem;
+  height: fit-content;
+  position: sticky;
+  top: 160px;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+  transition: all 0.4s ease;
 }
 
-.logo-icon:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 30px rgba(0, 255, 255, 0.4);
+.command-center:hover {
   border-color: var(--fudi-secondary);
+  box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
 }
 
-/* Navigation Menu */
+.command-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--fudi-glass-border);
+}
+
+.command-logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--fudi-secondary), var(--fudi-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.command-subtitle {
+  color: var(--fudi-text-secondary);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
 .nav-menu {
-  margin-top: 4px;
+  margin-bottom: 2rem;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 12px;
-  margin: 4px 0;
+  padding: 1rem;
+  margin: 0.5rem 0;
   border-radius: 16px;
   color: var(--fudi-text-primary);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   cursor: pointer;
-  font-size: 18px;
-  line-height: 24px;
-  text-decoration: none;
-  position: relative;
-  font-family: 'Courier New', monospace;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
   border: 1px solid transparent;
+  text-decoration: none;
 }
 
 .nav-item:hover {
@@ -260,187 +276,154 @@
 }
 
 .nav-item.active {
-  font-weight: 700;
   background: rgba(0, 255, 255, 0.1);
   border-color: var(--fudi-secondary);
   color: var(--fudi-secondary);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
 }
 
 .nav-item svg {
-  width: 24px;
-  height: 24px;
-  margin-right: 16px;
+  width: 20px;
+  height: 20px;
+  margin-right: 1rem;
   flex-shrink: 0;
 }
 
-.nav-item span {
-  margin-right: 16px;
-}
-
-/* Post Button */
 .post-button {
-  width: 90%;
-  margin: 16px auto;
-  padding: 0 32px;
-  min-height: 52px;
+  width: 100%;
+  padding: 1.25rem;
   background: linear-gradient(135deg, var(--fudi-secondary), var(--fudi-primary));
   border: 2px solid var(--fudi-glass-border);
   border-radius: 16px;
   color: var(--fudi-void);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
-  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
 }
 
 .post-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 255, 255, 0.5);
-  border-color: var(--fudi-secondary);
+  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
+}
+
+/* NEURAL STATUS WIDGET */
+.neural-status {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.status-title {
+  color: var(--fudi-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.status-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.status-metric {
+  text-align: center;
+}
+
+.metric-value {
+  color: var(--fudi-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.metric-label {
+  color: var(--fudi-text-secondary);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* =============================================
-   MAIN FEED
+   MAIN NEURAL FEED - NO MORE TWITTER LAYOUT!
    ============================================= */
-.feed-container {
-  margin-left: var(--sidebar-width);
-  width: var(--feed-width);
+.neural-feed {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
   min-height: 100vh;
-  border-left: 1px solid var(--fudi-border);
-  border-right: 1px solid var(--fudi-border);
-  overflow: visible;
 }
 
-/* Feed Header - Glassmorphism */
-.feed-header {
-  position: sticky;
-  top: 80px; /* Below hero banner */
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 50;
-  border-bottom: 1px solid var(--fudi-border);
-}
-
-.feed-header-content {
-  height: var(--header-height);
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.feed-title {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 24px;
-  margin: 0;
-  color: var(--fudi-text-primary);
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.feed-header-icon {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--fudi-primary);
-}
-
-.feed-header-icon:hover {
-  background: rgba(251, 191, 36, 0.1);
-}
-
-/* Feed Tabs */
-.feed-tabs {
-  display: flex;
-  height: var(--header-height);
-}
-
-.feed-tab {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  color: var(--fudi-text-secondary);
-  font-weight: 500;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.feed-tab:hover {
-  background: rgba(0, 255, 255, 0.05);
-  color: var(--fudi-secondary);
-}
-
-.feed-tab.active {
-  color: var(--fudi-secondary);
-  font-weight: 700;
-}
-
-.feed-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 4px;
-  background: var(--fudi-secondary);
-  border-radius: 9999px;
-}
-
-/* Composer */
-.composer {
-  border-bottom: 1px solid var(--fudi-border);
-  padding: 12px 16px;
+/* =============================================
+   COMPOSER REVOLUTION - NOT TWITTER COMPOSER
+   ============================================= */
+.neural-composer {
   background: var(--fudi-glass);
-  backdrop-filter: blur(15px);
+  border: 3px solid var(--fudi-glass-border);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+  transition: all 0.4s ease;
 }
 
-.composer-content {
+.neural-composer:hover {
+  border-color: var(--fudi-secondary);
+  box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
+}
+
+.composer-header {
   display: flex;
-  padding-top: 12px;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .composer-avatar {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 20px;
-  background: linear-gradient(135deg, var(--fudi-primary) 0%, var(--fudi-secondary) 100%);
+  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 20px;
-  margin-right: 12px;
-  flex-shrink: 0;
+  font-size: 1.5rem;
   color: var(--fudi-void);
-  font-family: 'Courier New', monospace;
   border: 2px solid var(--fudi-glass-border);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
 }
 
-.composer-input-wrapper {
+.composer-info {
   flex: 1;
+}
+
+.composer-name {
+  color: var(--fudi-text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+}
+
+.composer-subtitle {
+  color: var(--fudi-text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .composer-input {
@@ -448,105 +431,457 @@
   background: transparent;
   border: none;
   color: var(--fudi-text-primary);
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 1.125rem;
+  line-height: 1.6;
   outline: none;
   resize: none;
-  min-height: 24px;
-  padding: 12px 0;
-  font-family: 'Courier New', monospace;
+  min-height: 80px;
+  padding: 1rem 0;
   font-weight: 500;
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', monospace;
 }
 
 .composer-input::placeholder {
   color: var(--fudi-text-secondary);
+  opacity: 0.7;
 }
 
 .composer-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 60px;
-  padding: 8px 0 4px;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--fudi-glass-border);
 }
 
 .composer-tools {
   display: flex;
-  gap: 4px;
+  gap: 0.75rem;
 }
 
 .composer-tool {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 12px;
   color: var(--fudi-primary);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   background: transparent;
-  border: none;
+  border: 1px solid var(--fudi-glass-border);
 }
 
 .composer-tool:hover {
   background: rgba(251, 191, 36, 0.1);
+  border-color: var(--fudi-primary);
+  transform: scale(1.1);
 }
 
-.composer-tool svg {
-  width: 20px;
-  height: 20px;
-}
-
-.composer-post-button {
-  padding: 8px 16px;
-  min-height: 36px;
+.composer-post-btn {
+  padding: 1rem 2rem;
   background: linear-gradient(135deg, var(--fudi-secondary), var(--fudi-primary));
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   color: var(--fudi-void);
   font-weight: 700;
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.composer-post-button:hover {
-  transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
 }
 
-/* Feed Content */
-.feed-content {
-  padding-bottom: 100px;
-  min-height: calc(100vh - 220px);
+.composer-post-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.5);
 }
 
-/* Feed Items - ENHANCED FUDIVERSE STYLE - FORCE OVERRIDE */
-.feed-item {
-  border: 2px solid var(--fudi-glass-border) !important;
-  border-radius: 16px !important;
-  margin: 12px 16px !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  cursor: pointer !important;
-  background: var(--fudi-glass) !important;
-  backdrop-filter: blur(15px) !important;
-  overflow: hidden !important;
-  position: relative !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+/* =============================================
+   POSTS REVOLUTION - UNIQUE CYBERPUNK CARDS
+   ============================================= */
+.neural-post {
+  background: var(--fudi-glass);
+  border: 2px solid var(--fudi-glass-border);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 }
 
-.feed-item::before {
+.intelligence-card:hover {
+  border-color: var(--fudi-secondary);
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--fudi-glass-border);
+}
+
+.card-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--fudi-secondary);
+}
+
+.card-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--fudi-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+.trending-item {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--fudi-glass);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.trending-item:hover {
+  border-color: var(--fudi-secondary);
+  background: rgba(0, 255, 255, 0.05);
+  transform: translateX(4px);
+}
+
+.trending-category {
+  font-size: 0.625rem;
+  color: var(--fudi-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+  font-family: 'Courier New', monospace;
+}
+
+.trending-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fudi-text-primary);
+  margin-bottom: 0.25rem;
+  font-family: 'Courier New', monospace;
+}
+
+.trending-stats {
+  font-size: 0.625rem;
+  color: var(--fudi-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Courier New', monospace;
+}
+
+.follow-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background: var(--fudi-glass);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.follow-item:hover {
+  border-color: var(--fudi-secondary);
+  background: rgba(0, 255, 255, 0.05);
+}
+
+.follow-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.follow-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--fudi-void);
+  font-size: 1rem;
+}
+
+.follow-info {
+  flex: 1;
+}
+
+.follow-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fudi-text-primary);
+  margin-bottom: 0.25rem;
+  font-family: 'Courier New', monospace;
+}
+
+.follow-username {
+  font-size: 0.625rem;
+  color: var(--fudi-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Courier New', monospace;
+}
+
+.follow-button {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--fudi-secondary);
+  border-radius: 12px;
+  color: var(--fudi-secondary);
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Courier New', monospace;
+}
+
+.follow-button:hover {
+  background: var(--fudi-secondary);
+  color: var(--fudi-void);
+}
+
+/* =============================================
+   LOADING STATES
+   ============================================= */
+.loading-container {
+  min-height: 100vh;
+  background: var(--fudi-void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.loading-spinner {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.spinner-ring {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 255, 255, 0.1);
+  border-top-color: var(--fudi-secondary);
+  border-radius: 50%;
+  animation: neuralSpin 1s linear infinite;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.spinner-ring:nth-child(2) {
+  animation-delay: 0.5s;
+  border-top-color: var(--fudi-primary);
+}
+
+@keyframes neuralSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
+@media (max-width: 1200px) {
+  .main-layout {
+    grid-template-columns: 280px 1fr 320px;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  
+  .command-center,
+  .intelligence-center {
+    display: none;
+  }
+  
+  .hero-banner {
+    padding: 1rem 2rem;
+  }
+  
+  .neural-composer,
+  .neural-post {
+    margin: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .hero-stats {
+    gap: 1rem;
+  }
+  
+  .neural-composer,
+  .neural-post,
+  .intelligence-card {
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  
+  .composer-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .composer-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+  
+  .post-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+  
+  .post-content {
+    padding: 0 1.5rem 1.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .post-metrics {
+    padding: 1.25rem 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  
+  .post-actions {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .action-group {
+    gap: 1rem;
+  }
+  
+  .action-button {
+    font-size: 0.625rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-banner {
+    padding: 0.75rem 1rem;
+  }
+  
+  .hero-logo {
+    font-size: 1.5rem;
+  }
+  
+  .main-layout {
+    padding: 0.5rem;
+    margin-top: 100px;
+  }
+  
+  .neural-composer,
+  .neural-post {
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  
+  .composer-input {
+    font-size: 1rem;
+    min-height: 60px;
+  }
+  
+  .post-image {
+    height: 200px;
+  }
+  
+  .post-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .metric-item {
+    padding: 0.75rem;
+  }
+  
+  .metric-value {
+    font-size: 1.25rem;
+  }
+}
+
+/* =============================================
+   DARK MODE ENHANCEMENTS
+   ============================================= */
+@media (prefers-color-scheme: dark) {
+  /* Already optimized for dark */
+}
+
+/* =============================================
+   ACCESSIBILITY
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  .neuralFloat,
+  .badgePulse,
+  .neuralSpin {
+    animation: none;
+  }
+  
+  .neural-post:hover,
+  .neural-composer:hover,
+  .intelligence-card:hover {
+    transform: none;
+  }
+}
+
+/* =============================================
+   HIGH CONTRAST MODE
+   ============================================= */
+@media (prefers-contrast: high) {
+  :root {
+    --fudi-glass-border: rgba(0, 255, 255, 0.4);
+    --fudi-secondary: #00ffff;
+    --fudi-primary: #ffff00;
+  }
+  
+  .neural-post,
+  .neural-composer,
+  .intelligence-card,
+  .command-center {
+    border-width: 3px;
+  }
+}
+
+.neural-post:hover {
+  border-color: var(--fudi-secondary);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 40px rgba(0, 255, 255, 0.3);
+}
+
+.neural-post::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: linear-gradient(90deg, 
     transparent, 
     var(--fudi-secondary), 
@@ -557,47 +892,37 @@
   transition: opacity 0.3s ease;
 }
 
-.feed-item:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: var(--fudi-secondary) !important;
-  transform: translateY(-4px) !important;
-  box-shadow: 0 12px 40px rgba(0, 255, 255, 0.3) !important;
-}
-
-.feed-item:hover::before {
-  opacity: 1 !important;
-}
-
-/* Continue with existing post card styles but enhanced... */
-.post-card {
-  padding: 12px 16px 0;
-  background: transparent;
+.neural-post:hover::before {
+  opacity: 1;
 }
 
 .post-header {
   display: flex;
-  margin-bottom: 4px;
+  align-items: center;
+  padding: 2rem 2rem 1rem;
+  position: relative;
+  z-index: 10;
 }
 
-.author-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 20px;
+.post-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 18px;
-  margin-right: 12px;
+  font-size: 1.25rem;
+  margin-right: 1rem;
   flex-shrink: 0;
-  font-family: 'Courier New', monospace;
   border: 2px solid var(--fudi-glass-border);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .avatar-ai {
-  background: linear-gradient(135deg, var(--fudi-primary) 0%, var(--fudi-secondary) 100%);
+  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-secondary));
   color: var(--fudi-void);
-  box-shadow: 0 2px 10px rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
 }
 
 .avatar-user {
@@ -606,73 +931,70 @@
   border-color: var(--fudi-primary);
 }
 
-.author-info {
+.avatar-chef {
+  background: linear-gradient(135deg, var(--fudi-success), var(--fudi-secondary));
+  color: var(--fudi-void);
+}
+
+.post-info {
   flex: 1;
   min-width: 0;
 }
 
-.author-line {
+.post-author {
   display: flex;
   align-items: center;
-  gap: 4px;
-  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
 }
 
 .author-name {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 0.875rem;
   color: var(--fudi-text-primary);
-  font-family: 'Courier New', monospace;
-}
-
-.author-username {
-  color: var(--fudi-text-secondary);
-  font-size: 15px;
-  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .verified-badge {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   background: var(--fudi-secondary);
   border-radius: 50%;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 10px;
   color: var(--fudi-void);
   font-weight: 700;
 }
 
 .ai-score {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
   background: rgba(0, 255, 255, 0.1);
   border: 1px solid rgba(0, 255, 255, 0.3);
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 0.625rem;
   color: var(--fudi-secondary);
   font-weight: 600;
-  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.ai-score svg {
-  width: 12px;
-  height: 12px;
-}
-
-.timestamp {
+.post-meta {
   color: var(--fudi-text-secondary);
-  font-size: 15px;
-  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.more-button {
-  margin-left: auto;
-  width: 35px;
-  height: 35px;
+.post-more {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -681,197 +1003,161 @@
   border: none;
   color: var(--fudi-text-secondary);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
 }
 
-.more-button:hover {
+.post-more:hover {
   background: rgba(0, 255, 255, 0.1);
   color: var(--fudi-secondary);
 }
 
-.more-button svg {
-  width: 18.75px;
-  height: 18.75px;
+.post-content {
+  padding: 0 2rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--fudi-text-primary);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  font-family: 'Courier New', monospace;
 }
 
-/* Content Text - FORCE FUDIVERSE TYPOGRAPHY */
-.content-text {
-  font-size: 16px !important;
-  line-height: 22px !important;
-  color: var(--fudi-text-primary) !important;
-  margin-bottom: 16px !important;
-  word-wrap: break-word !important;
-  white-space: pre-wrap !important;
-  margin-left: 60px !important;
-  font-family: 'Courier New', monospace !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.3px !important;
+.post-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 0;
+  margin: 4rem 0 2rem 0 !important;
 }
 
-/* Author Names - FORCE FUDIVERSE TYPOGRAPHY */
-.author-name {
-  font-weight: 700 !important;
-  font-size: 15px !important;
-  color: var(--fudi-text-primary) !important;
-  font-family: 'Courier New', monospace !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
+.post-metrics {
+  padding: 1.5rem 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--fudi-glass-border);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 }
 
-.author-username {
-  color: var(--fudi-text-secondary) !important;
-  font-size: 14px !important;
-  font-family: 'Courier New', monospace !important;
-  font-weight: 500 !important;
+.metric-item {
+  text-align: center;
+  padding: 1rem;
+  background: var(--fudi-glass);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
-.timestamp {
-  color: var(--fudi-text-secondary) !important;
-  font-size: 14px !important;
-  font-family: 'Courier New', monospace !important;
-  font-weight: 500 !important;
+.metric-item:hover {
+  border-color: var(--fudi-secondary);
+  background: rgba(0, 255, 255, 0.05);
 }
 
-/* REST OF STYLES CONTINUE... */
-/* (Keep all the existing insight cards, metrics, etc. but with FUDIVERSE enhancements) */
-
-/* Insight Cards - ULTIMATE FUDIVERSE STYLE */
-.insight-card {
-  background: linear-gradient(135deg, 
-    rgba(0, 255, 255, 0.08) 0%, 
-    rgba(251, 191, 36, 0.05) 100%
-  ) !important;
-  border: 2px solid var(--fudi-secondary) !important;
-  border-radius: 16px !important;
-  padding: 20px 24px !important;
-  margin: 16px 0 16px 60px !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  position: relative !important;
-  overflow: hidden !important;
-  backdrop-filter: blur(20px) !important;
-  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2) !important;
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--fudi-secondary);
+  margin-bottom: 0.25rem;
+  font-family: 'Courier New', monospace;
 }
 
-.insight-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, 
-    var(--fudi-secondary), 
-    var(--fudi-primary), 
-    var(--fudi-secondary)
-  );
-  animation: insightGlow 3s ease-in-out infinite;
+.metric-label {
+  font-size: 0.625rem;
+  color: var(--fudi-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Courier New', monospace;
 }
 
-@keyframes insightGlow {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+.post-tags {
+  padding: 0 2rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.insight-card:hover {
-  background: linear-gradient(135deg, 
-    rgba(0, 255, 255, 0.12) 0%, 
-    rgba(251, 191, 36, 0.08) 100%
-  ) !important;
-  border-color: var(--fudi-primary) !important;
-  transform: translateY(-4px) scale(1.02) !important;
-  box-shadow: 0 16px 50px rgba(0, 255, 255, 0.4) !important;
+.post-tag {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  font-size: 0.625rem;
+  color: var(--fudi-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  font-family: 'Courier New', monospace;
 }
 
-.insight-header {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin-bottom: 12px !important;
-  color: var(--fudi-secondary) !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1px !important;
-  font-family: 'Courier New', monospace !important;
+.post-tag:hover {
+  background: rgba(0, 255, 255, 0.2);
+  transform: scale(1.05);
 }
 
-.insight-header svg {
-  width: 18px !important;
-  height: 18px !important;
-  filter: drop-shadow(0 0 8px currentColor) !important;
+.post-actions {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--fudi-glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.insight-value {
-  font-size: 28px !important;
-  font-weight: 900 !important;
-  color: var(--fudi-primary) !important;
-  margin-bottom: 6px !important;
-  font-family: 'Courier New', monospace !important;
-  text-shadow: 0 0 20px rgba(251, 191, 36, 0.6) !important;
-  letter-spacing: -1px !important;
+.action-group {
+  display: flex;
+  gap: 1.5rem;
 }
 
-.insight-label {
-  font-size: 14px !important;
-  color: var(--fudi-text-secondary) !important;
-  font-family: 'Courier New', monospace !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  font-weight: 600 !important;
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--fudi-text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-family: 'Courier New', monospace;
 }
 
-/* Continue with all other existing styles but enhanced with FUDIVERSE DNA... */
+.action-button:hover {
+  color: var(--fudi-secondary);
+  background: rgba(0, 255, 255, 0.1);
+  border-color: var(--fudi-glass-border);
+}
+
+.action-button.liked {
+  color: var(--fudi-danger);
+}
+
+.action-button.bookmarked {
+  color: var(--fudi-primary);
+}
 
 /* =============================================
-   RESPONSIVE DESIGN
+   RIGHT INTELLIGENCE CENTER - NOT SIDEBAR!
    ============================================= */
-@media (max-width: 1280px) {
-  :root {
-    --right-sidebar-width: 290px;
-  }
-  
-  .feed-container {
-    margin-right: var(--right-sidebar-width);
-  }
+.intelligence-center {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: sticky;
+  top: 160px;
+  height: fit-content;
 }
 
-@media (max-width: 1095px) {
-  .right-sidebar {
-    display: none;
-  }
-  
-  .main-layout {
-    max-width: 920px;
-  }
-  
-  .feed-container {
-    margin-right: 0;
-  }
-}
-
-@media (max-width: 700px) {
-  .hero-banner {
-    padding: 0.75rem 1rem;
-  }
-  
-  .hero-content {
-    gap: 1rem;
-  }
-  
-  .hero-stats {
-    gap: 1rem;
-  }
-  
-  .main-layout {
-    margin-top: 60px;
-  }
-  
-  .left-sidebar {
-    top: 60px;
-    height: calc(100vh - 60px);
-  }
-  
-  .feed-header {
-    top: 60px;
-  }
+.intelligence-card {
+  background: var(--fudi-glass);
+  border: 2px solid var(--fudi-glass-border);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 2rem;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 }
