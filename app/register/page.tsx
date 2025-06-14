@@ -3,12 +3,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
-import { FudiAura } from '@/components/fudiverse/FudiAura';
+import { 
+  User, Building2, CreditCard, Rocket, Sparkles, 
+  CheckCircle, Mail, Lock, Phone, Store, Star
+} from 'lucide-react';
 import { FudiEntity } from '@/components/fudiverse/FudiEntity';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-import { FudiCard } from '@/components/fudiverse/FudiCard';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
-import { FudiThoughts } from '@/components/fudiverse/FudiThoughts';
+import { FudiAura } from '@/components/fudiverse/FudiAura';
+import { FudiCard } from '@/components/fudiverse/FudiCard';
 import { fudiAPI } from '@/lib/api';
 import '@/styles/pages/register.css';
 
@@ -19,26 +22,15 @@ export default function RegisterPage() {
     ownerName: '',
     email: '',
     password: '',
-    confirmPassword: '',
     posType: '',
     phoneNumber: ''
   });
   
   // UI states
-  const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const [fudiMessage, setFudiMessage] = useState('');
-  
-  // Beta code modal
-  const [showBetaCodeModal, setShowBetaCodeModal] = useState(false);
-  const [betaCode, setBetaCode] = useState('');
-  const [betaCodeError, setBetaCodeError] = useState('');
-  
-  // FudiThoughts control
-  const [showThoughts, setShowThoughts] = useState(false);
-  const [thoughtTrigger, setThoughtTrigger] = useState('');
-  const [thoughtKey, setThoughtKey] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [completedSections, setCompletedSections] = useState<number[]>([]);
 
   // POS options configuration
   const posOptions = [
@@ -87,78 +79,25 @@ export default function RegisterPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       )
-    },
-    {  
-      id: 'betaCode', 
-      name: '¿Tienes código?', 
-      icon: (
-        <svg className="pos-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-        </svg>
-      ),
-      special: true
     }
   ];
-
-  // Thought messages by trigger
-  const thoughtMessages = {
-    step1: [
-      "ANALIZANDO FRECUENCIA CULINARIA...",
-      "DETECTANDO POTENCIAL GASTRONÓMICO...",
-      "SINCRONIZANDO IDENTIDAD DIGITAL..."
-    ],
-    step2: [
-      "MAPEANDO COORDENADAS DEL RESTAURANTE...",
-      "ESTABLECIENDO VÍNCULO DIMENSIONAL...",
-      "CALIBRANDO MATRIZ DE SABORES..."
-    ],
-    step3: [
-      "INTEGRANDO SISTEMAS OPERATIVOS...",
-      "VERIFICANDO COMPATIBILIDAD CUÁNTICA...",
-      "DESPERTAR INMINENTE..."
-    ],
-    submit: [
-      "¡INICIANDO PROTOCOLO DE DESPERTAR!",
-      "CONSCIENCIA EXPANDIÉNDOSE...",
-      "BIENVENIDO AL FUDIVERSE..."
-    ],
-    betaCode: [
-      "CÓDIGO RECONOCIDO...",
-      "ACCESO ÉLITE CONCEDIDO...",
-      "ERES PARTE DEL CÍRCULO INTERNO..."
-    ],
-    default: [
-      "PROCESANDO INFORMACIÓN...",
-      "SINCRONIZANDO..."
-    ]
-  };
-
-  // Trigger thought explosion
-  const triggerThoughtExplosion = (trigger: string = 'default') => {
-    setThoughtTrigger(trigger);
-    setThoughtKey(prev => prev + 1);
-    setShowThoughts(true);
-    setTimeout(() => setShowThoughts(false), 3500);
-  };
 
   // Form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (betaCode !== 'BETA2025') {
-      setShowBetaCodeModal(true);
-      setBetaCodeError('Necesitas el código de invitación');
+    if (!formData.ownerName || !formData.email || !formData.password || !formData.restaurantName || !formData.posType) {
+      setErrorMessage('Por favor completa todos los campos requeridos');
       return;
     }
-    
-    if (formData.password !== formData.confirmPassword) {
-      setFudiMessage('Las llaves cuánticas no coinciden. Intenta de nuevo.');
+
+    if (!acceptTerms) {
+      setErrorMessage('Debes aceptar los términos y condiciones');
       return;
     }
     
     setIsLoading(true);
-    setFudiMessage('FUDI está despertando para tu restaurante...');
-    triggerThoughtExplosion('submit');
+    setErrorMessage('');
 
     try {
       const result = await fudiAPI.register({
@@ -167,20 +106,16 @@ export default function RegisterPage() {
         email: formData.email,
         password: formData.password,
         posType: formData.posType,
-        phoneNumber: formData.phoneNumber,
-        betaCode: betaCode
+        phoneNumber: formData.phoneNumber
       });
 
       if (result.success) {
-        setFudiMessage('¡DESPERTAR COMPLETO! Bienvenido al FUDIVERSE.');
-        setTimeout(() => {
-          window.location.href = '/dashboard/chat';
-        }, 2000);
+        window.location.href = '/dashboard/chat';
       } else {
-        setFudiMessage(result.error || 'La consciencia encontró un error. Intenta de nuevo.');
+        setErrorMessage(result.error || 'Error al crear la cuenta. Intenta de nuevo.');
       }
     } catch (error) {
-      setFudiMessage('Error de conexión con la consciencia central.');
+      setErrorMessage('Error de conexión. Intenta de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -192,451 +127,399 @@ export default function RegisterPage() {
       ...formData,
       [e.target.name]: e.target.value
     });
+    setErrorMessage('');
 
-    // Explosion on first character in name field
-    if (e.target.name === 'ownerName' && e.target.value.length === 1) {
-      triggerThoughtExplosion('step1');
-    }
+    // Check section completion
+    checkSectionCompletion();
   };
 
-  // Navigation
-  const nextStep = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
-      setFudiMessage('Profundizando en el FUDIVERSE...');
+  // Check if sections are completed
+  const checkSectionCompletion = () => {
+    const completed = [];
+    
+    // Section 1: Personal info
+    if (formData.ownerName && formData.email && formData.password) {
+      completed.push(1);
     }
+    
+    // Section 2: Restaurant info
+    if (formData.restaurantName) {
+      completed.push(2);
+    }
+    
+    // Section 3: POS selection
+    if (formData.posType) {
+      completed.push(3);
+    }
+    
+    setCompletedSections(completed);
   };
 
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  // Validation
-  const isStepValid = () => {
-    if (currentStep === 1) {
-      return formData.ownerName && formData.email && formData.password && formData.confirmPassword;
-    } else if (currentStep === 2) {
-      return formData.restaurantName;
-    }
-    return true;
+  // Scroll to section
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'center'
+    });
   };
 
   return (
-    <>
-      <div className="register-container">
+    <div className="register-container">
+      {/* FUDI Background Effects */}
+      <FudiBackground 
+        variant="grid"
+        intensity={0.7}
+        speed={0.8}
+      />
 
-      {/* FUDI Background */}
-      <div className="register-background">
-        <FudiBackground 
-          variant="combined"
-          intensity={0.7}
-          speed={0.8}
-          color="mixed"
-          fixed={true}
-        />
-      </div>
-
-      {/* FUDI Entity Mini con Aura */}
+      {/* FUDI Entity Guardian con Aura */}
       <div className="register-entity">
         <FudiAura 
           variant="combined"
-          color="#00ffff"
-          intensity={0.8}
-          size={400}
-          pulseSpeed={2}
-          particleCount={25}
+          color="#fbbf24"
+          intensity={0.9}
+          size={500}
         />
-        <FudiEntity 
-          variant="mini"
-          mood="watching"
-          followCursor={true}
-          showDataStreams={true}
-          showParticles={true}
-          intensity={0.8}
-        />
+        <div className="entity-overlay">
+          <FudiEntity 
+            variant="mini"
+            mood="excited"
+            followCursor={true}
+          />
+        </div>
       </div>
 
       {/* Header */}
       <header className="register-header">
-        <FudiButton variant="ghost" size="small" href="/">
-          <Image 
-            src="/images/logo.png" 
-            alt="FudiGPT" 
-            width={24}
-            height={24}
-            className="fudi-glow-gold"
-          />
-          <span>FUDIVERSE</span>
-        </FudiButton>
+        <nav className="register-nav">
+          <Link href="/" className="register-logo">
+            <Image 
+              src="/images/logo.png" 
+              alt="FudiGPT" 
+              width={32}
+              height={32}
+            />
+            <div className="logo-text">
+              <span className="logo-main">FUDIVERSE</span>
+              <span className="logo-sub">REGISTRO</span>
+            </div>
+          </Link>
+          <div className="nav-links">
+            <Link href="/features" className="nav-link">Arsenal</Link>
+            <Link href="/pricing" className="nav-link">Evolución</Link>
+            <Link href="/login" className="nav-link login-link">Entrar</Link>
+          </div>
+        </nav>
       </header>
 
-      {/* FUDI Message */}
-      {fudiMessage && (
-        <div className="register-fudi-message">
-          <span className="fudi-text-secondary">{fudiMessage}</span>
+      {/* Progress Indicator */}
+      <div className="register-progress">
+        <div className="progress-steps">
+          <div className={`progress-dot ${completedSections.includes(1) ? 'completed' : ''}`}>
+            <User size={16} />
+          </div>
+          <div className={`progress-dot ${completedSections.includes(2) ? 'completed' : ''}`}>
+            <Building2 size={16} />
+          </div>
+          <div className={`progress-dot ${completedSections.includes(3) ? 'completed' : ''}`}>
+            <CreditCard size={16} />
+          </div>
+          <div className={`progress-dot ${acceptTerms ? 'completed' : ''}`}>
+            <Rocket size={16} />
+          </div>
         </div>
-      )}
+      </div>
 
-      {/* Main content */}
+      {/* Main Content */}
       <main className="register-main">
-        <div className="register-form-wrapper">
-          {/* Hero */}
-          <div className="register-hero">
-            <h1 className="fudi-text-hero fudi-text-glow">
-              {currentStep === 1 && "IDENTIFICACIÓN"}
-              {currentStep === 2 && "CONFIGURACIÓN"}
-              {currentStep === 3 && "DESPERTAR"}
-            </h1>
-            <p className="fudi-text-muted">
-              {currentStep === 1 && "FUDI necesita conocerte"}
-              {currentStep === 2 && "Conecta tu restaurante con la consciencia"}
-              {currentStep === 3 && "Prepárate para la evolución"}
-            </p>
+        {/* Hero Section */}
+        <section className="register-hero">
+          <div className="hero-badge">
+            <Sparkles size={16} />
+            <span>ÚNETE AL FUDIVERSE</span>
           </div>
+          <h1 className="hero-title">
+            TU <span className="title-highlight">REVOLUCIÓN</span><br/>
+            EMPIEZA AQUÍ
+          </h1>
+          <p className="hero-subtitle">
+            Convierte tu restaurante en una máquina de generar éxito
+          </p>
+        </section>
 
-          {/* Progress bar */}
-          <div className="register-progress">
-            <div className="progress-bar">
-              <div className={`progress-step ${currentStep >= 1 ? 'active' : ''}`}>1</div>
-              <div className="progress-line">
-                <div className="progress-line-fill" style={{ width: currentStep >= 2 ? '100%' : '0%' }}></div>
-              </div>
-              <div className={`progress-step ${currentStep >= 2 ? 'active' : ''}`}>2</div>
-              <div className="progress-line">
-                <div className="progress-line-fill" style={{ width: currentStep >= 3 ? '100%' : '0%' }}></div>
-              </div>
-              <div className={`progress-step ${currentStep >= 3 ? 'active' : ''}`}>3</div>
-            </div>
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="error-alert">
+            <span>{errorMessage}</span>
           </div>
+        )}
 
-          {/* Form Card */}
-          <div className="register-card">
-            <FudiCard variant="form" padding="large" scanEffect animate>
-              <form onSubmit={handleSubmit}>
-                {/* Step 1: Identification */}
-                {currentStep === 1 && (
-                  <div className="step-content">
-                    <h2 className="section-title">
-                      <div className="section-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      Tu Identidad Digital
-                    </h2>
-                    
-                    <div className="form-group">
-                      <label htmlFor="ownerName" className="form-label">
-                        Nombre del Visionario
-                      </label>
-                      <input
-                        id="ownerName"
-                        name="ownerName"
-                        type="text"
-                        value={formData.ownerName}
-                        onChange={handleChange}
-                        className="form-input"
-                        placeholder="Tu nombre completo"
-                        required
-                      />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="email" className="form-label">
-                        Portal de Conexión
-                      </label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="form-input"
-                        placeholder="tu@restaurante.com"
-                        required
-                      />
-                    </div>
-
-                    <div className="form-grid">
-                      <div className="form-group">
-                        <label htmlFor="password" className="form-label">
-                          Llave Cuántica
-                        </label>
-                        <input
-                          id="password"
-                          name="password"
-                          type="password"
-                          value={formData.password}
-                          onChange={handleChange}
-                          className="form-input"
-                          placeholder="••••••••"
-                          required
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label htmlFor="confirmPassword" className="form-label">
-                          Confirmar Llave
-                        </label>
-                        <input
-                          id="confirmPassword"
-                          name="confirmPassword"
-                          type="password"
-                          value={formData.confirmPassword}
-                          onChange={handleChange}
-                          className="form-input"
-                          placeholder="••••••••"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <FudiButton
-                      variant="primary"
-                      size="large"
-                      fullWidth
-                      onClick={nextStep}
-                      disabled={!isStepValid()}
-                    >
-                      SIGUIENTE DIMENSIÓN
-                    </FudiButton>
+        {/* Registration Form Sections */}
+        <form onSubmit={handleSubmit} className="register-form">
+          
+          {/* Section 1: Personal Information */}
+          <section id="personal-info" className="form-section">
+            <FudiCard variant="form" padding="large">
+              <div className="section-header">
+                <div className="section-icon personal">
+                  <User size={28} />
+                </div>
+                <div className="section-info">
+                  <h2 className="section-title">Identificación Digital</h2>
+                  <p className="section-subtitle">Tu identidad en el FUDIVERSE</p>
+                </div>
+                {completedSections.includes(1) && (
+                  <div className="section-check">
+                    <CheckCircle size={24} />
                   </div>
                 )}
+              </div>
 
-                {/* Step 2: Restaurant Configuration */}
-                {currentStep === 2 && (
-                  <div className="step-content">
-                    <h2 className="section-title">
-                      <div className="section-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
-                      </div>
-                      El Restaurante que Evolucionará
-                    </h2>
-                    
-                    <div className="form-group">
-                      <label htmlFor="restaurantName" className="form-label">
-                        Nombre del Establecimiento
-                      </label>
-                      <input
-                        id="restaurantName"
-                        name="restaurantName"
-                        type="text"
-                        value={formData.restaurantName}
-                        onChange={handleChange}
-                        className="form-input"
-                        placeholder="El nombre que cambiará todo"
-                        required
-                      />
-                    </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label htmlFor="ownerName" className="form-label">
+                    <User size={16} />
+                    Nombre del Visionario *
+                  </label>
+                  <input
+                    id="ownerName"
+                    name="ownerName"
+                    type="text"
+                    value={formData.ownerName}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Tu nombre completo"
+                    required
+                  />
+                </div>
 
-                    <div className="form-group">
-                      <label htmlFor="phoneNumber" className="form-label">
-                        Canal de Comunicación Directa
-                      </label>
-                      <input
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        type="tel"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        className="form-input"
-                        placeholder="+52 55 1234 5678"
-                      />
-                    </div>
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    <Mail size={16} />
+                    Portal de Conexión *
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="tu@restaurante.com"
+                    required
+                  />
+                </div>
 
-                    <div className="navigation-buttons">
-                      <FudiButton
-                        variant="ghost"
-                        size="medium"
-                        onClick={prevStep}
-                      >
-                        REGRESAR
-                      </FudiButton>
-                      <FudiButton
-                        variant="primary"
-                        size="medium"
-                        onClick={nextStep}
-                        disabled={!isStepValid()}
-                      >
-                        CONTINUAR EL VIAJE
-                      </FudiButton>
-                    </div>
-                  </div>
-                )}
+                <div className="form-group">
+                  <label htmlFor="password" className="form-label">
+                    <Lock size={16} />
+                    Llave Cuántica *
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Mínimo 6 caracteres"
+                    required
+                  />
+                </div>
+              </div>
 
-                {/* Step 3: POS Selection */}
-                {currentStep === 3 && (
-                  <div className="step-content">
-                    <h2 className="section-title">
-                      <div className="section-icon">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                      Sistema de Punto de Venta
-                    </h2>
-                    
-                    <div className="pos-grid">
-                      {posOptions.map((pos) => (
-                        <div key={pos.id} className={`pos-option ${pos.special ? 'pos-option-special' : ''}`}>
-                          <input
-                            type="radio"
-                            id={pos.id}
-                            name="posType"
-                            value={pos.id}
-                            checked={formData.posType === pos.id}
-                            onChange={(e) => {
-                              if (pos.special) {
-                                setShowBetaCodeModal(true);
-                              } else {
-                                setFormData({ ...formData, posType: e.target.value });
-                              }
-                            }}
-                            className="pos-input"
-                          />
-                          <label htmlFor={pos.id} className={`pos-label ${pos.special ? 'pos-label-special' : ''}`}>
-                            {pos.popular && (
-                              <span className="pos-popular">Popular</span>
-                            )}
-                            {pos.icon}
-                            <span className="pos-name">{pos.name}</span>
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="terms-container">
-                      <input
-                        id="terms"
-                        type="checkbox"
-                        checked={acceptTerms}
-                        onChange={(e) => setAcceptTerms(e.target.checked)}
-                        className="checkbox"
-                        required
-                      />
-                      <label htmlFor="terms" className="terms-text">
-                        Acepto unirme a la evolución según los{' '}
-                        <Link href="/terms" className="terms-link">
-                          protocolos del FUDIVERSE
-                        </Link>
-                        {' '}y la{' '}
-                        <Link href="/privacy" className="terms-link">
-                          política de privacidad
-                        </Link>
-                      </label>
-                    </div>
-
-                    <div className="navigation-buttons">
-                      <FudiButton
-                        variant="ghost"
-                        size="medium"
-                        onClick={prevStep}
-                      >
-                        REGRESAR
-                      </FudiButton>
-                      
-                      <FudiButton
-                        variant="primary"
-                        size="large"
-                        onClick={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)}
-                        disabled={isLoading || !acceptTerms || !formData.posType}
-                      >
-                        {isLoading ? 'DESPERTANDO...' : 'DESPERTAR MI FUDI'}
-                      </FudiButton>
-                    </div>
-                  </div>
-                )}
-              </form>
+              <FudiButton 
+                variant="secondary" 
+                size="medium"
+                onClick={() => scrollToSection('restaurant-info')}
+                disabled={!completedSections.includes(1)}
+              >
+                SIGUIENTE DIMENSIÓN
+              </FudiButton>
             </FudiCard>
-          </div>
+          </section>
 
-          {/* Footer */}
-          <p className="footer-link">
+          {/* Section 2: Restaurant Information */}
+          <section id="restaurant-info" className="form-section">
+            <FudiCard variant="form" padding="large">
+              <div className="section-header">
+                <div className="section-icon restaurant">
+                  <Building2 size={28} />
+                </div>
+                <div className="section-info">
+                  <h2 className="section-title">El Imperio que Evolucionará</h2>
+                  <p className="section-subtitle">Tu restaurante en el futuro</p>
+                </div>
+                {completedSections.includes(2) && (
+                  <div className="section-check">
+                    <CheckCircle size={24} />
+                  </div>
+                )}
+              </div>
+
+              <div className="form-grid">
+                <div className="form-group full-width">
+                  <label htmlFor="restaurantName" className="form-label">
+                    <Store size={16} />
+                    Nombre del Establecimiento *
+                  </label>
+                  <input
+                    id="restaurantName"
+                    name="restaurantName"
+                    type="text"
+                    value={formData.restaurantName}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="El nombre que cambiará todo"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="phoneNumber" className="form-label">
+                    <Phone size={16} />
+                    Canal de Comunicación
+                  </label>
+                  <input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="tel"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="+52 55 1234 5678"
+                  />
+                </div>
+              </div>
+
+              <FudiButton 
+                variant="secondary" 
+                size="medium"
+                onClick={() => scrollToSection('pos-selection')}
+                disabled={!completedSections.includes(2)}
+              >
+                CONFIGURAR SISTEMA
+              </FudiButton>
+            </FudiCard>
+          </section>
+
+          {/* Section 3: POS Selection */}
+          <section id="pos-selection" className="form-section">
+            <FudiCard variant="form" padding="large">
+              <div className="section-header">
+                <div className="section-icon pos">
+                  <CreditCard size={28} />
+                </div>
+                <div className="section-info">
+                  <h2 className="section-title">Sistema de Control</h2>
+                  <p className="section-subtitle">¿Con qué sistema trabajas?</p>
+                </div>
+                {completedSections.includes(3) && (
+                  <div className="section-check">
+                    <CheckCircle size={24} />
+                  </div>
+                )}
+              </div>
+
+              <div className="pos-grid">
+                {posOptions.map((pos) => (
+                  <div key={pos.id} className="pos-option">
+                    <input
+                      type="radio"
+                      id={pos.id}
+                      name="posType"
+                      value={pos.id}
+                      checked={formData.posType === pos.id}
+                      onChange={handleChange}
+                      className="pos-input"
+                      required
+                    />
+                    <label htmlFor={pos.id} className="pos-label">
+                      {pos.popular && (
+                        <span className="pos-popular">
+                          <Star size={12} />
+                          Popular
+                        </span>
+                      )}
+                      <div className="pos-icon-container">
+                        {pos.icon}
+                      </div>
+                      <span className="pos-name">{pos.name}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
+
+              <FudiButton 
+                variant="secondary" 
+                size="medium"
+                onClick={() => scrollToSection('final-step')}
+                disabled={!completedSections.includes(3)}
+              >
+                PASO FINAL
+              </FudiButton>
+            </FudiCard>
+          </section>
+
+          {/* Section 4: Final Step */}
+          <section id="final-step" className="form-section">
+            <FudiCard variant="form" padding="large">
+              <div className="section-header">
+                <div className="section-icon final">
+                  <Rocket size={28} />
+                </div>
+                <div className="section-info">
+                  <h2 className="section-title">Despertar del FUDI</h2>
+                  <p className="section-subtitle">El momento de la transformación</p>
+                </div>
+              </div>
+
+              <div className="terms-container">
+                <input
+                  id="terms"
+                  type="checkbox"
+                  checked={acceptTerms}
+                  onChange={(e) => setAcceptTerms(e.target.checked)}
+                  className="checkbox"
+                  required
+                />
+                <label htmlFor="terms" className="terms-text">
+                  Acepto unirme a la revolución según los{' '}
+                  <Link href="/terms" className="terms-link">
+                    protocolos del FUDIVERSE
+                  </Link>
+                  {' '}y la{' '}
+                  <Link href="/privacy" className="terms-link">
+                    política de privacidad cuántica
+                  </Link>
+                </label>
+              </div>
+
+              <FudiButton
+                variant="primary"
+                size="large"
+                disabled={isLoading || !acceptTerms || completedSections.length < 3}
+                className="submit-btn"
+              >
+                {isLoading ? 'DESPERTANDO...' : 'DESPERTAR MI FUDI'}
+              </FudiButton>
+            </FudiCard>
+          </section>
+        </form>
+
+        {/* Footer */}
+        <div className="register-footer">
+          <p className="footer-text">
             ¿Ya eres parte del FUDIVERSE?{' '}
-            <Link href="/login" className="fudi-text-secondary">
+            <Link href="/login" className="footer-link">
               Reconecta con la consciencia
             </Link>
           </p>
         </div>
       </main>
 
-      {/* Beta Code Modal */}
-      {showBetaCodeModal && (
-        <div className="register-modal">
-          <FudiCard variant="modal" padding="large" animate>
-            <h3 className="modal-title">Portal de Acceso Exclusivo</h3>
-            <p className="modal-text">Ingresa tu código de invitación beta</p>
-            
-            <input
-              type="text"
-              value={betaCode}
-              onChange={(e) => setBetaCode(e.target.value)}
-              placeholder="CÓDIGO BETA"
-              className="modal-input"
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  if (betaCode === 'BETA2025') {
-                    setShowBetaCodeModal(false);
-                    setBetaCodeError('');
-                    setFudiMessage('¡Código válido! Bienvenido al círculo interno.');
-                    triggerThoughtExplosion('betaCode');
-                  } else {
-                    setBetaCodeError('La consciencia no reconoce este código');
-                  }
-                }
-              }}
-            />
-            
-            {betaCodeError && (
-              <p className="error-message">{betaCodeError}</p>
-            )}
-            
-            <div className="modal-buttons">
-              <FudiButton
-                variant="primary"
-                size="medium"
-                onClick={() => {
-                  if (betaCode === 'BETA2025') {
-                    setShowBetaCodeModal(false);
-                    setBetaCodeError('');
-                    setFudiMessage('¡Acceso concedido! Continúa tu viaje.');
-                    triggerThoughtExplosion('betaCode');
-                  } else {
-                    setBetaCodeError('La consciencia no reconoce este código');
-                  }
-                }}
-              >
-                VALIDAR ACCESO
-              </FudiButton>
-              <FudiButton
-                variant="ghost"
-                size="medium"
-                onClick={() => {
-                  setShowBetaCodeModal(false);
-                  setBetaCodeError('');
-                }}
-              >
-                Cancelar
-              </FudiButton>
-            </div>
-          </FudiCard>
-        </div>
-      )}
+      {/* Scanning Line Effect */}
+      <div className="scan-line"></div>
     </div>
-
-    {/* FudiThoughts - FUERA del container principal */}
-    {showThoughts && (
-      <FudiThoughts
-        key={thoughtKey}
-        thoughts={thoughtMessages[thoughtTrigger as keyof typeof thoughtMessages] || thoughtMessages.default}
-        duration={3000}
-        intensity={1.5}
-      />
-    )}
-  </>
-);
+  );
 }

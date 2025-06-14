@@ -7,13 +7,13 @@ import {
   ArrowUp, ArrowDown, DollarSign, ShoppingCart,
   Clock, Calendar, Users, CreditCard, Store,
   Brain, AlertCircle, Sparkles, AlertTriangle,
-  Crown, Gift, Flame, Trophy, Target, Star
+  Crown, Gift, Flame, Trophy, Target, Star,
+  ChevronLeft, ChevronRight, MessageCircle, Rocket
 } from 'lucide-react';
 import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
 import { FudiAura } from '@/components/fudiverse/FudiAura';
 import { FudiEntity } from '@/components/fudiverse/FudiEntity';
-/*import '@/styles/fudi-utilities.css'*/
-import '@/styles/pages/dashboard.css';
+import '../../../styles/pages/dashboard.css';
 
 // Initialize Supabase
 const supabase = createClient(
@@ -33,6 +33,17 @@ interface RestaurantData {
   esPositivo: boolean;
   gananciaHoy: number;
   comensalesHoy: number;
+}
+
+interface FudiInsight {
+  type: string;
+  title: string;
+  description: string;
+  metric: string;
+  confidence: number;
+  action: string;
+  impact?: 'high' | 'medium' | 'low';
+  category?: 'revenue' | 'operations' | 'customer' | 'prediction';
 }
 
 interface FudiParticle {
@@ -67,6 +78,19 @@ export default function FudiDashboard() {
     gananciaHoy: 0,
     comensalesHoy: 0,
   });
+  
+  // 🧠 FUDINTELLIGENCE STATE
+  const [fudiInsights, setFudiInsights] = useState<FudiInsight[]>([]);
+  const [insightsLoading, setInsightsLoading] = useState(false);
+  const [lastInsightUpdate, setLastInsightUpdate] = useState<Date | null>(null);
+  const [insightsError, setInsightsError] = useState<string | null>(null);
+  const [currentInsightIndex, setCurrentInsightIndex] = useState(0);
+  
+  // 🤖 FUDI WISDOM STATE
+  const [currentWisdomIndex, setCurrentWisdomIndex] = useState(0);
+  const [showWisdomBubble, setShowWisdomBubble] = useState(false);
+  const [currentAskFudiIndex, setCurrentAskFudiIndex] = useState(0);
+  
   const [topProductos, setTopProductos] = useState<any[]>([]);
   const [ventasPorHora, setVentasPorHora] = useState<any[]>([]);
   const [ultimaSincronizacion, setUltimaSincronizacion] = useState<Date | null>(null);
@@ -84,6 +108,200 @@ export default function FudiDashboard() {
   const [mesasCalientes, setMesasCalientes] = useState<any[]>([]);
   const [tendenciasPago, setTendenciasPago] = useState<any>(null);
 
+  // 🤖 FUDI WISDOM MESSAGES
+  const fudiWisdom = [
+    {
+      icon: "🧠",
+      message: "FUDIVERSE AI analizando patrones de tu restaurante...",
+      type: "processing"
+    },
+    {
+      icon: "⚡", 
+      message: "Convirtiendo datos en historias de éxito • ¿Quién mejor que FUDI?",
+      type: "inspiration"
+    },
+    {
+      icon: "🎯",
+      message: "Harness the power of data • Tu ventaja competitiva neural",
+      type: "motivation"
+    },
+    {
+      icon: "💡",
+      message: "Datos sin análisis = Dinero sin dirección • FUDI democratiza IA",
+      type: "education"
+    },
+    {
+      icon: "🚀",
+      message: "Neural networks detectando oportunidades ocultas 24/7",
+      type: "tech"
+    },
+    {
+      icon: "🤖",
+      message: "Machine learning optimizando tu operación • Welcome to the future",
+      type: "futuristic"
+    },
+    {
+      icon: "💰",
+      message: "Stop guessing, start knowing con FUDIVERSE • Data storytelling",
+      type: "business"
+    },
+    {
+      icon: "🔥",
+      message: "Tu restaurante genera datos • FUDI genera sabiduría infinita",
+      type: "wisdom"
+    }
+  ];
+
+  // 💬 ASK FUDI HOOKS
+  const askFudiHooks = [
+    "Ask FUDI: ¿Cómo optimizar tus combos para mayor profit? ¿Quién mejor que FUDI?",
+    "Ask FUDI: ¿Estrategias para maximizar tu hora pico? ¿Quién mejor que FUDI?", 
+    "Ask FUDI: ¿Técnicas de upselling que realmente funcionan? ¿Quién mejor que FUDI?",
+    "Ask FUDI: ¿Reducir costos sin sacrificar calidad? ¿Quién mejor que FUDI?",
+    "Ask FUDI: ¿Menu engineering secrets del futuro? ¿Quién mejor que FUDI?",
+    "Ask FUDI: ¿Cómo predecir demanda y optimizar inventario? ¿Quién mejor que FUDI?",
+    "Ask FUDI: ¿Estrategias de pricing psicológico? ¿Quién mejor que FUDI?",
+    "Ask FUDI: ¿Análisis de competencia con IA? ¿Quién mejor que FUDI?"
+  ];
+
+  // 🧠 FUDINTELLIGENCE - Carga de insights
+  const cargarFudiInsights = async () => {
+    if (!userData?.restaurantId) return;
+    
+    try {
+      setInsightsLoading(true);
+      setInsightsError(null);
+      
+      console.log('🧠 Cargando FUDINTELLIGENCE insights...');
+      
+      const response = await fetch('/api/fudintelligence', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('fudi_token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.insights) {
+        console.log('✅ FUDINTELLIGENCE insights cargados:', result.insights.length);
+        setFudiInsights(result.insights);
+        setLastInsightUpdate(new Date());
+        setCurrentInsightIndex(0);
+        
+        agregarMensajeTicker({
+          type: 'milestone',
+          icon: '🧠',
+          text: `FUDINTELLIGENCE: ${result.insights.length} insights generados • Confianza promedio: ${(result.insights.reduce((acc: number, i: any) => acc + i.confidence, 0) / result.insights.length * 100).toFixed(0)}%`,
+          priority: 'high'
+        });
+      } else {
+        throw new Error(result.message || 'Error desconocido');
+      }
+    } catch (error: any) {
+      console.error('❌ Error cargando FUDINTELLIGENCE:', error);
+      setInsightsError(error.message);
+      
+      // Crear insights mock para demo
+      setFudiInsights([
+        {
+          type: 'business_model_detection',
+          title: 'NEGOCIO TAKEAWAY DOMINANTE',
+          description: 'Tu operación es 85% takeaway según análisis de patrones temporales. Los clientes prefieren ordenar para llevar.',
+          metric: '85%',
+          confidence: 0.95,
+          action: 'Optimiza para velocidad y delivery',
+          impact: 'high',
+          category: 'operations'
+        },
+        {
+          type: 'velocity_excellence',
+          title: 'MÁQUINA DE VELOCIDAD',
+          description: 'Tiempo promedio por orden rápida excepcional. Tu equipo está trabajando con eficiencia máxima.',
+          metric: '1.1 min',
+          confidence: 0.92,
+          action: 'Mantén esta eficiencia como ventaja competitiva',
+          impact: 'medium',
+          category: 'operations'
+        },
+        {
+          type: 'peak_hour_detection',
+          title: 'HORA PICO IDENTIFICADA',
+          description: 'Mayor flujo de clientes detectado entre 13:00-14:00. Prepárate para el rush del almuerzo.',
+          metric: '2:00 PM',
+          confidence: 0.88,
+          action: 'Aumenta personal durante hora pico',
+          impact: 'medium',
+          category: 'operations'
+        }
+      ]);
+      setLastInsightUpdate(new Date());
+      setCurrentInsightIndex(0);
+    } finally {
+      setInsightsLoading(false);
+    }
+  };
+
+  // Navegación del carrusel
+  const nextInsight = () => {
+    setCurrentInsightIndex((prev) => 
+      prev >= fudiInsights.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevInsight = () => {
+    setCurrentInsightIndex((prev) => 
+      prev <= 0 ? fudiInsights.length - 1 : prev - 1
+    );
+  };
+
+  // 🤖 FUDI WISDOM ROTATION
+  useEffect(() => {
+    const wisdomInterval = setInterval(() => {
+      setCurrentWisdomIndex(prev => 
+        prev >= fudiWisdom.length - 1 ? 0 : prev + 1
+      );
+      setShowWisdomBubble(true);
+      
+      // Hide bubble after 4 seconds
+      setTimeout(() => {
+        setShowWisdomBubble(false);
+      }, 4000);
+    }, 8000);
+
+    // Show first message after 2 seconds
+    setTimeout(() => {
+      setShowWisdomBubble(true);
+      setTimeout(() => setShowWisdomBubble(false), 4000);
+    }, 2000);
+
+    return () => clearInterval(wisdomInterval);
+  }, []);
+
+  // 💬 ASK FUDI HOOK ROTATION
+  useEffect(() => {
+    const hookInterval = setInterval(() => {
+      setCurrentAskFudiIndex(prev => 
+        prev >= askFudiHooks.length - 1 ? 0 : prev + 1
+      );
+    }, 6000);
+
+    return () => clearInterval(hookInterval);
+  }, []);
+
+  // Auto-advance carrusel cada 8 segundos
+  useEffect(() => {
+    if (fudiInsights.length > 1) {
+      const interval = setInterval(nextInsight, 8000);
+      return () => clearInterval(interval);
+    }
+  }, [fudiInsights.length]);
+
   useEffect(() => {
     // Load user data
     const loadUserData = async () => {
@@ -97,7 +315,6 @@ export default function FudiDashboard() {
             restaurantId: decoded.restaurantId || RESTAURANT_ID
           });
         } else {
-          // Si no hay token, usar valores por defecto
           setUserData({
             restaurantName: 'RESTAURANTE',
             ownerName: 'OPERADOR',
@@ -106,7 +323,6 @@ export default function FudiDashboard() {
         }
       } catch (error) {
         console.error('Error loading user data:', error);
-        // En caso de error, usar valores por defecto
         setUserData({
           restaurantName: 'RESTAURANTE',
           ownerName: 'OPERADOR',
@@ -126,11 +342,12 @@ export default function FudiDashboard() {
     }
   }, [userData]);
 
-  // Cargar datos inteligentes cuando tengamos los datos básicos
+  // Cargar FUDINTELLIGENCE cuando tengamos datos básicos
   useEffect(() => {
     if (userData && userData.restaurantId && data.ventasHoy > 0) {
       console.log('Cargando datos inteligentes...');
       cargarDatosInteligentes();
+      cargarFudiInsights();
     }
   }, [userData, data.ventasHoy, topProductos.length]);
 
@@ -141,6 +358,7 @@ export default function FudiDashboard() {
     const interval = setInterval(() => {
       cargarDatos();
       cargarDatosInteligentes();
+      cargarFudiInsights();
     }, 30000);
     
     return () => clearInterval(interval);
@@ -148,12 +366,12 @@ export default function FudiDashboard() {
 
   // Forzar actualización al hacer login
   useEffect(() => {
-    // Detectar si es un login fresco
     const isNewLogin = sessionStorage.getItem('fudi_fresh_login');
     if (isNewLogin === 'true') {
       console.log('Login detectado - forzando sincronización...');
       cargarDatos();
       cargarDatosInteligentes();
+      cargarFudiInsights();
       sessionStorage.removeItem('fudi_fresh_login');
     }
   }, []);
@@ -161,17 +379,240 @@ export default function FudiDashboard() {
   // Initialize particle system
   useEffect(() => {
     const initParticles = [];
-    for (let i = 0; i < 50; i++) { 
+    for (let i = 0; i < 30; i++) { 
       initParticles.push({
         id: i,
         x: Math.random() * window.innerWidth,
         y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2
+        vx: (Math.random() - 0.5) * 1,
+        vy: (Math.random() - 0.5) * 1
       });
     }
     setParticles(initParticles);
   }, []);
+
+  // 🧠 FUDINTELLIGENCE Carousel Component
+  const FudiInsightsCarousel = () => {
+    if (insightsLoading) {
+      return (
+        <div className="fudi-insights-carousel loading">
+          <div className="carousel-glow"></div>
+          <div className="carousel-header">
+            <div className="carousel-badge">
+              <Brain className="carousel-icon spinning" />
+              <span className="carousel-label">NEURAL PROCESANDO</span>
+              <span className="carousel-status">ANALIZANDO DATOS</span>
+            </div>
+            <div className="carousel-meta">
+              <span className="carousel-count">STANDBY</span>
+            </div>
+          </div>
+          <div className="carousel-loading">
+            <div className="neural-wave"></div>
+            <div className="neural-wave"></div>
+            <div className="neural-wave"></div>
+          </div>
+        </div>
+      );
+    }
+
+    if (insightsError || fudiInsights.length === 0) {
+      return (
+        <div className="fudi-insights-carousel error">
+          <div className="carousel-glow"></div>
+          <div className="carousel-header">
+            <div className="carousel-badge error">
+              <AlertTriangle className="carousel-icon" />
+              <span className="carousel-label">NEURAL STANDBY</span>
+              <span className="carousel-status">CONECTANDO</span>
+            </div>
+          </div>
+          <div className="carousel-error">
+            <p>🧠 Conectando con sistema neural...</p>
+            <p>Preparando insights inteligentes...</p>
+          </div>
+        </div>
+      );
+    }
+
+    const currentInsight = fudiInsights[currentInsightIndex];
+
+    return (
+      <div className="fudi-insights-carousel">
+        <div className="carousel-glow"></div>
+        
+        {/* Header */}
+        <div className="carousel-header">
+          <div className="carousel-badge">
+            <Brain className="carousel-icon pulsing" />
+            <span className="carousel-label">FUDINTELLIGENCE</span>
+            <span className="carousel-status">NEURAL ACTIVO</span>
+          </div>
+          <div className="carousel-meta">
+            <span className="carousel-count">{currentInsightIndex + 1} DE {fudiInsights.length}</span>
+            {lastInsightUpdate && (
+              <span className="carousel-time">
+                {lastInsightUpdate.toLocaleTimeString('es-MX', { 
+                  hour: '2-digit', 
+                  minute: '2-digit' 
+                })}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Carousel Content */}
+        <div className="carousel-container">
+          {/* Navigation */}
+          {fudiInsights.length > 1 && (
+            <>
+              <button 
+                className="carousel-nav prev" 
+                onClick={prevInsight}
+                aria-label="Insight anterior"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button 
+                className="carousel-nav next" 
+                onClick={nextInsight}
+                aria-label="Siguiente insight"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </>
+          )}
+
+          {/* Main Insight Card */}
+          <div className="insight-main-card">
+            {/* Confidence Ring */}
+            <div className="confidence-ring-large">
+              <div 
+                className="confidence-fill-large"
+                style={{ 
+                  background: `conic-gradient(
+                    #fbbf24 ${currentInsight.confidence * 360}deg,
+                    rgba(255,255,255,0.1) ${currentInsight.confidence * 360}deg
+                  )`
+                }}
+              />
+              <div className="confidence-value-large">
+                {Math.round(currentInsight.confidence * 100)}%
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="insight-main-content">
+              <div className="insight-category">
+                {currentInsight.impact === 'high' && '🔥'}
+                {currentInsight.impact === 'medium' && '⚡'}
+                {currentInsight.impact === 'low' && '💡'}
+                {currentInsight.category?.toUpperCase()}
+              </div>
+              
+              <h2 className="insight-main-title">{currentInsight.title}</h2>
+              <p className="insight-main-description">{currentInsight.description}</p>
+              
+              <div className="insight-main-metric">
+                <span className="metric-value-large">{currentInsight.metric}</span>
+                <span className="metric-label-large">{currentInsight.type.replace('_', ' ')}</span>
+              </div>
+
+              <div className="insight-main-action">
+                <Sparkles size={20} />
+                <span>{currentInsight.action}</span>
+              </div>
+            </div>
+
+            {/* Category Icon */}
+            <div className="insight-category-icon">
+              {currentInsight.category === 'revenue' && '💰'}
+              {currentInsight.category === 'operations' && '⚡'}
+              {currentInsight.category === 'customer' && '👥'}
+              {currentInsight.category === 'prediction' && '🔮'}
+            </div>
+          </div>
+
+          {/* Indicators */}
+          {fudiInsights.length > 1 && (
+            <div className="carousel-indicators">
+              {fudiInsights.map((_, index) => (
+                <button
+                  key={index}
+                  className={`indicator ${index === currentInsightIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentInsightIndex(index)}
+                  aria-label={`Ir al insight ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // 🤖 ASK FUDI SECTION COMPONENT
+  const AskFudiSection = () => {
+    const currentHook = askFudiHooks[currentAskFudiIndex];
+    
+    const handleChatRedirect = () => {
+      // Same pattern as register page - direct redirect
+      window.location.href = '/dashboard/chat';
+    };
+
+    return (
+      <div className="ask-fudi-section" onClick={handleChatRedirect}>
+        <div className="fudi-chat-avatar">
+          🤖
+        </div>
+        
+        <h3 className="ask-fudi-title">
+          💬 FUDI ESTÁ AQUÍ
+        </h3>
+        
+        <p className="ask-fudi-hook">
+          {currentHook}
+        </p>
+        
+        <p className="ask-fudi-tagline">
+          ⚡ WHO'S BETTER THAN FUDI? ⚡
+        </p>
+        
+        <button 
+          type="button"
+          className="chat-cta-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleChatRedirect();
+          }}
+        >
+          <MessageCircle size={24} />
+          <span>CHAT WITH FUDI NOW</span>
+          <Rocket size={20} />
+        </button>
+      </div>
+    );
+  };
+
+  // Generate context for chat
+  const generateDashboardContext = () => {
+    const insights = fudiInsights.length > 0 ? fudiInsights[currentInsightIndex] : null;
+    const topProduct = topProductos.length > 0 ? topProductos[0].nombre : null;
+    
+    let context = `Hola FUDI, estaba viendo mi dashboard y tengo algunas preguntas. `;
+    
+    if (insights) {
+      context += `Veo que detectaste que ${insights.description.toLowerCase()} `;
+    }
+    
+    if (topProduct) {
+      context += `Mi producto top es ${topProduct}. `;
+    }
+    
+    context += `¿Qué me recomiendas para optimizar mi operación?`;
+    
+    return context;
+  };
 
   // Particle animation
   useEffect(() => {
@@ -188,11 +629,11 @@ export default function FudiDashboard() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach(particle => {
-        particle.vx += (Math.random() - 0.5) * 0.1;
-        particle.vy += (Math.random() - 0.5) * 0.1;
+        particle.vx += (Math.random() - 0.5) * 0.05;
+        particle.vy += (Math.random() - 0.5) * 0.05;
         
-        particle.vx = Math.max(-2, Math.min(2, particle.vx));
-        particle.vy = Math.max(-2, Math.min(2, particle.vy));
+        particle.vx = Math.max(-1, Math.min(1, particle.vx));
+        particle.vy = Math.max(-1, Math.min(1, particle.vy));
 
         particle.x += particle.vx;
         particle.y += particle.vy;
@@ -203,17 +644,17 @@ export default function FudiDashboard() {
         if (particle.y > canvas.height) particle.y = 0;
 
         ctx.save();
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#fbbf24';
-        ctx.fillStyle = '#fbbf24';
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#00ffff';
+        ctx.fillStyle = '#00ffff';
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
+        ctx.arc(particle.x, particle.y, 2, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
         
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, 8, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
+        ctx.arc(particle.x, particle.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.15)';
         ctx.fill();
         
         ctx.shadowBlur = 0;
@@ -242,7 +683,7 @@ export default function FudiDashboard() {
       const eyeCenterY = rect.top + rect.height / 2;
 
       const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
-      const distance = Math.min(10, Math.hypot(e.clientX - eyeCenterX, e.clientY - eyeCenterY) / 10);
+      const distance = Math.min(8, Math.hypot(e.clientX - eyeCenterX, e.clientY - eyeCenterY) / 12);
 
       const x = Math.cos(angle) * distance;
       const y = Math.sin(angle) * distance;
@@ -308,154 +749,6 @@ export default function FudiDashboard() {
         }
       }
 
-      // 2. MESAS CALIENTES (múltiples órdenes)
-      const { data: transaccionesMesa } = await supabase
-        .from('poster_transactions')
-        .select('table_id, payed_sum, date_close')
-        .eq('restaurant_id', restaurantId)
-        .gte('date_close', `${hoyStr} 00:00:00`)
-        .not('table_id', 'is', null);
-
-      if (transaccionesMesa && transaccionesMesa.length > 0) {
-        const mesasAgrupadas: { [key: string]: { count: number, total: number, lastOrder: string } } = {};
-        
-        transaccionesMesa.forEach(t => {
-          const mesa = t.table_id.toString();
-          if (!mesasAgrupadas[mesa]) {
-            mesasAgrupadas[mesa] = { count: 0, total: 0, lastOrder: t.date_close };
-          }
-          mesasAgrupadas[mesa].count++;
-          mesasAgrupadas[mesa].total += parseFloat(t.payed_sum);
-          if (new Date(t.date_close) > new Date(mesasAgrupadas[mesa].lastOrder)) {
-            mesasAgrupadas[mesa].lastOrder = t.date_close;
-          }
-        });
-
-        // Detectar mesas calientes (3+ órdenes)
-        Object.entries(mesasAgrupadas).forEach(([mesa, data]) => {
-          if (data.count >= 3) {
-            const tiempoUltimaOrden = (Date.now() - new Date(data.lastOrder).getTime()) / 60000;
-            if (tiempoUltimaOrden < 60) { // Última orden hace menos de 1 hora
-              agregarMensajeTicker({
-                type: 'alert',
-                icon: '🔥',
-                text: `MESA CALIENTE: Mesa ${mesa} • ${data.count} órdenes • Revenue: ${formatMoney(data.total)} • Activa hace ${Math.round(tiempoUltimaOrden)}min`,
-                priority: 'medium'
-              });
-            }
-          }
-        });
-      }
-
-      // 3. TENDENCIAS DE PAGO
-      const { data: pagosHoy } = await supabase
-        .from('poster_transactions')
-        .select('payed_cash, payed_card')
-        .eq('restaurant_id', restaurantId)
-        .gte('date_close', `${hoyStr} 00:00:00`);
-
-      if (pagosHoy && pagosHoy.length > 0) {
-        let efectivo = 0, tarjeta = 0;
-        pagosHoy.forEach(p => {
-          efectivo += parseFloat(p.payed_cash || '0');
-          tarjeta += parseFloat(p.payed_card || '0');
-        });
-        
-        const total = efectivo + tarjeta;
-        const porcTarjeta = total > 0 ? (tarjeta / total * 100) : 0;
-        const porcEfectivo = total > 0 ? (efectivo / total * 100) : 0;
-        
-        agregarMensajeTicker({
-          type: 'trend',
-          icon: '💳',
-          text: `TENDENCIA PAGOS: ${porcTarjeta.toFixed(0)}% tarjeta, ${porcEfectivo.toFixed(0)}% efectivo • Total procesado: ${formatMoney(total)}`,
-          priority: 'low'
-        });
-      }
-
-      // 4. PROPINAS EXCEPCIONALES
-      const { data: propinasHoy } = await supabase
-        .from('poster_transactions')
-        .select('table_id, tips_cash, tips_card, payed_sum, client_id')
-        .eq('restaurant_id', restaurantId)
-        .gte('date_close', `${hoyStr} 00:00:00`)
-        .or('tips_cash.gt.0,tips_card.gt.0');
-
-      if (propinasHoy && propinasHoy.length > 0) {
-        let totalPropinas = 0;
-        propinasHoy.forEach(t => {
-          const propina = parseFloat(t.tips_cash || '0') + parseFloat(t.tips_card || '0');
-          totalPropinas += propina;
-          const total = parseFloat(t.payed_sum || '0');
-          const porcentaje = total > 0 ? (propina / total * 100) : 0;
-          
-          if (porcentaje > 20 && propina > 100) {
-            agregarMensajeTicker({
-              type: 'celebration',
-              icon: '💰',
-              text: `PROPINA EXCEPCIONAL: Mesa ${t.table_id} dejó ${porcentaje.toFixed(0)}% (${formatMoney(propina)}) • Agradecer al salir`,
-              priority: 'high'
-            });
-          }
-        });
-        
-        if (totalPropinas > 0) {
-          agregarMensajeTicker({
-            type: 'milestone',
-            icon: '💵',
-            text: `PROPINAS HOY: ${formatMoney(totalPropinas)} • ${propinasHoy.length} mesas dejaron propina`,
-            priority: 'low'
-          });
-        }
-      }
-
-      // 5. RÉCORDS Y PREDICCIONES
-      if (data.transaccionesHoy > 0) {
-        const velocidadOrdenes = data.transaccionesHoy / (new Date().getHours() || 1);
-        agregarMensajeTicker({
-          type: 'record',
-          icon: '⚡',
-          text: `VELOCIDAD: ${velocidadOrdenes.toFixed(1)} órdenes/hora • ${data.transaccionesHoy} órdenes totales hoy`,
-          priority: 'medium'
-        });
-      }
-
-      // 6. PROYECCIONES
-      if (data.ventasHoy > 0) {
-        const horasRestantes = Math.max(0, 22 - new Date().getHours()); // Asumiendo cierre a las 10pm
-        const ventasPorHora = data.ventasHoy / (new Date().getHours() - 8 || 1); // Asumiendo apertura 8am
-        const proyeccion = data.ventasHoy + (ventasPorHora * horasRestantes);
-        
-        agregarMensajeTicker({
-          type: 'prediction',
-          icon: '📈',
-          text: `PROYECCIÓN CIERRE: ${formatMoney(proyeccion)} • ${data.cambioVentas > 0 ? '+' : ''}${data.cambioVentas.toFixed(0)}% vs ayer`,
-          priority: 'low'
-        });
-      }
-
-      // 7. PRODUCTO ESTRELLA DEL DÍA
-      if (topProductos && topProductos.length > 0) {
-        const estrella = topProductos[0];
-        agregarMensajeTicker({
-          type: 'milestone',
-          icon: '🌟',
-          text: `PRODUCTO ESTRELLA: ${estrella.nombre} • ${estrella.cantidad} vendidos • ${formatMoney(estrella.ventas)} en ventas`,
-          priority: 'medium'
-        });
-      }
-
-      // 8. MARGEN DE GANANCIA
-      if (data.ventasHoy > 0 && data.gananciaHoy > 0) {
-        const margen = (data.gananciaHoy / data.ventasHoy) * 100;
-        agregarMensajeTicker({
-          type: margen > 30 ? 'milestone' : 'alert',
-          icon: margen > 30 ? '✅' : '⚠️',
-          text: `MARGEN OPERATIVO: ${margen.toFixed(1)}% • Ganancia: ${formatMoney(data.gananciaHoy)} de ${formatMoney(data.ventasHoy)}`,
-          priority: margen > 30 ? 'low' : 'high'
-        });
-      }
-
       console.log('Datos inteligentes cargados completamente');
 
     } catch (error) {
@@ -471,9 +764,7 @@ export default function FudiDashboard() {
     };
     
     setTickerMessages(prev => {
-      // Mantener máximo 20 mensajes, eliminar los más viejos
       const nuevos = [...prev, nuevoMensaje].sort((a, b) => {
-        // Ordenar por prioridad y luego por timestamp
         const prioridadOrden = { high: 0, medium: 1, low: 2 };
         if (prioridadOrden[a.priority] !== prioridadOrden[b.priority]) {
           return prioridadOrden[a.priority] - prioridadOrden[b.priority];
@@ -481,11 +772,10 @@ export default function FudiDashboard() {
         return b.timestamp.getTime() - a.timestamp.getTime();
       });
       
-      // Filtrar duplicados basados en texto similar
       const unicos = nuevos.filter((msg, index, self) =>
         index === self.findIndex((m) => 
           m.text.substring(0, 30) === msg.text.substring(0, 30) &&
-          (msg.timestamp.getTime() - m.timestamp.getTime()) < 300000 // 5 minutos
+          (msg.timestamp.getTime() - m.timestamp.getTime()) < 300000
         )
       );
       
@@ -705,7 +995,10 @@ export default function FudiDashboard() {
       <div className="dashboard-loading">
         <div className="loading-content">
           <div className="loading-spinner"></div>
-          <p className="loading-text">INICIALIZANDO FUDI...</p>
+          <p className="loading-text">INICIALIZANDO FUDIVERSE...</p>
+          <p style={{color: 'var(--fudi-text-secondary)', fontSize: '0.875rem', marginTop: '1rem'}}>
+            🧠 Neural networks activating • ⚡ Data streams connecting
+          </p>
         </div>
       </div>
     );
@@ -713,12 +1006,17 @@ export default function FudiDashboard() {
 
   return (
     <div className="dashboard-container">
+      {/* NEURAL GRID BACKGROUND - via CSS */}
+      
+      {/* SCANNING LINE EFFECT */}
+      <div className="scan-line"></div>
+
       {/* FUDI Chat Grid Background */}
       <FudiChatGrid 
-        opacity={0.03} 
+        opacity={0.02} 
         gridSize={80} 
         animated={true}
-        color="#fbbf24"
+        color="#00ffff"
       />
 
       {/* FUDI Particle Field */}
@@ -727,23 +1025,34 @@ export default function FudiDashboard() {
         className="particle-canvas"
       />
 
-      {/* FUDI Entity observando con Aura */}
+      {/* FUDI Entity observando con Aura + Wisdom Bubbles */}
       <div className="dashboard-entity">
         <FudiAura 
           variant="combined"
-          color="#fbbf24"
-          intensity={0.8}
+          color="#00ffff"
+          intensity={0.7}
           size={400}
           pulseSpeed={2}
-          particleCount={25}
+          particleCount={20}
         />
+        
+        {/* FUDI WISDOM BUBBLE */}
+        {showWisdomBubble && (
+          <div className="fudi-wisdom-bubble">
+            <span style={{marginRight: '0.5rem'}}>
+              {fudiWisdom[currentWisdomIndex].icon}
+            </span>
+            {fudiWisdom[currentWisdomIndex].message}
+          </div>
+        )}
+        
         <FudiEntity 
           variant="mini" 
           mood="watching"
           followCursor={true}
           showDataStreams={true}
           showParticles={true}
-          intensity={0.7}
+          intensity={0.6}
         />
       </div>
 
@@ -752,28 +1061,27 @@ export default function FudiDashboard() {
         <div className="header-content">
           <div className="dashboard-greeting">
             <h1>
-              Dashboard <span className="dashboard-username">{userData?.restaurantName}</span>
+              NEURAL DASHBOARD <span className="dashboard-username">{userData?.restaurantName}</span>
             </h1>
             <p className="dashboard-subtitle">
-              Sistema Neural Activo • {ultimaSincronizacion ? (
+              🧠 SISTEMA NEURAL ACTIVO • ⚡ DATA INTELLIGENCE ONLINE • {ultimaSincronizacion ? (
                 <>
-                  {sinDatosHoy && <span className="alert-sync">⚠️ Mostrando: </span>}
+                  {sinDatosHoy && <span className="alert-sync">⚠️ MOSTRANDO: </span>}
                   {ultimaSincronizacion.toLocaleDateString('es-MX', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
+                    weekday: 'short', 
+                    month: 'short', 
                     day: 'numeric' 
-                  })}
+                  }).toUpperCase()}
                 </>
               ) : (
-                'Sincronizando...'
+                'SINCRONIZANDO CONSCIENCIA...'
               )}
             </p>
           </div>
           <div className="header-stats">
             <span className="live-indicator">
               <span className="live-dot"></span>
-              FUDI ONLINE
+              FUDIVERSE ONLINE
             </span>
           </div>
         </div>
@@ -781,146 +1089,102 @@ export default function FudiDashboard() {
 
       {/* Main Content */}
       <main className="dashboard-main">
-        {/* FUDI INTELLIGENCE TICKER */}
-        <div className="fudi-ticker">
-          <div className="ticker-glow"></div>
-          <div className="ticker-header">
-            <div className="ticker-badge">
-              <Brain className="ticker-icon" />
-              <span className="ticker-label">FUDI INTELLIGENCE</span>
-            </div>
-            <div className="ticker-live">
-              <span className="ticker-dot"></span>
-              <span className="ticker-text">NEURAL ACTIVO</span>
-            </div>
-          </div>
-          
-          <div className="ticker-container">
-            <div className="ticker-track">
-              <div className="ticker-content">
-                {/* Duplicamos los mensajes para efecto continuo */}
-                {tickerMessages.length > 0 ? (
-                  [...tickerMessages, ...tickerMessages].map((msg, index) => (
-                    <div 
-                      key={`${msg.id}-${index}`} 
-                      className={`ticker-item ${msg.type}`}
-                      data-priority={msg.priority}
-                    >
-                      <span className="ticker-item-icon">{msg.icon}</span>
-                      <span className="ticker-item-text">{msg.text}</span>
-                      <span className="ticker-item-separator">•</span>
-                    </div>
-                  ))
-                ) : (
-                  // Mensajes por defecto mientras carga
-                  <>
-                    <div className="ticker-item trend">
-                      <span className="ticker-item-icon">🔄</span>
-                      <span className="ticker-item-text">ANALIZANDO PATRONES DE DATOS...</span>
-                      <span className="ticker-item-separator">•</span>
-                    </div>
-                    <div className="ticker-item prediction">
-                      <span className="ticker-item-icon">📊</span>
-                      <span className="ticker-item-text">SISTEMA NEURAL PROCESANDO...</span>
-                      <span className="ticker-item-separator">•</span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="main-grid">
-          {/* Hero Card - Ingresos */}
+          {/* 🧠 FUDINTELLIGENCE CAROUSEL - HERO SECTION */}
+          <FudiInsightsCarousel />
+
+          {/* 🤖 ASK FUDI SECTION - STRATEGIC CTA */}
+          <AskFudiSection />
+
+          {/* Hero Card - NEURAL CASHFLOW */}
           <div className="hero-card">
             <div className="hero-icon">
-              <DollarSign size={28} />
+              <Zap size={32} />
             </div>
             <div className="hero-label">
-              INGRESOS HOY
+              ⚡ NEURAL CASHFLOW • HOY
             </div>
             <div className="hero-number">
               {formatMoney(data.ventasHoy)}
             </div>
             <div className={`hero-trend ${data.esPositivo ? 'trend-positive' : 'trend-negative'}`}>
-              {data.esPositivo ? <ArrowUp size={20} /> : <ArrowDown size={20} />}
+              {data.esPositivo ? <ArrowUp size={24} /> : <ArrowDown size={24} />}
               <span>{data.esPositivo ? '+' : ''}{data.cambioVentas.toFixed(1)}%</span>
-              <span style={{ fontSize: '0.875rem', opacity: 0.7 }}>vs ayer</span>
+              <span style={{ fontSize: '0.875rem', opacity: 0.8 }}>vs ayer</span>
             </div>
           </div>
 
-          {/* Metrics Grid */}
+          {/* Metrics Grid - VITAL SIGNS */}
           <div className="metric-grid">
-            {/* Ganancias */}
+            {/* Neural Profits */}
             <div className="metric-card green">
               <div className="metric-icon">
-                <TrendingUp size={28} />
+                <TrendingUp size={32} />
               </div>
-              <p className="metric-label">GANANCIAS</p>
+              <p className="metric-label">🧠 NEURAL PROFITS</p>
               <p className="metric-value">
                 {formatMoney(data.gananciaHoy)}
               </p>
               <p className="metric-trend">
-                <ArrowUp size={14} /> +14%
+                <ArrowUp size={16} /> +14% OPTIMIZADO
               </p>
             </div>
 
-            {/* Órdenes */}
+            {/* Velocity Machine */}
             <div className="metric-card">
               <div className="metric-icon">
-                <ShoppingCart size={28} />
+                <Zap size={32} />
               </div>
-              <p className="metric-label">ÓRDENES</p>
+              <p className="metric-label">⚡ VELOCITY MACHINE</p>
               <p className="metric-value">
                 {data.transaccionesHoy}
               </p>
               <p className="metric-trend">
-                <ArrowUp size={14} /> +14%
+                <ArrowUp size={16} /> +14% EFICIENCIA
               </p>
             </div>
 
-            {/* Comensales */}
+            {/* Neural Guests */}
             <div className="metric-card purple">
               <div className="metric-icon">
-                <Users size={28} />
+                <Users size={32} />
               </div>
-              <p className="metric-label">COMENSALES</p>
+              <p className="metric-label">🎯 NEURAL GUESTS</p>
               <p className="metric-value">
                 {data.comensalesHoy}
               </p>
               <p className="metric-trend">
-                <ArrowUp size={14} /> +12%
+                <ArrowUp size={16} /> +12% FLOW
               </p>
             </div>
 
-            {/* Ticket Promedio */}
+            {/* Smart Ticket */}
             <div className="metric-card gold">
               <div className="metric-icon">
-                <Activity size={28} />
+                <Target size={32} />
               </div>
-              <p className="metric-label">TICKET PROMEDIO</p>
+              <p className="metric-label">🚀 SMART TICKET</p>
               <p className="metric-value">
                 {formatMoney(data.ticketPromedio)}
               </p>
               <p className="metric-trend">
-                <ArrowUp size={14} /> +1%
+                <ArrowUp size={16} /> +1% PRECISION
               </p>
             </div>
           </div>
 
           {/* Charts Section */}
           <div className="chart-section">
-            {/* Ventas por Hora */}
+            {/* Neural Flow Chart */}
             <div className="chart-card">
               <div className="chart-header">
                 <h3 className="chart-title">
-                  <Clock size={16} />
-                  FLUJO DE VENTAS • POR HORA
+                  <Activity size={18} />
+                  🧠 NEURAL FLOW • TIEMPO REAL
                 </h3>
                 <span className="live-indicator">
                   <span className="live-dot"></span>
-                  TIEMPO REAL
+                  DATA STREAMING
                 </span>
               </div>
               
@@ -950,14 +1214,14 @@ export default function FudiDashboard() {
               </div>
             </div>
 
-            {/* Top Productos */}
+            {/* Neural Products Intelligence */}
             <div className="products-list">
               <h3 className="products-header">
-                <TrendingUp size={16} />
-                PRODUCTOS TOP
+                <Brain size={18} />
+                🔥 NEURAL PRODUCTS
               </h3>
               <p className="products-subtext">
-                Últimos 7 días • Por ingresos
+                AI RANKING • 7 DÍAS • REVENUE OPTIMIZED
               </p>
               
               {topProductos.slice(0, 7).map((producto, index) => (
@@ -967,7 +1231,7 @@ export default function FudiDashboard() {
                   </div>
                   <div className="product-info">
                     <p className="product-name">
-                      {producto.nombre}
+                      {index === 0 && '🏆 '}{producto.nombre}
                     </p>
                     <div className="progress-bar">
                       <div 
@@ -979,7 +1243,7 @@ export default function FudiDashboard() {
                   <div className="product-metrics">
                     <div className={`product-value ${index === 0 ? 'gold' : ''}`}>
                       {producto.cantidad}
-                      <span className="product-unit">ventas</span>
+                      <span className="product-unit">neural</span>
                     </div>
                   </div>
                 </div>
@@ -987,54 +1251,60 @@ export default function FudiDashboard() {
             </div>
           </div>
 
-          {/* Bottom Stats */}
+          {/* Neural Stats */}
           <div className="bottom-stats">
-            {/* Métodos de Pago */}
+            {/* Payment Intelligence */}
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>
-                <CreditCard />
+              <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981' }}>
+                <CreditCard size={24} />
               </div>
-              <h4 className="stat-label">
-                MÉTODOS DE PAGO
-              </h4>
-              <div className="stat-value" style={{ color: '#10b981' }}>
-                97.7%
+              <div className="stat-content">
+                <h4 className="stat-label">
+                  🧠 PAYMENT NEURAL
+                </h4>
+                <div className="stat-value" style={{ color: '#10b981' }}>
+                  97.7%
+                </div>
+                <p className="stat-subtext">Efectivo Dominante</p>
               </div>
-              <p className="stat-subtext">Efectivo</p>
             </div>
 
-            {/* Plataforma */}
+            {/* Platform Intelligence */}
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'rgba(0, 255, 255, 0.1)', color: '#00ffff' }}>
-                <Store />
+              <div className="stat-icon" style={{ background: 'rgba(0, 255, 255, 0.15)', color: '#00ffff' }}>
+                <Store size={24} />
               </div>
-              <h4 className="stat-label">
-                PLATAFORMA
-              </h4>
-              <div className="stat-value" style={{ color: '#00ffff' }}>
-                100%
+              <div className="stat-content">
+                <h4 className="stat-label">
+                  ⚡ PLATFORM NEURAL
+                </h4>
+                <div className="stat-value" style={{ color: '#00ffff' }}>
+                  100%
+                </div>
+                <p className="stat-subtext">En Sucursal Total</p>
               </div>
-              <p className="stat-subtext">En Sucursal</p>
             </div>
 
-            {/* Semana */}
+            {/* Weekly Intelligence */}
             <div className="stat-card">
-              <div className="stat-icon" style={{ background: 'rgba(168, 85, 247, 0.1)', color: '#a855f7' }}>
-                <Calendar />
+              <div className="stat-icon" style={{ background: 'rgba(167, 139, 250, 0.15)', color: '#a78bfa' }}>
+                <Calendar size={24} />
               </div>
-              <h4 className="stat-label">
-                ACUMULADO SEMANA
-              </h4>
-              <div className="stat-value" style={{ color: '#a855f7' }}>
-                {formatMoney(data.ventasSemana)}
+              <div className="stat-content">
+                <h4 className="stat-label">
+                  🚀 WEEKLY NEURAL
+                </h4>
+                <div className="stat-value" style={{ color: '#a78bfa' }}>
+                  {formatMoney(data.ventasSemana)}
+                </div>
+                <p className="stat-subtext">7 Días Acumulado</p>
               </div>
-              <p className="stat-subtext">7 días</p>
             </div>
           </div>
         </div>
       </main>
 
-      {/* FUDI Consciousness Indicator */}
+      {/* FUDI Consciousness Eye */}
       <div className="fudi-presence">
         <div ref={fudiEyeRef} className="fudi-eye">
           <div className="fudi-pupil" />

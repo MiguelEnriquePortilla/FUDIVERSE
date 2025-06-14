@@ -8,8 +8,7 @@ import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
 import { FudiAura } from '@/components/fudiverse/FudiAura';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
 import { FudiLogo } from '@/components/fudiverse/FudiLogo';
-import styles from './page.module.css';
-
+import '@/styles/pages/chat.css'; // ✨ FUDIVERSE REVOLUTION CSS
 
 interface Conversation {
   id: string;
@@ -26,13 +25,12 @@ interface Message {
 }
 
 export default function ChatPage() {
-  // Estado principal
+  // 🔒 CRITICAL STATE - NO CHANGES
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
   const [fudiPersonality, setFudiPersonality] = useState<'estratega' | 'motivador' | 'mentor' | 'casual'>('casual');
   const [messageCount, setMessageCount] = useState(0);
@@ -40,19 +38,18 @@ export default function ChatPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
 
-  
-  // Easter eggs
+  // Easter eggs and neural effects
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([]);
   const [glowIntensity, setGlowIntensity] = useState(0);
 
-  // Datos del usuario
+  // 🔒 CRITICAL USER DATA - NO CHANGES
   const [userData, setUserData] = useState({
     restaurantName: 'Cargando...',
     ownerName: 'Usuario',
     restaurantId: '13207c90-2ea6-4aa0-bfac-349753d24ea4'
   });
 
-  // Obtener datos del token y cargar conversaciones
+  // 🔒 CRITICAL DATA LOADING - NO CHANGES
   useEffect(() => {
     const token = localStorage.getItem('fudi_token');
     if (token) {
@@ -72,7 +69,7 @@ export default function ChatPage() {
     }
   }, []);
 
-  // Cargar conversaciones desde Supabase
+  // 🔒 CRITICAL API FUNCTION - NO CHANGES
   const loadConversations = async (restaurantId: string) => {
     try {
       const response = await fudiAPI.conversations.getAll(restaurantId);
@@ -90,12 +87,12 @@ export default function ChatPage() {
     }
   };
 
-  // Quick actions sin emojis
+  // Quick actions - FUDIVERSE STYLE
   const quickActions = [
-    { text: '¿Cómo van mis ingresos?', glow: 'from-cyan-500/20 to-blue-500/20' },
-    { text: '¿Cuál es mi utilidad?', glow: 'from-green-500/20 to-emerald-500/20' },
-    { text: '¿Cuánto gasté hoy?', glow: 'from-purple-500/20 to-pink-500/20' },
-    { text: '¿Mi ganancia del mes?', glow: 'from-blue-500/20 to-purple-500/20' }
+    { text: '¿Cómo van mis ingresos?', neural: 'revenue' },
+    { text: '¿Cuál es mi utilidad?', neural: 'profit' },
+    { text: '¿Cuánto gasté hoy?', neural: 'expenses' },
+    { text: '¿Mi ganancia del mes?', neural: 'growth' }
   ];
 
   // Personalidades de FUDI
@@ -106,45 +103,43 @@ export default function ChatPage() {
     casual: { icon: '', label: userData.restaurantName, desc: '' }
   };
 
-  // Saludo dinámico con personalidad
+  // Saludo dinámico con personalidad FUDIVERSE
   const getGreeting = () => {
     const hour = new Date().getHours();
     const base = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
     
-    // Saludos especiales según hora
-    if (hour >= 2 && hour < 5) return '🦉 Noctámbulo mode activated';
-    if (hour >= 5 && hour < 7) return '🌅 Madrugador legendario';
-    if (hour === 13) return '🍕 Hora de la comida';
+    // Saludos especiales según hora - FUDIVERSE STYLE
+    if (hour >= 2 && hour < 5) return '🦉 Neural Mode Activated';
+    if (hour >= 5 && hour < 7) return '🌅 Early Bird Neural';
+    if (hour === 13) return '🍽️ Neural Lunch Break';
     
     return base;
   };
 
-  // Efectos de sonido sutiles
+  // Efectos de sonido neural
   const playSound = (type: 'send' | 'receive' | 'typing') => {
-    // Implementar con Web Audio API para sonidos suaves
     if (type === 'send') {
-      // Sonido cyber sutil
       const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBi');
       audio.volume = 0.1;
       audio.play().catch(() => {});
     }
   };
 
-  // Auto-resize textarea
+  // Auto-resize textarea con neural feedback
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputMessage(e.target.value);
-    setShowWelcome(false); // Ocultar welcome al escribir
+    setShowWelcome(false);
     
     // Auto-resize
     e.target.style.height = 'auto';
     e.target.style.height = e.target.scrollHeight + 'px';
   };
 
-  // Easter eggs y efectos
+  // Easter eggs y efectos FUDIVERSE
   useEffect(() => {
     if (inputMessage.toLowerCase().includes('fudiverse')) {
-      // Activar particles
-      for (let i = 0; i < 5; i++) {
+      // Activar neural particles
+      for (let i = 0; i < 8; i++) {
         setTimeout(() => {
           const particle = {
             id: Date.now() + i,
@@ -155,8 +150,8 @@ export default function ChatPage() {
           
           setTimeout(() => {
             setParticles(prev => prev.filter(p => p.id !== particle.id));
-          }, 3000);
-        }, i * 100);
+          }, 4000);
+        }, i * 150);
       }
     }
   }, [inputMessage]);
@@ -170,7 +165,7 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  // Nueva conversación
+  // 🔒 CRITICAL CONVERSATION FUNCTIONS - NO CHANGES
   const startNewConversation = async () => {
     try {
       const response = await fudiAPI.conversations.create(
@@ -197,14 +192,18 @@ export default function ChatPage() {
     }
   };
 
-  // Manejar quick action
+  // Manejar quick action con neural feedback
   const handleQuickAction = (action: any) => {
     setInputMessage(action.text);
     setShowWelcome(false);
     inputRef.current?.focus();
+    
+    // Neural feedback
+    setGlowIntensity(1);
+    setTimeout(() => setGlowIntensity(0), 1000);
   };
 
-  // Enviar mensaje
+  // 🔒 CRITICAL SEND MESSAGE FUNCTION - NO CHANGES
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
@@ -256,7 +255,7 @@ export default function ChatPage() {
     }
 
     try {
-      // CONEXIÓN REAL CON FUDI
+      // 🔒 CRITICAL API CALL - NO CHANGES
       const response = await fudiAPI.chat(
         userData.restaurantId,
         userMessageContent
@@ -272,14 +271,14 @@ export default function ChatPage() {
         };
         setMessages(prev => [...prev, aiMessage]);
 
-        // Guardar interacción en Supabase
+        // 🔒 CRITICAL SUPABASE SAVE - NO CHANGES
         if (conversationId) {
           await fudiAPI.conversations.saveInteraction({
             restaurantId: userData.restaurantId,
             conversationId: conversationId,
             userMessage: userMessageContent,
             fudiResponse: response.response,
-            responseTime: responseTime / 1000 // en segundos
+            responseTime: responseTime / 1000
           });
 
           // Actualizar título de la conversación si es la primera
@@ -297,7 +296,6 @@ export default function ChatPage() {
           }
         }
         
-        // Play receive sound
         playSound('receive');
       }
     } catch (error) {
@@ -314,306 +312,172 @@ export default function ChatPage() {
     }
   };
 
+  // Navigation functions
+  const navigateTo = (path: string) => {
+    window.location.href = path;
+  };
+
   return (
-    <div className={styles.container}>
-      <FudiChatGrid opacity={0.02} gridSize={60} animated={false} />
+    <div className="container">
+      {/* ✨ NEURAL GRID BACKGROUND - CSS HANDLED */}
       
-      {/* Sidebar */}
-      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed}`}>
-        <div className={styles.sidebarHeader}>
-          <button
-              onClick={startNewConversation}
-              className={styles.newChatButton}
-              style={{ 
-                fontSize: '16px',
-                padding: '0.5rem .5rem',
-                fontWeight: '500'
-              }}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              <span style={{ fontSize: '16px' }}>Nuevo chat</span>
-            </button>
-
-            {/* Botón Ocultar sidebar */}
-            <button 
-              onClick={() => setSidebarOpen(false)}
-              className={styles.hideSidebarButton}
-              style={{ 
-                fontSize: '16px',
-                padding: '0.375rem 0.5rem',
-                color: '#888'
-              }}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7" />
-              </svg>
-              <span>Ocultar sidebar</span>
-            </button>
-        </div>
-
-        {/* Lista de conversaciones */}
-        <div className={styles.conversationsList}>
-          <div className={styles.conversationsHeader}>
-            <h3 className={styles.conversationsTitle}>Chats</h3>
-            <div className={styles.conversationsContainer}>
-              {conversations.map((conv) => (
-                <button
-                  key={conv.id}
-                  onClick={async () => {
-                    setCurrentConversationId(conv.id);
-                    setShowWelcome(false);
-                    
-                    // Cargar mensajes de la conversación desde Supabase
-                    try {
-                      const response = await fetch(`/api/conversations?conversationId=${conv.id}`);
-                      const data = await response.json();
-                      
-                      if (data.success && data.conversation) {
-                        const loadedMessages = data.conversation.messages?.map((msg: any, index: number) => ({
-                          id: index + 1,
-                          type: msg.role === 'user' ? 'user' : 'assistant',
-                          content: msg.content,
-                          timestamp: new Date(msg.timestamp)
-                        })) || [];
-                        setMessages(loadedMessages);
-                      }
-                    } catch (error) {
-                      console.error('Error loading conversation:', error);
-                    }
-                  }}
-                  className={`${styles.conversationButton} ${
-                    currentConversationId === conv.id ? styles.conversationButtonActive : ''
-                  }`}
-                >
-                  <div className={styles.conversationTitle}>{conv.title}</div>
-                  <div className={styles.conversationTime}>
-                    {new Date(conv.timestamp).toLocaleTimeString('es-MX', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
-                    })}
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Footer del sidebar con dropdown */}
-        <div className={styles.sidebarFooter}>
-          <button
-            onClick={() => setShowUserDropdown(!showUserDropdown)}
-            className={styles.userInfoButton}
-          >
-            <div className={styles.userAvatar}>
-              {userData?.ownerName?.substring(0, 1)?.toUpperCase() || 'U'}
-            </div>
-            <div className={styles.userDetails}>
-              <div className={styles.userName}>{userData?.ownerName || 'Usuario'}</div>
-              <div className={styles.userPlan}>Plan Pro</div>
-            </div>
-            <svg 
-              width="12" 
-              height="12" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              className={styles.dropdownArrow}
-              style={{ transform: showUserDropdown ? 'rotate(180deg)' : 'rotate(0deg)' }}
-            >
-              <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </button>
-
-          {/* Dropdown Menu */}
-          {showUserDropdown && (
-            <div className={styles.dropdownMenuBottom}>
-              
-              <div className={styles.dropdownSection}>
-               <button 
-                  className={styles.dropdownItem}
-                  onClick={() => window.location.href = '/dashboard/board'}
-                >
-                  <span>fudiBOARD</span>
-                  <span className={styles.itemLabel}>Dashboard Inteligente</span>
-                </button>
-                <button 
-                  className={styles.dropdownItem}
-                  onClick={() => window.location.href = '/dashboard/discovery'}
-                >
-                  <span>fudiSCOVERY</span>
-                  <span className={styles.itemLabel}>Explora insights</span>
-                </button>
-                <button 
-                  className={styles.dropdownItem}
-                  onClick={() => window.location.href = '/dashboard/vault'}
-                >
-                  <span>fudiVAULT</span>
-                  <span className={styles.itemLabel}>Tu biblioteca de conocimiento</span>
-                </button>
-                <button 
-                  className={styles.dropdownItem}
-                  onClick={() => window.location.href = '/dashboard/pos'}
-                >
-                  <span>fudiPOS</span>
-                  <span className={styles.itemLabel}>The First AI Point of Sale</span>
-                </button>
+      {/* ✨ SCANNING LINE EFFECT - CSS HANDLED */}
+      
+      {/* FUDIVERSE HEADER WITH NAVIGATION */}
+      <header className="header">
+        <div className="headerContent">
+          <div className="headerLeft">
+            <div className="fudiLogo">
+              <div>
+                <div className="fudiTitle">FudiGPT</div>
+                <div className="fudiSubtitle">POWERED BY FUDIVERSE AI</div>
               </div>
-              <div className={styles.dropdownDivider}></div>
-              <div className={styles.dropdownSection}>
-                <button className={styles.dropdownItem}>Configuración</button>
-                <button className={styles.dropdownItem}>Idioma</button>
-                <button className={styles.dropdownItem}>Ver más planes</button>
-                <button 
-                  className={styles.dropdownItem}
-                  onClick={() => window.location.href = 'mailto:hello@fudigpt.com'}
-                >
-                  Ayuda
-                </button>
-              </div>
-              
-              <div className={styles.dropdownDivider}></div>
+            </div>
+            
+            {/* NAVIGATION PILLS */}
+            <nav className="headerNavigation">
+              <button 
+                className="navPill newChatPill"
+                onClick={startNewConversation}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Nuevo
+              </button>
               
               <button 
-                className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
-                onClick={() => {
-                  localStorage.removeItem('fudi_token');
-                  window.location.href = '/';
-                }}
+                className="navPill active"
+                onClick={() => {}}
               >
-                Cerrar sesión
+                Chat
               </button>
-            </div>
-          )}
-        </div>
-      </aside>
-
-      {/* Toggle sidebar button - Solo visible cuando está cerrado */}
-      {!sidebarOpen && (
-        <button 
-          onClick={() => setSidebarOpen(true)}
-          className={styles.toggleSidebarButton}
-          title="Mostrar sidebar"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      )}
-
-      {/* Main chat area */}
-      <main className={styles.main}>
-        {/* Header mejorado con logo más grande */}
-        <header className={styles.header}>
-          <div className={styles.headerLeft}>
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-              <FudiLogo 
-                size="small"
-                variant="holographic"
-                animated={true}
-                color="mixed"
-                intensity={0.9}
-                showRings={true}
-                showData={true}
-                showPulse={true}
-              />
-            </div>
-            <div>
-              <span className={styles.fudiTitle}>FudiGPT</span>
-              <div className={styles.fudiSubtitle}>Powered by FUDIVERSE AI</div>
-            </div>
+              
+              <button 
+                className="navPill"
+                onClick={() => navigateTo('/dashboard/board')}
+              >
+                Board
+              </button>
+              
+              <button 
+                className="navPill"
+                onClick={() => navigateTo('/dashboard/discovery')}
+              >
+                Discovery
+              </button>
+              
+              <button 
+                className="navPill"
+                onClick={() => navigateTo('/dashboard/vault')}
+              >
+                Vault
+              </button>
+              
+              <button 
+                className="navPill"
+                onClick={() => navigateTo('/dashboard/pos')}
+              >
+                POS
+              </button>
+            </nav>
           </div>
           
-          <div className={styles.headerRight}>
-            <span className={styles.restaurantGreeting}>Hola, {userData.restaurantName}</span>
+          <div className="headerRight">
+            <div className="liveIndicator">
+              <div className="liveDot"></div>
+              FUDIVERSE ONLINE
+            </div>
+            <div className="restaurantGreeting">
+              Hola, {userData.restaurantName}
+            </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* Messages area */}
-        <div className={styles.messagesArea}>
+      {/* MAIN CHAT AREA - TRANSPARENT FOR NEURAL GRID */}
+      <main className="main">
+        <div className="messagesArea">
           {showWelcome && messages.length === 0 ? (
-            // Welcome screen
-            <div className={styles.welcomeScreen}>
-              <h1 className={styles.greeting}>
-                <span className={styles.greetingText}>{getGreeting()}, </span>
-                <span className={styles.greetingName}>{userData.ownerName.split(' ')[0]}</span>
-              </h1>
-              
-              {/* Quick actions como burbujas de texto estilo Claude */}
-              <div className={styles.quickActions}>
-                {quickActions.map((action, index) => (
-                  <FudiButton
-                    key={index}
-                    variant="ghost"
-                    size="small"
-                    onClick={() => handleQuickAction(action)}
-                    className={styles.quickAction}
-                    style={{
-                      animationDelay: `${index * 0.1}s`,
-                    }}
-                  >
-                    {action.text}
-                  </FudiButton>
-                ))}
+            // ✨ WELCOME SCREEN - FLOATING CARD
+            <div className="welcomeScreen">
+              <div className="welcomeCard">
+                <h1 className="greeting">
+                  <span className="greetingText">{getGreeting()}, </span>
+                  <span className="greetingName">{userData.ownerName.split(' ')[0]}</span>
+                </h1>
+                
+                {/* ✨ QUICK ACTIONS - NEURAL STYLE */}
+                <div className="quickActions">
+                  {quickActions.map((action, index) => (
+                    <button
+                      key={index}
+                      className="quickAction"
+                      onClick={() => handleQuickAction(action)}
+                      style={{
+                        animationDelay: `${index * 0.15}s`,
+                      }}
+                    >
+                      {action.text}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
-            // Messages
-            <div className={styles.messagesContainer}>
-              <div className={styles.messagesList}>
+            // ✨ MESSAGES - FLOATING CARDS SYSTEM
+            <div className="messagesContainer">
+              <div className="messagesList">
                 {messages.map((message, index) => (
                   <div
                     key={message.id}
-                    className={`${styles.messageWrapper} ${
-                      message.type === 'user' ? styles.messageWrapperUser : styles.messageWrapperAssistant
+                    className={`messageWrapper ${
+                      message.type === 'user' ? 'messageWrapperUser' : 'messageWrapperAssistant'
                     }`}
                   >
-                    <div className={`${styles.messageContent} ${
-                      message.type === 'user' ? styles.messageContentUser : ''
+                    <div className={`messageCard ${
+                      message.type === 'user' ? 'messageCardUser' : ''
                     }`}>
-                      {message.type === 'assistant' && (
-                        <img 
-                          src="/images/logo.png" 
-                          alt="Fudi" 
-                          className={styles.assistantAvatar}
-                        />
-                      )}
-                      <div className={`${styles.messageBubble} ${
-                        message.type === 'user' 
-                          ? styles.messageBubbleUser 
-                          : styles.messageBubbleAssistant
-                      }`}
-                      style={{
-                        boxShadow: message.type === 'assistant' && index === messages.length - 1 
-                          ? '0 0 30px rgba(6,182,212,0.1)' 
-                          : 'none'
-                      }}>
-                        {message.type === 'assistant' ? (
-                          <>
-                            <p className={styles.messageText}>{message.content}</p>
-                            <FudiSignature size="mini" showPulse={true} opacity={0.6} />
-                          </>
-                        ) : (
-                          <p className={styles.messageText}>{message.content}</p>
+                      <div className={`messageContent ${
+                        message.type === 'user' ? 'messageContentUser' : ''
+                      }`}>
+                        {message.type === 'assistant' && (
+                          <img 
+                            src="/images/logo.png" 
+                            alt="Fudi" 
+                            className="assistantAvatar"
+                          />
                         )}
+                        <div className="messageText">
+                          {message.type === 'assistant' ? (
+                            <>
+                              {message.content}
+                              <div style={{ marginTop: '1rem' }}>
+                                <FudiSignature size="mini" showPulse={true} opacity={0.6} />
+                              </div>
+                            </>
+                          ) : (
+                            message.content
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
                 
                 {isTyping && (
-                  <div className={`${styles.messageWrapper} ${styles.messageWrapperAssistant}`}>
-                    <div className={styles.messageContent}>
-                      <img 
-                        src="/images/logo.png" 
-                        alt="Fudi" 
-                        className={styles.assistantAvatar}
-                      />
-                      <div className={styles.messageBubble}>
-                        <div className={styles.typingIndicator}>
-                          <div className={styles.typingDot}></div>
-                          <div className={styles.typingDot}></div>
-                          <div className={styles.typingDot}></div>
+                  <div className="messageWrapper messageWrapperAssistant">
+                    <div className="messageCard">
+                      <div className="messageContent">
+                        <img 
+                          src="/images/logo.png" 
+                          alt="Fudi" 
+                          className="assistantAvatar"
+                        />
+                        <div className="typingIndicator">
+                          <div className="typingDot"></div>
+                          <div className="typingDot"></div>
+                          <div className="typingDot"></div>
                         </div>
                       </div>
                     </div>
@@ -626,103 +490,34 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* Input area */}
-        <div className={styles.inputArea}>
-          <form onSubmit={handleSendMessage} className={styles.inputForm}>
-            <div 
-              className={styles.inputContainer}
-              style={{
-                border: '1px solid rgba(6, 182, 212, 0.1)',
-                borderRadius: '1rem',
-                transition: 'all 0.3s ease',
-                background: 'rgba(62, 62, 62, 0.5)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(6, 182, 212, 0.2)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(6, 182, 212, 0.1)';
-              }}
-            >
-              <div 
-                style={{
-                  flex: 1,
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  border: '1px solid rgba(6, 182, 212, 0.2)',
-                  borderRadius: '0.75rem',
-                  padding: '0.75rem 1rem',
-                  transition: 'all 0.3s ease',
-                  background: 'rgba(6, 182, 212, 0.02)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(6, 182, 212, 0.4)';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(6, 182, 212, 0.15)';
-                  e.currentTarget.style.background = 'rgba(6, 182, 212, 0.04)';
-                }}
-                onMouseLeave={(e) => {
-                  if (document.activeElement !== inputRef.current) {
-                    e.currentTarget.style.borderColor = 'rgba(6, 182, 212, 0.2)';
-                    e.currentTarget.style.boxShadow = 'none';
-                    e.currentTarget.style.background = 'rgba(6, 182, 212, 0.02)';
-                  }
-                }}
-              >
-                <textarea
-                  ref={inputRef}
-                  value={inputMessage}
-                  onChange={handleInputChange}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage(e);
-                    }
-                  }}
-                  placeholder="¿Cómo puedo ayudarte hoy?"
-                  className={styles.textInput}
-                  rows={1}
-                  style={{ 
-                    minHeight: '24px',
-                    background: 'transparent',
-                    border: 'none',
-                    outline: 'none',
-                    width: '100%',
-                    padding: 0,
-                    margin: 0
-                  }}
-                  onFocus={(e) => {
-                    const wrapper = e.target.parentElement!;
-                    wrapper.style.borderColor = 'rgba(6, 182, 212, 0.6)';
-                    wrapper.style.boxShadow = '0 0 30px rgba(6, 182, 212, 0.25), inset 0 0 20px rgba(6, 182, 212, 0.05)';
-                    wrapper.style.background = 'rgba(6, 182, 212, 0.06)';
-                  }}
-                  onBlur={(e) => {
-                    const wrapper = e.target.parentElement!;
-                    wrapper.style.borderColor = 'rgba(6, 182, 212, 0.2)';
-                    wrapper.style.boxShadow = inputMessage.length > 0 ? '0 0 15px rgba(6, 182, 212, 0.1)' : 'none';
-                    wrapper.style.background = 'rgba(6, 182, 212, 0.02)';
-                  }}
-                />
-                {inputMessage.length > 0 && (
-                  <div style={{
-                    position: 'absolute',
-                    bottom: -1,
-                    left: '10%',
-                    right: '10%',
-                    height: '2px',
-                    background: 'linear-gradient(90deg, transparent, #06b6d4, transparent)',
-                    animation: 'pulse 2s ease-in-out infinite',
-                    opacity: 0.8,
-                    borderRadius: '1px'
-                  }} />
-                )}
+        {/* ✨ FLOATING INPUT AREA - PREMIUM NEURAL */}
+        <div className="inputArea">
+          <form onSubmit={handleSendMessage} className="inputContainer">
+            <div className="floatingInput">
+              {/* CUSTOM ASK FUDI PLACEHOLDER */}
+              <div className={`inputPlaceholder ${inputMessage ? 'hidden' : ''}`}>
+                ASK FUDI...
               </div>
               
-              <div className={styles.inputActions}>
+              <textarea
+                ref={inputRef}
+                value={inputMessage}
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage(e);
+                  }
+                }}
+                placeholder=""
+                className="textInput"
+                rows={1}
+              />
+              
+              <div className="inputActions">
                 <button
                   type="button"
-                  className={styles.attachButton}
+                  className="attachButton"
                   title="Adjuntar archivo"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -733,10 +528,10 @@ export default function ChatPage() {
                 <button
                   type="submit"
                   disabled={!inputMessage.trim() || isTyping}
-                  className={`${styles.sendButton} ${
+                  className={`sendButton ${
                     inputMessage.trim() && !isTyping
-                      ? styles.sendButtonEnabled 
-                      : styles.sendButtonDisabled
+                      ? 'sendButtonEnabled' 
+                      : 'sendButtonDisabled'
                   }`}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -747,23 +542,23 @@ export default function ChatPage() {
             </div>
           </form>
           
-          <p className={styles.inputDisclaimer}>
+          <p className="inputDisclaimer">
             FudiGPT puede cometer errores. Verifica la información importante.
           </p>
         </div>
       </main>
       
-      {/* Easter egg particles */}
-        {particles.map(particle => (
-          <div
-            key={particle.id}
-            className={styles.particle}
-            style={{
-              left: particle.x,
-              top: particle.y,
-            }}
-          />
-        ))}
+      {/* ✨ NEURAL PARTICLES - EASTER EGGS */}
+      {particles.map(particle => (
+        <div
+          key={particle.id}
+          className="particle"
+          style={{
+            left: particle.x,
+            top: particle.y,
+          }}
+        />
+      ))}
     </div>
   );
 }
