@@ -9,7 +9,7 @@ import {
   BarChart3, Image, Calendar, MapPin, Sparkles,
   Eye, Zap, AlertCircle, Brain, DollarSign,
   ChefHat, UtensilsCrossed, Package, Clock,
-  Verified, MoreVertical
+  Verified, MoreVertical, Network, Rocket
 } from 'lucide-react';
 
 // Import FUDI Components
@@ -104,15 +104,15 @@ class ContentGenerator {
     const insights = [
       {
         text: "📊 Análisis semanal: Las ventas del viernes superaron proyecciones en 47%. El factor clave fue la promoción 2x1 en bebidas que aumentó el ticket promedio.",
-        card: { title: "Impacto de Promoción", value: "+$12,500", label: "Ingreso adicional" }
+        card: { title: "IMPACTO DE PROMOCIÓN", value: "+$12,500", label: "Ingreso adicional" }
       },
       {
         text: "🎯 FUDI detectó un patrón interesante: Los clientes que piden entrada tienen 73% más probabilidad de ordenar postre. Time to push those appetizers!",
-        card: { title: "Oportunidad Detectada", value: "73%", label: "Conversión a postre" }
+        card: { title: "OPORTUNIDAD DETECTADA", value: "73%", label: "Conversión a postre" }
       },
       {
         text: "🔥 El plato del día vendió 3x más cuando lo pusimos en stories. El contenido visual mueve ventas, comprobado con data.",
-        card: { title: "ROI de Stories", value: "3x", label: "Incremento en ventas" }
+        card: { title: "ROI DE STORIES", value: "3x", label: "Incremento en ventas" }
       }
     ];
     
@@ -192,7 +192,7 @@ class ContentGenerator {
   private generateAlertPost(): Post {
     const alerts = [
       {
-        text: "⚠️ Alerta de inventario: Quedan solo 2 días de tortillas al ritmo actual. Time to call al proveedor!",
+        text: "⚠️ ALERTA DE INVENTARIO: Quedan solo 2 días de tortillas al ritmo actual. Time to call al proveedor!",
         tags: ['#InventoryAlert', '#Supplies']
       },
       {
@@ -234,9 +234,9 @@ class ContentGenerator {
   private generateTipPost(): Post {
     const restaurant = this.restaurantNames[Math.floor(Math.random() * this.restaurantNames.length)];
     const tips = [
-      "💡 Pro tip: Cambié el menú de 10 páginas a 2. Las ventas subieron 20% porque los clientes ya no se abruman. Less is more!",
-      "🎯 Hack del día: Puse música a 128 BPM en la cocina y la productividad subió 15%. La ciencia del ritmo aplicada.",
-      "✨ Game changer: Empecé a mandar fotos del plato listo al cliente que ordena para llevar. 0 quejas en 2 semanas.",
+      "💡 PRO TIP: Cambié el menú de 10 páginas a 2. Las ventas subieron 20% porque los clientes ya no se abruman. Less is more!",
+      "🎯 HACK DEL DÍA: Puse música a 128 BPM en la cocina y la productividad subió 15%. La ciencia del ritmo aplicada.",
+      "✨ GAME CHANGER: Empecé a mandar fotos del plato listo al cliente que ordena para llevar. 0 quejas en 2 semanas.",
       "🚀 Implementé pre-órdenes por WhatsApp Business. 40% menos tiempo de espera y clientes más felices."
     ];
     
@@ -267,8 +267,8 @@ class ContentGenerator {
     const restaurant = this.restaurantNames[Math.floor(Math.random() * this.restaurantNames.length)];
     const discussions = [
       "¿Alguien más notó que los pedidos de delivery bajaron 30% esta semana? ¿Será por el clima o hay algo más?",
-      "Debate del día: ¿Vale la pena invertir en robots de cocina? Vi uno que hace 300 burgers/hora 🤖",
-      "Real talk: ¿Cuánto están pagando de comisión a las apps de delivery? Necesito renegociar y quiero benchmarks.",
+      "DEBATE DEL DÍA: ¿Vale la pena invertir en robots de cocina? Vi uno que hace 300 burgers/hora 🤖",
+      "REAL TALK: ¿Cuánto están pagando de comisión a las apps de delivery? Necesito renegociar y quiero benchmarks.",
       "¿Qué opinan de cobrar extra por modificaciones al menú? Estoy perdiendo margen con tanto pedido especial."
     ];
     
@@ -420,13 +420,38 @@ export default function FudiDiscovery() {
   
   return (
     <div className="discovery-container">
-      {/* FUDI Background Grid */}
-      <FudiChatGrid 
-        opacity={0.03} 
-        gridSize={80} 
-        animated 
-        color="#fbbf24" 
-      />
+      {/* HERO BANNER - FUDISCOVERY INTRO */}
+      <div className="hero-banner">
+        <div className="hero-content">
+          <div>
+            <div className="hero-logo">fudiFlow</div>
+            <div className="hero-tagline">LA RED SOCIAL PARA RESTAURANTEROS</div>
+          </div>
+          <div className="hero-description">
+            Comparte insights • Aprende • Conecta • Crece
+          </div>
+        </div>
+        
+        <div className="hero-actions">
+          <div className="hero-stats">
+            <div className="hero-stat">
+              <Network size={16} />
+              <span className="stat-value">2,451</span>
+              <span>Restauranteros</span>
+            </div>
+            <div className="hero-stat">
+              <Rocket size={16} />
+              <span className="stat-value">8.2K</span>
+              <span>Posts hoy</span>
+            </div>
+          </div>
+          <button className="hero-cta">
+            Únete al Flow
+          </button>
+        </div>
+      </div>
+
+      {/* Neural Grid Background - handled by CSS */}
       
       {/* Main Layout */}
       <div className="main-layout">
@@ -438,43 +463,43 @@ export default function FudiDiscovery() {
           
           <nav className="nav-menu">
             <a href="#" className="nav-item active">
-              <Home size={26} />
+              <Home size={24} />
               <span>Inicio</span>
             </a>
             <a href="#" className="nav-item">
-              <Search size={26} />
+              <Search size={24} />
               <span>Explorar</span>
             </a>
             <a href="#" className="nav-item">
-              <Bell size={26} />
+              <Bell size={24} />
               <span>Notificaciones</span>
             </a>
             <a href="#" className="nav-item">
-              <Mail size={26} />
+              <Mail size={24} />
               <span>Mensajes</span>
             </a>
             <a href="#" className="nav-item">
-              <Bookmark size={26} />
+              <Bookmark size={24} />
               <span>Guardados</span>
             </a>
             <a href="#" className="nav-item">
-              <Users size={26} />
+              <Users size={24} />
               <span>Comunidades</span>
             </a>
             <a href="#" className="nav-item">
-              <Sparkles size={26} />
+              <Sparkles size={24} />
               <span>Premium</span>
             </a>
             <a href="#" className="nav-item">
-              <BarChart3 size={26} />
+              <BarChart3 size={24} />
               <span>Analytics</span>
             </a>
             <a href="#" className="nav-item">
-              <User size={26} />
+              <User size={24} />
               <span>Perfil</span>
             </a>
             <a href="#" className="nav-item">
-              <MoreHorizontal size={26} />
+              <MoreHorizontal size={24} />
               <span>Más opciones</span>
             </a>
           </nav>
@@ -492,7 +517,7 @@ export default function FudiDiscovery() {
         <main className="feed-container">
           <div className="feed-header">
             <div className="feed-header-content">
-              <h1 className="feed-title">Inicio</h1>
+              <h1 className="feed-title">Neural Flow</h1>
               <div className="feed-header-icon">
                 <Sparkles size={20} />
               </div>
