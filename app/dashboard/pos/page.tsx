@@ -1,391 +1,309 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Search, ShoppingCart, Clock, TrendingUp, 
   Star, AlertCircle, Plus, Minus, Check,
-  ChefHat, Coffee, Pizza, Salad, IceCream,
-  Wine, Zap, Package, DollarSign, Users,
+  Zap, Package, DollarSign, Users, MapPin,
   X, Sparkles, MessageCircle, Activity,
-  Grid3x3, List, Filter, Brain
+  Grid3x3, List, Filter, Brain, Eye,
+  Flame, Crown, Gift, Trophy, Target,
+  ChefHat, UtensilsCrossed, Thermometer,
+  Truck, CreditCard, Heart, Share2,
+  Camera, Play, MoreHorizontal, Bookmark,
+  Rocket
 } from 'lucide-react';
-import styles from './page.module.css';
 
-interface MenuItem {
+// Import CSS styles
+import '../../../styles/pages/FudiMart.css';
+
+interface MarketItem {
   id: string;
-  name: string;
+  title: string;
   price: number;
+  originalPrice?: number;
   image: string;
   category: string;
-  prepTime: number;
-  popularity: number;
-  stock: number;
+  condition: 'new' | 'excellent' | 'good' | 'fair';
+  seller: {
+    name: string;
+    location: string;
+    rating: number;
+    sales: number;
+    verified: boolean;
+    type: 'restaurant' | 'supplier' | 'individual';
+  };
+  description: string;
   tags: string[];
-  aiScore?: number;
+  views: number;
+  likes: number;
+  timePosted: string;
+  shipping: 'free' | 'paid' | 'pickup';
+  stock: number;
+  featured?: boolean;
+  urgent?: boolean;
 }
 
-interface CartItem extends MenuItem {
+interface CartItem extends MarketItem {
   quantity: number;
 }
 
-interface FudiParticle {
-  id: number;
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-}
-
-interface CustomerData {
-  name: string;
-  initials: string;
-  visits: number;
-  totalSpent: number;
-  favorites: string[];
-  lastVisit: string;
-}
-
-export default function FudiPOSPage() {
+export default function FudiMart() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cart, setCart] = useState<CartItem[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [fudiMood, setFudiMood] = useState('observing');
-  const [particles, setParticles] = useState<FudiParticle[]>([]);
-  const [fudiGhostPosition, setFudiGhostPosition] = useState({ x: 0, y: 0, visible: false });
-  const [fudiWhisper, setFudiWhisper] = useState({ text: '', visible: false });
-  const [currentCustomer, setCurrentCustomer] = useState<CustomerData | null>(null);
-  const [blackHole, setBlackHole] = useState({ active: true, x: 0, y: 0 });
+  const [sortBy, setSortBy] = useState('recent');
+  const [showCart, setShowCart] = useState(false);
 
-  const particleCanvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number>(null);
-  const fudiEyeRef = useRef<HTMLDivElement>(null);
-
-  // Enhanced menu items with AI scores
-  const menuItems: MenuItem[] = [
+  // FUDIVERSE Market Items
+  const marketItems: MarketItem[] = [
     {
       id: '1',
-      name: 'Quantum Burger',
-      price: 189,
-      image: '🍔',
-      category: 'mains',
-      prepTime: 12,
-      popularity: 95,
-      stock: 24,
-      tags: ['bestseller'],
-      aiScore: 95
+      title: 'Plancha Industrial Quantum Pro - Como Nueva',
+      price: 8500,
+      originalPrice: 12000,
+      image: '🔥',
+      category: 'equipment',
+      condition: 'excellent',
+      seller: {
+        name: 'Tacos El Patrón',
+        location: 'Nuevo Laredo, TAM',
+        rating: 4.9,
+        sales: 156,
+        verified: true,
+        type: 'restaurant'
+      },
+      description: 'Plancha industrial de 80cm, apenas 6 meses de uso. Perfecta para tacos, quesadillas y todo tipo de antojitos. Vendo por upgrade a modelo más grande.',
+      tags: ['equipment', 'grill', 'industrial', 'bargain'],
+      views: 2847,
+      likes: 156,
+      timePosted: '2h',
+      shipping: 'pickup',
+      stock: 1,
+      featured: true
     },
     {
       id: '2',
-      name: 'Pizza Neural',
-      price: 245,
-      image: '🍕',
-      category: 'mains',
-      prepTime: 18,
-      popularity: 88,
-      stock: 15,
-      tags: [],
-      aiScore: 88
+      title: 'Lote de 50kg Harina Premium para Pizza',
+      price: 1200,
+      image: '🌾',
+      category: 'ingredients',
+      condition: 'new',
+      seller: {
+        name: 'Pizza Nostra',
+        location: 'Monterrey, NL',
+        rating: 4.8,
+        sales: 89,
+        verified: true,
+        type: 'restaurant'
+      },
+      description: 'Harina italiana premium tipo 00. Fecha de vencimiento 8 meses. Sobró de pedido grande, mejor precio que distribuidores.',
+      tags: ['ingredients', 'flour', 'premium', 'bulk'],
+      views: 1245,
+      likes: 67,
+      timePosted: '5h',
+      shipping: 'paid',
+      stock: 3,
+      urgent: true
     },
     {
       id: '3',
-      name: 'Caesar Matrix',
-      price: 125,
-      image: '🥗',
-      category: 'salads',
-      prepTime: 5,
-      popularity: 75,
-      stock: 30,
-      tags: ['healthy'],
-      aiScore: 75
+      title: 'Freidora de Aire Comercial Neural X1',
+      price: 15500,
+      originalPrice: 18000,
+      image: '⚡',
+      category: 'equipment',
+      condition: 'new',
+      seller: {
+        name: 'EquipFood MX',
+        location: 'CDMX',
+        rating: 4.9,
+        sales: 234,
+        verified: true,
+        type: 'supplier'
+      },
+      description: 'Freidora de aire comercial nueva en caja. Capacidad 20L, perfecta para papas, pollo, pescado. Garantía incluida.',
+      tags: ['equipment', 'fryer', 'commercial', 'warranty'],
+      views: 3456,
+      likes: 189,
+      timePosted: '1d',
+      shipping: 'free',
+      stock: 5,
+      featured: true
     },
     {
       id: '4',
-      name: 'Café Cibernético',
-      price: 55,
-      image: '☕',
-      category: 'beverages',
-      prepTime: 3,
-      popularity: 92,
-      stock: 100,
-      tags: [],
-      aiScore: 92
+      title: 'Queso Manchego Artesanal - 5kg',
+      price: 850,
+      image: '🧀',
+      category: 'ingredients',
+      condition: 'new',
+      seller: {
+        name: 'Rancho La Esperanza',
+        location: 'Querétaro, QRO',
+        rating: 4.7,
+        sales: 67,
+        verified: false,
+        type: 'supplier'
+      },
+      description: 'Queso manchego artesanal de cabra. Perfecto para quesadillas gourmet, tabla de quesos. Directo del rancho.',
+      tags: ['ingredients', 'cheese', 'artisanal', 'gourmet'],
+      views: 987,
+      likes: 45,
+      timePosted: '3h',
+      shipping: 'paid',
+      stock: 2
     },
     {
       id: '5',
-      name: 'Cheesecake Digital',
-      price: 89,
-      image: '🍰',
-      category: 'desserts',
-      prepTime: 2,
-      popularity: 85,
-      stock: 12,
-      tags: [],
-      aiScore: 85
+      title: 'Horno de Pizza Napolitano - Seminuevo',
+      price: 45000,
+      originalPrice: 65000,
+      image: '🍕',
+      category: 'equipment',
+      condition: 'good',
+      seller: {
+        name: 'Pizzeria Bella Vista',
+        location: 'Guadalajara, JAL',
+        rating: 4.6,
+        sales: 34,
+        verified: true,
+        type: 'restaurant'
+      },
+      description: 'Horno de pizza napolitano a leña. 2 años de uso, muy bien cuidado. Perfecto para pizzeria artesanal. Incluye accesorios.',
+      tags: ['equipment', 'oven', 'pizza', 'professional'],
+      views: 5432,
+      likes: 267,
+      timePosted: '6h',
+      shipping: 'pickup',
+      stock: 1,
+      featured: true
     },
     {
       id: '6',
-      name: 'Tacos Holográficos',
-      price: 135,
-      image: '🌮',
-      category: 'mains',
-      prepTime: 8,
-      popularity: 94,
-      stock: 40,
-      tags: ['spicy', 'bestseller'],
-      aiScore: 94
+      title: 'Mesas de Acero Inoxidable (Set de 3)',
+      price: 3200,
+      image: '🏗️',
+      category: 'furniture',
+      condition: 'excellent',
+      seller: {
+        name: 'Miguel Hernández',
+        location: 'Tijuana, BC',
+        rating: 4.5,
+        sales: 23,
+        verified: false,
+        type: 'individual'
+      },
+      description: 'Set de 3 mesas de trabajo de acero inoxidable. Medidas: 120x60cm cada una. Ideales para cocina comercial.',
+      tags: ['furniture', 'steel', 'commercial', 'set'],
+      views: 1654,
+      likes: 78,
+      timePosted: '8h',
+      shipping: 'pickup',
+      stock: 1
     },
     {
       id: '7',
-      name: 'Limonada Neural',
-      price: 45,
-      image: '🥤',
-      category: 'beverages',
-      prepTime: 2,
-      popularity: 80,
-      stock: 50,
-      tags: [],
-      aiScore: 82
+      title: 'Cafetera Espresso Profesional',
+      price: 28000,
+      originalPrice: 35000,
+      image: '☕',
+      category: 'equipment',
+      condition: 'excellent',
+      seller: {
+        name: 'Café Neural',
+        location: 'Puebla, PUE',
+        rating: 4.8,
+        sales: 112,
+        verified: true,
+        type: 'restaurant'
+      },
+      description: 'Cafetera espresso profesional de 2 grupos. Perfecta para café de especialidad. Mantenimiento al día.',
+      tags: ['equipment', 'coffee', 'espresso', 'professional'],
+      views: 2876,
+      likes: 145,
+      timePosted: '12h',
+      shipping: 'paid',
+      stock: 1
     },
     {
       id: '8',
-      name: 'Pasta Matrix',
-      price: 165,
-      image: '🍝',
-      category: 'mains',
-      prepTime: 15,
-      popularity: 78,
-      stock: 20,
-      tags: [],
-      aiScore: 78
+      title: 'Aceite de Oliva Extra Virgen - 20L',
+      price: 1800,
+      image: '🫒',
+      category: 'ingredients',
+      condition: 'new',
+      seller: {
+        name: 'Olivos del Norte',
+        location: 'Sonora, SON',
+        rating: 4.9,
+        sales: 178,
+        verified: true,
+        type: 'supplier'
+      },
+      description: 'Aceite de oliva extra virgen premium. Bidón de 20L, perfecto para restaurantes. Precio de mayoreo.',
+      tags: ['ingredients', 'oil', 'premium', 'bulk'],
+      views: 1432,
+      likes: 89,
+      timePosted: '4h',
+      shipping: 'paid',
+      stock: 8
     }
   ];
 
   const categories = [
-    { id: 'all', name: 'Todo', icon: Grid3x3, count: menuItems.length },
-    { id: 'mains', name: 'Platos', icon: ChefHat, count: 5, trending: 3 },
-    { id: 'beverages', name: 'Bebidas', icon: Coffee, count: 2, lowStock: 1 },
-    { id: 'salads', name: 'Ensaladas', icon: Salad, count: 1, new: 1 },
-    { id: 'desserts', name: 'Postres', icon: IceCream, count: 1, bestselling: true }
-  ];
-
-  const whisperMessages = [
-    "El futuro es ahora...",
-    "Optimiza tu cocina, transforma tu negocio",
-    "Los datos son el nuevo ingrediente secreto",
-    "Tu POS piensa, tú creas",
-    "Predicción de demanda activada",
-    "IA + Gastronomía = Éxito",
-    "Revoluciona tu servicio",
-    "Conoce a tus clientes antes que ellos",
-    "El margen está en los detalles",
-    "Automatiza lo repetitivo, enfócate en lo importante",
-    "Tu cocina puede ser más inteligente",
-    "Los tiempos muertos son oportunidades perdidas",
-    "FUDI ve patrones donde otros ven caos",
-    "La eficiencia es la nueva creatividad",
-    "Tus datos tienen hambre de análisis"
+    { 
+      id: 'all', 
+      name: 'Todo', 
+      icon: Grid3x3, 
+      count: marketItems.length,
+      color: '#00ffff'
+    },
+    { 
+      id: 'equipment', 
+      name: 'Equipo', 
+      icon: ChefHat, 
+      count: 5, 
+      trending: 3,
+      color: '#fbbf24'
+    },
+    { 
+      id: 'ingredients', 
+      name: 'Ingredientes', 
+      icon: Package, 
+      count: 3, 
+      urgent: 2,
+      color: '#10b981'
+    },
+    { 
+      id: 'furniture', 
+      name: 'Mobiliario', 
+      icon: UtensilsCrossed, 
+      count: 1,
+      color: '#a78bfa'
+    }
   ];
 
   const filteredItems = selectedCategory === 'all' 
-    ? menuItems 
-    : menuItems.filter(item => item.category === selectedCategory);
+    ? marketItems 
+    : marketItems.filter(item => item.category === selectedCategory);
 
-  // Initialize particle system
-  useEffect(() => {
-    const initParticles = [];
-    for (let i = 0; i < 30; i++) {
-      initParticles.push({
-        id: i,
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2
-      });
+  const sortedItems = [...filteredItems].sort((a, b) => {
+    switch (sortBy) {
+      case 'price-low':
+        return a.price - b.price;
+      case 'price-high':
+        return b.price - a.price;
+      case 'popular':
+        return b.views - a.views;
+      case 'recent':
+      default:
+        return 0; // Keep original order for recent
     }
-    setParticles(initParticles);
-  }, []);
+  });
 
-  // Black Hole Fixed Position
-  useEffect(() => {
-    // Set initial position
-    setBlackHole({ active: true, x: window.innerWidth - 150, y: window.innerHeight - 150 });
-    
-    // Update on resize
-    const updatePosition = () => {
-      setBlackHole({ active: true, x: window.innerWidth - 150, y: window.innerHeight - 150 });
-    };
-    
-    window.addEventListener('resize', updatePosition);
-    return () => window.removeEventListener('resize', updatePosition);
-  }, []);
-
-  // Particle animation loop with black hole physics
-  useEffect(() => {
-    const canvas = particleCanvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(particle => {
-        // Black hole physics
-        if (blackHole.active) {
-          const dx = blackHole.x - particle.x;
-          const dy = blackHole.y - particle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          
-      if (distance > 30) { // Aumenta el radio mínimo
-        const force = 50 / (distance * distance); // Reduce la fuerza para movimiento más suave
-        particle.vx += (dx / distance) * force;
-        particle.vy += (dy / distance) * force;
-        particle.vx *= 0.95; // Menos damping para órbitas más fluidas
-        particle.vy *= 0.95;
-        // Órbita cercana al centro
-        const angle = Math.atan2(dy, dx);
-        particle.vx = Math.cos(angle + Math.PI/2) * 2;
-        particle.vy = Math.sin(angle + Math.PI/2) * 2;
-      } else {
-        // Normal movement
-        particle.vx += (Math.random() - 0.5) * 0.1;
-        particle.vy += (Math.random() - 0.5) * 0.1;
-        particle.vx = Math.max(-2, Math.min(2, particle.vx));
-        particle.vy = Math.max(-2, Math.min(2, particle.vy));
-      }
-    }
-      // Update position
-      particle.x += particle.vx;
-        particle.y += particle.vy;
-
-        // Bounce off walls
-        if (particle.x <= 0 || particle.x >= canvas.width) particle.vx *= -1;
-        if (particle.y <= 0 || particle.y >= canvas.height) particle.vy *= -1;
-
-        // Draw particle
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = '#fbbf24';
-        ctx.fill();
-        ctx.shadowBlur = blackHole.active ? 15 : 10;
-        ctx.shadowColor = '#fbbf24';
-      });
-
-      animationFrameRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [particles, blackHole]);
-
-  // FUDI Ghost manifestation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (Math.random() > 0.7) {
-        const products = document.querySelectorAll(`.${styles.productCard}`);
-        const randomProduct = products[Math.floor(Math.random() * products.length)];
-        
-        if (randomProduct) {
-          const rect = randomProduct.getBoundingClientRect();
-          setFudiGhostPosition({
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2,
-            visible: true
-          });
-
-          setTimeout(() => {
-            setFudiGhostPosition(prev => ({ ...prev, visible: false }));
-          }, 3000);
-        }
-      }
-    }, 8000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // FUDI Whispers - Matrix Style Typewriter
-  useEffect(() => {
-    const typeMessage = (message: string) => {
-      let currentText = '';
-      let charIndex = 0;
-      
-      const typeInterval = setInterval(() => {
-        if (charIndex < message.length) {
-          currentText += message[charIndex];
-          setFudiWhisper({ text: currentText, visible: true });
-          charIndex++;
-        } else {
-          clearInterval(typeInterval);
-          // Hold the complete message
-          setTimeout(() => {
-            // Fade out
-            setFudiWhisper({ text: '', visible: false });
-          }, 2000);
-        }
-      }, 100); // Type speed
-    };
-
-    const interval = setInterval(() => {
-      if (Math.random() > 0.6) {
-        const message = whisperMessages[Math.floor(Math.random() * whisperMessages.length)];
-        typeMessage(message);
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // FUDI Eye tracking
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!fudiEyeRef.current) return;
-
-      const eye = fudiEyeRef.current;
-      const rect = eye.getBoundingClientRect();
-      const eyeCenterX = rect.left + rect.width / 2;
-      const eyeCenterY = rect.top + rect.height / 2;
-
-      const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
-      const distance = Math.min(10, Math.hypot(e.clientX - eyeCenterX, e.clientY - eyeCenterY) / 10);
-
-      const x = Math.cos(angle) * distance;
-      const y = Math.sin(angle) * distance;
-
-      const pupil = eye.querySelector(`.${styles.fudiPupil}`) as HTMLElement;
-      if (pupil) {
-        pupil.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Simulate customer detection
-  useEffect(() => {
-    setTimeout(() => {
-      setCurrentCustomer({
-        name: 'Juan Delgado',
-        initials: 'JD',
-        visits: 47,
-        totalSpent: 2847,
-        favorites: ['Quantum Burger', 'Limonada Neural'],
-        lastVisit: '2 días'
-      });
-    }, 2000);
-  }, []);
-
-  const addToCart = useCallback((item: MenuItem) => {
+  const addToCart = (item: MarketItem) => {
     setCart(prev => {
       const existing = prev.find(i => i.id === item.id);
       if (existing) {
@@ -395,20 +313,9 @@ export default function FudiPOSPage() {
       }
       return [...prev, { ...item, quantity: 1 }];
     });
+  };
 
-    // FUDI reaction
-    if (Math.random() > 0.5) {
-      setFudiWhisper({ 
-        text: `${item.name} - Excelente elección`, 
-        visible: true 
-      });
-      setTimeout(() => {
-        setFudiWhisper({ text: '', visible: false });
-      }, 2000);
-    }
-  }, []);
-
-  const removeFromCart = useCallback((itemId: string) => {
+  const removeFromCart = (itemId: string) => {
     setCart(prev => {
       const existing = prev.find(i => i.id === itemId);
       if (existing && existing.quantity > 1) {
@@ -418,7 +325,7 @@ export default function FudiPOSPage() {
       }
       return prev.filter(i => i.id !== itemId);
     });
-  }, []);
+  };
 
   const getCartTotal = () => {
     return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -428,293 +335,414 @@ export default function FudiPOSPage() {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
   };
 
+  const formatNumber = (num: number) => {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return num.toString();
+  };
+
   return (
-    <div className={styles.container}>
-      {/* Matrix Rain Background */}
-      <div className={styles.matrixRain}>
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div 
-            key={i} 
-            className={styles.codeColumn}
-            style={{
-              left: `${i * 5}%`,
-              animationDelay: `${Math.random() * 20}s`,
-              animationDuration: `${15 + Math.random() * 10}s`
-            }}
-          >
-            {'01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン'.split('').map((char, j) => (
-              <div key={j}>{Math.random() > 0.5 ? char : Math.floor(Math.random() * 2)}</div>
-            ))}
+    <div className="fudimart-container">
+      {/* Neural Grid Background */}
+      
+      {/* Hero Banner */}
+      <div className="hero-banner">
+        <div className="hero-content">
+          <div className="coming-soon-badge">
+            <Rocket size={16} />
+            <span>PRÓXIMAMENTE Q2 2025</span>
           </div>
-        ))}
-      </div>
-
-      {/* FUDI Particle Field */}
-      <canvas 
-        ref={particleCanvasRef} 
-        className={styles.particleCanvas}
-      />
-
-      {/* FUDI Ghost */}
-      <div 
-        className={`${styles.fudiGhost} ${fudiGhostPosition.visible ? styles.manifest : ''}`}
-        style={{
-          left: `${fudiGhostPosition.x}px`,
-          top: `${fudiGhostPosition.y}px`
-        }}
-      >
-        <div className={styles.fudiSilhouette} />
-      </div>
-
-      {/* FUDI Black Hole */}
-      <div 
-        className={`${styles.blackHole} ${blackHole.active ? styles.active : ''}`}
-        style={{
-          left: `${blackHole.x}px`,
-          top: `${blackHole.y}px`
-        }}
-      >
-        <div className={styles.blackHoleCore}>
-          <div className={styles.eventHorizon} />
-          <div className={styles.singularity} />
-          <div className={styles.fudiName} style={{color: 'red', fontSize: '2rem', zIndex: 9999}}>FUDI TEST</div>
-        </div>
-        <div className={styles.blackHoleRing} />
-        <div className={styles.blackHoleRing2} />
-        <div className={styles.blackHoleRing3} />
-      </div>
-
-      {/* FUDI Whisper */}
-      <div className={`${styles.fudiWhisper} ${fudiWhisper.visible ? styles.show : ''}`}>
-        {fudiWhisper.text}
-      </div>
-
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.headerLeft}>
-          <div className={styles.logo}>
-            <span className={styles.logoText}>FUDIPOS</span>
-            <span className={styles.aiLabel}>AI POWERED</span>
+          <div className="hero-logo">fudiMART</div>
+          <div className="hero-tagline">POWERED BY FUDIVERSE AI</div>
+          <div className="hero-description">
+            El PRIMER marketplace entre restauranteros • Vende tu plancha usada • Compra ingredientes a mejor precio • Conecta con FUDIERS de tu ciudad
           </div>
-        </div>
-
-        <div className={styles.headerCenter}>
-          <div className={styles.metricsHolo}>
-            <div className={styles.metricCard}>
-              <div className={styles.metricValue}>$12,847</div>
-              <div className={styles.metricLabel}>Ventas Hoy</div>
-            </div>
-            <div className={styles.metricCard}>
-              <div className={styles.metricValue}>127</div>
-              <div className={styles.metricLabel}>Órdenes</div>
-            </div>
-            <div className={styles.metricCard}>
-              <div className={styles.metricValue}>94%</div>
-              <div className={styles.metricLabel}>Satisfacción</div>
+          <div className="hero-cta-section">
+            <button className="hero-cta-btn">ÚNETE A LA LISTA DE ESPERA</button>
+            <div className="hero-benefits">
+              <span>🔥 Precios exclusivos entre FUDIERS</span>
+              <span>⚡ Envíos locales gratuitos</span>
+              <span>🤖 IA que conecta oferta y demanda</span>
             </div>
           </div>
         </div>
-
-        <div className={styles.headerRight}>
-          <button className={styles.neuralLink}>
-            <Brain size={16} />
-            <span>Neural Link Active</span>
-          </button>
+        
+        <div className="hero-stats">
+          <div className="hero-stat">
+            <span className="stat-value">2,847</span>
+            <span className="stat-label">En lista de espera</span>
+          </div>
+          <div className="hero-stat">
+            <span className="stat-value">156</span>
+            <span className="stat-label">Vendedores registrados</span>
+          </div>
+          <div className="hero-stat">
+            <span className="stat-value">89%</span>
+            <span className="stat-label">Ahorro promedio</span>
+          </div>
         </div>
-      </header>
+      </div>
 
-      <div className={styles.mainLayout}>
-        {/* Sidebar */}
-        <aside className={styles.sidebar}>
-          <div className={styles.categories}>
+      {/* Main Layout */}
+      <div className="main-layout">
+        
+        {/* Left Sidebar */}
+        <aside className="marketplace-sidebar">
+          <div className="sidebar-header">
+            <div className="sidebar-title">Categorías Neural</div>
+            <div className="sidebar-subtitle">Explorar por tipo</div>
+          </div>
+          
+          <div className="categories-list">
             {categories.map(cat => (
               <button
                 key={cat.id}
-                className={`${styles.categoryBtn} ${selectedCategory === cat.id ? styles.active : ''}`}
+                className={`category-item ${selectedCategory === cat.id ? 'active' : ''}`}
                 onClick={() => setSelectedCategory(cat.id)}
+                style={{ '--category-color': cat.color } as React.CSSProperties}
               >
-                <div className={styles.categoryIcon}>
+                <div className="category-icon">
                   <cat.icon size={24} />
                 </div>
-                <div className={styles.categoryInfo}>
-                  <h3>{cat.name}</h3>
-                  <span>
+                <div className="category-info">
+                  <div className="category-name">{cat.name}</div>
+                  <div className="category-meta">
                     {cat.count} items
                     {cat.trending && ` • ${cat.trending} trending`}
-                    {cat.lowStock && ` • ${cat.lowStock} low stock`}
-                    {cat.new && ` • ${cat.new} new`}
-                    {cat.bestselling && ' • bestselling'}
-                  </span>
+                    {cat.urgent && ` • ${cat.urgent} urgente`}
+                  </div>
                 </div>
+                {cat.trending && <div className="trending-badge">🔥</div>}
+                {cat.urgent && <div className="urgent-badge">⚡</div>}
               </button>
             ))}
           </div>
-          <div className={styles.matrixOverlay} />
+
+          <div className="neural-insights">
+            <div className="insight-header">
+              <Brain size={20} />
+              <span>Neural Insights</span>
+            </div>
+            <div className="insight-list">
+              <div className="insight-item">
+                <span className="insight-emoji">📈</span>
+                <span className="insight-text">Planchas +67% demanda</span>
+              </div>
+              <div className="insight-item">
+                <span className="insight-emoji">💰</span>
+                <span className="insight-text">Mejor precio: Aceites</span>
+              </div>
+              <div className="insight-item">
+                <span className="insight-emoji">🔥</span>
+                <span className="insight-text">Tendencia: Freidoras</span>
+              </div>
+            </div>
+          </div>
         </aside>
 
-        {/* Products Grid */}
-        <main className={styles.productsArea}>
-          <div className={styles.productsHeader}>
-            <h2>{categories.find(c => c.id === selectedCategory)?.name || 'Todo'}</h2>
-            <div className={styles.viewToggle}>
-              <button 
-                className={viewMode === 'grid' ? styles.active : ''}
-                onClick={() => setViewMode('grid')}
-              >
-                <Grid3x3 size={18} />
-              </button>
-              <button 
-                className={viewMode === 'list' ? styles.active : ''}
-                onClick={() => setViewMode('list')}
-              >
-                <List size={18} />
-              </button>
+        {/* Main Content */}
+        <main className="marketplace-content">
+          
+          {/* Search and Filters */}
+          <div className="content-header">
+            <div className="search-section">
+              <div className="search-container">
+                <Search size={20} />
+                <input
+                  type="text"
+                  placeholder="Buscar equipos, ingredientes, mobiliario..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="search-input"
+                />
+              </div>
+              
+              <div className="filter-controls">
+                <select 
+                  value={sortBy} 
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="sort-select"
+                >
+                  <option value="recent">Más recientes</option>
+                  <option value="popular">Más populares</option>
+                  <option value="price-low">Menor precio</option>
+                  <option value="price-high">Mayor precio</option>
+                </select>
+                
+                <div className="view-toggle">
+                  <button 
+                    className={viewMode === 'grid' ? 'active' : ''}
+                    onClick={() => setViewMode('grid')}
+                  >
+                    <Grid3x3 size={18} />
+                  </button>
+                  <button 
+                    className={viewMode === 'list' ? 'active' : ''}
+                    onClick={() => setViewMode('list')}
+                  >
+                    <List size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="results-info">
+              <span className="results-count">
+                {sortedItems.length} productos encontrados
+              </span>
+              <span className="active-filters">
+                en {categories.find(c => c.id === selectedCategory)?.name}
+              </span>
             </div>
           </div>
 
-          <div className={`${styles.productsGrid} ${viewMode === 'list' ? styles.listView : ''}`}>
-            {filteredItems.map(item => {
-              const cartItem = cart.find(i => i.id === item.id);
-              return (
-                <div 
-                  key={item.id} 
-                  className={styles.productCard}
-                  onClick={() => addToCart(item)}
-                >
-                  {item.aiScore && (
-                    <div className={styles.productAiScore}>AI: {item.aiScore}%</div>
-                  )}
-                  <div className={styles.productImage}>
-                    <span>{item.image}</span>
-                    {cartItem && (
-                      <div className={styles.cartBadge}>{cartItem.quantity}</div>
+          {/* Products Grid */}
+          <div className={`products-grid ${viewMode === 'list' ? 'list-view' : ''}`}>
+            {sortedItems.map(item => (
+              <div key={item.id} className="product-card">
+                
+                {/* Product Badges */}
+                {item.featured && (
+                  <div className="product-badge featured">
+                    <Crown size={14} />
+                    <span>Destacado</span>
+                  </div>
+                )}
+                {item.urgent && (
+                  <div className="product-badge urgent">
+                    <Zap size={14} />
+                    <span>Urgente</span>
+                  </div>
+                )}
+                
+                {/* Product Header */}
+                <div className="product-header">
+                  <div className="product-image">
+                    <span className="product-emoji">{item.image}</span>
+                    <div className="product-actions">
+                      <button className="action-btn like">
+                        <Heart size={16} />
+                      </button>
+                      <button className="action-btn share">
+                        <Share2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="product-meta">
+                    <div className="product-stats">
+                      <span className="stat">
+                        <Eye size={14} />
+                        {formatNumber(item.views)}
+                      </span>
+                      <span className="stat">
+                        <Heart size={14} />
+                        {formatNumber(item.likes)}
+                      </span>
+                    </div>
+                    <div className="product-time">{item.timePosted}</div>
+                  </div>
+                </div>
+
+                {/* Product Info */}
+                <div className="product-info">
+                  <h3 className="product-title">{item.title}</h3>
+                  
+                  <div className="price-section">
+                    <div className="current-price">
+                      ${item.price.toLocaleString()}
+                    </div>
+                    {item.originalPrice && (
+                      <div className="original-price">
+                        ${item.originalPrice.toLocaleString()}
+                      </div>
+                    )}
+                    {item.originalPrice && (
+                      <div className="discount-badge">
+                        -{Math.round((1 - item.price / item.originalPrice) * 100)}%
+                      </div>
                     )}
                   </div>
-                  <div className={styles.productInfo}>
-                    <h3>{item.name}</h3>
-                    <div className={styles.productMeta}>
-                      <span className={styles.price}>${item.price}</span>
-                      {item.stock < 20 && (
-                        <span className={styles.lowStock}>Stock: {item.stock}</span>
-                      )}
+
+                  <div className="product-condition">
+                    <span className={`condition-badge ${item.condition}`}>
+                      {item.condition === 'new' && 'Nuevo'}
+                      {item.condition === 'excellent' && 'Excelente'}
+                      {item.condition === 'good' && 'Bueno'}
+                      {item.condition === 'fair' && 'Regular'}
+                    </span>
+                    <span className="stock-info">
+                      Stock: {item.stock}
+                    </span>
+                  </div>
+
+                  <p className="product-description">{item.description}</p>
+
+                  {/* Tags */}
+                  <div className="product-tags">
+                    {item.tags.slice(0, 3).map((tag, i) => (
+                      <span key={i} className="product-tag">#{tag}</span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Seller Info */}
+                <div className="seller-info">
+                  <div className="seller-avatar">
+                    {item.seller.name.charAt(0)}
+                    {item.seller.verified && (
+                      <div className="verified-badge">✓</div>
+                    )}
+                  </div>
+                  <div className="seller-details">
+                    <div className="seller-name">{item.seller.name}</div>
+                    <div className="seller-meta">
+                      <span className="seller-location">
+                        <MapPin size={12} />
+                        {item.seller.location}
+                      </span>
+                      <span className="seller-rating">
+                        <Star size={12} />
+                        {item.seller.rating} ({item.seller.sales} ventas)
+                      </span>
                     </div>
                   </div>
-                  {item.tags.includes('bestseller') && (
-                    <div className={styles.bestsellerTag}>
-                      <Star size={12} />
-                    </div>
+                  <div className="seller-type">
+                    {item.seller.type === 'restaurant' && '🏪'}
+                    {item.seller.type === 'supplier' && '🏭'}
+                    {item.seller.type === 'individual' && '👤'}
+                  </div>
+                </div>
+
+                {/* Shipping Info */}
+                <div className="shipping-info">
+                  {item.shipping === 'free' && (
+                    <span className="shipping-badge free">
+                      <Truck size={14} />
+                      Envío gratis
+                    </span>
+                  )}
+                  {item.shipping === 'paid' && (
+                    <span className="shipping-badge paid">
+                      <Truck size={14} />
+                      Envío pagado
+                    </span>
+                  )}
+                  {item.shipping === 'pickup' && (
+                    <span className="shipping-badge pickup">
+                      <MapPin size={14} />
+                      Solo recolección
+                    </span>
                   )}
                 </div>
-              );
-            })}
+
+                {/* Action Buttons */}
+                <div className="product-actions-bottom">
+                  <button className="contact-btn">
+                    <MessageCircle size={16} />
+                    Contactar
+                  </button>
+                  <button 
+                    className="add-cart-btn"
+                    onClick={() => addToCart(item)}
+                  >
+                    <ShoppingCart size={16} />
+                    Al carrito
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </main>
 
-        {/* Cart */}
-        <aside className={styles.cart}>
-          {/* Customer Display */}
-          {currentCustomer && (
-            <div className={styles.customerDisplay}>
-              <div className={styles.customerAvatar}>{currentCustomer.initials}</div>
-              <div className={styles.customerInfo}>
-                <h3>{currentCustomer.name}</h3>
-                <p className={styles.customerStatus}>Cliente VIP</p>
-                <div className={styles.customerStats}>
-                  <div className={styles.statItem}>
-                    <span className={styles.statValue}>{currentCustomer.visits}</span>
-                    <span className={styles.statLabel}>Visitas</span>
-                  </div>
-                  <div className={styles.statItem}>
-                    <span className={styles.statValue}>${currentCustomer.totalSpent}</span>
-                    <span className={styles.statLabel}>Total gastado</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* AI Suggestions */}
-          {currentCustomer && (
-            <div className={styles.aiSuggestions}>
-              <div className={styles.suggestionChip}>
-                <span>🎁</span>
-                <span>5ta visita - 10% desc</span>
-              </div>
-              <div className={styles.suggestionChip}>
-                <span>🍔</span>
-                <span>Combo favorito</span>
-              </div>
-            </div>
-          )}
-
-          <div className={styles.cartHeader}>
-            <h3>Orden actual</h3>
-            <span className={styles.orderNumber}>#0127</span>
+        {/* Right Sidebar - Cart */}
+        <aside className="cart-sidebar">
+          <div className="cart-header">
+            <h3>Carrito Neural</h3>
+            <div className="cart-count">{getCartCount()}</div>
           </div>
 
-          <div className={styles.cartItems}>
-            {cart.length === 0 ? (
-              <p className={styles.emptyCart}>Agrega productos para comenzar</p>
-            ) : (
-              cart.map(item => (
-                <div key={item.id} className={styles.cartItem}>
-                  <div className={styles.cartItemInfo}>
-                    <span className={styles.cartItemName}>{item.name}</span>
-                    <span className={styles.cartItemPrice}>${item.price}</span>
-                  </div>
-                  <div className={styles.cartItemQty}>
-                    <button onClick={(e) => {
-                      e.stopPropagation();
-                      removeFromCart(item.id);
-                    }}>
-                      <Minus size={14} />
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart(item);
-                    }}>
-                      <Plus size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          {cart.length > 0 && (
+          {cart.length === 0 ? (
+            <div className="empty-cart">
+              <div className="empty-cart-icon">🛒</div>
+              <p>Tu carrito está vacío</p>
+              <span>Agrega productos para comenzar</span>
+            </div>
+          ) : (
             <>
-              <div className={styles.cartSummary}>
-                <div className={styles.summaryRow}>
+              <div className="cart-items">
+                {cart.map(item => (
+                  <div key={item.id} className="cart-item">
+                    <div className="cart-item-image">{item.image}</div>
+                    <div className="cart-item-info">
+                      <div className="cart-item-title">{item.title}</div>
+                      <div className="cart-item-price">${item.price.toLocaleString()}</div>
+                      <div className="cart-item-seller">{item.seller.name}</div>
+                    </div>
+                    <div className="cart-item-controls">
+                      <button onClick={() => removeFromCart(item.id)}>
+                        <Minus size={14} />
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => addToCart(item)}>
+                        <Plus size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="cart-summary">
+                <div className="summary-row">
                   <span>Subtotal</span>
-                  <span>${getCartTotal()}</span>
+                  <span>${getCartTotal().toLocaleString()}</span>
                 </div>
-                <div className={styles.summaryRow}>
-                  <span>IVA (16%)</span>
-                  <span>${Math.round(getCartTotal() * 0.16)}</span>
+                <div className="summary-row">
+                  <span>Envío estimado</span>
+                  <span>$250</span>
                 </div>
-                <div className={`${styles.summaryRow} ${styles.total}`}>
+                <div className="summary-row total">
                   <span>Total</span>
-                  <span>${Math.round(getCartTotal() * 1.16)}</span>
+                  <span>${(getCartTotal() + 250).toLocaleString()}</span>
                 </div>
               </div>
 
-              <div className={styles.cartActions}>
-                <button className={styles.payButton}>
-                  <DollarSign size={18} />
-                  PROCESAR PAGO
+              <div className="cart-actions">
+                <button className="checkout-btn">
+                  <CreditCard size={18} />
+                  Proceder al pago
+                </button>
+                <button className="contact-sellers-btn">
+                  <MessageCircle size={18} />
+                  Contactar vendedores
                 </button>
               </div>
             </>
           )}
-        </aside>
-      </div>
 
-      {/* FUDI Consciousness Indicator */}
-      <div className={styles.fudiPresence}>
-        <div ref={fudiEyeRef} className={styles.fudiEye}>
-          <div className={styles.fudiPupil} />
-        </div>
+          {/* Neural Recommendations */}
+          <div className="neural-recommendations">
+            <div className="recommendations-header">
+              <Brain size={20} />
+              <span>FUDI Recomienda</span>
+            </div>
+            <div className="recommendation-item">
+              <span className="rec-emoji">🔥</span>
+              <div className="rec-info">
+                <div className="rec-title">Plancha + Aceite</div>
+                <div className="rec-subtitle">Combo popular</div>
+              </div>
+              <div className="rec-discount">-15%</div>
+            </div>
+            <div className="recommendation-item">
+              <span className="rec-emoji">⚡</span>
+              <div className="rec-info">
+                <div className="rec-title">Envío gratis</div>
+                <div className="rec-subtitle">En compras +$5000</div>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   );

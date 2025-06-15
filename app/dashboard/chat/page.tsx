@@ -357,28 +357,28 @@ export default function ChatPage() {
                 className="navPill"
                 onClick={() => navigateTo('/dashboard/board')}
               >
-                Board
+                fudiBOARD
               </button>
               
               <button 
                 className="navPill"
                 onClick={() => navigateTo('/dashboard/discovery')}
               >
-                Discovery
+                fudiFLOW
               </button>
               
               <button 
                 className="navPill"
                 onClick={() => navigateTo('/dashboard/vault')}
               >
-                Vault
+                fudiVAULT
               </button>
               
               <button 
                 className="navPill"
                 onClick={() => navigateTo('/dashboard/pos')}
               >
-                POS
+                fudiMART
               </button>
             </nav>
           </div>
