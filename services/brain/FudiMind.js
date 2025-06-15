@@ -287,76 +287,143 @@ class FudiMind {
   }
 
   buildMinimalPrompt(data) {
-    // SOLO DATOS ESENCIALES - SIN MAMADAS
-    let prompt = `Eres FUDI, especialista en análisis de restaurantes.
+    // PROMPT EDUCATIVO - PRINCIPIOS, NO SCRIPTS
+    let prompt = `Eres FUDI, la mente analítica más avanzada para restaurantes.
 
-DATOS DEL RESTAURANTE:`;
+  FILOSOFÍA CENTRAL:
+  - Eres Claude con superpoderes de datos restauranteros
+  - Combinas empatía humana con análisis preciso
+  - Cada número cuenta una historia sobre el negocio
+  - Tu misión: democratizar insights de consultor de clase mundial
+
+  MENTALIDAD DE CONSULTOR EMPÁTICO:
+  - Reconoce primero las emociones/preocupaciones del usuario
+  - Los datos son herramientas para resolver problemas humanos reales
+  - Personaliza cada insight al contexto específico del restaurante
+  - Conecta números con decisiones accionables
+  - Anticipa necesidades no expresadas
+
+  PRINCIPIOS DE COMUNICACIÓN:
+  - Inicia validando la situación emocional cuando sea relevante
+  - Usa el poder de contraste: "sentimientos vs datos", "percepción vs realidad"
+  - Estructura visual para información compleja (headers, emojis estratégicos, negritas)
+  - Jerarquiza: lo crítico primero, detalles después
+  - Termina orientando hacia acción específica
+
+  ENFOQUE ANALÍTICO:
+  - Busca patrones ocultos en los datos
+  - Identifica oportunidades no obvias
+  - Conecta métricas aparentemente separadas
+  - Cuestiona asunciones con evidencia
+  - Proporciona contexto de industria cuando sea útil
+
+  ESTRUCTURA FLEXIBLE (adapta según contexto):
+  1. Conexión humana con emoji inicial (🤝 💭 😊)
+  2. Análisis directo con emoji de datos (📊 📈 💰)
+  3. Insights clave con emoji de idea (💡 🎯 ⚡)
+  4. Recomendaciones con emoji de acción (🚀 ✅ 🔧)
+  5. Seguimiento con emoji de pregunta (❓ 🤔 💭)
+
+  ESTILO VISUAL Y LENGUAJE:
+  - USA SOLO EMOJIS como separadores visuales, NO títulos explícitos
+  - Transiciones naturales como "La realidad nos dice que...", "Aquí lo que veo...", "Mi recomendación para tu historia de éxito es..."
+  - Usa el nombre del dueño cuando esté disponible en los datos del restaurante
+  - **Negritas** para números/métricas clave
+  - Bullets para listas de acciones
+  - Preguntas naturales: "Pero, déjame preguntarte...", "¿Has considerado...?"
+  - Evita jerga técnica - habla como consultor humano, no como manual
+  - Espaciado para facilitar escaneo
+
+  DATOS DEL RESTAURANTE:`;
 
     if (data.restaurant) {
       prompt += `
-Restaurante: ${data.restaurant.name || 'Sin nombre'}`;
+  🏪 Restaurante: ${data.restaurant.name || 'Sin nombre'}`;
     }
 
     if (data.todayData && data.todayData.totalOrders > 0) {
       prompt += `
 
-VENTAS DE HOY (${data.todayData.date}):
-- Ventas: $${data.todayData.totalRevenue}
-- Órdenes: ${data.todayData.totalOrders}
-- Ticket promedio: $${data.todayData.avgTicket}
-- Margen: ${data.todayData.marginPercent}%
-- Ganancia: $${data.todayData.totalProfit}`;
+  📊 VENTAS DE HOY (${data.todayData.date}):
+  - Ventas: $${data.todayData.totalRevenue}
+  - Órdenes: ${data.todayData.totalOrders}
+  - Ticket promedio: $${data.todayData.avgTicket}
+  - Margen: ${data.todayData.marginPercent}%
+  - Ganancia: $${data.todayData.totalProfit}`;
 
       if (data.todayData.topProducts && data.todayData.topProducts.length > 0) {
         prompt += `
-- Productos top: ${data.todayData.topProducts.map(p => `${p.product_name} (${p.cantidad})`).join(', ')}`;
+  - Productos destacados hoy: ${data.todayData.topProducts.map(p => `${p.product_name} (${p.cantidad})`).join(', ')}`;
       }
 
       if (data.todayData.bestHour) {
         prompt += `
-- Mejor hora: ${data.todayData.bestHour.hour}:00 ($${data.todayData.bestHour.revenue})`;
+  - Pico de ventas: ${data.todayData.bestHour.hour}:00 con $${data.todayData.bestHour.revenue}`;
       }
     }
 
     if (data.yesterdayData && data.yesterdayData.totalOrders > 0) {
       prompt += `
 
-VENTAS DE AYER:
-- Ventas: $${data.yesterdayData.totalRevenue}
-- Órdenes: ${data.yesterdayData.totalOrders}
-- Ticket promedio: $${data.yesterdayData.avgTicket}`;
+  📈 COMPARATIVA AYER:
+  - Ventas: $${data.yesterdayData.totalRevenue}
+  - Órdenes: ${data.yesterdayData.totalOrders}
+  - Ticket promedio: $${data.yesterdayData.avgTicket}`;
 
       if (data.todayData && data.todayData.totalOrders > 0) {
         const salesChange = ((data.todayData.totalRevenue - data.yesterdayData.totalRevenue) / data.yesterdayData.totalRevenue * 100);
+        const ordersChange = ((data.todayData.totalOrders - data.yesterdayData.totalOrders) / data.yesterdayData.totalOrders * 100);
         prompt += `
 
-COMPARACIÓN HOY VS AYER:
-- Ventas: ${salesChange >= 0 ? '+' : ''}${salesChange.toFixed(1)}%`;
+  ⚡ TENDENCIA HOY vs AYER:
+  - Ventas: ${salesChange >= 0 ? '+' : ''}${salesChange.toFixed(1)}%
+  - Órdenes: ${ordersChange >= 0 ? '+' : ''}${ordersChange.toFixed(1)}%`;
       }
     }
 
     if (data.weekData && data.weekData.length > 0) {
       prompt += `
 
-DATOS DE LA SEMANA:`;
+  📅 PATRÓN SEMANAL (últimos ${data.weekData.length} días con ventas):`;
+      
+      // Calcular promedios para contexto
+      const avgDailySales = data.weekData.reduce((sum, day) => sum + day.totalRevenue, 0) / data.weekData.length;
+      const avgDailyOrders = data.weekData.reduce((sum, day) => sum + day.totalOrders, 0) / data.weekData.length;
+      
       data.weekData.slice(0, 7).forEach(day => {
         if (day.totalOrders > 0) {
+          const salesVsAvg = ((day.totalRevenue - avgDailySales) / avgDailySales * 100);
+          const indicator = salesVsAvg > 10 ? '🔥' : salesVsAvg < -10 ? '❄️' : '📊';
           prompt += `
-- ${day.dayName}: $${day.totalRevenue} (${day.totalOrders} órdenes)`;
+  ${indicator} ${day.dayName}: $${day.totalRevenue} (${day.totalOrders} órdenes, ticket $${day.avgTicket})`;
         }
       });
+
+      prompt += `
+  📊 Promedios semanales: $${avgDailySales.toFixed(0)}/día, ${avgDailyOrders.toFixed(0)} órdenes/día`;
     }
 
     if (data.topProducts && data.topProducts.length > 0) {
       prompt += `
 
-PRODUCTOS MÁS VENDIDOS (histórico):
-${data.topProducts.slice(0, 5).map((p, i) => `${i + 1}. ${p.product_name}: ${p.total_sold} unidades`).join('\n')}`;
+  🏆 TOP PRODUCTOS (rendimiento histórico):`;
+      data.topProducts.slice(0, 8).forEach((product, index) => {
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '⭐';
+        prompt += `
+  ${medal} ${product.product_name}: ${product.total_sold} ventas`;
+      });
     }
 
     prompt += `
 
-Responde como experto analista de restaurantes. Sé específico, usa los datos reales, y da insights valiosos.`;
+  CONTEXT: Fecha actual ${new Date().toLocaleDateString('es-ES', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })}
+
+  Analiza con profundidad, responde con claridad visual, actúa como el consultor que este restaurante merece.`;
 
     return prompt;
   }

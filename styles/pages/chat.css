@@ -475,23 +475,95 @@ html, body {
   letter-spacing: 0.3px;
 }
 
-/* ASSISTANT RESPONSE STYLING - DASHBOARD NAVIGATION STYLE */
+/* FIXED ASSISTANT RESPONSE STYLING - SIN UPPERCASE QUE MATA EL FORMATTING */
 .messageCard:not(.messageCardUser) .messageText {
-  color: var(--fudi-text-secondary);
+  color: var(--fudi-text-primary); /* Cambiado de secondary a primary */
   font-size: 1rem;
   font-weight: 500;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  line-height: 1.8;
-  opacity: 0.9;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; /* Mejor font para texto */
+  /* ❌ REMOVIDO: text-transform: uppercase; */
+  letter-spacing: 0.5px; /* Reducido para mejor legibilidad */
+  line-height: 1.6; /* Mejor espaciado */
+  opacity: 1; /* Full opacity */
   transition: all 0.3s ease;
+  white-space: pre-wrap; /* Respeta saltos de línea */
+  word-wrap: break-word; /* Maneja texto largo */
 }
 
 .messageCard:not(.messageCardUser):hover .messageText {
-  color: var(--fudi-secondary);
-  text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  color: var(--fudi-text-primary); /* Mantiene color consistente */
+  /* ❌ REMOVIDO: text-shadow que puede interferir */
   opacity: 1;
+}
+
+/* STYLING PARA ELEMENTOS MARKDOWN DENTRO DEL MENSAJE */
+.messageText h1,
+.messageText h2,
+.messageText h3,
+.messageText h4 {
+  color: var(--fudi-secondary);
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.messageText h2 {
+  font-size: 1.2rem;
+  border-bottom: 1px solid var(--fudi-glass-border);
+  padding-bottom: 0.25rem;
+}
+
+.messageText h3 {
+  font-size: 1.1rem;
+  color: var(--fudi-primary);
+}
+
+.messageText strong {
+  color: var(--fudi-primary);
+  font-weight: 700;
+}
+
+.messageText em {
+  color: var(--fudi-secondary);
+  font-style: italic;
+}
+
+.messageText ul,
+.messageText ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.messageText li {
+  margin: 0.25rem 0;
+  color: var(--fudi-text-primary);
+}
+
+.messageText p {
+  margin: 0.5rem 0;
+}
+
+.messageText code {
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid var(--fudi-glass-border);
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+  font-family: 'Courier New', monospace;
+  color: var(--fudi-secondary);
+}
+
+/* EMOJIS - ASEGURAR QUE SE VEAN BIEN */
+.messageText {
+  /* Soporte para emojis */
+  font-variant-emoji: unicode;
+}
+
+/* SEPARACIÓN VISUAL PARA SECCIONES */
+.messageText > *:first-child {
+  margin-top: 0;
+}
+
+.messageText > *:last-child {
+  margin-bottom: 0;
 }
 
 /* TYPING INDICATOR - NEURAL STYLE */
