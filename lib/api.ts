@@ -90,7 +90,14 @@ class FudiAPI {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: this.getHeaders(),
-        body: JSON.stringify(restaurantData)
+        body: JSON.stringify({
+          name: restaurantData.name,
+          ownerName: restaurantData.ownerName,  
+          email: restaurantData.email,
+          password: restaurantData.password,
+          posType: restaurantData.posType,
+          phoneNumber: restaurantData.phoneNumber
+        })
       });
 
       const data = await response.json();

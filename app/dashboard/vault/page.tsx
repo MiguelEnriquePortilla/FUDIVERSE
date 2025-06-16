@@ -521,6 +521,17 @@ export default function FudiVaultFilofax() {
       <header className="vault-header">
         <div className="header-content">
           <div className="header-left">
+            <button 
+              className="fudi-logo-toggle"
+              onClick={() => toggleFudiPanel()}
+            >
+              <img 
+                src="/images/logo.png" 
+                alt="FUDI Logo" 
+                className="fudi-header-logo"
+              />
+            </button>
+
             <div className="fudi-logo">
               <div>
                 <div className="fudi-title">fudiVAULT</div>
@@ -528,41 +539,41 @@ export default function FudiVaultFilofax() {
               </div>
             </div>
             
-            {/* Navigation Pills */}
-            <nav className="header-navigation">
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/chat')}
-              >
-                fudiGPT
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard')}
-              >
-                fudiBOARD
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/discovery')}
-              >
-                fudiFLOW
-              </button>
-              
-              <button className="nav-pill active">
-                fudiVAULT
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/pos')}
-              >
-                fudiMART
-              </button>
-            </nav>
-          </div>
+          {/* Navigation Pills */}
+          <nav className="header-navigation">
+            <button 
+              className="nav-pill"
+              onClick={() => navigateTo('/dashboard/chat')}
+            >
+              fudiGPT
+            </button>
+            
+            <button 
+              className="nav-pill"
+              onClick={() => navigateTo('/dashboard/board')}
+            >
+              fudiBOARD
+            </button>
+            
+            <button 
+              className="nav-pill"
+              onClick={() => navigateTo('/dashboard/discovery')}
+            >
+              fudiFLOW
+            </button>
+            
+            <button className="nav-pill active">
+              fudiVAULT
+            </button>
+            
+            <button 
+              className="nav-pill"
+              onClick={() => navigateTo('/dashboard/pos')}
+            >
+              fudiMART
+            </button>
+          </nav>
+        </div>
           
           <div className="header-right">
             <div className="live-indicator">

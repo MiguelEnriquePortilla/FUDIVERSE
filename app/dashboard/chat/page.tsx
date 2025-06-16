@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { fudiAPI } from '@/lib/api';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
+import { FudiButton } from '@/components/fudiverse/FudiButton';
 import '@/styles/pages/chat.css';
 
 interface Conversation {
@@ -33,7 +34,9 @@ export default function ChatPage() {
   const [messageCount, setMessageCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  
+  // ✅ NEW: Sidebar State (removed showUserDropdown)
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   // Easter eggs and effects
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([]);
@@ -81,6 +84,23 @@ export default function ChatPage() {
       }
     } catch (error) {
       console.error('Error loading conversations:', error);
+    }
+  };
+
+  // ✅ FIXED: Logout Function - va a página principal
+  const handleLogout = () => {
+    fudiAPI.logout();
+    window.location.href = '/';
+  };
+
+  // ✅ NEW: Switch Conversation
+  const switchConversation = (conversationId: string) => {
+    setCurrentConversationId(conversationId);
+    setMessages([]); // In real app, load messages for this conversation
+    setShowWelcome(false);
+    // Close sidebar on mobile after selection
+    if (window.innerWidth <= 768) {
+      setSidebarOpen(false);
     }
   };
 
@@ -147,7 +167,7 @@ export default function ChatPage() {
           
           setTimeout(() => {
             setParticles(prev => prev.filter(p => p.id !== particle.id));
-          }, 4000);
+          }, i * 150);
         }, i * 150);
       }
     }
@@ -325,10 +345,123 @@ export default function ChatPage() {
         fixed={true}
       />
 
-      {/* Header - Consistent with Other Pages */}
+      {/* ✅ NEW: Sidebar Overlay for Mobile */}
+      <div 
+        className={`sidebar-overlay ${sidebarOpen ? 'sidebar-overlay-open' : ''}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
+      {/* ✅ NEW: Conversations Sidebar */}
+      <aside className={`conversations-sidebar ${sidebarOpen ? 'conversations-sidebar-open' : ''}`}>
+        
+        {/* Sidebar Header */}
+        <div className="sidebar-header">
+          <div className="sidebar-title">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <div>
+              <h2>Conversaciones</h2>
+              <span className="conversations-count">{conversations.length} chats</span>
+            </div>
+          </div>
+          
+          <button 
+            className="sidebar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* New Chat Button */}
+        <button 
+          className="new-chat-button"
+          onClick={startNewConversation}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          Nueva Conversación
+        </button>
+
+        {/* Conversations List */}
+        <div className="conversations-list">
+          {conversations.length === 0 ? (
+            <div className="no-conversations">
+              <p>No hay conversaciones aún</p>
+              <p className="no-conversations-subtitle">Inicia tu primera conversación</p>
+            </div>
+          ) : (
+            conversations.map((conversation) => (
+              <button
+                key={conversation.id}
+                className={`conversation-item ${
+                  currentConversationId === conversation.id ? 'conversation-item-active' : ''
+                }`}
+                onClick={() => switchConversation(conversation.id)}
+              >
+                <div className="conversation-icon">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <div className="conversation-content">
+                  <h3 className="conversation-title">{conversation.title}</h3>
+                  <p className="conversation-preview">{conversation.lastMessage}</p>
+                </div>
+                <div className="conversation-time">
+                  {new Date(conversation.timestamp).toLocaleDateString()}
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+
+        {/* User Section with Logout */}
+        <div className="sidebar-user">
+          <div className="user-info">
+            <div className="user-avatar">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div className="user-details">
+              <div className="user-name">{userData.ownerName}</div>
+              <div className="user-restaurant">{userData.restaurantName}</div>
+            </div>
+          </div>
+          
+          <button 
+            className="logout-button"
+            onClick={handleLogout}
+            title="Cerrar sesión"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          </button>
+        </div>
+      </aside>
+
+      {/* Header - Enhanced with Simple Logout Button */}
       <header className="chat-header">
         <div className="header-content">
           <div className="header-left">
+            {/* ✅ NEW: Mobile Sidebar Toggle */}
+          <button 
+            className="fudi-logo-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <img 
+              src="/images/logo.png" 
+              alt="FUDI Logo" 
+              className="fudi-header-logo"
+            />
+          </button>
+
             <div className="fudi-logo">
               <div>
                 <div className="fudi-title">fudiGPT</div>
@@ -338,16 +471,6 @@ export default function ChatPage() {
             
             {/* Navigation Pills */}
             <nav className="header-navigation">
-              <button 
-                className="nav-pill new-chat-pill"
-                onClick={startNewConversation}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Nuevo Chat
-              </button>
-              
               <button className="nav-pill active">
                 fudiGPT
               </button>
@@ -375,7 +498,7 @@ export default function ChatPage() {
               
               <button 
                 className="nav-pill"
-                onClick={() => navigateTo('/dashboard/pos')}
+                onClick={() => navigateTo('/dashboard/fudiMart')}
               >
                 fudiMART
               </button>
@@ -387,15 +510,30 @@ export default function ChatPage() {
               <div className="live-dot"></div>
               ONLINE
             </div>
-            <div className="restaurant-greeting">
-              {userData.restaurantName}
+            
+            {/* ✅ SIMPLIFIED: Restaurant Name + Logout Button */}
+            <div className="header-user-section">
+              <span className="restaurant-name">{userData.restaurantName}</span>
+              <FudiButton
+                variant="danger"
+                size="small"
+                onClick={handleLogout}
+                icon={
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                }
+                iconPosition="left"
+              >
+                Cerrar sesión
+              </FudiButton>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Chat Area */}
-      <main className="chat-main">
+      {/* Main Chat Area - Adjusted for Sidebar */}
+      <main className={`chat-main ${sidebarOpen ? 'chat-main-with-sidebar' : ''}`}>
         <div className="messages-area">
           {showWelcome && messages.length === 0 ? (
             // Welcome Screen
@@ -490,7 +628,7 @@ export default function ChatPage() {
 
         {/* Input Area */}
         <div className="input-area">
-          <form onSubmit={handleSendMessage} className="input-container">
+          <div className="input-container">
             <div className="floating-input">
               {/* Custom Placeholder */}
               <div className={`input-placeholder ${inputMessage ? 'hidden' : ''}`}>
@@ -538,7 +676,7 @@ export default function ChatPage() {
                 </button>
               </div>
             </div>
-          </form>
+          </div>
           
           <p className="input-disclaimer">
             fudiGPT puede cometer errores. Verifica información importante.

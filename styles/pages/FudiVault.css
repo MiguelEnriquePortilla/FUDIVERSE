@@ -83,6 +83,20 @@ html, body {
 /* =============================================
    HEADER - EXACT FROM DASHBOARD
    ============================================= */
+
+.fudi-header-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.fudi-logo-toggle:hover .fudi-header-logo {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));
+}
+
+
 .vault-header {
   position: fixed;
   top: 0;

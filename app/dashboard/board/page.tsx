@@ -987,6 +987,10 @@ export default function FudiBoardDashboard() {
     );
   }
 
+  function setSidebarOpen(arg0: boolean): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <div className="board-container">
       {/* Single Clean Background */}
@@ -1002,6 +1006,17 @@ export default function FudiBoardDashboard() {
       <header className="board-header">
         <div className="header-content">
           <div className="header-left">
+            <button 
+              className="fudi-logo-toggle"
+              onClick={() => setSidebarOpen(!setSidebarOpen)}
+            >
+              <img 
+                src="/images/logo.png" 
+                alt="FUDI Logo" 
+                className="fudi-header-logo"
+              />
+            </button>
+
             <div className="fudi-logo">
               <div>
                 <div className="fudi-title">fudiBOARD</div>

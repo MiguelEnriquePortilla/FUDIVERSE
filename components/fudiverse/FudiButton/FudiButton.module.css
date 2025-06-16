@@ -177,6 +177,35 @@
 }
 
 /* ========================================
+   VARIANT: DANGER - LOGOUT STYLE
+   ======================================== */
+.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444; /* Rojo FUDI */
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(10px);
+}
+
+.danger:hover:not(.disabled) {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #fecaca; /* Rojo más claro al hover */
+  transform: translateY(-1px);
+  box-shadow: 
+    0 0 20px rgba(239, 68, 68, 0.3),
+    0 4px 16px rgba(239, 68, 68, 0.2),
+    inset 0 0 12px rgba(239, 68, 68, 0.1);
+}
+
+.danger:active:not(.disabled) {
+  transform: translateY(0px);
+  box-shadow: 
+    0 0 15px rgba(239, 68, 68, 0.4),
+    0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* ========================================
    VARIANT: QUANTUM - MANTENEMOS ORIGINAL
    ======================================== */
 .quantum {

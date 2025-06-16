@@ -9,6 +9,9 @@ import {
   Eye, Users, DollarSign, Target, Award, ThumbsUp
 } from 'lucide-react';
 
+// Import CSS
+import '../../../styles/pages/FudiDiscovery.css';
+
 // CONTENT GENERATORS - IRRESISTIBLE FOOD POSTS
 const generateFoodPosts = () => {
   const posts = [
@@ -324,25 +327,10 @@ export default function FudiFlowRevolution() {
 
   if (loading) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(180deg, #000 0%, #111 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'white'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: '60px',
-            height: '60px',
-            border: '3px solid rgba(255,255,255,0.1)',
-            borderTop: '3px solid #ff6b6b',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto 2rem'
-          }} />
-          <h2 style={{ color: '#ff6b6b', fontSize: '1.2rem', fontWeight: '600' }}>
+      <div className="loading-container">
+        <div className="loading-content">
+          <div className="loading-spinner" />
+          <h2 className="loading-text">
             Cargando experiencias deliciosas...
           </h2>
         </div>
@@ -351,953 +339,285 @@ export default function FudiFlowRevolution() {
   }
 
   return (
-    <>
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes heartPulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.3); }
-          100% { transform: scale(1); }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-10px); }
-        }
-        .heart-liked {
-          animation: heartPulse 0.6s ease;
-          color: #ff3040 !important;
-        }
-        .post-card {
-          animation: fadeInUp 0.5s ease;
-        }
-        .floating-button {
-          animation: float 3s ease-in-out infinite;
-        }
-      `}</style>
-
-      <div style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(180deg, #000 0%, #111 50%, #000 100%)',
-        color: 'white',
-        fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        
-        {/* Header con Navigation */}
-        <header style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-          background: 'rgba(0, 0, 0, 0.9)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          padding: '1rem 0'
-        }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            maxWidth: '500px',
-            margin: '0 auto',
-            padding: '0 1.5rem'
-          }}>
-            {/* Logo */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}>
-              <div style={{
-                fontSize: '1.5rem',
-                fontWeight: '900',
-                background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}>
-                fudiFLOW
-              </div>
-              <div style={{
-                background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
-                color: 'white',
-                fontSize: '0.7rem',
-                padding: '0.2rem 0.6rem',
-                borderRadius: '12px',
-                fontWeight: '700',
-                letterSpacing: '1px'
-              }}>
-                BETA
+    <div className="fudiflow-container">
+      
+      {/* Header con Navigation - Igual al Chat */}
+      <header className="fudiflow-header">
+        <div className="header-content">
+          <div className="header-left">
+            <div className="fudi-logo">
+              <img 
+                src="/images/logo.png" 
+                alt="FUDI Logo" 
+                className="fudi-header-logo"
+              />
+              <div>
+                <div className="fudi-title">fudiFLOW</div>
+                <div className="fudi-subtitle">Tu red social food</div>
               </div>
             </div>
-
-            {/* Navigation Pills */}
-            <nav style={{
-              display: 'flex',
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
-              padding: '0.3rem',
-              gap: '0.3rem'
-            }}>
-              <button
+            
+            {/* Navigation Pills - Igual al Chat */}
+            <nav className="header-navigation">
+              <button 
+                className="nav-pill"
                 onClick={() => window.location.href = '/dashboard/chat'}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderRadius: '16px',
-                  padding: '0.6rem 1.2rem',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = 'rgba(255, 107, 107, 0.2)';
-                  e.target.style.color = '#ff6b6b';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = 'rgba(255, 255, 255, 0.7)';
-                }}
               >
                 fudiGPT
               </button>
               
-              <button
-                onClick={() => window.location.href = '/dashboard'}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderRadius: '16px',
-                  padding: '0.6rem 1.2rem',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = 'rgba(255, 107, 107, 0.2)';
-                  e.target.style.color = '#ff6b6b';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = 'rgba(255, 255, 255, 0.7)';
-                }}
+              <button 
+                className="nav-pill"
+                onClick={() => window.location.href = '/dashboard/board'}
               >
                 fudiBOARD
               </button>
               
-              <button
-                style={{
-                  background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
-                  border: 'none',
-                  borderRadius: '16px',
-                  padding: '0.6rem 1.2rem',
-                  color: 'white',
-                  fontSize: '0.8rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  boxShadow: '0 0 20px rgba(255, 107, 107, 0.4)'
-                }}
-              >
+              <button className="nav-pill active">
                 fudiFLOW
               </button>
+              
+              <button 
+                className="nav-pill"
+                onClick={() => window.location.href = '/dashboard/vault'}
+              >
+                fudiVAULT
+              </button>
+              
+              <button 
+                className="nav-pill"
+                onClick={() => window.location.href = '/dashboard/fudiMart'}
+              >
+                fudiMART
+              </button>
             </nav>
-
-            {/* Coming Soon Badge */}
-            <div style={{
-              background: 'rgba(255, 193, 7, 0.2)',
-              border: '1px solid rgba(255, 193, 7, 0.5)',
-              borderRadius: '12px',
-              padding: '0.4rem 0.8rem',
-              fontSize: '0.7rem',
-              fontWeight: '700',
-              color: '#ffc107',
-              letterSpacing: '1px'
-            }}>
+          </div>
+          
+          <div className="header-right">
+            <div className="live-indicator">
+              <div className="live-dot"></div>
+              BETA
+            </div>
+            
+            <div className="coming-soon-badge">
               PRÓXIMAMENTE
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {/* Mobile Feed Container */}
-        <div 
-          ref={feedRef}
-          style={{
-            marginTop: '80px',
-            height: 'calc(100vh - 80px)',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            scrollBehavior: 'smooth',
-            WebkitOverflowScrolling: 'touch',
-            maxWidth: '500px',
-            margin: '80px auto 0',
-            position: 'relative'
-          }}
-        >
-          {/* Tab Navigation */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            padding: '1rem',
-            position: 'sticky',
-            top: 0,
-            background: 'rgba(0, 0, 0, 0.9)',
-            backdropFilter: 'blur(10px)',
-            zIndex: 100,
-            marginBottom: '1rem'
-          }}>
-            <div style={{
-              display: 'flex',
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
-              padding: '0.3rem'
-            }}>
-              {[
-                { id: 'foryou', label: 'Para Ti', icon: '🔥' },
-                { id: 'trending', label: 'Trending', icon: '📈' },
-                { id: 'following', label: 'Siguiendo', icon: '👥' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  style={{
-                    background: activeTab === tab.id 
-                      ? 'linear-gradient(135deg, #ff6b6b, #ffa726)' 
-                      : 'transparent',
-                    border: 'none',
-                    borderRadius: '16px',
-                    padding: '0.7rem 1.2rem',
-                    color: 'white',
-                    fontSize: '0.8rem',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    boxShadow: activeTab === tab.id ? '0 0 20px rgba(255, 107, 107, 0.4)' : 'none'
-                  }}
-                >
-                  <span>{tab.icon}</span>
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Posts Feed */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.5rem',
-            paddingBottom: '2rem'
-          }}>
-            
-            {/* COMING SOON BANNER STICKY - DENTRO DEL FEED */}
-            <div style={{
-              position: 'sticky',
-              top: '140px',
-              zIndex: 500,
-              width: '100%',
-              background: 'linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 167, 38, 0.95))',
-              backdropFilter: 'blur(20px)',
-              padding: '2rem',
-              borderRadius: '20px',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              boxShadow: '0 8px 32px rgba(255, 107, 107, 0.4)',
-              animation: 'fadeInUp 0.6s ease',
-              margin: '1rem 1rem 2rem',
-              transform: 'translateZ(0)', // Hardware acceleration
-              willChange: 'transform'
-            }}>
-              <div style={{
-                textAlign: 'center',
-                color: 'white'
-              }}>
-                {/* Header con emoji animado */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '1rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  <div style={{
-                    fontSize: '2rem',
-                    fontWeight: '900',
-                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
-                    animation: 'float 3s ease-in-out infinite'
-                  }}>
-                    🚀 PRÓXIMAMENTE
-                  </div>
-                </div>
-
-                {/* Main Value Prop */}
-                <h2 style={{
-                  fontSize: '1.4rem',
-                  fontWeight: '800',
-                  marginBottom: '1rem',
-                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
-                  lineHeight: '1.3'
-                }}>
-                  La red social QUE SÍ te interesa
-                </h2>
-
-                <p style={{
-                  fontSize: '1.1rem',
-                  marginBottom: '1.5rem',
-                  lineHeight: '1.4',
-                  opacity: 0.95
-                }}>
-                  <strong>¿Cansado del ruido en otras redes?</strong><br/>
-                  Aquí SOLO ves restaurantes, chefs y food lovers.<br/>
-                  <strong>Punto.</strong>
-                </p>
-
-                {/* Features Grid compacto */}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                  gap: '0.8rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.15)',
-                    borderRadius: '12px',
-                    padding: '0.8rem',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'transform 0.3s ease'
-                  }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>🍔</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>Solo Food Content</div>
-                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Sin distracciones</div>
-                  </div>
-                  
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.15)',
-                    borderRadius: '12px',
-                    padding: '0.8rem',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'transform 0.3s ease'
-                  }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>🧠</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>FUDIVERSE.Ai</div>
-                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Algoritmo inteligente</div>
-                  </div>
-                  
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.15)',
-                    borderRadius: '12px',
-                    padding: '0.8rem',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'transform 0.3s ease'
-                  }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>⚡</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>TikTok Vibes</div>
-                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Scroll adictivo</div>
-                  </div>
-                  
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.15)',
-                    borderRadius: '12px',
-                    padding: '0.8rem',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'transform 0.3s ease'
-                  }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>🎯</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>Zero Ruido</div>
-                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Solo lo que importa</div>
-                  </div>
-                </div>
-
-                {/* FUDIVERSE Connection compacto */}
-                <div style={{
-                  background: 'rgba(0, 0, 0, 0.3)',
-                  borderRadius: '16px',
-                  padding: '1.2rem',
-                  marginBottom: '1.2rem',
-                  border: '1px solid rgba(255, 255, 255, 0.2)'
-                }}>
-                  <h3 style={{
-                    fontSize: '1rem',
-                    fontWeight: '700',
-                    marginBottom: '0.6rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem'
-                  }}>
-                    🤖 Powered by FUDIVERSE.Ai
-                  </h3>
-                  <p style={{
-                    fontSize: '0.9rem',
-                    lineHeight: '1.4',
-                    opacity: 0.9
-                  }}>
-                    Tu feed será <strong>inteligentemente curado</strong> con contenido que SÍ te interesa: 
-                    tendencias, técnicas, ingredientes, negocios y todo el ecosistema food.
-                  </p>
-                </div>
-
-                {/* Call to Action */}
-                <button
-                  onClick={() => window.location.href = '/dashboard/chat'}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.9)',
-                    color: '#000',
-                    border: 'none',
-                    borderRadius: '12px',
-                    padding: '1rem 2rem',
-                    fontWeight: '700',
-                    fontSize: '0.9rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    textTransform: 'uppercase',
-                    letterSpacing: '1px',
-                    width: '100%',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background = 'white';
-                    e.target.style.transform = 'scale(1.02)';
-                    e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background = 'rgba(255, 255, 255, 0.9)';
-                    e.target.style.transform = 'scale(1)';
-                    e.target.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
-                  }}
-                >
-                  Pregúntale a FUDI cuándo estará listo
-                </button>
-              </div>
-            </div>
-
-            {posts.map((post, index) => (
-              <div
-                key={post.id}
-                className="post-card"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '0',
-                  position: 'relative',
-                  minHeight: '100vh',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  border: '1px solid rgba(255, 255, 255, 0.05)',
-                  overflow: 'hidden'
-                }}
+      {/* Feed Principal - CLEAN */}
+      <div ref={feedRef} className="feed-container">
+        
+        {/* Tab Navigation */}
+        <div className="tab-navigation">
+          <div className="tab-container">
+            {[
+              { id: 'foryou', label: 'Para Ti', icon: '🔥' },
+              { id: 'trending', label: 'Trending', icon: '📈' },
+              { id: 'following', label: 'Siguiendo', icon: '👥' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
               >
-                {/* Media Container */}
-                <div style={{
-                  position: 'relative',
-                  flex: 1,
-                  background: `url(${post.media.url})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  minHeight: '60vh',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between'
-                }}>
-                  
-                  {/* Gradient Overlay */}
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.8) 100%)',
-                    zIndex: 1
-                  }} />
-
-                  {/* Top Content */}
-                  <div style={{
-                    position: 'relative',
-                    zIndex: 2,
-                    padding: '1.5rem',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start'
-                  }}>
-                    {/* Author Info */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.75rem',
-                      background: 'rgba(0, 0, 0, 0.5)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: '20px',
-                      padding: '0.75rem 1rem'
-                    }}>
-                      <div style={{
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.2rem',
-                        fontWeight: '700',
-                        border: '2px solid rgba(255, 255, 255, 0.3)'
-                      }}>
-                        {post.author.avatar}
-                      </div>
-                      <div>
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem'
-                        }}>
-                          <span style={{
-                            fontWeight: '700',
-                            fontSize: '0.9rem'
-                          }}>
-                            {post.author.name}
-                          </span>
-                          {post.author.verified && (
-                            <div style={{
-                              background: '#1da1f2',
-                              borderRadius: '50%',
-                              width: '16px',
-                              height: '16px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '10px'
-                            }}>
-                              ✓
-                            </div>
-                          )}
-                        </div>
-                        <div style={{
-                          fontSize: '0.75rem',
-                          color: 'rgba(255, 255, 255, 0.8)'
-                        }}>
-                          {post.author.followers} seguidores
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* More Options */}
-                    <button style={{
-                      background: 'rgba(0, 0, 0, 0.5)',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '40px',
-                      height: '40px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      cursor: 'pointer',
-                      backdropFilter: 'blur(10px)'
-                    }}>
-                      <MoreVertical size={20} />
-                    </button>
-                  </div>
-
-                  {/* Video Play Button */}
-                  {post.media.type === 'video' && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      zIndex: 2
-                    }}>
-                      <button
-                        onClick={() => handleVideoPlay(post.id)}
-                        style={{
-                          background: 'rgba(0, 0, 0, 0.7)',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: '80px',
-                          height: '80px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'white',
-                          cursor: 'pointer',
-                          backdropFilter: 'blur(10px)',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.transform = 'scale(1.1)';
-                          e.target.style.background = 'rgba(255, 107, 107, 0.8)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.transform = 'scale(1)';
-                          e.target.style.background = 'rgba(0, 0, 0, 0.7)';
-                        }}
-                      >
-                        {playingVideo === post.id ? <Pause size={32} /> : <Play size={32} />}
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Bottom Content */}
-                  <div style={{
-                    position: 'relative',
-                    zIndex: 2,
-                    padding: '1.5rem'
-                  }}>
-                    {/* Location & Time */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      marginBottom: '1rem',
-                      fontSize: '0.8rem',
-                      color: 'rgba(255, 255, 255, 0.8)'
-                    }}>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.3rem'
-                      }}>
-                        <MapPin size={14} />
-                        {post.location}
-                      </div>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.3rem'
-                      }}>
-                        <Clock size={14} />
-                        {post.timestamp}
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <p style={{
-                      fontSize: '1.1rem',
-                      lineHeight: '1.4',
-                      margin: '0 0 1rem',
-                      fontWeight: '500'
-                    }}>
-                      {post.content}
-                    </p>
-
-                    {/* Tags */}
-                    <div style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: '0.5rem',
-                      marginBottom: '1.5rem'
-                    }}>
-                      {post.tags.map((tag, i) => (
-                        <span
-                          key={i}
-                          style={{
-                            background: 'rgba(255, 107, 107, 0.2)',
-                            color: '#ff6b6b',
-                            padding: '0.3rem 0.8rem',
-                            borderRadius: '12px',
-                            fontSize: '0.8rem',
-                            fontWeight: '600',
-                            border: '1px solid rgba(255, 107, 107, 0.3)'
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Music/Audio Info */}
-                    {post.music && (
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        background: 'rgba(0, 0, 0, 0.5)',
-                        borderRadius: '16px',
-                        padding: '0.75rem 1rem',
-                        marginBottom: '1rem',
-                        backdropFilter: 'blur(10px)'
-                      }}>
-                        <Mic size={16} />
-                        <span style={{ fontSize: '0.8rem' }}>{post.music}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Actions Bar */}
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '1.5rem',
-                  background: 'rgba(0, 0, 0, 0.9)',
-                  backdropFilter: 'blur(20px)',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.1)'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    gap: '2rem'
-                  }}>
-                    <button
-                      onClick={() => handleLike(post.id)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        color: post.liked ? '#ff3040' : 'rgba(255, 255, 255, 0.8)',
-                        cursor: 'pointer',
-                        fontSize: '0.9rem',
-                        fontWeight: '600',
-                        transition: 'all 0.3s ease'
-                      }}
-                      className={post.liked ? 'heart-liked' : ''}
-                    >
-                      <Heart size={24} fill={post.liked ? '#ff3040' : 'none'} />
-                      {formatNumber(post.stats.likes)}
-                    </button>
-
-                    <button style={{
-                      background: 'none',
-                      border: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      color: 'rgba(255, 255, 255, 0.8)',
-                      cursor: 'pointer',
-                      fontSize: '0.9rem',
-                      fontWeight: '600'
-                    }}>
-                      <MessageCircle size={24} />
-                      {formatNumber(post.stats.comments)}
-                    </button>
-
-                    <button
-                      onClick={() => handleShare(post.id)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        color: 'rgba(255, 255, 255, 0.8)',
-                        cursor: 'pointer',
-                        fontSize: '0.9rem',
-                        fontWeight: '600'
-                      }}
-                    >
-                      <Share2 size={24} />
-                      {formatNumber(post.stats.shares)}
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={() => handleSave(post.id)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: post.saved ? '#ffa726' : 'rgba(255, 255, 255, 0.8)',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    <Bookmark size={24} fill={post.saved ? '#ffa726' : 'none'} />
-                  </button>
-                </div>
-
-                {/* Special Features */}
-                {post.promotion && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '20px',
-                    right: '20px',
-                    background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
-                    borderRadius: '12px',
-                    padding: '0.75rem 1rem',
-                    zIndex: 3,
-                    boxShadow: '0 8px 25px rgba(255, 107, 107, 0.4)'
-                  }}>
-                    <div style={{
-                      fontWeight: '700',
-                      fontSize: '0.9rem',
-                      marginBottom: '0.25rem'
-                    }}>
-                      {post.promotion.text}
-                    </div>
-                    <div style={{
-                      fontSize: '0.7rem',
-                      opacity: 0.9
-                    }}>
-                      {post.promotion.cta}
-                    </div>
-                  </div>
-                )}
-
-                {post.trending && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '20px',
-                    left: '20px',
-                    background: 'rgba(255, 107, 107, 0.9)',
-                    borderRadius: '20px',
-                    padding: '0.5rem 1rem',
-                    zIndex: 3,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    fontSize: '0.8rem',
-                    fontWeight: '700'
-                  }}>
-                    <Flame size={16} />
-                    TRENDING
-                  </div>
-                )}
-              </div>
+                <span>{tab.icon}</span>
+                {tab.label}
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Floating Create Button */}
-        <button
-          onClick={() => setShowComposer(true)}
-          className="floating-button"
-          style={{
-            position: 'fixed',
-            bottom: '30px',
-            right: '30px',
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            cursor: 'pointer',
-            boxShadow: '0 8px 25px rgba(255, 107, 107, 0.4)',
-            transition: 'all 0.3s ease',
-            zIndex: 1000
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transform = 'scale(1.1)';
-            e.target.style.boxShadow = '0 12px 35px rgba(255, 107, 107, 0.6)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'scale(1)';
-            e.target.style.boxShadow = '0 8px 25px rgba(255, 107, 107, 0.4)';
-          }}
-        >
-          <Plus size={28} />
-        </button>
+        {/* Posts Feed - PURO */}
+        <div className="posts-feed">
 
-        {/* Simple Composer Modal */}
-        {showComposer && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.9)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 2000,
-            padding: '2rem'
-          }}>
-            <div style={{
-              background: 'rgba(0, 0, 0, 0.95)',
-              borderRadius: '20px',
-              padding: '2rem',
-              maxWidth: '500px',
-              width: '100%',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
-            }}>
-              <h3 style={{
-                marginBottom: '1.5rem',
-                fontSize: '1.2rem',
-                fontWeight: '700'
-              }}>
-                Comparte tu platillo 🍽️
-              </h3>
+          {posts.map((post, index) => (
+            <div key={post.id} className="post-card">
               
-              <textarea
-                value={composerText}
-                onChange={(e) => setComposerText(e.target.value)}
-                placeholder="¿Qué delicia estás preparando hoy?"
-                style={{
-                  width: '100%',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '12px',
-                  padding: '1rem',
-                  color: 'white',
-                  fontSize: '1rem',
-                  resize: 'none',
-                  minHeight: '120px',
-                  marginBottom: '1.5rem'
-                }}
-              />
+              {/* Media Container */}
+              <div 
+                className="post-media"
+                style={{ backgroundImage: `url(${post.media.url})` }}
+              >
+                
+                {/* Gradient Overlay */}
+                <div className="media-overlay" />
 
-              <div style={{
-                display: 'flex',
-                gap: '1rem',
-                justifyContent: 'flex-end'
-              }}>
+                {/* Top Content */}
+                <div className="post-header">
+                  {/* Author Info */}
+                  <div className="author-info">
+                    <div className="author-avatar">
+                      {post.author.avatar}
+                    </div>
+                    <div className="author-details">
+                      <h4>
+                        {post.author.name}
+                        {post.author.verified && (
+                          <div className="verified-badge">
+                            ✓
+                          </div>
+                        )}
+                      </h4>
+                      <div className="author-followers">
+                        {post.author.followers} seguidores
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* More Options */}
+                  <button className="more-button">
+                    <MoreVertical size={20} />
+                  </button>
+                </div>
+
+                {/* Video Play Button */}
+                {post.media.type === 'video' && (
+                  <div className="video-play-container">
+                    <button
+                      onClick={() => handleVideoPlay(post.id)}
+                      className="video-play-button"
+                    >
+                      {playingVideo === post.id ? <Pause size={32} /> : <Play size={32} />}
+                    </button>
+                  </div>
+                )}
+
+                {/* Bottom Content */}
+                <div className="post-content">
+                  {/* Location & Time */}
+                  <div className="post-meta">
+                    <div className="meta-item">
+                      <MapPin size={14} />
+                      {post.location}
+                    </div>
+                    <div className="meta-item">
+                      <Clock size={14} />
+                      {post.timestamp}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <p className="post-text">
+                    {post.content}
+                  </p>
+
+                  {/* Tags */}
+                  <div className="post-tags">
+                    {post.tags.map((tag, i) => (
+                      <span key={i} className="tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Music/Audio Info */}
+                  {post.music && (
+                    <div className="music-info">
+                      <Mic size={16} />
+                      <span className="music-text">{post.music}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions Bar */}
+              <div className="actions-bar">
+                <div className="actions-left">
+                  <button
+                    onClick={() => handleLike(post.id)}
+                    className={`action-button ${post.liked ? 'liked' : ''}`}
+                  >
+                    <Heart size={24} fill={post.liked ? '#ff3040' : 'none'} />
+                    {formatNumber(post.stats.likes)}
+                  </button>
+
+                  <button className="action-button">
+                    <MessageCircle size={24} />
+                    {formatNumber(post.stats.comments)}
+                  </button>
+
+                  <button
+                    onClick={() => handleShare(post.id)}
+                    className="action-button"
+                  >
+                    <Share2 size={24} />
+                    {formatNumber(post.stats.shares)}
+                  </button>
+                </div>
+
                 <button
-                  onClick={() => setShowComposer(false)}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: 'none',
-                    borderRadius: '12px',
-                    padding: '0.75rem 1.5rem',
-                    color: 'white',
-                    cursor: 'pointer'
-                  }}
+                  onClick={() => handleSave(post.id)}
+                  className={`action-button ${post.saved ? 'saved' : ''}`}
                 >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handlePost}
-                  style={{
-                    background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
-                    border: 'none',
-                    borderRadius: '12px',
-                    padding: '0.75rem 1.5rem',
-                    color: 'white',
-                    cursor: 'pointer',
-                    fontWeight: '600'
-                  }}
-                >
-                  Publicar
+                  <Bookmark size={24} fill={post.saved ? '#ffa726' : 'none'} />
                 </button>
               </div>
+
+              {/* Special Features */}
+              {post.promotion && (
+                <div className="promotion-badge">
+                  <div className="promotion-text">
+                    {post.promotion.text}
+                  </div>
+                  <div className="promotion-cta">
+                    {post.promotion.cta}
+                  </div>
+                </div>
+              )}
+
+              {post.trending && (
+                <div className="trending-badge">
+                  <Flame size={16} />
+                  TRENDING
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Floating Create Button */}
+      <button
+        onClick={() => setShowComposer(true)}
+        className="floating-create-button"
+      >
+        <Plus size={28} />
+      </button>
+
+      {/* Simple Composer Modal */}
+      {showComposer && (
+        <div className="composer-modal">
+          <div className="composer-content">
+            <h3 className="composer-title">
+              Comparte tu platillo 🍽️
+            </h3>
+            
+            <textarea
+              value={composerText}
+              onChange={(e) => setComposerText(e.target.value)}
+              placeholder="¿Qué delicia estás preparando hoy?"
+              className="composer-textarea"
+            />
+
+            <div className="composer-actions">
+              <button
+                onClick={() => setShowComposer(false)}
+                className="composer-button cancel"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handlePost}
+                className="composer-button publish"
+              >
+                Publicar
+              </button>
             </div>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 }

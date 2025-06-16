@@ -145,11 +145,11 @@ html, body {
   gap: 2rem;
 }
 
-.fudi-logo {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+.fudi-header-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: all 0.3s ease;
 }
 
 .fudi-title {

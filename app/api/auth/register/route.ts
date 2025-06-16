@@ -10,7 +10,7 @@ const supabase = createClient(
 export async function POST(request: NextRequest) {
   try {
     const { 
-      restaurantName, 
+      name,
       ownerName, 
       email, 
       password, 
@@ -18,54 +18,54 @@ export async function POST(request: NextRequest) {
       phoneNumber 
     } = await request.json();
 
-    // 🔒 TESTING MODE: Todos usan el mismo restaurant_id
     const SHARED_RESTAURANT_ID = "13207c90-2ea6-4aa0-bfac-349753d24ea4";
-
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Crear/actualizar restaurante en testing mode
-      const { error: restaurantError } = await supabase
-        .from('restaurants')
-        .upsert({
-          id: SHARED_RESTAURANT_ID,
-          name: restaurantName,
-          owner_name: ownerName,
-          email: email.toLowerCase(),
-          phone: phoneNumber,
-          pos_type: posType,
-          updated_at: new Date().toISOString()
-        });
+    // Preservar "Chicken Chicanito" - solo actualizar datos del usuario
+    const { error: restaurantError } = await supabase
+      .from('restaurants')
+      .update({
+        name: name,
+        owner_name: ownerName,
+        email: email.toLowerCase(),
+        phone: phoneNumber,
+        pos_type: posType,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', SHARED_RESTAURANT_ID);
 
-      // Crear usuario
-      const { data: user, error } = await supabase
-        .from('restaurant_owners')
-        .insert({
-          email: email.toLowerCase(),
-          name: ownerName,
-          created_at: new Date().toISOString()
-        })
-        .select('id')
-        .single();
-
-    if (error) {
-      return NextResponse.json({ error: 'Error al crear cuenta' }, { status: 500 });
+    if (restaurantError) {
+      console.error('Restaurant error:', restaurantError);
+      return NextResponse.json({ error: 'Error al crear restaurante' }, { status: 500 });
     }
 
-    // Obtener restaurant name
+    const { data: user, error: userError } = await supabase
+      .from('restaurant_owners')
+      .insert({
+        email: email.toLowerCase(),
+        name: ownerName,
+        created_at: new Date().toISOString()
+      })
+      .select('id')
+      .single();
+
+    if (userError) {
+      console.error('User error:', userError);
+      return NextResponse.json({ error: 'Error al crear usuario' }, { status: 500 });
+    }
+
     const { data: restaurant } = await supabase
       .from('restaurants')
       .select('name, owner_name')
       .eq('id', SHARED_RESTAURANT_ID)
       .single();
 
-    // Token completo
     const token = Buffer.from(JSON.stringify({
       userId: user.id,
       restaurantId: SHARED_RESTAURANT_ID,
       email: email,
-      restaurantName: restaurant?.name || 'Mi Restaurante',
-      ownerName: restaurant?.owner_name || ownerName || 'Usuario'
+      restaurantName: restaurant?.name || 'Chicken Chicanito',
+      ownerName: restaurant?.owner_name || ownerName
     })).toString('base64');
 
     return NextResponse.json({
@@ -75,6 +75,9 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
+    console.error('Register error:', error);
+    return NextResponse.json({ 
+      error: 'Error interno del servidor'
+    }, { status: 500 });
   }
 }
