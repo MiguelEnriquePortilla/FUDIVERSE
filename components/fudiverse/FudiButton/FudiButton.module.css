@@ -1,12 +1,13 @@
 /* components/fudiverse/FudiButton/FudiButton.module.css */
+/* PREMIUM BUSINESS VERSION */
 
 .fudiButton {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Courier New', monospace;
-  font-weight: 700;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; /* Más profesional */
+  font-weight: 600; /* Menos agresivo que 700 */
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border: none;
@@ -57,32 +58,34 @@
   transform: none;
 }
 
-/* Variant: Primary */
+/* ========================================
+   VARIANT: PRIMARY - BUSINESS BLUE
+   ======================================== */
 .primary {
-  background: rgba(251, 191, 36, 0.1); /* Casi transparente */
-  color: rgba(251, 191, 36, 0.8); /* Amarillo seco */
-  border: 1px solid rgba(251, 191, 36, 0.3); /* Borde sutil */
+  background: rgba(30, 64, 175, 0.1); /* Business blue sutil */
+  color: rgba(30, 64, 175, 0.9); /* Business blue texto */
+  border: 1px solid rgba(30, 64, 175, 0.3); /* Borde sutil */
   box-shadow: none; /* Sin sombra inicial */
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .primary:hover:not(.disabled) {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); /* Se PRENDE */
-  color: #000; /* Texto negro para contraste */
-  border-color: #fbbf24;
-  transform: translateY(-2px) scale(1.05); /* Sube y crece */
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); /* Se activa en azul */
+  color: #ffffff; /* Texto blanco para contraste */
+  border-color: #1e40af;
+  transform: translateY(-2px) scale(1.02); /* Sube sutilmente */
   box-shadow: 
-    0 0 30px rgba(251, 191, 36, 0.8), /* Resplandor externo */
-    0 0 50px rgba(251, 191, 36, 0.5),
-    0 10px 40px rgba(251, 191, 36, 0.4),
-    inset 0 0 20px rgba(255, 255, 255, 0.3); /* Brillo interno */
+    0 0 25px rgba(30, 64, 175, 0.6), /* Resplandor azul */
+    0 0 40px rgba(30, 64, 175, 0.4),
+    0 8px 32px rgba(30, 64, 175, 0.3),
+    inset 0 0 15px rgba(255, 255, 255, 0.2); /* Brillo interno */
 }
 
 .primary::before {
   content: '';
   position: absolute;
   inset: -3px;
-  background: linear-gradient(45deg, #fbbf24, #ffed4e, #f59e0b, #fbbf24);
+  background: linear-gradient(45deg, #1e40af, #3b82f6, #2563eb, #1e40af);
   background-size: 400% 400%;
   border-radius: 8px;
   opacity: 0;
@@ -102,7 +105,7 @@
     filter: blur(10px) hue-rotate(0deg);
   }
   50% {
-    filter: blur(12px) hue-rotate(10deg);
+    filter: blur(12px) hue-rotate(5deg); /* Menos hue rotation */
   }
   100% { 
     background-position: 100% 50%;
@@ -110,49 +113,50 @@
   }
 }
 
-@keyframes primaryGlow {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
-}
-
-/* Variant: Secondary */
+/* ========================================
+   VARIANT: SECONDARY - PREMIUM GOLD ACCENT
+   ======================================== */
 .secondary {
-  background: rgba(0, 255, 255, 0.1);
-  color: #00ffff;
-  border: 2px solid #00ffff;
-  box-shadow: 
-    0 0 20px rgba(0, 255, 255, 0.3),
-    inset 0 0 20px rgba(0, 255, 255, 0.1);
+  background: rgba(212, 175, 55, 0.08); /* Gold muy sutil */
+  color: #d4af37; /* Premium gold */
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: none;
+  transition: all 0.3s ease;
 }
 
 .secondary:hover:not(.disabled) {
-  background: rgba(0, 255, 255, 0.2);
-  transform: translateY(-2px);
+  background: rgba(212, 175, 55, 0.15);
+  color: #f1f5f9; /* Texto claro */
+  border-color: #d4af37;
+  transform: translateY(-1px);
   box-shadow: 
-    0 0 30px rgba(0, 255, 255, 0.5),
-    inset 0 0 30px rgba(0, 255, 255, 0.2);
+    0 0 20px rgba(212, 175, 55, 0.3),
+    0 5px 20px rgba(212, 175, 55, 0.2),
+    inset 0 0 10px rgba(212, 175, 55, 0.1);
 }
 
-/* Variant: Ghost */
+/* ========================================
+   VARIANT: GHOST - PROFESSIONAL
+   ======================================== */
 .ghost {
   background: transparent;
-  color: rgba(255, 255, 255, 0.6); /* Texto más apagado */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Borde super sutil */
+  color: rgba(241, 245, 249, 0.7); /* Texto más profesional */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* Borde sutil */
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .ghost:hover:not(.disabled) {
-  background: rgba(255, 255, 255, 0.1); /* Fondo sutil */
-  border-color: rgba(255, 255, 255, 0.8);
-  color: #fff; /* Texto blanco brillante */
-  transform: translateY(-1px); /* Sube poquito */
+  background: rgba(255, 255, 255, 0.08); /* Fondo muy sutil */
+  border-color: rgba(30, 64, 175, 0.5); /* Borde azul al hover */
+  color: #f1f5f9; /* Texto brillante */
+  transform: translateY(-1px);
   box-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.3), /* Glow suave */
-    0 5px 15px rgba(255, 255, 255, 0.1),
-    inset 0 0 10px rgba(255, 255, 255, 0.1); /* Brillo interno sutil */
+    0 0 15px rgba(30, 64, 175, 0.2),
+    0 3px 12px rgba(255, 255, 255, 0.1),
+    inset 0 0 8px rgba(255, 255, 255, 0.08);
 }
 
-/* Efecto de brillo sutil para ghost */
+/* Efecto de brillo sutil para ghost - más profesional */
 .ghost::after {
   content: '';
   position: absolute;
@@ -161,7 +165,7 @@
   background: linear-gradient(
     45deg,
     transparent 30%,
-    rgba(255, 255, 255, 0.1) 50%,
+    rgba(30, 64, 175, 0.1) 50%, /* Azul en lugar de blanco */
     transparent 70%
   );
   transform: translateX(-100%);
@@ -172,7 +176,9 @@
   transform: translateX(100%);
 }
 
-/* Variant: Quantum */
+/* ========================================
+   VARIANT: QUANTUM - MANTENEMOS ORIGINAL
+   ======================================== */
 .quantum {
   background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
   color: #fff;
@@ -217,7 +223,32 @@
   100% { transform: translateX(100%); }
 }
 
-/* Responsive */
+/* ========================================
+   ICON STYLES - MEJORADOS
+   ======================================== */
+.hasIcon {
+  gap: 0.5rem;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  transition: transform 0.2s ease;
+}
+
+.fudiButton:hover .icon {
+  transform: scale(1.1); /* Icono crece sutilmente */
+}
+
+.text {
+  display: flex;
+  align-items: center;
+}
+
+/* ========================================
+   RESPONSIVE - MEJORADO
+   ======================================== */
 @media (max-width: 768px) {
   .small {
     padding: 0.375rem 0.75rem;
@@ -232,5 +263,12 @@
   .large {
     padding: 0.875rem 1.75rem;
     font-size: 1rem;
+  }
+  
+  /* En móvil, efectos más sutiles */
+  .primary:hover:not(.disabled),
+  .secondary:hover:not(.disabled),
+  .ghost:hover:not(.disabled) {
+    transform: translateY(-1px) scale(1.01); /* Menos movimiento */
   }
 }

@@ -7,12 +7,8 @@ import {
   Sparkles, Rocket, Crown, Star, ChevronRight,
   Play, ArrowRight, Coffee, Clock, DollarSign
 } from 'lucide-react';
-import { FudiEntity } from '@/components/fudiverse/FudiEntity';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
-import { FudiHeroText } from '@/components/fudiverse/FudiHeroText';
-import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
-import { FudiAura } from '@/components/fudiverse/FudiAura';
 import { InfinitoCard } from '@/components/fudiverse/InfinitoCard';
 
 // Import styles
@@ -42,23 +38,23 @@ export default function Home() {
   const dreamScenarios = [
     {
       icon: Brain,
-      title: "IMAGÍNATE...",
-      scenario: "Son las 2PM. Tu restaurante está lleno. FUDI ya ordenó el inventario perfecto para mañana.",
-      impact: "Cero estrés, máximo profit",
+      title: "IMAGINA ESTO:",
+      scenario: "Son las 2PM, casa llena. El sistema ya calculó exactamente qué inventario necesitas mañana.",
+      impact: "Cero desperdicio, máxima ganancia",
       color: "#fbbf24"
     },
     {
       icon: Eye,
-      title: "VISUALIZA...",
-      scenario: "Tu mesero ve que Juan es cliente VIP. FUDI le sugiere su plato favorito con 20% descuento.",
-      impact: "Cliente feliz = cliente que regresa",
+      title: "VISUALIZA:",
+      scenario: "Tu mesero atiende a Juan. El sistema muestra que es cliente VIP y sugiere su plato favorito con descuento personalizado.",
+      impact: "Cliente satisfecho, facturación recurrente",
       color: "#3b82f6"
     },
     {
       icon: TrendingUp,
-      title: "SIENTE...",
-      scenario: "Viernes 8PM. FUDI predijo la demanda exacta. No sobra nada, no falta nada. Perfección.",
-      impact: "Tu competencia sigue adivinando",
+      title: "EXPERIMENTA:",
+      scenario: "Viernes 8PM, noche perfecta. El sistema predijo la demanda exacta. Cero faltantes, cero desperdicio.",
+      impact: "Eficiencia que tu competencia no tiene",
       color: "#10b981"
     }
   ];
@@ -66,64 +62,32 @@ export default function Home() {
   const powerMoments = [
     {
       time: "6:00 AM",
-      action: "FUDI analizó toda la noche",
-      result: "Ya sabe qué vas a vender hoy"
+      action: "Sistema analizó ventas de ayer",
+      result: "Proyección de ventas lista para hoy"
     },
     {
       time: "12:00 PM",
-      action: "Mesa 7 pide recomendación",
-      result: "FUDI sugiere el combo perfecto"
+      action: "Cliente solicita recomendación",
+      result: "FUDI sugiere el plato más rentable"
     },
     {
       time: "8:00 PM",
-      action: "Inventario optimizado automático",
-      result: "Mañana será otro día perfecto"
+      action: "Orden de inventario generada automáticamente",
+      result: "Listo para otro día exitoso"
     }
   ];
 
   return (
     <div className="splash-container">
-      {/* FUDI Background Effects */}
-      <FudiChatGrid 
-        opacity={0.1}
-        gridSize={100}
-        color="#4a4a4a"
-        animated={true}
-        showGradient={true}
-        pulseSpeed={2}
-      />
       
+      {/* ✅ FUDI Background - ULTRA LIMPIO COMO ABOUT */}
       <FudiBackground 
-        variant="particles"
-        intensity={0.4}
-        speed={0.8}
-        color="mixed"
-        opacity={0.6}
+        variant="premium"
+        theme="claude"
+        intensity={0.2}    // ← MÁS SUTIL
+        opacity={1}        // ← OPACIDAD COMPLETA COMO ABOUT
         fixed={true}
       />
-      
-      {/* FUDI Entity - The Guardian */}
-      <div className="fudi-entity-container">
-        <FudiAura 
-          variant="combined"
-          color="#fbbf24"
-          intensity={0.8}
-          size={600}
-          pulseSpeed={2}
-          particleCount={30}
-        />
-        <FudiEntity 
-          variant="fullscreen"
-          mood="excited"
-          followCursor={true}
-          showDataStreams={true}
-          showParticles={true}
-          showCircuits={true}
-          showScanBeam={true}
-          showNeuralNet={true}
-          intensity={0.8}
-        />
-      </div>
 
       {/* Header */}
       <header className={`splash-header ${isScrolled ? 'header-scrolled' : ''}`}>
@@ -132,26 +96,25 @@ export default function Home() {
             <span className="logo-text">FUDIVERSE</span>
             <span className="logo-subtitle">RESTO AI</span>
           </Link>
-
           <div className="nav-links">
             <Link href="/features" className="nav-link">
               <Brain size={16} />
-              <span>Arsenal</span>
+              <span>Características</span>
             </Link>
             <Link href="/pricing" className="nav-link">
               <Crown size={16} />
-              <span>Evolución</span>
+              <span>Planes</span>
             </Link>
             <Link href="/about" className="nav-link">
               <Rocket size={16} />
-              <span>Revolución</span>
+              <span>Nosotros</span>
             </Link>
             <Link href="/login" className="nav-link login-link">
               <span>ENTRAR</span>
             </Link>
             <FudiButton variant="primary" size="small" href="/register">
               <Sparkles size={16} />
-              <span>ÚNETE AL FUDIVERSE</span>
+              <span>EMPEZAR GRATIS</span>
             </FudiButton>
           </div>
         </nav>
@@ -164,23 +127,24 @@ export default function Home() {
           {/* Status Badge */}
           <div className="status-badge">
             <div className="status-dot"></div>
-            <span>REVOLUCIÓN EN PROGRESO</span>
+            <span>OPTIMIZANDO RESTAURANTES</span>
             <Zap size={14} />
           </div>
           
           {/* Main Hero Text */}
           <h1 className="hero-title">
-            DEJA DE <span className="title-highlight-red">ADIVINAR</span>.<br/>
-            EMPIEZA A <span className="title-highlight-gold">DOMINAR</span>.
+          <span className="title-highlight-gold"></span><br/>
+          ¡No analices <span className="title-highlight-gold">datos</span>, escribe una historia de <span className="title-highlight-gold">éxito!</span><br/>
           </h1>
           
           <div className="hero-subtitle">
             <p className="subtitle-main">
-              La <strong>inteligencia artificial</strong> que convierte tu restaurante 
-              en una <strong className="gold-text">máquina de generar dinero</strong>
+              FUDIVERSE <strong>IA predice ventas, optimiza inventario y maximiza ganancias</strong> PARA tu restaurante
             </p>
             <p className="subtitle-secondary">
-              Mientras tu competencia sigue adivinando, tú ya sabes exactamente qué va a pasar
+              <p className="subtitle-highlight">
+                Mientras otros restaurantes operan a la antigüa y a ciegas, tú tomas decisiones informadas e inteligentes que te llevan más lejos
+              </p>
             </p>
           </div>
 
@@ -221,7 +185,7 @@ export default function Home() {
               className="main-cta"
             >
               <Rocket size={20} />
-              <span>SÍ, QUIERO DOMINAR</span>
+              <span>EMPEZAR AHORA</span>
             </FudiButton>
             
             <FudiButton 
@@ -231,7 +195,7 @@ export default function Home() {
               className="secondary-cta"
             >
               <Play size={18} />
-              <span>VER EL PODER</span>
+              <span>CONOCELO GRATIS</span>
             </FudiButton>
           </div>
 
@@ -255,7 +219,7 @@ export default function Home() {
             </div>
             <p className="proof-text">
               <Star size={16} />
-              "La mejor inversión que hice para mi restaurante" - Chef María, Ciudad de México
+              "Aumenté mis ganancias 35% en 3 meses. La mejor inversión que hice." - Chef María González, Ciudad de México
             </p>
           </div>
         </div>
@@ -266,10 +230,10 @@ export default function Home() {
         <div className="timeline-header">
           <h2 className="timeline-title">
             <Clock size={32} />
-            UN DÍA EN LA VIDA CON FUDI
+            24 HORAS DE OPERACIÓN INTELIGENTE
           </h2>
           <p className="timeline-subtitle">
-            Mientras duermes, trabajas y vives... <strong>FUDI nunca para</strong>
+            Mientras tu equipo descansa, <strong>FUDI sigue optimizando tu negocio</strong>
           </p>
         </div>
 
@@ -295,11 +259,11 @@ export default function Home() {
         <div className="timeline-conclusion">
           <div className="conclusion-card">
             <DollarSign size={40} />
-            <h3>RESULTADO FINAL</h3>
-            <p>Más ventas, menos estrés, cero adivinanzas</p>
+            <h3>RESULTADO</h3>
+            <p>+30% rentabilidad, -50% desperdicio, 100% control</p>
             <div className="conclusion-cta">
               <FudiButton variant="primary" href="/register">
-                ESTO LO QUIERO YA
+                IMPLEMENTAR AHORA
                 <ChevronRight size={18} />
               </FudiButton>
             </div>
@@ -312,22 +276,22 @@ export default function Home() {
         <div className="transformation-content">
           <div className="transformation-header">
             <h2 className="transformation-title">
-              LA TRANSFORMACIÓN QUE NECESITAS
+              LA EVOLUCIÓN QUE TU RESTAURANTE NECESITA
             </h2>
             <p className="transformation-subtitle">
-              No es solo software. Es tu <strong>evolución empresarial</strong>.
+              No es solo tecnología. Es la diferencia entre sobrevivir y prosperar. No son analizar datos es escribir tu historia de éxito.
             </p>
           </div>
 
           <div className="before-after">
             <div className="before-card">
-              <h3 className="before-title">😰 ANTES DE FUDI</h3>
+              <h3 className="before-title">😰 ANTES</h3>
               <ul className="before-list">
-                <li>"¿Cuánta comida preparo hoy?"</li>
-                <li>"¿Por qué no vendí ayer?"</li>
-                <li>"¿Este cliente es nuevo?"</li>
-                <li>"¿Qué plato le gusta más?"</li>
-                <li>Desperdicio, estrés, adivinanzas</li>
+                <li>"¿Cuánto inventario necesito?"</li>
+                <li>"¿Por qué bajaron las ventas?"</li>
+                <li>"¿Cómo fidelizo a mis clientes?"</li>
+                <li>"¿Qué debo recomendar?"</li>
+                <li>Desperdicio, pérdidas, incertidumbre</li>
               </ul>
             </div>
 
@@ -337,54 +301,56 @@ export default function Home() {
             </div>
 
             <div className="after-card">
-              <h3 className="after-title">🚀 DESPUÉS DE FUDI</h3>
+              <h3 className="after-title">🚀 DESPUÉS</h3>
               <ul className="after-list">
-                <li>"FUDI ya calculó todo perfectamente"</li>
-                <li>"Cada día es más rentable que el anterior"</li>
-                <li>"FUDI reconoce a todos mis VIPs"</li>
-                <li>"FUDI sabe qué recomendar siempre"</li>
-                <li>Precisión, tranquilidad, éxito</li>
+                <li>"El sistema ya calculó las cantidades exactas"</li>
+                <li>"Cada semana mejoran los márgenes"</li>
+                <li>"El sistema identifica a todos los clientes VIP"</li>
+                <li>"Recomendaciones automáticas que aumentan ticket promedio"</li>
+                <li>Precisión, control, crecimiento</li>
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Infinito Vision */}
+      {/* ❌ INFINITO CARD TEMPORALMENTE COMENTADO PARA PRUEBAS
       <section className="vision-section">
         <InfinitoCard 
           variant="default"
-          title="TU VISIÓN, REALIZADA"
-          subtitle="EL FUTURO ES HOY"
-          description="El restaurante que siempre soñaste tener, y aún más importante, el legado para tu gente!"
+          title="TU RESTAURANTE, OPTIMIZADO"
+          subtitle="TECNOLOGÍA DE HOY"
+          description="El restaurante eficiente y rentable que siempre quisiste. Tecnología que hace la diferencia."
           icon={<Eye size={60} />}
           size="xl"
           glow={true}
           animated={true}
         />
       </section>
+      */}
 
-      {/* Final CTA */}
+      {/* Final CTA - SIN ORBS PROBLEMÁTICOS */}
       <section className="final-cta">
+        {/* ❌ ELIMINADO - ORBS QUE CREAN CAPAS PROBLEMÁTICAS
         <div className="final-cta-background">
           <div className="final-orb orb-1"></div>
           <div className="final-orb orb-2"></div>
           <div className="final-orb orb-3"></div>
         </div>
+        */}
         
         <div className="final-cta-content">
           <div className="final-badge">
             <Sparkles size={16} />
-            <span>TU MOMENTO HA LLEGADO</span>
+            <span>LISTA PARA IMPLEMENTAR</span>
           </div>
           
           <h2 className="final-title">
-            ¿LISTO PARA DEJAR DE <span className="highlight-red">ADIVINAR</span><br/>
-            Y EMPEZAR A <span className="highlight-gold">DOMINAR</span>?
+            ¿Listo para escribir tu propia <span className="highlight-gold">historia de éxito</span>?
           </h2>
           
           <p className="final-subtitle">
-            La revolución de tu restaurante empieza con un click
+            La optimización de tu restaurante empieza hoy
           </p>
           
           <div className="final-actions">
@@ -395,7 +361,7 @@ export default function Home() {
                 className="final-primary-cta"
               >
               <Rocket size={24} />
-              <span>ÚNETE AL FUDIVERSE AHORA</span>
+              <span>EMPEZAR PRUEBA GRATIS</span>
             </FudiButton>
             
             <p className="final-guarantee">
@@ -417,7 +383,7 @@ export default function Home() {
           className="floating-button"
         >
           <MessageSquare size={18} />
-          <span>EMPEZAR</span>
+          <span>PROBAR GRATIS</span>
         </FudiButton>
       </div>
     </div>

@@ -1,507 +1,275 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Link from 'next/link';
 import { 
-  Search, Plus, Grid3x3, List, Filter, Command,
-  Star, Clock, Eye, Edit3, Share2, Sparkles,
-  Brain, TrendingUp, Vault, Users, ShoppingCart, Truck,
-  Activity, Zap, DollarSign, Target, BarChart3, Rocket,
-  Award, Shield, Lightbulb, MessageSquare, ArrowRight,
-  Play
+  Brain, BarChart3, Vault, Users, ShoppingCart,
+  Sparkles, TrendingUp, Award, ChevronRight, Star,
+  Play, MessageSquare, Rocket, Clock
 } from 'lucide-react';
-
-// Import FUDI Components
-import { FudiEntity } from '@/components/fudiverse/FudiEntity';
-import { FudiAura } from '@/components/fudiverse/FudiAura';
-import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
-import { FudiCard } from '@/components/fudiverse/FudiCard';
-import { FudiButton } from '@/components/fudiverse/FudiButton';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-
-// Import Vault styles - EXACT SAME LAYOUT
-import '@/styles/pages/FudiVault.css';
-
-interface FeatureItem {
-  id: string;
-  title: string;
-  subtitle: string;
-  type: 'brain' | 'analytics' | 'vault' | 'network' | 'pos' | 'delivery';
-  impact: string;
-  keyBenefit: string;
-  tags: string[];
-  status: 'available' | 'coming-soon';
-  testimonial: string;
-}
+import { FudiButton } from '@/components/fudiverse/FudiButton';
+import '@/styles/pages/fudi.features.css';
 
 export default function FeaturesPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // CLEAN & POWERFUL features - usando el copy ÉPICO
-  const features: FeatureItem[] = [
+  const features = [
     {
-      id: '1',
-      title: 'FUDI AI',
+      id: 'fudigpt',
+      name: 'fudiGPT',
       subtitle: 'Tu Cerebro que Nunca Duerme',
-      type: 'brain',
-      impact: 'Mientras duermes, FUDI analiza',
-      keyBenefit: '"Chef, los viernes a las 8PM siempre piden 3 Margaritas... ¿preparamos?"',
-      tags: ['Predicción', 'Automático', '24/7'],
-      status: 'available',
-      testimonial: '"Ahora FUDI me avisa qué cocinar antes de que yo lo sepa."'
+      description: 'IA que conoce tu negocio mejor que tu contador',
+      color: '#fbbf24',
+      icon: Brain,
+      keyBenefit: '"Chef, tus clientes de los martes ordenan 40% más ensaladas después de las 7PM"',
+      impact: 'Decisiones inteligentes mientras duermes',
+      testimonial: '"Ya no adivino qué comprar. fudiGPT me dice exactamente qué necesito."',
+      status: 'available'
     },
     {
-      id: '2',
-      title: 'DASHBOARDS ÉPICOS',
-      subtitle: 'Que Te Hacen Decir "WOW"',
-      type: 'analytics',
-      impact: 'Tu negocio LATIENDO en tiempo real',
-      keyBenefit: '"Tu pizza #7 genera 340% más profit que la #3... ¿por qué sigues promoviendo la #3?"',
-      tags: ['Tiempo Real', 'Insights', 'WOW Factor'],
-      status: 'available',
-      testimonial: '"Olvídate de Excel estático. Esto es OTRA LIGA."'
+      id: 'fudiboard',
+      name: 'fudiBOARD',
+      subtitle: 'EL PRIMER DASHBOARD Ai powered',
+      description: 'Dashboards que hablan tu idioma de negocio',
+      color: '#3b82f6',
+      icon: BarChart3,
+      keyBenefit: '"Tu mesa #5 genera 23% menos revenue que la #3. ¿Movemos esa TV?"',
+      impact: 'Ve patrones que tus ojos no detectan',
+      testimonial: '"Mis números hablan. Ahora SÉ por qué algunos días vendo más."',
+      status: 'available'
     },
     {
-      id: '3',
-      title: 'VAULT PRO',
+      id: 'fudihub',
+      name: 'fudiHUB',
       subtitle: 'Tu Oficina que Nunca Cierra',
-      type: 'vault',
-      impact: 'Propuestas que cierran deals 💰',
-      keyBenefit: 'Click. Edit. LISTO. Profesional.',
-      tags: ['Templates Pro', 'Deals', 'Profesional'],
-      status: 'available',
-      testimonial: '"Reportes que enamoran inversionistas. Templates que me ahorran HORAS."'
+      description: 'Documentos profesionales sin el estrés profesional',
+      color: '#8b5cf6',
+      icon: Vault,
+      keyBenefit: '"Genera propuestas profesionales en 3 clicks. Cierra deals mientras compites."',
+      impact: 'Documentos de 10/10 sin el estrés',
+      testimonial: '"Mis reportes ahora compiten con cadenas grandes. Mismo nivel, menos drama."',
+      status: 'available'
     },
     {
-      id: '4',
-      title: 'DISCOVERY',
-      subtitle: 'Donde los PROS se Conectan',
-      type: 'network',
-      impact: 'Red social SIN ruido, PURO PRO',
-      keyBenefit: '"¿Proveedor de aguacate confiable?" ✓ "¿Cómo bajar merma 15%?" ✓',
-      tags: ['Solo PROS', 'Secretos', 'Networking'],
-      status: 'available',
-      testimonial: '"Los secretos del gremio, AL FIN compartidos."'
+      id: 'fudiflow',
+      name: 'fudiFLOW',
+      subtitle: 'La red social para nosotros los fudiErs',
+      description: 'Networking entre restauranteros que realmente funciona',
+      color: '#10b981',
+      icon: Users,
+      keyBenefit: '"Conecta con otros restos. Comparte clientes. Crece en red, no solo."',
+      impact: 'Tu competencia ahora es tu aliado',
+      testimonial: '"Intercambio clientes con el sushi de enfrente. Ambos ganamos más."',
+      status: 'available'
     },
     {
-      id: '5',
-      title: 'POS INTELIGENTE',
-      subtitle: 'Vende MÁS, Piensa MENOS',
-      type: 'pos',
-      impact: 'Te avisa ANTES del problema',
-      keyBenefit: '"Juan viene cada martes. Ya tiene 47 visitas. ¿Le damos su 50ava gratis?"',
-      tags: ['Inteligente', 'VIP Auto', 'Preventivo'],
-      status: 'available',
-      testimonial: '"Reconoce clientes VIP automático. Sugiere combos que FUNCIONAN."'
-    },
-    {
-      id: '6',
-      title: 'FUDELIVERY',
-      subtitle: 'Adiós Comisiones del 30%',
-      type: 'delivery',
-      impact: 'Hola ganancias REALES',
-      keyBenefit: 'Tu propia plataforma. Cero comisiones. 100% tuyo.',
-      tags: ['Sin Comisiones', '100% Tuyo', 'Q2 2025'],
-      status: 'coming-soon',
-      testimonial: '"Finalmente, delivery que NO me roba las ganancias."'
+      id: 'fudimart',
+      name: 'fudiMART',
+      subtitle: 'Vende, Compra, Cambia, Negocia, lo que quieras, estás entre RESTOS',
+      description: 'El marketplace donde cada peso se rentabiliza',
+      color: '#f59e0b',
+      icon: ShoppingCart,
+      keyBenefit: '"¿Te sobró salmón? Véndelo al resto de al lado. Cero desperdicio."',
+      impact: 'Cada peso invertido, rentabilizado',
+      testimonial: '"Mi exceso de inventario es el tesoro de otro resto. Win-win real."',
+      status: 'available'
     }
   ];
 
-  const typeConfig = {
-    brain: { color: '#fbbf24', icon: Brain, gradient: 'from-yellow-400 to-orange-500' },
-    analytics: { color: '#3b82f6', icon: BarChart3, gradient: 'from-blue-400 to-blue-600' },
-    vault: { color: '#8b5cf6', icon: Vault, gradient: 'from-purple-400 to-purple-600' },
-    network: { color: '#10b981', icon: Users, gradient: 'from-green-400 to-emerald-600' },
-    pos: { color: '#ef4444', icon: ShoppingCart, gradient: 'from-red-400 to-red-600' },
-    delivery: { color: '#f59e0b', icon: Truck, gradient: 'from-amber-400 to-orange-600' }
-  };
-
   return (
-    <div className="vault-container">
-      {/* FUDI Background - Lighter Grid */}
-      <FudiChatGrid 
-        opacity={0.15}
-        gridSize={80}
-        color="#4a4a4a"
-        animated={true}
-        showGradient={true}
-        pulseSpeed={1.5}
+    <div className="features-container">
+      {/* Single Clean Background */}
+      <FudiBackground 
+        variant="premium"
+        theme="claude"
+        intensity={0.2}
+        opacity={1}
+        fixed={true}
       />
-      
-      {/* Header - BACK TO SIMPLE */}
-      <header className="vault-header">
-        {/* Texto solo, sin logo */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <div>
-            <div className="vault-logo-text">FUDIVERSE</div>
-            <div className="vault-subtitle">Business Arsenal</div>
-          </div>
-        </div>
 
-        {/* Search for Features */}
-        <div className="vault-search">
-          <div className="search-container">
-            <Search size={18} style={{ color: '#666' }} />
-            <input
-              type="text"
-              placeholder="Busca tu próxima ventaja competitiva..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
-            />
-            <div className="search-hotkey">
-              <Command size={12} />
-              <span>K</span>
-            </div>
+      {/* Header - Consistent with Pricing */}
+      <header className="features-header">
+        <nav className="features-nav">
+          <Link href="/" className="features-logo">
+            <span>FUDIVERSE</span>
+          </Link>
+          <div className="nav-links">
+            <Link href="/features" className="nav-link active">Características</Link>
+            <Link href="/pricing" className="nav-link">Planes</Link>
+            <Link href="/about" className="nav-link">Nosotros</Link>
+            <Link href="/login" className="nav-link">Entrar</Link>
+            <FudiButton variant="primary" size="small" href="/register">
+              ÚNETE
+            </FudiButton>
           </div>
-        </div>
-
-        {/* Actions */}
-        <div className="header-actions">
-          <FudiButton variant="primary" className="new-vault-btn" href="/register">
-            <Rocket size={18} />
-            <span>EMPEZAR AHORA</span>
-          </FudiButton>
-        </div>
+        </nav>
       </header>
 
-      {/* Main Content */}
-      <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 85px)' }}>
-        <div className="vault-content" style={{ margin: 0, width: '100%' }}>
+      {/* Hero Section */}
+      <section className="features-hero">
+        <div className="hero-content">
+          <div className="hero-badge">
+            <Sparkles size={16} />
+            <span>ARSENAL COMPLETO</span>
+          </div>
           
-          {/* Hero Section */}
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '4rem 2rem', 
-            marginBottom: '3rem' 
-          }}>
-            <h1 style={{ 
-              fontSize: '3.5rem', 
-              fontWeight: '900', 
-              color: 'rgba(255, 255, 255, 0.95)',
-              marginBottom: '1.5rem',
-              lineHeight: '1.1',
-              textShadow: '0 4px 20px rgba(251, 191, 36, 0.3)'
-            }}>
-              DEJA DE <span style={{ color: '#ef4444' }}>SOBREVIVIR</span>.<br/>
-              EMPIEZA A <span style={{ color: '#fbbf24' }}>DOMINAR</span>.
-            </h1>
-            <p style={{ 
-              fontSize: '1.4rem', 
-              color: 'rgba(255, 255, 255, 0.8)', 
-              maxWidth: '700px', 
-              margin: '0 auto',
-              fontWeight: '600'
-            }}>
-              Tu restaurante está a <strong style={{ color: '#fbbf24' }}>1 click</strong> de la evolución
-            </p>
-            <div style={{
-              background: 'rgba(251, 191, 36, 0.15)',
-              border: '2px solid rgba(251, 191, 36, 0.3)',
-              borderRadius: '16px',
-              padding: '1.5rem',
-              marginTop: '2rem',
-              maxWidth: '600px',
-              margin: '2rem auto 0 auto'
-            }}>
-              <p style={{
-                fontSize: '1.2rem',
-                fontWeight: '700',
-                color: '#fbbf24',
-                margin: '0'
-              }}>
-                🧠 FUDI NO ES TU EMPLEADO. ES TU CEREBRO EXTRA.
-              </p>
+          <h1 className="hero-title">
+            NO SOLO <span className="hero-highlight">HERRAMIENTAS</span>.<br/>
+            TU NUEVO <span className="hero-highlight">CEREBRO DE NEGOCIO</span>.
+          </h1>
+          <p className="hero-subtitle">
+            Cada feature de FUDIVERSE está diseñada por <strong>restauranteros, para restauranteros</strong>. 
+            Sin tecnicismos. Solo resultados.
+          </p>
+
+          <div className="hero-stats">
+            <div className="stat">
+              <div className="stat-number">+500</div>
+              <div className="stat-label">Restaurantes</div>
+            </div>
+            <div className="stat">
+              <div className="stat-number">98%</div>
+              <div className="stat-label">Satisfacción</div>
+            </div>
+            <div className="stat">
+              <div className="stat-number">+25%</div>
+              <div className="stat-label">Revenue Promedio</div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Features Grid - 2 ROWS x 3 COLUMNS */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(3, 1fr)', 
-            gridTemplateRows: 'repeat(2, 1fr)',
-            gap: '2rem',
-            padding: '2rem',
-            maxWidth: '1400px',
-            margin: '0 auto'
-          }}>
-            {features.map((feature) => {
-              const TypeIcon = typeConfig[feature.type].icon;
-              const typeColor = typeConfig[feature.type].color;
-
-              return (
-                <div
-                  key={feature.id}
-                  style={{
-                    background: 'rgba(0, 0, 0, 0.4)',
-                    borderRadius: '24px',
-                    border: `2px solid ${typeColor}20`,
-                    padding: '2.5rem',
-                    position: 'relative',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    backdropFilter: 'blur(10px)',
-                    minHeight: '320px',
-                    display: 'flex',
-                    flexDirection: 'column'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-8px)';
-                    e.currentTarget.style.borderColor = `${typeColor}60`;
-                    e.currentTarget.style.boxShadow = `0 20px 40px ${typeColor}20`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = `${typeColor}20`;
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  {/* Status Badge for Coming Soon */}
-                  {feature.status === 'coming-soon' && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '1.5rem',
-                      right: '1.5rem',
-                      background: `linear-gradient(135deg, ${typeColor}, #ef4444)`,
-                      color: 'white',
-                      fontSize: '0.8rem',
-                      fontWeight: '800',
-                      padding: '0.5rem 1rem',
-                      borderRadius: '20px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-                    }}>
-                      Q2 2025
-                    </div>
-                  )}
-
-                  {/* Icon */}
-                  <div style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '20px',
-                    background: `linear-gradient(135deg, ${typeColor}20, ${typeColor}40)`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '1.5rem',
-                    border: `2px solid ${typeColor}60`
-                  }}>
-                    <TypeIcon size={40} style={{ color: typeColor }} />
+      {/* Features Section */}
+      <section className="features-section">
+        <div className="features-grid">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <div 
+                key={feature.id} 
+                className={`feature-card ${feature.status === 'coming-soon' ? 'coming-soon' : ''}`}
+                style={{ '--feature-color': feature.color } as React.CSSProperties}
+              >
+                {feature.status === 'coming-soon' && (
+                  <div className="coming-soon-badge">
+                    <Clock size={16} />
+                    <span>Q2 2025</span>
                   </div>
+                )}
 
-                  {/* Title & Subtitle */}
-                  <div style={{ marginBottom: '1rem' }}>
-                    <h3 style={{ 
-                      fontSize: '1.8rem', 
-                      fontWeight: '800', 
-                      color: 'rgba(255, 255, 255, 0.95)',
-                      marginBottom: '0.5rem',
-                      letterSpacing: '-0.5px'
-                    }}>
-                      {feature.title}
-                    </h3>
-                    <p style={{ 
-                      fontSize: '1rem', 
-                      color: 'rgba(255, 255, 255, 0.7)',
-                      fontWeight: '500'
-                    }}>
-                      {feature.subtitle}
-                    </p>
+                <div className="feature-header">
+                  <div className="feature-icon">
+                    <Icon size={32} />
+                    <div className="icon-glow"></div>
                   </div>
-
-                  {/* Key Benefit */}
-                  <div style={{ 
-                    background: `${typeColor}15`,
-                    border: `1px solid ${typeColor}30`,
-                    borderRadius: '12px',
-                    padding: '1rem',
-                    marginBottom: '1rem'
-                  }}>
-                    <p style={{ 
-                      fontSize: '1.1rem', 
-                      fontWeight: '600',
-                      color: 'rgba(255, 255, 255, 0.9)',
-                      margin: '0'
-                    }}>
-                      {feature.keyBenefit}
-                    </p>
-                  </div>
-
-                  {/* Impact Metric */}
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    marginBottom: '1.5rem',
-                    gap: '0.5rem'
-                  }}>
-                    <TrendingUp size={20} style={{ color: typeColor }} />
-                    <span style={{ 
-                      fontSize: '1.1rem', 
-                      fontWeight: '700',
-                      color: typeColor
-                    }}>
-                      {feature.impact}
-                    </span>
-                  </div>
-
-                  {/* Testimonial */}
-                  <div style={{ 
-                    marginTop: 'auto',
-                    background: 'rgba(0, 0, 0, 0.3)',
-                    borderLeft: `4px solid ${typeColor}`,
-                    borderRadius: '8px',
-                    padding: '1rem',
-                    marginBottom: '1.5rem'
-                  }}>
-                    <p style={{
-                      fontSize: '0.95rem',
-                      fontStyle: 'italic',
-                      color: 'rgba(255, 255, 255, 0.8)',
-                      margin: '0',
-                      lineHeight: '1.4'
-                    }}>
-                      {feature.testimonial}
-                    </p>
-                  </div>
-
-                  {/* CTA Button */}
-                  <div style={{ marginTop: 'auto' }}>
-                    {feature.status === 'available' ? (
-                      <button style={{
-                        width: '100%',
-                        background: `linear-gradient(135deg, ${typeColor}, ${typeColor}dd)`,
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '12px',
-                        padding: '1rem 1.5rem',
-                        fontSize: '1rem',
-                        fontWeight: '700',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.5rem',
-                        transition: 'all 0.2s ease',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.02)';
-                        e.currentTarget.style.boxShadow = `0 8px 25px ${typeColor}40`;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = 'none';
-                      }}
-                      >
-                        <Play size={18} />
-                        VER DEMO
-                      </button>
-                    ) : (
-                      <button style={{
-                        width: '100%',
-                        background: 'rgba(255, 255, 255, 0.1)',
-                        color: 'rgba(255, 255, 255, 0.8)',
-                        border: `2px solid ${typeColor}40`,
-                        borderRadius: '12px',
-                        padding: '1rem 1.5rem',
-                        fontSize: '1rem',
-                        fontWeight: '700',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.5rem',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px'
-                      }}>
-                        <MessageSquare size={18} />
-                        NOTIFICARME
-                      </button>
-                    )}
-                  </div>
+                  <div className="feature-number">0{index + 1}</div>
                 </div>
-              );
-            })}
-          </div>
 
-          {/* Bottom CTA */}
-          <div style={{ 
-            marginTop: '4rem', 
-            textAlign: 'center',
-            padding: '4rem 2rem',
-            background: 'rgba(251, 191, 36, 0.1)',
-            borderRadius: '24px',
-            border: '2px solid rgba(251, 191, 36, 0.3)',
-            margin: '4rem 2rem 2rem 2rem'
-          }}>
-            <h2 style={{ 
-              fontSize: '2.8rem', 
-              fontWeight: '900', 
-              marginBottom: '1rem',
-              color: 'rgba(255, 255, 255, 0.95)'
-            }}>
-              ¿LISTO PARA <span style={{ color: '#fbbf24' }}>EVOLUCIONAR</span>?
-            </h2>
-            <p style={{ 
-              fontSize: '1.3rem', 
-              color: 'rgba(255, 255, 255, 0.8)', 
-              marginBottom: '2.5rem',
-              maxWidth: '600px',
-              margin: '0 auto 2.5rem auto',
-              fontWeight: '600'
-            }}>
-              Únete a <strong style={{ color: '#fbbf24' }}>+500 restaurantes</strong> que ya dominan con FUDI
-            </p>
+                <div className="feature-content">
+                  <h3 className="feature-name">{feature.name}</h3>
+                  <p className="feature-subtitle">{feature.subtitle}</p>
+                  <p className="feature-description">{feature.description}</p>
+
+                  <div className="feature-benefit">
+                    <div className="benefit-icon">
+                      <TrendingUp size={16} />
+                    </div>
+                    <span>{feature.keyBenefit}</span>
+                  </div>
+
+                  <div className="feature-impact">
+                    <Award size={16} />
+                    <span>{feature.impact}</span>
+                  </div>
+
+                  <blockquote className="feature-testimonial">
+                    <span>{feature.testimonial}</span>
+                  </blockquote>
+                </div>
+
+                <div className="feature-cta">
+                  {feature.status === 'available' ? (
+                    <FudiButton 
+                      variant="secondary"
+                      size="medium"
+                      href={`/demo/${feature.id}`}
+                      className="demo-btn"
+                    >
+                      <Play size={16} />
+                      VER DEMO
+                      <ChevronRight size={16} />
+                    </FudiButton>
+                  ) : (
+                    <FudiButton 
+                      variant="secondary"
+                      size="medium"
+                      href={`/notify/${feature.id}`}
+                      className="notify-btn"
+                    >
+                      <MessageSquare size={16} />
+                      NOTIFICARME
+                    </FudiButton>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="bottom-cta">
+        <div className="cta-content">
+          <div className="cta-badge">
+            <Brain size={16} />
+            <span>EVOLUCIÓN COMPLETA</span>
+          </div>
+          
+          <h2 className="cta-title">
+            ¿LISTO PARA <span className="highlight">EVOLUCIONAR</span> TU RESTAURANTE?
+          </h2>
+          <p className="cta-subtitle">
+            🎁 <strong>Primer mes GRATIS</strong> con acceso a todas las features
+          </p>
+          
+          <div className="cta-actions">
             <FudiButton 
               variant="primary" 
               size="large" 
               href="/register"
-              style={{
-                padding: '1.5rem 4rem',
-                fontSize: '1.2rem',
-                fontWeight: '800',
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
-              }}
+              icon={<Rocket size={20} />}
             >
-              <Rocket size={24} />
-              ÚNETE AL FUDIVERSE
+              EMPEZAR GRATIS
             </FudiButton>
-            <div style={{
-              marginTop: '1.5rem',
-              fontSize: '1rem',
-              color: 'rgba(255, 255, 255, 0.6)'
-            }}>
-              La evolución empieza HOY
-            </div>
+            
+            <FudiButton 
+              variant="secondary" 
+              size="large" 
+              href="/pricing"
+              icon={<Star size={20} />}
+            >
+              VER PLANES
+            </FudiButton>
+          </div>
+          
+          <div className="trust-quote">
+            <blockquote>
+              "No es tecnología por tecnología. Es <strong>inteligencia aplicada</strong> al negocio que amas."
+            </blockquote>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* FUDI Entity - Watching the sales process */}
-      <div className="fudi-container">
-        <FudiAura 
-          variant="combined"
-          color="#fbbf24"
-          intensity={0.8}
-          size={400}
-          pulseSpeed={3}
-          particleCount={25}
-        />
-        <FudiEntity 
-          variant="mini"
-          mood="excited"
-          followCursor={true}
-          showDataStreams={true}
-          showParticles={true}
-          intensity={0.7}
-        />
-      </div>
+      {/* Footer */}
+      <footer className="features-footer">
+        <div className="footer-content">
+          <p>&copy; 2024 FUDIVERSE. Inteligencia para restauranteros inteligentes.</p>
+          <div className="footer-links">
+            <Link href="/terms">Términos</Link>
+            <Link href="/privacy">Privacidad</Link>
+            <Link href="/contact">Contacto</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

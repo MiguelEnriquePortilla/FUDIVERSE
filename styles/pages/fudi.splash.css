@@ -1,32 +1,25 @@
 /* =============================================
-   FUDI SPLASH - GATEWAY TO EVOLUTION
+   FUDI SPLASH - ULTRA LIMPIO 🧹
+   SIN BACKGROUNDS QUE ESTORBEN
    ============================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* CSS Variables - FUDI Master Palette */
+/* =============================================
+   CSS VARIABLES - SOLO LO ESENCIAL
+   ============================================= */
 :root {
-  /* Core FUDI Colors */
-  --fudi-void: #0a0a0a;
-  --fudi-dark: #111111;
-  --fudi-surface: #1a1a1a;
-  --fudi-elevated: #242424;
-  --fudi-primary: #fbbf24; /* Matrix Gold */
-  --fudi-secondary: #00ffff; /* Cyber Cyan */
-  --fudi-accent: #a78bfa; /* Neural Purple */
-  --fudi-blue: #3b82f6; /* Data Blue */
-  --fudi-green: #10b981; /* Success Green */
-  --fudi-red: #ef4444; /* Alert Red */
-  --fudi-orange: #f59e0b; /* Energy Orange */
-  --fudi-purple: #8b5cf6; /* Wisdom Purple */
+  /* Core Colors */
+  --fudi-primary: #fbbf24;
+  --fudi-secondary: #00ffff;
+  --fudi-blue: #3b82f6;
+  --fudi-green: #10b981;
+  --fudi-red: #ef4444;
   
-  /* Glass & Glow System */
-  --glass-bg: rgba(10, 10, 10, 0.8);
+  /* Glass System - TRANSPARENTE PARA QUE PASE EL FUDIBACKGROUND */
+  --glass-bg: rgba(0, 0, 0, 0.3); /* MÁS TRANSPARENTE */
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-hover: rgba(255, 255, 255, 0.12);
-  --glow-primary: 0 0 40px rgba(251, 191, 36, 0.3);
-  --glow-intense: 0 0 60px rgba(251, 191, 36, 0.5);
-  --glow-dream: 0 0 30px var(--dream-color, #fbbf24);
   
   /* Text Hierarchy */
   --text-primary: rgba(255, 255, 255, 0.95);
@@ -47,82 +40,19 @@
 }
 
 /* =============================================
-   BASE CONTAINER
+   CONTAINER - SIN BACKGROUND PROBLEMÁTICO
    ============================================= */
 .splash-container {
-  min-height: 100vh;
-  background: var(--fudi-void);
-  color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
   position: relative;
-  overflow-x: hidden;
-}
-
-/* Animated Master Background */
-.splash-container::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: 
-    radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 60% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-  animation: master-pulse 15s ease-in-out infinite;
-  z-index: 0;
-}
-
-@keyframes master-pulse {
-  0%, 100% { 
-    transform: scale(1) rotate(0deg);
-    opacity: 0.5;
-  }
-  25% { 
-    transform: scale(1.1) rotate(90deg);
-    opacity: 0.8;
-  }
-  50% { 
-    transform: scale(0.9) rotate(180deg);
-    opacity: 0.6;
-  }
-  75% { 
-    transform: scale(1.05) rotate(270deg);
-    opacity: 0.7;
-  }
-}
-
-/* Revolution Flow Lines */
-.splash-container::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: 
-    linear-gradient(45deg, transparent 0%, rgba(251, 191, 36, 0.1) 50%, transparent 100%),
-    linear-gradient(-45deg, transparent 0%, rgba(59, 130, 246, 0.1) 50%, transparent 100%),
-    linear-gradient(135deg, transparent 0%, rgba(16, 185, 129, 0.08) 50%, transparent 100%);
-  background-size: 300px 300px;
-  animation: revolution-flow 25s linear infinite;
-  z-index: 0;
-}
-
-@keyframes revolution-flow {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(300px, 300px) rotate(360deg); }
-}
-
-/* FUDI Entity Container */
-.fudi-entity-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   z-index: 1;
-  pointer-events: none;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* ELIMINADO: background que creaba la capa verdosa */
 }
 
 /* =============================================
-   HEADER NAVIGATION
+   HEADER - TRANSPARENTE
    ============================================= */
 .splash-header {
   position: fixed;
@@ -130,7 +60,7 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background: var(--glass-bg);
+  background: rgba(0, 0, 0, 0.3); /* MÁS TRANSPARENTE */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
@@ -138,32 +68,8 @@
 }
 
 .splash-header.header-scrolled {
-  background: rgba(10, 10, 10, 0.95);
+  background: rgba(0, 0, 0, 0.6); /* MÁS TRANSPARENTE */
   box-shadow: var(--shadow-lg);
-}
-
-.splash-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    var(--fudi-primary) 20%, 
-    var(--fudi-blue) 40%, 
-    var(--fudi-green) 60%, 
-    var(--fudi-purple) 80%,
-    transparent
-  );
-  opacity: 0.6;
-  animation: header-master-glow 6s ease-in-out infinite;
-}
-
-@keyframes header-master-glow {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.9; }
 }
 
 .splash-nav {
@@ -200,11 +106,6 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-top: -2px;
-}
-
-.splash-logo:hover .logo-text {
-  transform: scale(1.05);
-  filter: drop-shadow(var(--glow-primary));
 }
 
 .nav-links {
@@ -244,7 +145,7 @@
 }
 
 /* =============================================
-   HERO SECTION
+   HERO SECTION - SIN BACKGROUND
    ============================================= */
 .splash-hero {
   min-height: 100vh;
@@ -255,11 +156,15 @@
   z-index: 10;
   padding: 8rem 2rem 4rem 2rem;
   text-align: center;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
 .hero-content {
   max-width: 1000px;
   margin: 0 auto;
+  position: relative;
+  z-index: 20;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
 /* Status Badge */
@@ -310,16 +215,8 @@
   margin-bottom: 2rem;
   color: var(--text-primary);
   text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
-  animation: title-master-glow 5s ease-in-out infinite;
-}
-
-@keyframes title-master-glow {
-  0%, 100% { 
-    text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
-  }
-  50% { 
-    text-shadow: 0 0 80px rgba(251, 191, 36, 0.6), 0 0 120px rgba(59, 130, 246, 0.4);
-  }
+  position: relative;
+  z-index: 30;
 }
 
 .title-highlight-red {
@@ -331,7 +228,7 @@
 }
 
 .title-highlight-gold {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
+  background: linear-gradient(135deg, var(--fudi-primary), #f59e0b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -341,6 +238,8 @@
 /* Hero Subtitle */
 .hero-subtitle {
   margin-bottom: 3rem;
+  position: relative;
+  z-index: 30;
 }
 
 .subtitle-main {
@@ -358,6 +257,10 @@
   line-height: 1.5;
 }
 
+.subtitle-highlight {
+  color: var(--text-secondary);
+}
+
 .gold-text {
   color: var(--fudi-primary);
   text-shadow: 0 0 20px currentColor;
@@ -372,10 +275,12 @@
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
+  z-index: 30;
 }
 
 .dream-card {
-  background: var(--glass-bg);
+  background: var(--glass-bg); /* MÁS TRANSPARENTE */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 2px solid var(--dream-color, var(--fudi-primary));
@@ -392,32 +297,13 @@
   transform: scale(1);
   box-shadow: 
     var(--shadow-xl),
-    var(--glow-dream);
-}
-
-.dream-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg,
-    transparent 0%,
-    var(--dream-color, var(--fudi-primary)) 30%,
-    transparent 70%
-  );
-  opacity: 0.1;
-  border-radius: 22px;
-  transform: translateX(-100%);
-  transition: transform 0.8s ease;
-}
-
-.dream-card.active::before {
-  transform: translateX(100%);
+    0 0 40px var(--dream-color, var(--fudi-primary));
 }
 
 .dream-icon {
   width: 60px;
   height: 60px;
-  background: var(--glass-bg);
+  background: var(--glass-bg); /* MÁS TRANSPARENTE */
   border: 2px solid var(--dream-color, var(--fudi-primary));
   border-radius: 16px;
   display: flex;
@@ -458,7 +344,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   border: 1px solid var(--dream-color, var(--fudi-primary));
   border-radius: 8px;
   padding: 0.75rem;
@@ -477,25 +363,15 @@
   gap: 1.5rem;
   justify-content: center;
   margin: 4rem 0;
-}
-
-.main-cta {
-  padding: 1.25rem 3rem;
-  font-size: 1.1rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.secondary-cta {
-  padding: 1.25rem 2.5rem;
-  font-size: 1.1rem;
-  font-weight: 700;
+  position: relative;
+  z-index: 30;
 }
 
 /* Social Proof */
 .social-proof {
   margin-top: 3rem;
+  position: relative;
+  z-index: 30;
 }
 
 .proof-stats {
@@ -547,15 +423,19 @@
 }
 
 /* =============================================
-   POWER TIMELINE SECTION
+   TODAS LAS SECCIONES - SIN BACKGROUNDS
    ============================================= */
-.power-timeline {
+.power-timeline,
+.transformation-section,
+.vision-section,
+.final-cta {
   padding: 8rem 2rem;
   position: relative;
   z-index: 10;
-  background: rgba(59, 130, 246, 0.05);
+  /* NO BACKGROUNDS - DEJA PASAR EL FUDIBACKGROUND */
 }
 
+/* Resto de elementos que usan glass-bg - SE MANTIENEN */
 .timeline-header {
   text-align: center;
   margin-bottom: 5rem;
@@ -703,15 +583,7 @@
   margin-bottom: 2rem;
 }
 
-/* =============================================
-   TRANSFORMATION SECTION
-   ============================================= */
-.transformation-section {
-  padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
-}
-
+/* Transformation Section */
 .transformation-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -820,80 +692,13 @@
   50% { transform: scale(1.2); }
 }
 
-/* =============================================
-   VISION SECTION
-   ============================================= */
-.vision-section {
-  padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
-}
-
-/* =============================================
-   FINAL CTA SECTION
-   ============================================= */
-.final-cta {
-  padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  overflow: hidden;
-}
-
-.final-cta-background {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-
-.final-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  animation: final-orb-float 12s ease-in-out infinite;
-}
-
-.final-orb.orb-1 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.4), transparent);
-  top: 10%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.final-orb.orb-2 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent);
-  top: 60%;
-  right: 20%;
-  animation-delay: 4s;
-}
-
-.final-orb.orb-3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.3), transparent);
-  bottom: 20%;
-  left: 60%;
-  animation-delay: 8s;
-}
-
-@keyframes final-orb-float {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1);
-  }
-  50% { 
-    transform: translate(40px, -40px) scale(1.2);
-  }
-}
-
+/* Final CTA */
 .final-cta-content {
   max-width: 800px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  text-align: center;
 }
 
 .final-badge {
@@ -910,16 +715,6 @@
   color: var(--fudi-primary);
   text-transform: uppercase;
   letter-spacing: 1px;
-  animation: final-badge-glow 3s ease-in-out infinite;
-}
-
-@keyframes final-badge-glow {
-  0%, 100% { 
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
-  }
-  50% { 
-    box-shadow: 0 0 60px rgba(251, 191, 36, 0.8);
-  }
 }
 
 .final-title {
@@ -929,16 +724,6 @@
   margin-bottom: 2rem;
   line-height: 1.2;
   text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
-  animation: final-title-glow 4s ease-in-out infinite;
-}
-
-@keyframes final-title-glow {
-  0%, 100% { 
-    text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
-  }
-  50% { 
-    text-shadow: 0 0 80px rgba(251, 191, 36, 0.7), 0 0 120px rgba(59, 130, 246, 0.5);
-  }
 }
 
 .highlight-red {
@@ -949,7 +734,7 @@
 }
 
 .highlight-gold {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
+  background: linear-gradient(135deg, var(--fudi-primary), #f59e0b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -967,14 +752,6 @@
   margin-bottom: 2rem;
 }
 
-.final-primary-cta {
-  padding: 1.5rem 4rem;
-  font-size: 1.2rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
 .final-guarantee {
   font-size: 1rem;
   color: var(--text-tertiary);
@@ -983,7 +760,7 @@
 }
 
 /* =============================================
-   SCANNING LINE EFFECT
+   EFECTOS QUE SÍ SIRVEN
    ============================================= */
 .scan-line {
   position: fixed;
@@ -1008,9 +785,6 @@
   100% { transform: translateX(100vw); }
 }
 
-/* =============================================
-   FLOATING CTA
-   ============================================= */
 .floating-cta {
   position: fixed;
   bottom: 2rem;
@@ -1038,7 +812,7 @@
 }
 
 /* =============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE - LIMPIO
    ============================================= */
 @media (max-width: 1200px) {
   .dream-scenarios {
@@ -1140,38 +914,26 @@
     width: 50px;
     height: 50px;
   }
-  
-  .main-cta, .secondary-cta {
-    width: 100%;
-    padding: 1rem 2rem;
-  }
-  
-  .final-primary-cta {
-    width: 100%;
-    padding: 1.2rem 2rem;
-  }
 }
 
 /* =============================================
-   UTILITIES
+   UTILITIES - ESENCIALES
    ============================================= */
 ::selection {
   background: rgba(251, 191, 36, 0.3);
   color: var(--text-primary);
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Hide scrollbar but keep functionality */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--fudi-void);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -1183,14 +945,12 @@ html {
   background: var(--border-hover);
 }
 
-/* Focus states for accessibility */
 button:focus,
 a:focus {
   outline: 2px solid var(--fudi-primary);
   outline-offset: 2px;
 }
 
-/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -1,67 +1,59 @@
-/* /styles/pages/login.css */
 /* =============================================
-   FUDI LOGIN - RECONEXIÓN ÉPICA
+   FUDI LOGIN - BUSINESS CASUAL PERFECTION 🎯
    ============================================= */
 
-/* CSS Variables - FUDI Color Palette */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================
+   CSS VARIABLES - CONSISTENT WITH FEATURES
+   ============================================= */
 :root {
-  --fudi-void: #0a0a0a;
-  --fudi-dark: #111111;
-  --fudi-surface: #1a1a1a;
+  /* Core FUDI Colors */
   --fudi-primary: #fbbf24; /* Matrix Gold */
-  --fudi-secondary: #00ffff; /* Cyan */
-  --fudi-accent: #a78bfa; /* Purple */
-  --fudi-success: #10b981;
-  --fudi-danger: #ef4444;
-  --fudi-glass: rgba(255, 255, 255, 0.03);
-  --fudi-glass-border: rgba(255, 255, 255, 0.08);
-  --fudi-text-primary: rgba(231, 233, 234, 1);
-  --fudi-text-secondary: rgba(113, 118, 123, 1);
-  --fudi-border: rgb(47, 51, 54);
+  --fudi-secondary: #00ffff; /* Cyber Cyan */
+  --fudi-accent: #a78bfa; /* Neural Purple */
+  --fudi-blue: #3b82f6; /* Data Blue */
+  --fudi-green: #10b981; /* Success Green */
+  --fudi-red: #ef4444; /* Alert Red */
+  --fudi-orange: #f59e0b; /* Energy Orange */
+  --fudi-purple: #8b5cf6; /* Wisdom Purple */
+  
+  /* Glass System */
+  --glass-bg: rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.12);
+  
+  /* Text Hierarchy */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-muted: rgba(255, 255, 255, 0.3);
+  
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(251, 191, 36, 0.3);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.4);
 }
 
 /* =============================================
-   CONTAINER PRINCIPAL
+   BASE CONTAINER - CLEAN
    ============================================= */
 .login-container {
   min-height: 100vh;
-  background: var(--fudi-void);
-  color: var(--fudi-text-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   position: relative;
   overflow-x: hidden;
 }
 
 /* =============================================
-   FUDI ENTITY GUARDIAN
-   ============================================= */
-.login-entity {
-  position: fixed;
-  top: 50%;
-  right: 5%;
-  transform: translateY(-50%);
-  z-index: 5;
-  width: 400px;
-  height: 400px;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.login-entity-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-}
-
-.login-entity > * {
-  pointer-events: all;
-}
-
-/* =============================================
-   HEADER ÉPICO
+   HEADER - IDENTICAL TO FEATURES
    ============================================= */
 .login-header {
   position: fixed;
@@ -69,25 +61,55 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1.5rem 3rem;
-  background: rgba(10, 10, 10, 0.9);
+  background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--fudi-glass-border);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: all 0.3s ease;
+}
+
+.login-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--fudi-blue) 15%, 
+    var(--fudi-primary) 35%, 
+    var(--fudi-green) 50%, 
+    var(--fudi-purple) 65%,
+    transparent
+  );
+  opacity: 0.6;
+  animation: header-evolution 5s ease-in-out infinite;
+}
+
+@keyframes header-evolution {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.9; }
 }
 
 .login-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
 }
 
 .login-logo {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-decoration: none;
+  letter-spacing: -0.5px;
   transition: all 0.3s ease;
 }
 
@@ -95,40 +117,54 @@
   transform: scale(1.05);
 }
 
-.logo-text {
+.nav-links {
   display: flex;
-  flex-direction: column;
-  line-height: 1;
+  align-items: center;
+  gap: 2rem;
 }
 
-.logo-main {
-  font-size: 1.25rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--fudi-secondary) 0%, var(--fudi-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 2px;
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.logo-sub {
-  font-size: 0.7rem;
-  color: var(--fudi-text-secondary);
-  letter-spacing: 3px;
-  text-transform: uppercase;
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--fudi-primary), var(--fudi-blue));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text-primary);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
 }
 
 /* =============================================
    MAIN CONTENT
    ============================================= */
 .login-main {
-  padding: 8rem 2rem 4rem;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 10;
+  padding: 8rem 2rem 4rem 2rem;
 }
 
 .login-form-wrapper {
@@ -138,7 +174,7 @@
 }
 
 /* =============================================
-   HERO SECTION
+   HERO SECTION - BUSINESS CASUAL
    ============================================= */
 .login-hero {
   text-align: center;
@@ -161,25 +197,25 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1.5rem;
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid rgba(0, 255, 255, 0.3);
+  background: var(--glass-bg);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 50px;
-  color: var(--fudi-secondary);
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--fudi-blue);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 2rem;
-  animation: badgePulse 3s infinite;
+  animation: hero-badge-glow 3s ease-in-out infinite;
 }
 
-@keyframes badgePulse {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+@keyframes hero-badge-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
   }
-  50% {
-    box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+  50% { 
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
   }
 }
 
@@ -188,19 +224,31 @@
   font-weight: 900;
   line-height: 1.1;
   margin-bottom: 1rem;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--fudi-secondary) 0%, var(--fudi-primary) 100%);
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--fudi-blue), var(--fudi-primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+  text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+  animation: title-glow 4s ease-in-out infinite;
+}
+
+@keyframes title-glow {
+  0%, 100% { 
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+  }
+  50% { 
+    text-shadow: 0 0 50px rgba(59, 130, 246, 0.6), 0 0 70px rgba(251, 191, 36, 0.4);
+  }
 }
 
 .hero-subtitle {
-  font-size: 1.1rem;
-  color: var(--fudi-text-secondary);
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  font-weight: 500;
   max-width: 400px;
   margin: 0 auto;
+  line-height: 1.5;
 }
 
 /* =============================================
@@ -208,18 +256,19 @@
    ============================================= */
 .login-fudi-message {
   position: fixed;
-  top: 1.5rem;
+  top: 6rem;
   right: 2rem;
   max-width: 350px;
   padding: 0.75rem 1.5rem;
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid rgba(0, 255, 255, 0.3);
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 50px;
   backdrop-filter: blur(20px);
   animation: messageSlide 0.5s ease-out;
   z-index: 200;
   font-size: 0.9rem;
-  color: var(--fudi-secondary);
+  color: var(--fudi-blue);
+  font-weight: 600;
 }
 
 @keyframes messageSlide {
@@ -237,8 +286,16 @@
    LOGIN CARD
    ============================================= */
 .login-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-default);
+  border-radius: 24px;
+  padding: 2.5rem;
+  position: relative;
   animation: cardSlideIn 0.8s ease-out;
   margin-bottom: 2rem;
+  box-shadow: var(--shadow-lg);
 }
 
 @keyframes cardSlideIn {
@@ -253,7 +310,7 @@
 }
 
 /* =============================================
-   FORM ELEMENTS
+   FORM ELEMENTS - BUSINESS CASUAL
    ============================================= */
 .login-form {
   display: flex;
@@ -272,44 +329,68 @@
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
-  color: var(--fudi-text-primary);
+  color: var(--text-primary);
   font-size: 0.9rem;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .form-input {
   width: 100%;
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--border-default);
   border-radius: 12px;
   padding: 1rem 1.25rem;
-  color: var(--fudi-text-primary);
+  color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
   box-sizing: border-box;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: var(--fudi-secondary);
-  background: rgba(0, 255, 255, 0.05);
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+  border-color: var(--fudi-blue);
+  background: rgba(59, 130, 246, 0.05);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
   transform: translateY(-2px);
 }
 
 .form-input::placeholder {
-  color: var(--fudi-text-secondary);
-  opacity: 0.6;
-  text-transform: uppercase;
-  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  opacity: 0.8;
+  font-size: 0.95rem;
 }
 
 .form-input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Password Container */
+.password-container {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.password-toggle:hover {
+  color: var(--fudi-blue);
+  background: rgba(59, 130, 246, 0.1);
 }
 
 /* =============================================
@@ -331,39 +412,34 @@
 }
 
 .checkbox {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--fudi-secondary);
+  width: 18px;
+  height: 18px;
+  accent-color: var(--fudi-blue);
   cursor: pointer;
 }
 
 .remember-label {
   font-size: 0.9rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   cursor: pointer;
   user-select: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   transition: all 0.3s ease;
 }
 
 .remember-label:hover {
-  color: var(--fudi-secondary);
+  color: var(--fudi-blue);
 }
 
 .forgot-link {
   font-size: 0.9rem;
-  color: var(--fudi-secondary);
+  color: var(--fudi-blue);
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   transition: all 0.3s ease;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .forgot-link:hover {
   color: var(--fudi-primary);
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
   text-decoration: underline;
 }
 
@@ -378,6 +454,11 @@
 .login-button-container .fudi-button {
   width: 100% !important;
   box-sizing: border-box;
+  padding: 1rem 1.5rem !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
 /* =============================================
@@ -395,18 +476,17 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--fudi-glass-border), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-default), transparent);
 }
 
 .divider-text {
   position: relative;
   display: inline-block;
   padding: 0 1.5rem;
-  background: var(--fudi-void);
+  background: var(--glass-bg);
   font-size: 0.875rem;
-  color: var(--fudi-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
 }
 
 /* =============================================
@@ -425,25 +505,30 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--border-default);
   border-radius: 12px;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   backdrop-filter: blur(10px);
 }
 
 .social-button:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--fudi-secondary);
-  color: var(--fudi-text-primary);
+  background: var(--glass-hover);
+  border-color: var(--fudi-blue);
+  color: var(--text-primary);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+}
+
+.social-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .social-icon {
@@ -462,7 +547,7 @@
 .login-status {
   position: fixed;
   inset: 0;
-  background: rgba(10, 10, 10, 0.95);
+  background: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(20px);
   display: flex;
   align-items: center;
@@ -478,19 +563,19 @@
 
 .status-message {
   font-size: 1.5rem;
-  color: var(--fudi-secondary);
+  color: var(--fudi-blue);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 2rem;
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+  text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
   font-weight: 700;
 }
 
 .status-spinner {
   width: 60px;
   height: 60px;
-  border: 3px solid rgba(0, 255, 255, 0.2);
-  border-top-color: var(--fudi-secondary);
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-top-color: var(--fudi-blue);
   border-radius: 50%;
   margin: 0 auto;
   animation: spin 1s linear infinite;
@@ -517,133 +602,139 @@
 .footer-link {
   text-align: center;
   margin-top: 2rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   font-size: 0.9rem;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .footer-register-link {
-  color: var(--fudi-secondary);
+  color: var(--fudi-blue);
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .footer-register-link:hover {
   color: var(--fudi-primary);
   text-decoration: underline;
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-}
-
-/* =============================================
-   SCAN LINE EFFECT
-   ============================================= */
-.scan-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--fudi-secondary),
-    transparent
-  );
-  animation: scanAnimation 8s linear infinite;
-  z-index: 1001;
-}
-
-@keyframes scanAnimation {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(100vh);
-  }
+  transform: translateX(4px);
 }
 
 /* =============================================
    RESPONSIVE DESIGN
    ============================================= */
-@media (max-width: 1024px) {
-  .login-entity {
-    right: 2%;
-    width: 300px;
-    height: 300px;
-  }
-}
-
 @media (max-width: 768px) {
-  .login-header {
-    padding: 1rem 2rem;
+  .login-nav {
+    padding: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
-
+  
+  .nav-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
   .login-main {
-    padding: 6rem 1rem 2rem;
+    padding: 6rem 1rem 2rem 1rem;
   }
-
-  .login-entity {
-    display: none;
-  }
-
+  
   .login-fudi-message {
     right: 1rem;
     left: 1rem;
     max-width: none;
     text-align: center;
+    top: 7rem;
   }
-
+  
   .login-options {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-
+  
   .social-buttons {
     grid-template-columns: 1fr;
   }
-
+  
   .hero-title {
     font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .login-card {
+    padding: 2rem;
   }
 }
 
 @media (max-width: 480px) {
-  .login-header {
-    padding: 1rem;
+  .login-card {
+    padding: 1.5rem;
   }
-
+  
   .hero-title {
     font-size: 2rem;
   }
-
+  
   .social-button {
     padding: 0.875rem;
     font-size: 0.8rem;
   }
+  
+  .form-input {
+    padding: 0.875rem 1rem;
+  }
 }
 
 /* =============================================
-   UTILITIES & ANIMATIONS
+   UTILITIES
    ============================================= */
 ::selection {
-  background: rgba(0, 255, 255, 0.3);
-  color: var(--fudi-text-primary);
+  background: rgba(59, 130, 246, 0.3);
+  color: var(--text-primary);
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Hide scrollbar but keep functionality */
-.login-container {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-.login-container::-webkit-scrollbar {
-  display: none;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+button:focus,
+a:focus,
+input:focus {
+  outline: 2px solid var(--fudi-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

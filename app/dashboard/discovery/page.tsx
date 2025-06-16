@@ -2,130 +2,194 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Heart, MessageCircle, Share2, Bookmark, 
-  Home, Search, Hash, Bell, Mail, User,
-  MoreHorizontal, TrendingUp, Users, Settings,
-  BarChart3, Image, Calendar, MapPin, Sparkles,
-  Eye, Zap, AlertCircle, Brain, DollarSign,
-  ChefHat, UtensilsCrossed, Package, Clock,
-  Verified, MoreVertical, Network, Rocket,
-  Camera, Play, Flame, Trophy, Target,
-  ArrowUp, ArrowDown, Star, Crown, Gift,
-  Activity, Cpu, Wifi, Signal, Database
+  Heart, MessageCircle, Share2, Bookmark, Send, MoreHorizontal,
+  Home, Search, Hash, Bell, Mail, User, Plus, Play, Pause,
+  MoreVertical, Camera, Video, Image, Mic, MapPin, Clock,
+  ChefHat, Star, TrendingUp, Crown, Gift, Zap, Flame,
+  Eye, Users, DollarSign, Target, Award, ThumbsUp
 } from 'lucide-react';
 
-// Import CSS styles
-import '../../../styles/pages/FudiDiscovery.css';
-
-// CONTENT GENERATORS
-const generateRestaurantPosts = () => {
+// CONTENT GENERATORS - IRRESISTIBLE FOOD POSTS
+const generateFoodPosts = () => {
   const posts = [
     {
-      id: 'insight-1',
-      type: 'insight',
+      id: 'viral-1',
+      type: 'video',
       author: {
-        name: 'FUDI Analytics',
-        username: '@fudianalytics',
-        avatar: '🧠',
+        name: 'Tacos El Fuego',
+        username: '@tacosfuego',
+        avatar: '🌮',
         verified: true,
-        aiScore: 98,
-        type: 'ai'
+        followers: '12.5K'
       },
-      content: 'NEURAL INSIGHT: Descubrimos que agregar el sonido del "sizzle" de la carne en nuestros videos aumentó pedidos de hamburguesas 340%. Los cerebros hambrientos reaccionan al audio tanto como al visual.',
-      image: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=600&h=300&fit=crop',
-      metrics: [
-        { label: 'Impacto ROI', value: '+340%' },
-        { label: 'Engagement', value: '89%' },
-        { label: 'Conversión', value: '+156%' }
-      ],
-      tags: ['#DataDriven', '#VisualContent', '#TacoStrategy'],
+      content: '¡El secreto está en el salseo! 3 ingredientes que cambiarán tu taco game para siempre 🔥',
+      media: {
+        type: 'video',
+        url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=600&h=800&fit=crop',
+        views: '847K',
+        duration: '0:45'
+      },
+      location: 'CDMX, Roma Norte',
+      tags: ['#TacoHacks', '#SalsaSecreta', '#ViralFood'],
       timestamp: '2h',
-      stats: { likes: 847, comments: 156, shares: 234, views: 12500 }
+      stats: { 
+        likes: 94700, 
+        comments: 2341, 
+        shares: 5677, 
+        saves: 12400 
+      },
+      music: 'Sonido original - Tacos El Fuego',
+      trending: true
     },
     {
-      id: 'chef-tip-1',
-      type: 'chef-tip',
+      id: 'food-porn-1',
+      type: 'photo',
       author: {
-        name: 'Chef Marco Guerrero',
-        username: '@chefmarco',
-        avatar: '👨‍🍳',
+        name: 'Burger Paradise',
+        username: '@burgerparadise',
+        avatar: '🍔',
         verified: false,
-        type: 'chef'
+        followers: '8.2K'
       },
-      content: 'GAME CHANGER: Cambié mi mise en place de 30 contenedores a 12 estratégicos. Velocidad en cocina +67%. A veces menos contenedores = más control neural.',
-      image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=300&fit=crop',
-      metrics: [
-        { label: 'Velocidad', value: '+67%' },
-        { label: 'Eficiencia', value: '+45%' },
-        { label: 'Stress Level', value: '-23%' }
-      ],
-      tags: ['#KitchenHacks', '#Efficiency', '#ChefLife'],
+      content: 'Cuando la carne se encuentra con el queso... amor a primera vista 😍 ¿Ya probaste nuestra Deluxe Supreme?',
+      media: {
+        type: 'photo',
+        url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=800&fit=crop'
+      },
+      location: 'Guadalajara, Chapultepec',
+      tags: ['#BurgerPorn', '#CheeseLovers', '#Delicious'],
       timestamp: '4h',
-      stats: { likes: 2341, comments: 387, shares: 892, views: 18500 }
-    },
-    {
-      id: 'restaurant-update-1',
-      type: 'restaurant',
-      author: {
-        name: 'Tacos El Patrón',
-        username: '@tacospatron',
-        avatar: 'T',
-        verified: false,
-        type: 'user'
+      stats: { 
+        likes: 15600, 
+        comments: 234, 
+        shares: 445, 
+        saves: 2100 
       },
-      content: '🔥 BREAKING: Acabamos de romper nuestro récord histórico de ventas en un solo día. $47,350 pesos en 12 horas. El equipo está ON FIRE y los clientes lo sienten.',
-      image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&h=300&fit=crop',
-      metrics: [
-        { label: 'Ventas Hoy', value: '$47,350' },
-        { label: 'Tickets', value: '432' },
-        { label: 'Ticket Promedio', value: '$109' }
-      ],
-      tags: ['#RecordBreaking', '#TeamWork', '#Success'],
-      timestamp: '6h',
-      stats: { likes: 1205, comments: 234, shares: 445, views: 8900 }
+      promotion: {
+        type: 'discount',
+        text: '25% OFF hoy',
+        cta: 'Ordenar ahora'
+      }
     },
     {
-      id: 'ai-prediction-1',
-      type: 'prediction',
+      id: 'behind-scenes-1',
+      type: 'video',
       author: {
-        name: 'FUDI Quantum',
-        username: '@fudiquantum',
-        avatar: '🔮',
+        name: 'Chef María',
+        username: '@chefmaria',
+        avatar: '👩‍🍳',
         verified: true,
-        aiScore: 94,
-        type: 'ai'
+        followers: '156K'
       },
-      content: 'PREDICCIÓN NEURAL: Basado en patrones históricos, mañana (Viernes) tendrás 23% más demanda de bebidas frías entre 2-4 PM. Prepara hielo extra y staff adicional.',
-      image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&h=300&fit=crop',
-      metrics: [
-        { label: 'Precisión', value: '94%' },
-        { label: 'Demanda Proyectada', value: '+23%' },
-        { label: 'Hora Pico', value: '2-4 PM' }
-      ],
-      tags: ['#Prediction', '#AIForecast', '#BeverageStrategy'],
-      timestamp: '1d',
-      stats: { likes: 567, comments: 89, shares: 178, views: 6700 }
+      content: 'POV: Preparando 200 órdenes de pasta en hora pico. El teamwork es todo 🔥⚡',
+      media: {
+        type: 'video',
+        url: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=800&fit=crop',
+        views: '2.1M',
+        duration: '1:12'
+      },
+      location: 'Monterrey, San Pedro',
+      tags: ['#BehindTheScenes', '#TeamWork', '#PastaLove'],
+      timestamp: '6h',
+      stats: { 
+        likes: 287000, 
+        comments: 5670, 
+        shares: 12400, 
+        saves: 34500 
+      },
+      music: 'Kitchen Vibes - Trending',
+      challenge: {
+        name: '#KitchenFlow',
+        participants: '45.2K'
+      }
     },
     {
-      id: 'viral-tip-1',
-      type: 'viral',
+      id: 'dessert-magic-1',
+      type: 'photo',
       author: {
-        name: 'Mariscos La Perla',
-        username: '@mariscosperla',
-        avatar: '🦐',
+        name: 'Sweet Dreams',
+        username: '@sweetdreams',
+        avatar: '🍰',
         verified: false,
-        type: 'user'
+        followers: '23.1K'
       },
-      content: 'VIRAL HACK: Empecé a servir limones en forma de flor (30 segundos extra de prep). Los clientes suben 10x más fotos. Instagram stories +500%. Social media = marketing gratis.',
-      image: 'https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?w=600&h=300&fit=crop',
-      metrics: [
-        { label: 'Fotos Subidas', value: '+1000%' },
-        { label: 'Stories Mentions', value: '+500%' },
-        { label: 'Costo Extra', value: '$0.50' }
-      ],
-      tags: ['#ViralHack', '#SocialMedia', '#CustomerExperience'],
-      timestamp: '2d',
-      stats: { likes: 3421, comments: 567, shares: 1234, views: 25600 }
+      content: 'Momento de magia: Cuando el chocolate caliente se encuentra con el helado... 🍫❄️ ASMR visual',
+      media: {
+        type: 'photo',
+        url: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&h=800&fit=crop'
+      },
+      location: 'Puebla Centro',
+      tags: ['#ChocolateASMR', '#DessertPorn', '#SweetMoments'],
+      timestamp: '8h',
+      stats: { 
+        likes: 42300, 
+        comments: 890, 
+        shares: 1200, 
+        saves: 8900 
+      },
+      recipe: {
+        available: true,
+        ingredients: 4,
+        time: '15 min'
+      }
+    },
+    {
+      id: 'transformation-1',
+      type: 'video',
+      author: {
+        name: 'Pizza Bros',
+        username: '@pizzabros',
+        avatar: '🍕',
+        verified: true,
+        followers: '89.4K'
+      },
+      content: 'De masa simple a obra maestra en 60 segundos. El arte de la pizza napoletana 🇮🇹✨',
+      media: {
+        type: 'video',
+        url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=800&fit=crop',
+        views: '1.8M',
+        duration: '1:00'
+      },
+      location: 'CDMX, Polanco',
+      tags: ['#PizzaArt', '#Transformation', '#Napoletana'],
+      timestamp: '12h',
+      stats: { 
+        likes: 156000, 
+        comments: 3400, 
+        shares: 7800, 
+        saves: 18900 
+      },
+      music: 'Italian Vibes - Trending'
+    },
+    {
+      id: 'trending-drink-1',
+      type: 'photo',
+      author: {
+        name: 'Café Cultura',
+        username: '@cafecultura',
+        avatar: '☕',
+        verified: false,
+        followers: '34.7K'
+      },
+      content: 'El latte art que está rompiendo Instagram. ¿Butterfly o Dragon? Tú decides 🦋🐉',
+      media: {
+        type: 'photo',
+        url: 'https://images.unsplash.com/photo-1495774856032-8b90bbb32b32?w=600&h=800&fit=crop'
+      },
+      location: 'Mérida, Centro',
+      tags: ['#LatteArt', '#CoffeeLovers', '#ArtisticCoffee'],
+      timestamp: '1d',
+      stats: { 
+        likes: 28900, 
+        comments: 567, 
+        shares: 890, 
+        saves: 4500 
+      },
+      tutorial: {
+        available: true,
+        difficulty: 'Intermedio',
+        duration: '5 min'
+      }
     }
   ];
 
@@ -133,60 +197,56 @@ const generateRestaurantPosts = () => {
 };
 
 export default function FudiFlowRevolution() {
-  interface Post {
-    id: string;
-    type: string;
-    author: {
-      name: string;
-      username: string;
-      avatar: string;
-      verified: boolean;
-      aiScore?: number;
-      type: string;
-    };
-    content: string;
-    image?: string;
-    metrics?: Array<{
-      label: string;
-      value: string;
-    }>;
-    tags?: string[];
-    timestamp: string;
-    stats: {
-      likes: number;
-      comments: number;
-      shares: number;
-      views: number;
-    };
-    liked?: boolean;
-    bookmarked?: boolean;
-  }
-  
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('foryou');
+  const [showComposer, setShowComposer] = useState(false);
   const [composerText, setComposerText] = useState('');
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [playingVideo, setPlayingVideo] = useState(null);
+  const [currentUser] = useState({
+    name: 'Mi Restaurante',
+    username: '@mirestaurante',
+    avatar: 'M'
+  });
+
+  const feedRef = useRef(null);
 
   useEffect(() => {
-    // Load posts
-    const initialPosts = generateRestaurantPosts();
-    setPosts(initialPosts);
-
-    // Scroll handler
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Simulate loading
+    setTimeout(() => {
+      const initialPosts = generateFoodPosts();
+      setPosts(initialPosts);
+      setLoading(false);
+    }, 1000);
   }, []);
 
-  const formatNumber = (num: number) => {
+  // Infinite scroll simulation
+  useEffect(() => {
+    const handleScroll = () => {
+      if (feedRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = feedRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 1000) {
+          // Load more posts
+          const morePosts = generateFoodPosts();
+          setPosts(prev => [...prev, ...morePosts]);
+        }
+      }
+    };
+
+    const feedElement = feedRef.current;
+    if (feedElement) {
+      feedElement.addEventListener('scroll', handleScroll);
+      return () => feedElement.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
+  const formatNumber = (num) => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
     return num.toString();
   };
 
-  const handleLike = (postId: any) => {
+  const handleLike = (postId) => {
     setPosts(prev => prev.map(post => {
       if (post.id === postId) {
         const liked = !post.liked;
@@ -203,10 +263,37 @@ export default function FudiFlowRevolution() {
     }));
   };
 
-  const handleBookmark = (postId: string) => {
+  const handleSave = (postId) => {
     setPosts(prev => prev.map(post => {
       if (post.id === postId) {
-        return { ...post, bookmarked: !post.bookmarked };
+        const saved = !post.saved;
+        return {
+          ...post,
+          saved,
+          stats: {
+            ...post.stats,
+            saves: saved ? post.stats.saves + 1 : post.stats.saves - 1
+          }
+        };
+      }
+      return post;
+    }));
+  };
+
+  const handleVideoPlay = (postId) => {
+    setPlayingVideo(playingVideo === postId ? null : postId);
+  };
+
+  const handleShare = (postId) => {
+    setPosts(prev => prev.map(post => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          stats: {
+            ...post.stats,
+            shares: post.stats.shares + 1
+          }
+        };
       }
       return post;
     }));
@@ -217,402 +304,1000 @@ export default function FudiFlowRevolution() {
     
     const newPost = {
       id: `user-${Date.now()}`,
-      type: 'restaurant',
-      author: {
-        name: 'Mi Restaurante',
-        username: '@mirestaurante',
-        avatar: 'M',
-        verified: false,
-        type: 'user'
-      },
+      type: 'photo',
+      author: currentUser,
       content: composerText,
+      media: {
+        type: 'photo',
+        url: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&h=800&fit=crop'
+      },
+      location: 'Mi ubicación',
+      tags: ['#MiRestaurante'],
       timestamp: 'ahora',
-      stats: { likes: 0, comments: 0, shares: 0, views: 0 }
+      stats: { likes: 0, comments: 0, shares: 0, saves: 0 }
     };
     
     setPosts([newPost, ...posts]);
     setComposerText('');
+    setShowComposer(false);
   };
 
-  return (
-    <div className="fudiflow-container">
-      {/* Neural Grid Background */}
-
-      {/* HERO BANNER - COMING SOON EPIC */}
-      <div className={`hero-banner ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="hero-content">
-          <div className="coming-soon-badge">
-            <Rocket size={16} />
-            <span>PRÓXIMAMENTE</span>
-          </div>
-          
-          <div>
-            <div className="hero-logo">fudiFlow</div>
-            <div className="hero-tagline">POWERED BY FUDIVERSE AI</div>
-          </div>
+  if (loading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(180deg, #000 0%, #111 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            width: '60px',
+            height: '60px',
+            border: '3px solid rgba(255,255,255,0.1)',
+            borderTop: '3px solid #ff6b6b',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 2rem'
+          }} />
+          <h2 style={{ color: '#ff6b6b', fontSize: '1.2rem', fontWeight: '600' }}>
+            Cargando experiencias deliciosas...
+          </h2>
         </div>
-        
-        <div className="hero-stats">
-          <div className="hero-stat">
-            <span className="stat-value">8,500+</span>
-            <span className="stat-label">Lista de espera</span>
-          </div>
-          <div className="hero-stat">
-            <span className="stat-value">22</span>
-            <span className="stat-label">Ciudades</span>
-          </div>
-          <div className="hero-stat">
-            <span className="stat-value">Q2</span>
-            <span className="stat-label">2025 Launch</span>
-          </div>
-        </div>
-        
-        <button className="hero-cta">
-          ÚNETE A LA LISTA
-        </button>
       </div>
+    );
+  }
 
-      {/* MAIN LAYOUT */}
-      <div className="main-layout">
+  return (
+    <>
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes heartPulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.3); }
+          100% { transform: scale(1); }
+        }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        .heart-liked {
+          animation: heartPulse 0.6s ease;
+          color: #ff3040 !important;
+        }
+        .post-card {
+          animation: fadeInUp 0.5s ease;
+        }
+        .floating-button {
+          animation: float 3s ease-in-out infinite;
+        }
+      `}</style>
+
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(180deg, #000 0%, #111 50%, #000 100%)',
+        color: 'white',
+        fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
         
-        {/* LEFT COMMAND CENTER */}
-        <aside className="command-center">
-          <div className="command-header">
-            <div className="command-logo">fudiFlow</div>
-            <div className="command-subtitle">Neural Command Center</div>
-          </div>
-          
-          <nav className="nav-menu">
-            <a href="#" className="nav-item active">
-              <Home size={20} />
-              Neural Feed
-            </a>
-            <a href="#" className="nav-item">
-              <Search size={20} />
-              Explorar
-            </a>
-            <a href="#" className="nav-item">
-              <Brain size={20} />
-              AI Insights
-            </a>
-            <a href="#" className="nav-item">
-              <Bell size={20} />
-              Alertas
-            </a>
-            <a href="#" className="nav-item">
-              <Mail size={20} />
-              Mensajes
-            </a>
-            <a href="#" className="nav-item">
-              <Users size={20} />
-              Comunidad
-            </a>
-            <a href="#" className="nav-item">
-              <Sparkles size={20} />
-              Premium
-            </a>
-            <a href="#" className="nav-item">
-              <BarChart3 size={20} />
-              Analytics
-            </a>
-          </nav>
-          
-          <button className="post-button">
-            <Sparkles size={20} style={{marginRight: '0.5rem'}} />
-            Compartir Neural
-          </button>
+        {/* Header con Navigation */}
+        <header style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+          background: 'rgba(0, 0, 0, 0.9)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          padding: '1rem 0'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            maxWidth: '500px',
+            margin: '0 auto',
+            padding: '0 1.5rem'
+          }}>
+            {/* Logo */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <div style={{
+                fontSize: '1.5rem',
+                fontWeight: '900',
+                background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                fudiFLOW
+              </div>
+              <div style={{
+                background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+                color: 'white',
+                fontSize: '0.7rem',
+                padding: '0.2rem 0.6rem',
+                borderRadius: '12px',
+                fontWeight: '700',
+                letterSpacing: '1px'
+              }}>
+                BETA
+              </div>
+            </div>
 
-          <div className="neural-status">
-            <div className="status-title">
-              <Activity size={16} style={{marginRight: '0.5rem'}} />
-              FUDIVERSE STATUS
-            </div>
-            <div className="status-metrics">
-              <div className="status-metric">
-                <div className="metric-value">98%</div>
-                <div className="metric-label">Neural Online</div>
-              </div>
-              <div className="status-metric">
-                <div className="metric-value">2.3K</div>
-                <div className="metric-label">Restauranteros</div>
-              </div>
-              <div className="status-metric">
-                <div className="metric-value">Live</div>
-                <div className="metric-label">Data Stream</div>
-              </div>
-              <div className="status-metric">
-                <div className="metric-value">24/7</div>
-                <div className="metric-label">AI Analysis</div>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        {/* MAIN NEURAL FEED */}
-        <main className="neural-feed">
-          
-          {/* NEURAL COMPOSER */}
-          <div className="neural-composer">
-            <div className="composer-header">
-              <div className="composer-avatar">M</div>
-              <div className="composer-info">
-                <div className="composer-name">Mi Restaurante</div>
-                <div className="composer-subtitle">Neural Broadcasting</div>
-              </div>
-            </div>
-            
-            <textarea
-              className="composer-input"
-              placeholder="¿Qué insights neurales estás descubriendo en tu restaurante hoy?"
-              value={composerText}
-              onChange={(e) => setComposerText(e.target.value)}
-              rows={3}
-            />
-            
-            <div className="composer-actions">
-              <div className="composer-tools">
-                <button className="composer-tool">
-                  <Camera size={20} />
-                </button>
-                <button className="composer-tool">
-                  <BarChart3 size={20} />
-                </button>
-                <button className="composer-tool">
-                  <Brain size={20} />
-                </button>
-                <button className="composer-tool">
-                  <Activity size={20} />
-                </button>
-              </div>
-              <button className="composer-post-btn" onClick={handlePost}>
-                <Zap size={16} style={{marginRight: '0.5rem'}} />
-                Neural Cast
+            {/* Navigation Pills */}
+            <nav style={{
+              display: 'flex',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '20px',
+              padding: '0.3rem',
+              gap: '0.3rem'
+            }}>
+              <button
+                onClick={() => window.location.href = '/dashboard/chat'}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '16px',
+                  padding: '0.6rem 1.2rem',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 107, 107, 0.2)';
+                  e.target.style.color = '#ff6b6b';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.color = 'rgba(255, 255, 255, 0.7)';
+                }}
+              >
+                fudiGPT
               </button>
+              
+              <button
+                onClick={() => window.location.href = '/dashboard'}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '16px',
+                  padding: '0.6rem 1.2rem',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 107, 107, 0.2)';
+                  e.target.style.color = '#ff6b6b';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.color = 'rgba(255, 255, 255, 0.7)';
+                }}
+              >
+                fudiBOARD
+              </button>
+              
+              <button
+                style={{
+                  background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+                  border: 'none',
+                  borderRadius: '16px',
+                  padding: '0.6rem 1.2rem',
+                  color: 'white',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  boxShadow: '0 0 20px rgba(255, 107, 107, 0.4)'
+                }}
+              >
+                fudiFLOW
+              </button>
+            </nav>
+
+            {/* Coming Soon Badge */}
+            <div style={{
+              background: 'rgba(255, 193, 7, 0.2)',
+              border: '1px solid rgba(255, 193, 7, 0.5)',
+              borderRadius: '12px',
+              padding: '0.4rem 0.8rem',
+              fontSize: '0.7rem',
+              fontWeight: '700',
+              color: '#ffc107',
+              letterSpacing: '1px'
+            }}>
+              PRÓXIMAMENTE
+            </div>
+          </div>
+        </header>
+
+        {/* Mobile Feed Container */}
+        <div 
+          ref={feedRef}
+          style={{
+            marginTop: '80px',
+            height: 'calc(100vh - 80px)',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            scrollBehavior: 'smooth',
+            WebkitOverflowScrolling: 'touch',
+            maxWidth: '500px',
+            margin: '80px auto 0',
+            position: 'relative'
+          }}
+        >
+          {/* Tab Navigation */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '1rem',
+            position: 'sticky',
+            top: 0,
+            background: 'rgba(0, 0, 0, 0.9)',
+            backdropFilter: 'blur(10px)',
+            zIndex: 100,
+            marginBottom: '1rem'
+          }}>
+            <div style={{
+              display: 'flex',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '20px',
+              padding: '0.3rem'
+            }}>
+              {[
+                { id: 'foryou', label: 'Para Ti', icon: '🔥' },
+                { id: 'trending', label: 'Trending', icon: '📈' },
+                { id: 'following', label: 'Siguiendo', icon: '👥' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  style={{
+                    background: activeTab === tab.id 
+                      ? 'linear-gradient(135deg, #ff6b6b, #ffa726)' 
+                      : 'transparent',
+                    border: 'none',
+                    borderRadius: '16px',
+                    padding: '0.7rem 1.2rem',
+                    color: 'white',
+                    fontSize: '0.8rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    boxShadow: activeTab === tab.id ? '0 0 20px rgba(255, 107, 107, 0.4)' : 'none'
+                  }}
+                >
+                  <span>{tab.icon}</span>
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* NEURAL POSTS */}
-          {posts.map(post => (
-            <article key={post.id} className="neural-post">
-              <div className="post-header">
-                <div className={`post-avatar avatar-${post.author.type}`}>
-                  {post.author.avatar}
+          {/* Posts Feed */}
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem',
+            paddingBottom: '2rem'
+          }}>
+            
+            {/* COMING SOON BANNER STICKY - DENTRO DEL FEED */}
+            <div style={{
+              position: 'sticky',
+              top: '140px',
+              zIndex: 500,
+              width: '100%',
+              background: 'linear-gradient(135deg, rgba(255, 107, 107, 0.95), rgba(255, 167, 38, 0.95))',
+              backdropFilter: 'blur(20px)',
+              padding: '2rem',
+              borderRadius: '20px',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              boxShadow: '0 8px 32px rgba(255, 107, 107, 0.4)',
+              animation: 'fadeInUp 0.6s ease',
+              margin: '1rem 1rem 2rem',
+              transform: 'translateZ(0)', // Hardware acceleration
+              willChange: 'transform'
+            }}>
+              <div style={{
+                textAlign: 'center',
+                color: 'white'
+              }}>
+                {/* Header con emoji animado */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '1rem',
+                  marginBottom: '1.5rem'
+                }}>
+                  <div style={{
+                    fontSize: '2rem',
+                    fontWeight: '900',
+                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
+                    animation: 'float 3s ease-in-out infinite'
+                  }}>
+                    🚀 PRÓXIMAMENTE
+                  </div>
                 </div>
-                <div className="post-info">
-                  <div className="post-author">
-                    <span className="author-name">{post.author.name}</span>
-                    {post.author.verified && (
-                      <div className="verified-badge">✓</div>
-                    )}
-                    {post.author.aiScore && (
-                      <div className="ai-score">
-                        <Eye size={12} />
-                        {post.author.aiScore}%
+
+                {/* Main Value Prop */}
+                <h2 style={{
+                  fontSize: '1.4rem',
+                  fontWeight: '800',
+                  marginBottom: '1rem',
+                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
+                  lineHeight: '1.3'
+                }}>
+                  La red social QUE SÍ te interesa
+                </h2>
+
+                <p style={{
+                  fontSize: '1.1rem',
+                  marginBottom: '1.5rem',
+                  lineHeight: '1.4',
+                  opacity: 0.95
+                }}>
+                  <strong>¿Cansado del ruido en otras redes?</strong><br/>
+                  Aquí SOLO ves restaurantes, chefs y food lovers.<br/>
+                  <strong>Punto.</strong>
+                </p>
+
+                {/* Features Grid compacto */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '0.8rem',
+                  marginBottom: '1.5rem'
+                }}>
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.15)',
+                    borderRadius: '12px',
+                    padding: '0.8rem',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'transform 0.3s ease'
+                  }}>
+                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>🍔</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>Solo Food Content</div>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Sin distracciones</div>
+                  </div>
+                  
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.15)',
+                    borderRadius: '12px',
+                    padding: '0.8rem',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'transform 0.3s ease'
+                  }}>
+                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>🧠</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>FUDIVERSE.Ai</div>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Algoritmo inteligente</div>
+                  </div>
+                  
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.15)',
+                    borderRadius: '12px',
+                    padding: '0.8rem',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'transform 0.3s ease'
+                  }}>
+                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>⚡</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>TikTok Vibes</div>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Scroll adictivo</div>
+                  </div>
+                  
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.15)',
+                    borderRadius: '12px',
+                    padding: '0.8rem',
+                    backdropFilter: 'blur(10px)',
+                    transition: 'transform 0.3s ease'
+                  }}>
+                    <div style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}>🎯</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>Zero Ruido</div>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.9 }}>Solo lo que importa</div>
+                  </div>
+                </div>
+
+                {/* FUDIVERSE Connection compacto */}
+                <div style={{
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  borderRadius: '16px',
+                  padding: '1.2rem',
+                  marginBottom: '1.2rem',
+                  border: '1px solid rgba(255, 255, 255, 0.2)'
+                }}>
+                  <h3 style={{
+                    fontSize: '1rem',
+                    fontWeight: '700',
+                    marginBottom: '0.6rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    🤖 Powered by FUDIVERSE.Ai
+                  </h3>
+                  <p style={{
+                    fontSize: '0.9rem',
+                    lineHeight: '1.4',
+                    opacity: 0.9
+                  }}>
+                    Tu feed será <strong>inteligentemente curado</strong> con contenido que SÍ te interesa: 
+                    tendencias, técnicas, ingredientes, negocios y todo el ecosistema food.
+                  </p>
+                </div>
+
+                {/* Call to Action */}
+                <button
+                  onClick={() => window.location.href = '/dashboard/chat'}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.9)',
+                    color: '#000',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '1rem 2rem',
+                    fontWeight: '700',
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px',
+                    width: '100%',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'white';
+                    e.target.style.transform = 'scale(1.02)';
+                    e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                    e.target.style.transform = 'scale(1)';
+                    e.target.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+                  }}
+                >
+                  Pregúntale a FUDI cuándo estará listo
+                </button>
+              </div>
+            </div>
+
+            {posts.map((post, index) => (
+              <div
+                key={post.id}
+                className="post-card"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '0',
+                  position: 'relative',
+                  minHeight: '100vh',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Media Container */}
+                <div style={{
+                  position: 'relative',
+                  flex: 1,
+                  background: `url(${post.media.url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  minHeight: '60vh',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  
+                  {/* Gradient Overlay */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.8) 100%)',
+                    zIndex: 1
+                  }} />
+
+                  {/* Top Content */}
+                  <div style={{
+                    position: 'relative',
+                    zIndex: 2,
+                    padding: '1.5rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start'
+                  }}>
+                    {/* Author Info */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      background: 'rgba(0, 0, 0, 0.5)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: '20px',
+                      padding: '0.75rem 1rem'
+                    }}>
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.2rem',
+                        fontWeight: '700',
+                        border: '2px solid rgba(255, 255, 255, 0.3)'
+                      }}>
+                        {post.author.avatar}
+                      </div>
+                      <div>
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
+                        }}>
+                          <span style={{
+                            fontWeight: '700',
+                            fontSize: '0.9rem'
+                          }}>
+                            {post.author.name}
+                          </span>
+                          {post.author.verified && (
+                            <div style={{
+                              background: '#1da1f2',
+                              borderRadius: '50%',
+                              width: '16px',
+                              height: '16px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '10px'
+                            }}>
+                              ✓
+                            </div>
+                          )}
+                        </div>
+                        <div style={{
+                          fontSize: '0.75rem',
+                          color: 'rgba(255, 255, 255, 0.8)'
+                        }}>
+                          {post.author.followers} seguidores
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* More Options */}
+                    <button style={{
+                      background: 'rgba(0, 0, 0, 0.5)',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '40px',
+                      height: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      cursor: 'pointer',
+                      backdropFilter: 'blur(10px)'
+                    }}>
+                      <MoreVertical size={20} />
+                    </button>
+                  </div>
+
+                  {/* Video Play Button */}
+                  {post.media.type === 'video' && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      zIndex: 2
+                    }}>
+                      <button
+                        onClick={() => handleVideoPlay(post.id)}
+                        style={{
+                          background: 'rgba(0, 0, 0, 0.7)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '80px',
+                          height: '80px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'white',
+                          cursor: 'pointer',
+                          backdropFilter: 'blur(10px)',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.transform = 'scale(1.1)';
+                          e.target.style.background = 'rgba(255, 107, 107, 0.8)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.transform = 'scale(1)';
+                          e.target.style.background = 'rgba(0, 0, 0, 0.7)';
+                        }}
+                      >
+                        {playingVideo === post.id ? <Pause size={32} /> : <Play size={32} />}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Bottom Content */}
+                  <div style={{
+                    position: 'relative',
+                    zIndex: 2,
+                    padding: '1.5rem'
+                  }}>
+                    {/* Location & Time */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '1rem',
+                      marginBottom: '1rem',
+                      fontSize: '0.8rem',
+                      color: 'rgba(255, 255, 255, 0.8)'
+                    }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem'
+                      }}>
+                        <MapPin size={14} />
+                        {post.location}
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.3rem'
+                      }}>
+                        <Clock size={14} />
+                        {post.timestamp}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <p style={{
+                      fontSize: '1.1rem',
+                      lineHeight: '1.4',
+                      margin: '0 0 1rem',
+                      fontWeight: '500'
+                    }}>
+                      {post.content}
+                    </p>
+
+                    {/* Tags */}
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '0.5rem',
+                      marginBottom: '1.5rem'
+                    }}>
+                      {post.tags.map((tag, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            background: 'rgba(255, 107, 107, 0.2)',
+                            color: '#ff6b6b',
+                            padding: '0.3rem 0.8rem',
+                            borderRadius: '12px',
+                            fontSize: '0.8rem',
+                            fontWeight: '600',
+                            border: '1px solid rgba(255, 107, 107, 0.3)'
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Music/Audio Info */}
+                    {post.music && (
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        background: 'rgba(0, 0, 0, 0.5)',
+                        borderRadius: '16px',
+                        padding: '0.75rem 1rem',
+                        marginBottom: '1rem',
+                        backdropFilter: 'blur(10px)'
+                      }}>
+                        <Mic size={16} />
+                        <span style={{ fontSize: '0.8rem' }}>{post.music}</span>
                       </div>
                     )}
                   </div>
-                  <div className="post-meta">
-                    {post.author.username} • {post.timestamp}
+                </div>
+
+                {/* Actions Bar */}
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '1.5rem',
+                  background: 'rgba(0, 0, 0, 0.9)',
+                  backdropFilter: 'blur(20px)',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    gap: '2rem'
+                  }}>
+                    <button
+                      onClick={() => handleLike(post.id)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: post.liked ? '#ff3040' : 'rgba(255, 255, 255, 0.8)',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        fontWeight: '600',
+                        transition: 'all 0.3s ease'
+                      }}
+                      className={post.liked ? 'heart-liked' : ''}
+                    >
+                      <Heart size={24} fill={post.liked ? '#ff3040' : 'none'} />
+                      {formatNumber(post.stats.likes)}
+                    </button>
+
+                    <button style={{
+                      background: 'none',
+                      border: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      fontWeight: '600'
+                    }}>
+                      <MessageCircle size={24} />
+                      {formatNumber(post.stats.comments)}
+                    </button>
+
+                    <button
+                      onClick={() => handleShare(post.id)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        cursor: 'pointer',
+                        fontSize: '0.9rem',
+                        fontWeight: '600'
+                      }}
+                    >
+                      <Share2 size={24} />
+                      {formatNumber(post.stats.shares)}
+                    </button>
                   </div>
-                </div>
-                <button className="post-more">
-                  <MoreHorizontal size={18} />
-                </button>
-              </div>
 
-              <div className="post-content">
-                {post.content}
-              </div>
-
-              {post.image && (
-                <img 
-                  src={post.image} 
-                  alt="Post content" 
-                  className="post-image"
-                />
-              )}
-
-              {post.metrics && (
-                <div className="post-metrics">
-                  {post.metrics.map((metric, i) => (
-                    <div key={i} className="metric-item">
-                      <div className="metric-value">{metric.value}</div>
-                      <div className="metric-label">{metric.label}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {post.tags && (
-                <div className="post-tags">
-                  {post.tags.map((tag, i) => (
-                    <span key={i} className="post-tag">{tag}</span>
-                  ))}
-                </div>
-              )}
-
-              <div className="post-actions">
-                <div className="action-group">
-                  <button className="action-button">
-                    <MessageCircle size={16} />
-                    {formatNumber(post.stats.comments)}
-                  </button>
-                  <button className="action-button">
-                    <Share2 size={16} />
-                    {formatNumber(post.stats.shares)}
-                  </button>
-                  <button 
-                    className={`action-button ${post.liked ? 'liked' : ''}`}
-                    onClick={() => handleLike(post.id)}
+                  <button
+                    onClick={() => handleSave(post.id)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: post.saved ? '#ffa726' : 'rgba(255, 255, 255, 0.8)',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
                   >
-                    <Heart size={16} fill={post.liked ? 'currentColor' : 'none'} />
-                    {formatNumber(post.stats.likes)}
+                    <Bookmark size={24} fill={post.saved ? '#ffa726' : 'none'} />
                   </button>
                 </div>
-                <button 
-                  className={`action-button ${post.bookmarked ? 'bookmarked' : ''}`}
-                  onClick={() => handleBookmark(post.id)}
+
+                {/* Special Features */}
+                {post.promotion && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '20px',
+                    right: '20px',
+                    background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+                    borderRadius: '12px',
+                    padding: '0.75rem 1rem',
+                    zIndex: 3,
+                    boxShadow: '0 8px 25px rgba(255, 107, 107, 0.4)'
+                  }}>
+                    <div style={{
+                      fontWeight: '700',
+                      fontSize: '0.9rem',
+                      marginBottom: '0.25rem'
+                    }}>
+                      {post.promotion.text}
+                    </div>
+                    <div style={{
+                      fontSize: '0.7rem',
+                      opacity: 0.9
+                    }}>
+                      {post.promotion.cta}
+                    </div>
+                  </div>
+                )}
+
+                {post.trending && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '20px',
+                    left: '20px',
+                    background: 'rgba(255, 107, 107, 0.9)',
+                    borderRadius: '20px',
+                    padding: '0.5rem 1rem',
+                    zIndex: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.8rem',
+                    fontWeight: '700'
+                  }}>
+                    <Flame size={16} />
+                    TRENDING
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Floating Create Button */}
+        <button
+          onClick={() => setShowComposer(true)}
+          className="floating-button"
+          style={{
+            position: 'fixed',
+            bottom: '30px',
+            right: '30px',
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            cursor: 'pointer',
+            boxShadow: '0 8px 25px rgba(255, 107, 107, 0.4)',
+            transition: 'all 0.3s ease',
+            zIndex: 1000
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'scale(1.1)';
+            e.target.style.boxShadow = '0 12px 35px rgba(255, 107, 107, 0.6)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'scale(1)';
+            e.target.style.boxShadow = '0 8px 25px rgba(255, 107, 107, 0.4)';
+          }}
+        >
+          <Plus size={28} />
+        </button>
+
+        {/* Simple Composer Modal */}
+        {showComposer && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2000,
+            padding: '2rem'
+          }}>
+            <div style={{
+              background: 'rgba(0, 0, 0, 0.95)',
+              borderRadius: '20px',
+              padding: '2rem',
+              maxWidth: '500px',
+              width: '100%',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              <h3 style={{
+                marginBottom: '1.5rem',
+                fontSize: '1.2rem',
+                fontWeight: '700'
+              }}>
+                Comparte tu platillo 🍽️
+              </h3>
+              
+              <textarea
+                value={composerText}
+                onChange={(e) => setComposerText(e.target.value)}
+                placeholder="¿Qué delicia estás preparando hoy?"
+                style={{
+                  width: '100%',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  color: 'white',
+                  fontSize: '1rem',
+                  resize: 'none',
+                  minHeight: '120px',
+                  marginBottom: '1.5rem'
+                }}
+              />
+
+              <div style={{
+                display: 'flex',
+                gap: '1rem',
+                justifyContent: 'flex-end'
+              }}>
+                <button
+                  onClick={() => setShowComposer(false)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '0.75rem 1.5rem',
+                    color: 'white',
+                    cursor: 'pointer'
+                  }}
                 >
-                  <Bookmark size={16} fill={post.bookmarked ? 'currentColor' : 'none'} />
+                  Cancelar
+                </button>
+                <button
+                  onClick={handlePost}
+                  style={{
+                    background: 'linear-gradient(135deg, #ff6b6b, #ffa726)',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '0.75rem 1.5rem',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontWeight: '600'
+                  }}
+                >
+                  Publicar
                 </button>
               </div>
-            </article>
-          ))}
-        </main>
-
-        {/* RIGHT INTELLIGENCE CENTER */}
-        <aside className="intelligence-center">
-          
-          {/* NEURAL TRENDS */}
-          <div className="intelligence-card">
-            <div className="card-header">
-              <TrendingUp className="card-icon" />
-              <span className="card-title">Neural Trends</span>
-            </div>
-            
-            <div className="trending-item">
-              <div className="trending-category">Trending • Restaurantes</div>
-              <div className="trending-title">#MenuEngineering</div>
-              <div className="trending-stats">4,567 neural posts</div>
-            </div>
-            
-            <div className="trending-item">
-              <div className="trending-category">AI Analysis • Operaciones</div>
-              <div className="trending-title">Optimización de Inventario</div>
-              <div className="trending-stats">2,341 insights compartidos</div>
-            </div>
-            
-            <div className="trending-item">
-              <div className="trending-category">Viral • Marketing</div>
-              <div className="trending-title">TikTok Food Hacks</div>
-              <div className="trending-stats">8,923 implementaciones</div>
-            </div>
-            
-            <div className="trending-item">
-              <div className="trending-category">Hot Topic • Finanzas</div>
-              <div className="trending-title">Inflación Ingredientes 2025</div>
-              <div className="trending-stats">1,567 discusiones</div>
             </div>
           </div>
-
-          {/* NEURAL CONNECTIONS */}
-          <div className="intelligence-card">
-            <div className="card-header">
-              <Network className="card-icon" />
-              <span className="card-title">Neural Connections</span>
-            </div>
-            
-            <div className="follow-item">
-              <div className="follow-user">
-                <div className="follow-avatar">G</div>
-                <div className="follow-info">
-                  <div className="follow-name">Gordon AI Chef</div>
-                  <div className="follow-username">@gordonai</div>
-                </div>
-              </div>
-              <button className="follow-button">Connect</button>
-            </div>
-            
-            <div className="follow-item">
-              <div className="follow-user">
-                <div className="follow-avatar">🤖</div>
-                <div className="follow-info">
-                  <div className="follow-name">FUDI Quantum</div>
-                  <div className="follow-username">@fudiquantum</div>
-                </div>
-              </div>
-              <button className="follow-button">Connect</button>
-            </div>
-            
-            <div className="follow-item">
-              <div className="follow-user">
-                <div className="follow-avatar">C</div>
-                <div className="follow-info">
-                  <div className="follow-name">Chef Oropeza Neural</div>
-                  <div className="follow-username">@cheforopeza</div>
-                </div>
-              </div>
-              <button className="follow-button">Connect</button>
-            </div>
-            
-            <div className="follow-item">
-              <div className="follow-user">
-                <div className="follow-avatar">📊</div>
-                <div className="follow-info">
-                  <div className="follow-name">Restaurant Analytics</div>
-                  <div className="follow-username">@restanalytics</div>
-                </div>
-              </div>
-              <button className="follow-button">Connect</button>
-            </div>
-          </div>
-
-          {/* NEURAL INTELLIGENCE */}
-          <div className="intelligence-card">
-            <div className="card-header">
-              <Brain className="card-icon" />
-              <span className="card-title">Neural Intelligence</span>
-            </div>
-            
-            <div style={{textAlign: 'center', padding: '1rem'}}>
-              <div style={{
-                fontSize: '3rem',
-                marginBottom: '1rem',
-                filter: 'drop-shadow(0 0 20px rgba(0,255,255,0.6))'
-              }}>🧠</div>
-              <div style={{
-                color: 'var(--fudi-secondary)',
-                fontSize: '0.875rem',
-                fontWeight: '700',
-                textTransform: 'uppercase',
-                letterSpacing: '2px',
-                marginBottom: '0.5rem'
-              }}>
-                FUDI AI PROCESSING
-              </div>
-              <div style={{
-                color: 'var(--fudi-text-secondary)',
-                fontSize: '0.75rem',
-                lineHeight: '1.4'
-              }}>
-                Analizando patrones neurales de 2,345 restaurantes para generar insights personalizados
-              </div>
-            </div>
-          </div>
-        </aside>
+        )}
       </div>
-
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes glow {
-          0%, 100% { filter: drop-shadow(0 0 30px rgba(0,255,255,0.8)); }
-          50% { filter: drop-shadow(0 0 50px rgba(251,191,36,0.8)); }
-        }
-      `}</style>
-    </div>
+    </>
   );
 }

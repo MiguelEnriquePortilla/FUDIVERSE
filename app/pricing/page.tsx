@@ -5,10 +5,9 @@ import Link from 'next/link';
 import { 
   Check, Sparkles, Rocket, Crown, Building2,
   MessageSquare, BarChart3, Vault, Users, ShoppingCart,
-  Zap, Star, TrendingUp, Award, ChevronRight, Flame
+  Zap, Star, TrendingUp, Award, ChevronRight, Brain
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
 import { InfinitoCard } from '@/components/fudiverse/InfinitoCard';
 import '@/styles/pages/fudi.pricing.css';
@@ -21,16 +20,16 @@ export default function PricingPage() {
       id: 'basic',
       name: 'BÁSICO',
       price: billingCycle === 'monthly' ? 19.99 : 15.99,
-      tagline: 'PRUEBA EL PODER',
-      description: 'Para los que quieren probar antes de VOLAR',
+      tagline: 'COMIENZA TU TRANSFORMACIÓN',
+      description: 'Para restauranteros que quieren probar el poder de la información inteligente',
       color: '#10b981',
       icon: Sparkles,
-      perfectFor: 'Acabas de abrir o quieres sentir el poder sin compromiso',
+      perfectFor: 'Acabas de abrir o quieres entender mejor tus números sin compromiso',
       features: [
-        'FUDI Chat con límite mensual (pero qué límite tan generoso 😉)',
-        'La misma inteligencia que usan los PROS',
-        'Respuestas que valen ORO',
-        'Análisis básico de tu restaurante',
+        'FUDIVERSE AI con análisis básico mensual',
+        'Conversaciones naturales sobre tu restaurante',
+        'Insights sobre ventas y tendencias',
+        'Reportes simples y claros',
         'Soporte por email'
       ]
     },
@@ -38,62 +37,62 @@ export default function PricingPage() {
       id: 'pro',
       name: 'PRO',
       price: billingCycle === 'monthly' ? 49.99 : 39.99,
-      tagline: 'MODO RESTAURANTERO SERIO',
-      description: 'El favorito de los que ya entendieron el juego',
+      tagline: 'INTELIGENCIA COMPLETA',
+      description: 'El plan preferido por restauranteros que toman decisiones basadas en datos',
       color: '#3b82f6',
-      icon: Rocket,
+      icon: BarChart3,
       popular: true,
-      perfectFor: 'Ya tienes clientes y quieres MULTIPLICARLOS',
+      perfectFor: 'Ya tienes clientes regulares y quieres optimizar operaciones',
       features: [
-        'FUDI Chat ILIMITADO (pregunta hasta que te canses)',
-        'Dashboard en VIVO - mira tu negocio LATIR',
-        'Alertas inteligentes que SALVAN ventas',
-        'Insights que tus competidores DESEARÍAN tener',
-        'Análisis predictivo básico',
+        'FUDIVERSE AI ilimitado con análisis avanzado',
+        'Dashboard en tiempo real de tu restaurante',
+        'Alertas inteligentes sobre anomalías',
+        'Predicciones de demanda y inventario',
+        'Análisis de rentabilidad por plato',
         'Soporte prioritario',
-        'Exportación de reportes'
+        'Exportación de todos los reportes'
       ]
     },
     {
       id: 'max',
       name: 'MAX',
       price: billingCycle === 'monthly' ? 99.99 : 79.99,
-      tagline: 'DOMINACIÓN TOTAL',
-      description: 'Para los que no vinieron a jugar, vinieron a GANAR',
+      tagline: 'MÁXIMO POTENCIAL',
+      description: 'Para restauranteros que quieren todas las herramientas para el éxito',
       color: '#fbbf24',
       icon: Crown,
-      perfectFor: 'Tu restaurante es tu IMPERIO y lo tratas como tal',
+      perfectFor: 'Tu restaurante es tu negocio principal y buscas maximizar resultados',
       features: [
-        'TODO FUDIVERSE desbloqueado 🚀',
-        'VAULT incluido - tu oficina digital PRO',
-        'DISCOVERY - únete a la élite restaurantera',
-        'POS inteligente cuando esté listo',
-        'Análisis predictivo avanzado',
-        'API access para integraciones',
-        'Soporte prioritario (respuesta en minutos)',
-        'Entrenamiento personalizado',
-        'Early access a nuevas features'
+        'Todo FUDIVERSE desbloqueado',
+        'VAULT incluido - gestión documental inteligente',
+        'Análisis predictivo avanzado con IA',
+        'Integración con sistemas POS',
+        'Benchmarking vs industria',
+        'API access para integraciones personalizadas',
+        'Soporte premium (respuesta inmediata)',
+        'Consultoría mensual personalizada',
+        'Acceso anticipado a nuevas funciones'
       ]
     },
     {
       id: 'enterprise',
       name: 'ENTERPRISE',
       price: 'Personalizado',
-      tagline: 'MÚLTIPLES UNIDADES, MÚLTIPLES VICTORIAS',
-      description: 'Porque los imperios necesitan herramientas imperiales',
+      tagline: 'MÚLTIPLES UNIDADES, UNA PLATAFORMA',
+      description: 'Solución completa para cadenas y grupos restauranteros',
       color: '#8b5cf6',
       icon: Building2,
-      perfectFor: 'Tienes 3+ unidades y sueñas en GRANDE',
+      perfectFor: 'Tienes 3+ unidades y necesitas visión consolidada del negocio',
       features: [
-        'Todo MAX multiplicado por tus sucursales',
-        'Dashboard corporativo consolidado',
-        'Entrenamiento para tu equipo completo',
-        'FUDI personalizado para tu marca',
-        'Integraciones personalizadas',
-        'SLA garantizado',
+        'Todo MAX para múltiples ubicaciones',
+        'Dashboard corporativo unificado',
+        'Entrenamiento para equipos completos',
+        'FUDIVERSE personalizado para tu marca',
+        'Integraciones enterprise personalizadas',
+        'SLA garantizado y soporte 24/7',
         'Account manager dedicado',
-        'Tu éxito tiene un equipo dedicado',
-        'Roadmap compartido'
+        'Análisis consolidado multi-unidad',
+        'Roadmap de producto compartido'
       ],
       isEnterprise: true
     }
@@ -101,7 +100,7 @@ export default function PricingPage() {
 
   return (
     <div className="pricing-container">
-      {/* FUDI Background Effects */}
+      {/* ❌ ELIMINADOS - MÚLTIPLES BACKGROUNDS QUE SE PELEAN
       <FudiChatGrid 
         opacity={0.15}
         gridSize={80}
@@ -118,6 +117,16 @@ export default function PricingPage() {
         color="mixed"
         opacity={0.4}
       />
+      */}
+
+      {/* ✅ UN SOLO BACKGROUND LIMPIO */}
+      <FudiBackground 
+        variant="premium"
+        theme="claude"
+        intensity={0.2}
+        opacity={1}
+        fixed={true}
+      />
 
       {/* Header */}
       <header className="pricing-header">
@@ -127,7 +136,7 @@ export default function PricingPage() {
           </Link>
           <div className="nav-links">
             <Link href="/features" className="nav-link">Características</Link>
-            <Link href="/pricing" className="nav-link active">Precios</Link>
+            <Link href="/pricing" className="nav-link active">Planes</Link>
             <Link href="/about" className="nav-link">Nosotros</Link>
             <Link href="/login" className="nav-link">Entrar</Link>
             <FudiButton variant="primary" size="small" href="/register">
@@ -141,16 +150,22 @@ export default function PricingPage() {
       <section className="pricing-hero">
         <div className="hero-content">
           <div className="hero-badge">
-            <Crown size={16} />
-            <span>NIVELES DE EVOLUCIÓN</span>
+            <Brain size={16} />
+            <span>PLANES INTELIGENTES</span>
           </div>
           
           <h1 className="hero-title">
-            ELIGE TU NIVEL DE <span className="hero-highlight">EVOLUCIÓN</span>
+            ELIGE EL PLAN QUE <span className="hero-highlight">TRANSFORME</span> TU RESTAURANTE
           </h1>
           <p className="hero-subtitle">
-            Todos los planes incluyen el poder de FUDI. La diferencia es cuánto quieres <strong>DOMINAR</strong>.
+            Todos los planes incluyen FUDIVERSE AI. La diferencia está en cuánta <strong>información inteligente</strong> quieres tener.
           </p>
+
+          {/* Nuevo Tagline */}
+          <div className="hero-quote">
+            <Sparkles size={20} />
+            <span>"Entiende tus datos. Transfórmalos en información. Escribe tu historia de éxito. Solo con FUDIVERSE AI."</span>
+          </div>
         </div>
 
         {/* Billing Toggle */}
@@ -251,30 +266,30 @@ export default function PricingPage() {
         <div className="social-proof-content">
           <h2 className="social-proof-title">
             <Users size={32} />
-            ÚNETE A LA ÉLITE RESTAURANTERA
+            ÚNETE A RESTAURANTEROS INTELIGENTES
           </h2>
           
           <div className="proof-stats">
             <div className="proof-stat">
               <div className="stat-value">+500</div>
               <div className="stat-label">Restaurantes</div>
-              <div className="stat-description">Ya dominan con FUDI</div>
+              <div className="stat-description">Ya usan FUDIVERSE AI</div>
             </div>
             <div className="proof-stat">
               <div className="stat-value">98%</div>
               <div className="stat-label">Satisfacción</div>
-              <div className="stat-description">Clientes felices</div>
+              <div className="stat-description">Toman mejores decisiones</div>
             </div>
             <div className="proof-stat">
               <div className="stat-value">$2M+</div>
               <div className="stat-label">Ahorrados</div>
-              <div className="stat-description">En costos operativos</div>
+              <div className="stat-description">En optimización operativa</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Infinito Card - Potential Section */}
+      {/* ❌ INFINITO CARD TEMPORALMENTE COMENTADO
       <section className="potential-section">
         <InfinitoCard 
           variant="cosmic"
@@ -287,22 +302,25 @@ export default function PricingPage() {
           animated={true}
         />
       </section>
+      */}
 
-      {/* Bottom CTA */}
+      {/* Bottom CTA - SIN ORBS */}
       <section className="bottom-cta">
+        {/* ❌ ELIMINADO - CTA BACKGROUND CON ORBS
         <div className="cta-background">
           <div className="cta-orb orb-1"></div>
           <div className="cta-orb orb-2"></div>
           <div className="cta-orb orb-3"></div>
         </div>
+        */}
         
         <div className="cta-content">
           <div className="cta-badge">
-            <Flame size={16} />
-            <span>TU MOMENTO</span>
+            <Brain size={16} />
+            <span>DECISIÓN INTELIGENTE</span>
           </div>
           
-          <h2 className="cta-title">¿CUÁL ES TU <span className="highlight">NIVEL</span>?</h2>
+          <h2 className="cta-title">¿LISTO PARA TOMAR <span className="highlight">MEJORES DECISIONES</span>?</h2>
           <p className="cta-subtitle">
             🎁 <strong>Primer mes con 20% OFF</strong> en cualquier plan anual
           </p>
@@ -323,13 +341,13 @@ export default function PricingPage() {
               href="/features"
               icon={<MessageSquare size={20} />}
             >
-              VER FEATURES
+              VER CARACTERÍSTICAS
             </FudiButton>
           </div>
           
           <div className="trust-quote">
             <blockquote>
-              "La evolución empieza con una decisión. <strong>¿Cuál será la tuya?</strong>"
+              "Cada gran restaurante comenzó con una <strong>decisión inteligente</strong>"
             </blockquote>
           </div>
         </div>
@@ -338,7 +356,7 @@ export default function PricingPage() {
       {/* Footer */}
       <footer className="pricing-footer">
         <div className="footer-content">
-          <p>&copy; 2024 FUDIVERSE. Todos los niveles disponibles.</p>
+          <p>&copy; 2024 FUDIVERSE. Inteligencia para todos los restauranteros.</p>
           <div className="footer-links">
             <Link href="/terms">Términos</Link>
             <Link href="/privacy">Privacidad</Link>

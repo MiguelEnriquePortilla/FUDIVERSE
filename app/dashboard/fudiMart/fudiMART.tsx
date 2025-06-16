@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { 
   Search, MapPin, Plus, Grid3X3, List, SlidersHorizontal,
   Star, MessageCircle, Heart, Share2, Filter, Menu, X,
-  Brain, Flame, Snowflake, UtensilsCrossed, Sprout, 
+  Brain, Flame, Snowflake, UtensilsCrossed, Paintbrush, 
   Smartphone, Truck, DollarSign, Clock, Eye, ChevronRight,
   User, Package, BookOpen, Settings, HelpCircle
 } from 'lucide-react';
@@ -62,12 +62,12 @@ export default function FudiMART() {
     { id: 'otros', name: 'Otros', icon: '🚚', count: 35 }
   ];
 
-const products: Product[] = [
+  const products: Product[] = [
     {
       id: '1',
       title: 'Plancha Industrial 60cm - Marca Vulcano',
       price: 8500,
-      image: 'https://media.istockphoto.com/id/992080292/es/foto/plancha-de-cocina-industrial.webp?a=1&b=1&s=612x612&w=0&k=20&c=6Wmg85dMkocFl8KgLPR16apSRdSagpEPBzK2y_tSVNI=',
+      image: '/api/placeholder/280/200',
       condition: 'Como Nuevo',
       location: 'Nuevo Laredo, Tamps',
       distance: '2.5 km',
@@ -84,7 +84,7 @@ const products: Product[] = [
       id: '2',
       title: 'Congelador Vertical 400L - Imbera',
       price: 12000,
-      image: 'https://images.unsplash.com/photo-1745618682981-5f386e36e8ff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGluZHVzdHJpYWwlMjBmcmVlemVyJTIyfGVufDB8fDB8fHww',
+      image: '/api/placeholder/280/200',
       condition: 'Buen Estado',
       location: 'Nuevo Laredo, Tamps',
       distance: '5.2 km',
@@ -101,7 +101,7 @@ const products: Product[] = [
       id: '3',
       title: 'Set 20 Mesas de Madera + 80 Sillas',
       price: 25000,
-      image: 'https://plus.unsplash.com/premium_photo-1670984939638-01d1854a5d12?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8TWVzYXMlMjBkZXxlbnwwfHwwfHx8MA%3D%3D',
+      image: '/api/placeholder/280/200',
       condition: 'Buen Estado',
       location: 'Nuevo Laredo, Tamps',
       distance: '8.1 km',
@@ -117,7 +117,7 @@ const products: Product[] = [
       id: '4',
       title: 'Freidora Doble 8L + 8L - Whirlpool',
       price: 6800,
-      image: 'https://media.istockphoto.com/id/2192466154/es/foto/dos-canastas-de-freidora-de-acero-inoxidable-rellenas-de-tacos-dorados-de-carne-mexicana-cruda.webp?a=1&b=1&s=612x612&w=0&k=20&c=-vMbc2s1IOo-I0lwoVyn2neD0zlMkTQ1yLzpQIll16o=',
+      image: '/api/placeholder/280/200',
       condition: 'Como Nuevo',
       location: 'Nuevo Laredo, Tamps',
       distance: '3.7 km',
@@ -134,7 +134,7 @@ const products: Product[] = [
       id: '5',
       title: 'Sistema POS Completo + Impresora',
       price: 4500,
-      image: 'https://media.istockphoto.com/id/868891836/es/foto/pase-de-pago-tarjeta-de-cr%C3%A9dito-en-un-restaurante.webp?a=1&b=1&s=612x612&w=0&k=20&c=yFWjz4A2KI6dqyX4XCM6Hs5Iq1WJiMoo7sgFpwjFZdg=',
+      image: '/api/placeholder/280/200',
       condition: 'Nuevo',
       location: 'Nuevo Laredo, Tamps',
       distance: '1.8 km',
@@ -151,7 +151,7 @@ const products: Product[] = [
       id: '6',
       title: 'Lavaplatos Industrial + Secadora',
       price: 15000,
-      image: 'https://media.istockphoto.com/id/157505562/es/foto/lavaplatos-cocina-de-profesional.webp?a=1&b=1&s=612x612&w=0&k=20&c=udm59Z4kPRzIC8J2PFWtPV-5a8LL0q-nS-Dwt7D63EA=',
+      image: '/api/placeholder/280/200',
       condition: 'Buen Estado',
       location: 'Nuevo Laredo, Tamps',
       distance: '6.3 km',
@@ -189,7 +189,7 @@ const products: Product[] = [
       '🔥': <Flame size={size} />,
       '❄️': <Snowflake size={size} />,
       '🍽️': <UtensilsCrossed size={size} />,
-      '🧹': <Sprout size={size} />,
+      '🧹': <Paintbrush size={size} />,
       '📱': <Smartphone size={size} />,
       '🚚': <Truck size={size} />,
       '🔍': <Search size={size} />
@@ -361,186 +361,6 @@ const products: Product[] = [
 
         {/* Content Area */}
         <div className="marketplace-content">
-          
-          {/* Coming Soon Banner */}
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(59, 130, 246, 0.15))',
-            border: '2px solid var(--fudi-primary)',
-            borderRadius: '20px',
-            padding: '2rem',
-            marginBottom: '2rem',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              position: 'absolute',
-              top: '1rem',
-              right: '1rem',
-              background: 'var(--fudi-primary)',
-              color: '#000',
-              padding: '1.5rem 3rem',
-              borderRadius: '50px',
-              fontSize: '1.5rem',
-              fontWeight: '900',
-              textTransform: 'uppercase',
-              letterSpacing: '2px',
-              boxShadow: '0 0 30px rgba(251, 191, 36, 0.6)',
-              animation: 'pulse 2s ease-in-out infinite'
-            }}>
-              COMING SOON
-            </div>
-            
-            <div style={{ marginBottom: '1.5rem' }}>
-              <h2 style={{
-                fontSize: '1.75rem',
-                fontWeight: '900',
-                color: 'var(--text-primary)',
-                marginBottom: '0.5rem',
-                textTransform: 'uppercase',
-                letterSpacing: '1px'
-              }}>
-                🔥 ¿CANSADO DE INTERMEDIARIOS?
-              </h2>
-              <p style={{
-                fontSize: '1.1rem',
-                color: 'var(--fudi-primary)',
-                fontWeight: '600',
-                marginBottom: '1rem'
-              }}>
-                fudiMART: El primer marketplace DE restaurantes, PARA restaurantes, POR restaurantes
-              </p>
-            </div>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '1.5rem',
-              marginBottom: '1.5rem'
-            }}>
-              <div style={{
-                background: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                borderRadius: '12px',
-                padding: '1.25rem'
-              }}>
-                <h4 style={{
-                  color: 'var(--fudi-red)',
-                  fontWeight: '700',
-                  marginBottom: '0.75rem',
-                  fontSize: '0.9rem',
-                  textTransform: 'uppercase'
-                }}>
-                  😤 OTROS MARKETPLACES
-                </h4>
-                <ul style={{
-                  listStyle: 'none',
-                  padding: 0,
-                  margin: 0,
-                  fontSize: '0.875rem',
-                  color: 'var(--text-secondary)'
-                }}>
-                  <li style={{ marginBottom: '0.5rem' }}>❌ Comisiones del 5-15%</li>
-                  <li style={{ marginBottom: '0.5rem' }}>❌ Vendedores no conocen el negocio</li>
-                  <li style={{ marginBottom: '0.5rem' }}>❌ Productos generales, no especializados</li>
-                  <li style={{ marginBottom: '0.5rem' }}>❌ Sin confianza entre usuarios</li>
-                </ul>
-              </div>
-
-              <div style={{
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
-                borderRadius: '12px',
-                padding: '1.25rem'
-              }}>
-                <h4 style={{
-                  color: 'var(--fudi-green)',
-                  fontWeight: '700',
-                  marginBottom: '0.75rem',
-                  fontSize: '0.9rem',
-                  textTransform: 'uppercase'
-                }}>
-                  🚀 fudiMART
-                </h4>
-                <ul style={{
-                  listStyle: 'none',
-                  padding: 0,
-                  margin: 0,
-                  fontSize: '0.875rem',
-                  color: 'var(--text-secondary)'
-                }}>
-                  <li style={{ marginBottom: '0.5rem' }}>✅ CERO comisiones entre FUDIERs</li>
-                  <li style={{ marginBottom: '0.5rem' }}>✅ Solo restauranteros verificados</li>
-                  <li style={{ marginBottom: '0.5rem' }}>✅ Equipos especializados para tu negocio</li>
-                  <li style={{ marginBottom: '0.5rem' }}>✅ Confianza total: conoces al vendedor</li>
-                </ul>
-              </div>
-            </div>
-
-            <div style={{
-              textAlign: 'center',
-              padding: '1.5rem',
-              background: 'rgba(0, 0, 0, 0.3)',
-              borderRadius: '12px',
-              border: '1px solid var(--border-default)'
-            }}>
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: '800',
-                color: 'var(--text-primary)',
-                marginBottom: '0.75rem'
-              }}>
-                💡 LA REVOLUCIÓN DEL MARKETPLACE GASTRONÓMICO
-              </h3>
-              <p style={{
-                fontSize: '1rem',
-                color: 'var(--text-secondary)',
-                marginBottom: '1.5rem',
-                lineHeight: '1.6'
-              }}>
-                <strong style={{ color: 'var(--fudi-primary)' }}>Imagínate:</strong> Compras una plancha usada de "Tacos El Güero" que está a 3 cuadras. 
-                El dueño te explica exactamente cómo cuidarla, te da tips, y hasta te invita un taco. 
-                <strong style={{ color: 'var(--fudi-green)' }}> ¡ESO es fudiMART!</strong>
-              </p>
-              
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '1rem',
-                flexWrap: 'wrap'
-              }}>
-                <button style={{
-                  background: 'linear-gradient(135deg, var(--fudi-primary), var(--fudi-blue))',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '50px',
-                  padding: '0.75rem 2rem',
-                  fontWeight: '700',
-                  fontSize: '0.875rem',
-                  cursor: 'pointer',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1px',
-                  transition: 'all 0.3s ease'
-                }}>
-                  🔔 AVÍSAME CUANDO ESTÉ LISTO
-                </button>
-                
-                <button style={{
-                  background: 'transparent',
-                  color: 'var(--text-secondary)',
-                  border: '1px solid var(--border-default)',
-                  borderRadius: '50px',
-                  padding: '0.75rem 2rem',
-                  fontWeight: '600',
-                  fontSize: '0.875rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}>
-                  📖 LEER MÁS
-                </button>
-              </div>
-            </div>
-          </div>
           
           {/* Content Header */}
           <div className="content-header">

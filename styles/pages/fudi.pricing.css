@@ -1,16 +1,14 @@
 /* =============================================
-   FUDI PRICING - LEVELS OF EVOLUTION
+   FUDI PRICING - ULTRA LIMPIO 🧹
    ============================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* CSS Variables - FUDI Evolution Palette */
+/* =============================================
+   CSS VARIABLES - SOLO LO ESENCIAL
+   ============================================= */
 :root {
   /* Core FUDI Colors */
-  --fudi-void: #0a0a0a;
-  --fudi-dark: #111111;
-  --fudi-surface: #1a1a1a;
-  --fudi-elevated: #242424;
   --fudi-primary: #fbbf24; /* Matrix Gold */
   --fudi-secondary: #00ffff; /* Cyber Cyan */
   --fudi-accent: #a78bfa; /* Neural Purple */
@@ -20,13 +18,10 @@
   --fudi-orange: #f59e0b; /* Energy Orange */
   --fudi-purple: #8b5cf6; /* Wisdom Purple */
   
-  /* Glass & Glow System */
-  --glass-bg: rgba(10, 10, 10, 0.8);
+  /* Glass System - MÁS TRANSPARENTE */
+  --glass-bg: rgba(0, 0, 0, 0.3);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-hover: rgba(255, 255, 255, 0.12);
-  --glow-primary: 0 0 40px rgba(251, 191, 36, 0.3);
-  --glow-intense: 0 0 60px rgba(251, 191, 36, 0.5);
-  --glow-plan: 0 0 30px var(--plan-color, #3b82f6);
   
   /* Text Hierarchy */
   --text-primary: rgba(255, 255, 255, 0.95);
@@ -47,70 +42,29 @@
 }
 
 /* =============================================
-   BASE CONTAINER
+   BASE CONTAINER - SIN BACKGROUNDS
    ============================================= */
 .pricing-container {
   min-height: 100vh;
-  background: var(--fudi-void);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   position: relative;
   overflow-x: hidden;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
-/* Animated Pricing Background */
+/* ❌ ELIMINADOS - BACKGROUNDS PROBLEMÁTICOS
 .pricing-container::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: 
-    radial-gradient(circle at 25% 25%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-  animation: pricing-pulse 10s ease-in-out infinite;
-  z-index: 0;
+  ... pricing-pulse animation
 }
 
-@keyframes pricing-pulse {
-  0%, 100% { 
-    transform: scale(1) rotate(0deg);
-    opacity: 0.4;
-  }
-  25% { 
-    transform: scale(1.1) rotate(90deg);
-    opacity: 0.7;
-  }
-  50% { 
-    transform: scale(0.9) rotate(180deg);
-    opacity: 0.5;
-  }
-  75% { 
-    transform: scale(1.05) rotate(270deg);
-    opacity: 0.6;
-  }
-}
-
-/* Moving Evolution Lines */
 .pricing-container::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: 
-    linear-gradient(45deg, transparent 0%, rgba(59, 130, 246, 0.1) 50%, transparent 100%),
-    linear-gradient(-45deg, transparent 0%, rgba(251, 191, 36, 0.1) 50%, transparent 100%);
-  background-size: 250px 250px;
-  animation: evolution-flow 18s linear infinite;
-  z-index: 0;
+  ... evolution-flow animation
 }
-
-@keyframes evolution-flow {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(250px, 250px); }
-}
+*/
 
 /* =============================================
-   HEADER NAVIGATION
+   HEADER - TRANSPARENTE
    ============================================= */
 .pricing-header {
   position: fixed;
@@ -172,7 +126,6 @@
 
 .pricing-logo:hover {
   transform: scale(1.05);
-  filter: drop-shadow(var(--glow-primary));
 }
 
 .nav-links {
@@ -213,7 +166,7 @@
 }
 
 /* =============================================
-   HERO SECTION
+   HERO SECTION - SIN BACKGROUND
    ============================================= */
 .pricing-hero {
   min-height: 80vh;
@@ -225,6 +178,7 @@
   z-index: 10;
   padding: 8rem 2rem 4rem 2rem;
   text-align: center;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
 .hero-content {
@@ -237,13 +191,13 @@
   align-items: center;
   gap: 0.5rem;
   background: var(--glass-bg);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 50px;
   padding: 0.75rem 1.5rem;
   margin-bottom: 2rem;
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--fudi-primary);
+  color: var(--fudi-blue);
   text-transform: uppercase;
   letter-spacing: 1px;
   animation: hero-badge-glow 3s ease-in-out infinite;
@@ -251,10 +205,10 @@
 
 @keyframes hero-badge-glow {
   0%, 100% { 
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
   }
   50% { 
-    box-shadow: 0 0 40px rgba(251, 191, 36, 0.6);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
   }
 }
 
@@ -264,16 +218,16 @@
   line-height: 1.1;
   margin-bottom: 1.5rem;
   color: var(--text-primary);
-  text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
+  text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
   animation: title-evolution 4s ease-in-out infinite;
 }
 
 @keyframes title-evolution {
   0%, 100% { 
-    text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
+    text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
   }
   50% { 
-    text-shadow: 0 0 60px rgba(251, 191, 36, 0.6), 0 0 80px rgba(59, 130, 246, 0.4);
+    text-shadow: 0 0 60px rgba(59, 130, 246, 0.6), 0 0 80px rgba(251, 191, 36, 0.4);
   }
 }
 
@@ -291,6 +245,35 @@
   font-weight: 500;
   margin-bottom: 3rem;
   line-height: 1.6;
+}
+
+/* Hero Quote - NUEVO TAGLINE */
+.hero-quote {
+  background: var(--glass-bg);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--fudi-primary);
+  animation: quote-pulse 5s ease-in-out infinite;
+}
+
+@keyframes quote-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 0 50px rgba(251, 191, 36, 0.4);
+  }
 }
 
 /* Billing Toggle */
@@ -322,7 +305,7 @@
 
 .toggle-btn.active {
   background: var(--fudi-primary);
-  color: var(--fudi-void);
+  color: #0a0a0a;
   box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
 }
 
@@ -337,12 +320,13 @@
 }
 
 /* =============================================
-   PRICING SECTION
+   PRICING SECTION - SIN BACKGROUND
    ============================================= */
 .pricing-section {
   padding: 6rem 2rem;
   position: relative;
   z-index: 10;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
 .pricing-grid {
@@ -353,7 +337,7 @@
   gap: 2rem;
 }
 
-/* Pricing Card - The Evolution Levels */
+/* Pricing Card - Versión Business */
 .pricing-card {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
@@ -370,7 +354,6 @@
   flex-direction: column;
 }
 
-/* Holographic Level Effect */
 .pricing-card::before {
   content: '';
   position: absolute;
@@ -408,7 +391,7 @@
   transform: translateY(-12px) scale(1.02);
   box-shadow: 
     var(--shadow-xl),
-    var(--glow-plan);
+    0 0 30px var(--plan-color, var(--fudi-blue));
 }
 
 .pricing-card.popular {
@@ -657,13 +640,13 @@
 }
 
 /* =============================================
-   SOCIAL PROOF SECTION
+   SOCIAL PROOF - SIN BACKGROUND ESPECIAL
    ============================================= */
 .social-proof-section {
   padding: 6rem 2rem;
   position: relative;
   z-index: 10;
-  background: rgba(59, 130, 246, 0.05);
+  /* NO BACKGROUND ESPECIAL - DEJA PASAR EL FUDIBACKGROUND */
 }
 
 .social-proof-content {
@@ -715,16 +698,7 @@
 }
 
 /* =============================================
-   POTENTIAL SECTION
-   ============================================= */
-.potential-section {
-  padding: 6rem 2rem;
-  position: relative;
-  z-index: 10;
-}
-
-/* =============================================
-   BOTTOM CTA SECTION
+   BOTTOM CTA - SIN ORBS
    ============================================= */
 .bottom-cta {
   padding: 8rem 2rem;
@@ -732,56 +706,13 @@
   z-index: 10;
   text-align: center;
   overflow: hidden;
+  /* NO BACKGROUND ORBS - DEJA PASAR EL FUDIBACKGROUND */
 }
 
-.cta-background {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-
-.cta-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  animation: cta-orb-float 10s ease-in-out infinite;
-}
-
-.cta-orb.orb-1 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.3), transparent);
-  top: 10%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.cta-orb.orb-2 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent);
-  top: 60%;
-  right: 20%;
-  animation-delay: 3s;
-}
-
-.cta-orb.orb-3 {
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.3), transparent);
-  bottom: 20%;
-  left: 60%;
-  animation-delay: 6s;
-}
-
-@keyframes cta-orb-float {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1);
-  }
-  50% { 
-    transform: translate(30px, -30px) scale(1.1);
-  }
-}
+/* ❌ ELIMINADO - CTA BACKGROUND Y ORBS
+.cta-background { ... }
+.cta-orb { ... }
+*/
 
 .cta-content {
   max-width: 700px;
@@ -795,13 +726,13 @@
   align-items: center;
   gap: 0.5rem;
   background: var(--glass-bg);
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 50px;
   padding: 0.75rem 1.5rem;
   margin-bottom: 2rem;
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--fudi-red);
+  color: var(--fudi-blue);
   text-transform: uppercase;
   letter-spacing: 1px;
   animation: cta-badge-glow 3s ease-in-out infinite;
@@ -809,10 +740,10 @@
 
 @keyframes cta-badge-glow {
   0%, 100% { 
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
   }
   50% { 
-    box-shadow: 0 0 40px rgba(239, 68, 68, 0.6);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
   }
 }
 
@@ -822,16 +753,16 @@
   color: var(--text-primary);
   margin-bottom: 1.5rem;
   line-height: 1.2;
-  text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
+  text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
   animation: cta-title-glow 4s ease-in-out infinite;
 }
 
 @keyframes cta-title-glow {
   0%, 100% { 
-    text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
+    text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
   }
   50% { 
-    text-shadow: 0 0 60px rgba(251, 191, 36, 0.6), 0 0 80px rgba(59, 130, 246, 0.4);
+    text-shadow: 0 0 60px rgba(59, 130, 246, 0.6), 0 0 80px rgba(251, 191, 36, 0.4);
   }
 }
 
@@ -877,7 +808,7 @@
    FOOTER
    ============================================= */
 .pricing-footer {
-  background: var(--fudi-dark);
+  background: rgba(0, 0, 0, 0.5);
   border-top: 1px solid var(--border-subtle);
   padding: 2rem;
   text-align: center;
@@ -945,7 +876,6 @@
   
   .pricing-section,
   .social-proof-section,
-  .potential-section,
   .bottom-cta {
     padding: 4rem 1rem;
   }
@@ -1024,48 +954,6 @@
 }
 
 /* =============================================
-   ANIMATIONS & EFFECTS
-   ============================================= */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Staggered animations for pricing cards */
-.pricing-card:nth-child(1) { animation: slideInLeft 0.6s ease-out 0.1s both; }
-.pricing-card:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.2s both; }
-.pricing-card:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.3s both; }
-.pricing-card:nth-child(4) { animation: slideInRight 0.6s ease-out 0.4s both; }
-
-/* =============================================
    UTILITIES
    ============================================= */
 ::selection {
@@ -1073,18 +961,16 @@
   color: var(--text-primary);
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Hide scrollbar but keep functionality */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--fudi-void);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -1096,14 +982,12 @@ html {
   background: var(--border-hover);
 }
 
-/* Focus states for accessibility */
 button:focus,
 a:focus {
   outline: 2px solid var(--fudi-primary);
   outline-offset: 2px;
 }
 
-/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

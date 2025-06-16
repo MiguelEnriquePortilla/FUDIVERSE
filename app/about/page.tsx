@@ -7,17 +7,17 @@ import {
   Truck, Sparkles, Zap, Target, ChevronRight,
   BarChart3, MessageSquare, Rocket, Award,
   Shield, Lightbulb, Clock, Globe, Star,
-  Coffee, Code, Heart, Flame
+  Coffee, Code, Heart, Flame,
+  Crown
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiEntity } from '@/components/fudiverse/FudiEntity';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
 import { FudiCard } from '@/components/fudiverse/FudiCard';
-import { FudiChatGrid } from '@/components/fudiverse/FudiChatGrid';
 import { FudiAura } from '@/components/fudiverse/FudiAura';
 import { InfinitoCard } from '@/components/fudiverse/InfinitoCard';
 
-// Import the CSS
+// Import the CLEAN CSS
 import '@/styles/pages/fudi.about.css';
 
 export default function AboutPage() {
@@ -107,7 +107,7 @@ export default function AboutPage() {
 
   return (
     <div className="about-container">
-      {/* FUDI Background - Neural Network representing "Experience" */}
+      {/* ❌ ELIMINADOS - MÚLTIPLES BACKGROUNDS QUE SE PELEABAN
       <FudiChatGrid 
         opacity={0.15}
         gridSize={60}
@@ -125,6 +125,16 @@ export default function AboutPage() {
         opacity={0.25}
         fixed={true}
       />
+      */}
+
+      {/* ✅ UN SOLO BACKGROUND ULTRA LIMPIO */}
+      <FudiBackground 
+        variant="premium"
+        theme="claude"
+        intensity={0.2}    // ← MÁS SUTIL
+        opacity={1}        // ← OPACIDAD COMPLETA
+        fixed={true}
+      />
 
       {/* Header */}
       <header className="about-header">
@@ -133,12 +143,23 @@ export default function AboutPage() {
             <span>FUDIVERSE</span>
           </Link>
           <div className="nav-links">
-            <Link href="/features" className="nav-link">Características</Link>
-            <Link href="/pricing" className="nav-link">Precios</Link>
-            <Link href="/about" className="nav-link active">Nosotros</Link>
-            <Link href="/login" className="nav-link">Entrar</Link>
+            <Link href="/features" className="nav-link">
+              <Brain size={16} />
+              <span>Características</span>
+            </Link>
+            <Link href="/pricing" className="nav-link">
+              <Crown size={16} />
+              <span>Planes</span>
+            </Link>
+            <Link href="/about" className="nav-link">
+              <Rocket size={16} />
+              <span>Nosotros</span>
+            </Link>
+            <Link href="/login" className="nav-link login-link">
+              <span>ENTRAR</span>
+            </Link>
             <FudiButton variant="primary" size="small" href="/register">
-              ÚNETE
+             EMPEZAR GRATIS
             </FudiButton>
           </div>
         </nav>
@@ -148,46 +169,47 @@ export default function AboutPage() {
       <section className="about-hero">
         <div className="hero-content">
           <div className="hero-badge">
-            <Flame size={16} />
-            <span>LA REVOLUCIÓN</span>
+            <Brain size={16} />
+            <span>INTELIGENCIA PARA RESTAURANTES</span>
           </div>
           
           <h1 className="hero-title">
             NO SOMOS OTRO <span className="hero-highlight">SOFTWARE</span>.
             <br />
-            SOMOS LA <span className="hero-highlight-2">REVOLUCIÓN</span>.
+            SOMOS TU <span className="hero-highlight-2">SOCIO INTELIGENTE</span>.
           </h1>
           
           <p className="hero-subtitle">
-            La historia de cómo <strong>30 años de experiencia</strong> se convirtieron en tu ventaja competitiva
+            La primera IA diseñada específicamente para <strong>restauranteros que quieren entender sus datos</strong> y tomar mejores decisiones
           </p>
 
           <div className="hero-quote">
             <Sparkles size={20} />
-            <span>"We want to put a dent in the FUDIVERSE"</span>
+            <span>"¡No analices datos, escribe una historia de éxito!"</span>
           </div>
         </div>
 
-        {/* FUDI Entity - Storytelling Mode */}
+        {/* ❌ ELIMINADO - FUDI ENTITY Y AURA QUE PUEDEN CREAR CAPAS PROBLEMÁTICAS
         <div className="hero-entity">
           <FudiAura 
             variant="combined"
             color="#8b5cf6"
-            intensity={0.7}
-            size={300}
-            pulseSpeed={2}
-            particleCount={20}
+            intensity={0.4}
+            size={250}
+            pulseSpeed={3}
+            particleCount={10}
           />
           <FudiEntity 
             variant="floating"
             mood="thoughtful"
-            size="large"
+            size="medium"
             followCursor={true}
-            showParticles={true}
-            showDataStreams={true}
-            intensity={0.6}
+            showParticles={false}
+            showDataStreams={false}
+            intensity={0.4}
           />
         </div>
+        */}
       </section>
 
       {/* Origin Story Section */}
@@ -197,7 +219,7 @@ export default function AboutPage() {
             <Brain size={32} />
             EL ORIGEN
           </h2>
-          <p className="section-subtitle">"30 AÑOS EN LAS TRINCHERAS"</p>
+          <p className="section-subtitle">"DE DATOS A DECISIONES INTELIGENTES"</p>
         </div>
 
         <div className="story-grid">
@@ -267,35 +289,35 @@ export default function AboutPage() {
             <Rocket size={32} />
             LA MISIÓN
           </h2>
-          <p className="section-subtitle">"DEMOCRATIZAR EL PODER DE LOS DATOS"</p>
+          <p className="section-subtitle">"TRANSFORMAMOS NÚMEROS EN RESULTADOS"</p>
         </div>
 
         <div className="mission-content">
           <div className="mission-statement">
             <div className="statement-card">
               <Globe size={40} />
-              <h3>We want to put a dent in the FUDIVERSE 🌍</h3>
-              <p>No más consultorías de $10,000 que te dejan igual</p>
+              <h3>La primera IA que entiende tu restaurante 🏪</h3>
+              <p>Diseñada específicamente para restauranteros, no adaptada de otras industrias</p>
             </div>
             
             <div className="statement-card">
               <Brain size={40} />
-              <h3>No más dashboards que necesitan PhD</h3>
-              <p>FUDI SPEAKS RESTO - Habla tu idioma</p>
+              <h3>Información clara, no dashboards complicados</h3>
+              <p>FUDI habla tu idioma - conversaciones naturales sobre tu negocio</p>
             </div>
             
             <div className="statement-card">
               <MessageSquare size={40} />
-              <h3>Consultoría de clase mundial</h3>
-              <p>En un chat. A tu alcance. 24/7.</p>
+              <h3>Tu socio de confianza para mejores decisiones</h3>
+              <p>Disponible 24/7 para ayudarte a entender qué está pasando en tu restaurante</p>
             </div>
           </div>
 
           {/* FUDI Speaking Examples */}
           <div className="fudi-speaks">
             <h3 className="speaks-title">
-              <Sparkles size={24} />
-              FUDI SPEAKS RESTO
+              <MessageSquare size={24} />
+              ASÍ HABLA FUDIVERSE AI
             </h3>
             <div className="speaks-examples">
               <div className="speak-bubble">
@@ -378,7 +400,7 @@ export default function AboutPage() {
           })}
         </div>
 
-        {/* INFINITO Card - EPIC & WIDE */}
+        {/* ❌ INFINITO CARD TEMPORALMENTE COMENTADO PARA PRUEBAS
         <InfinitoCard 
           variant="default"
           title="POTENCIAL INFINITO"
@@ -388,6 +410,7 @@ export default function AboutPage() {
           glow={true}
           animated={true}
         />
+        */}
 
         <div className="team-description">
           <div className="team-points">
@@ -411,13 +434,15 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Revolution CTA Section */}
+      {/* Revolution CTA Section - SIN ORBS */}
       <section className="revolution-cta">
+        {/* ❌ ELIMINADO - CTA BACKGROUND CON ORBS QUE ESTORBABAN
         <div className="cta-background">
           <div className="cta-orb orb-1"></div>
           <div className="cta-orb orb-2"></div>
           <div className="cta-orb orb-3"></div>
         </div>
+        */}
         
         <div className="cta-content">
           <div className="cta-badge">

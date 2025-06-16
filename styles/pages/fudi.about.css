@@ -1,16 +1,14 @@
 /* =============================================
-   FUDI ABOUT - THE REVOLUTION STORY
+   FUDI ABOUT - ULTRA LIMPIO 🧹
    ============================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* CSS Variables - FUDI Revolution Palette */
+/* =============================================
+   CSS VARIABLES - SOLO LO ESENCIAL
+   ============================================= */
 :root {
   /* Core FUDI Colors */
-  --fudi-void: #0a0a0a;
-  --fudi-dark: #111111;
-  --fudi-surface: #1a1a1a;
-  --fudi-elevated: #242424;
   --fudi-primary: #fbbf24; /* Matrix Gold */
   --fudi-secondary: #00ffff; /* Cyber Cyan */
   --fudi-accent: #a78bfa; /* Neural Purple */
@@ -20,14 +18,10 @@
   --fudi-orange: #f59e0b; /* Energy Orange */
   --fudi-purple: #8b5cf6; /* Wisdom Purple */
   
-  /* Glass & Glow System */
-  --glass-bg: rgba(10, 10, 10, 0.8);
+  /* Glass System - MÁS TRANSPARENTE */
+  --glass-bg: rgba(0, 0, 0, 0.3);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-hover: rgba(255, 255, 255, 0.12);
-  --glow-primary: 0 0 40px rgba(251, 191, 36, 0.3);
-  --glow-intense: 0 0 60px rgba(251, 191, 36, 0.5);
-  --glow-story: 0 0 30px var(--story-color, #8b5cf6);
-  --glow-belief: 0 0 25px var(--belief-color, #10b981);
   
   /* Text Hierarchy */
   --text-primary: rgba(255, 255, 255, 0.95);
@@ -48,65 +42,29 @@
 }
 
 /* =============================================
-   BASE CONTAINER
+   BASE CONTAINER - SIN BACKGROUNDS
    ============================================= */
 .about-container {
   min-height: 100vh;
-  background: var(--fudi-void);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   position: relative;
   overflow-x: hidden;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
-/* Animated Revolution Background */
+/* ❌ ELIMINADOS - BACKGROUNDS PROBLEMÁTICOS
 .about-container::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(251, 191, 36, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
-  animation: revolution-pulse 12s ease-in-out infinite;
-  z-index: 0;
+  ... revolution-pulse animation
 }
 
-@keyframes revolution-pulse {
-  0%, 100% { 
-    transform: scale(1) rotate(0deg);
-    opacity: 0.4;
-  }
-  33% { 
-    transform: scale(1.1) rotate(120deg);
-    opacity: 0.7;
-  }
-  66% { 
-    transform: scale(0.9) rotate(240deg);
-    opacity: 0.5;
-  }
-}
-
-/* Neural Network Lines */
 .about-container::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: 
-    linear-gradient(45deg, transparent 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%),
-    linear-gradient(-45deg, transparent 0%, rgba(251, 191, 36, 0.1) 50%, transparent 100%);
-  background-size: 300px 300px;
-  animation: neural-flow 20s linear infinite;
-  z-index: 0;
+  ... neural-flow animation
 }
-
-@keyframes neural-flow {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(300px, 300px) rotate(360deg); }
-}
+*/
 
 /* =============================================
-   HEADER NAVIGATION
+   HEADER - TRANSPARENTE
    ============================================= */
 .about-header {
   position: fixed;
@@ -167,7 +125,6 @@
 
 .about-logo:hover {
   transform: scale(1.05);
-  filter: drop-shadow(var(--glow-primary));
 }
 
 .nav-links {
@@ -208,7 +165,7 @@
 }
 
 /* =============================================
-   HERO SECTION
+   HERO SECTION - SIN BACKGROUND
    ============================================= */
 .about-hero {
   min-height: 100vh;
@@ -219,6 +176,7 @@
   z-index: 10;
   padding: 0 2rem;
   text-align: center;
+  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
 .hero-content {
@@ -332,12 +290,17 @@
 }
 
 /* =============================================
-   ORIGIN STORY SECTION
+   TODAS LAS SECCIONES - SIN BACKGROUNDS
    ============================================= */
-.origin-section {
+.origin-section,
+.mission-section,
+.purpose-section,
+.team-section,
+.revolution-cta {
   padding: 8rem 2rem;
   position: relative;
   z-index: 10;
+  /* NO BACKGROUNDS - DEJA PASAR EL FUDIBACKGROUND */
 }
 
 .section-header {
@@ -364,6 +327,9 @@
   letter-spacing: 1px;
 }
 
+/* =============================================
+   STORY CARDS
+   ============================================= */
 .story-grid {
   max-width: 1200px;
   margin: 0 auto 5rem auto;
@@ -385,7 +351,6 @@
   overflow: hidden;
 }
 
-/* Story card holographic effect */
 .story-card::before {
   content: '';
   position: absolute;
@@ -426,7 +391,7 @@
   border-color: var(--story-color, var(--fudi-purple));
   box-shadow: 
     var(--shadow-xl),
-    var(--glow-story);
+    0 0 30px var(--story-color, var(--fudi-purple));
 }
 
 .story-card.active::after {
@@ -504,7 +469,9 @@
   50% { transform: scale(1.2); }
 }
 
-/* Pain Points */
+/* =============================================
+   PAIN POINTS
+   ============================================= */
 .pain-points {
   max-width: 800px;
   margin: 0 auto;
@@ -569,15 +536,8 @@
 }
 
 /* =============================================
-   MISSION SECTION
+   MISSION CARDS
    ============================================= */
-.mission-section {
-  padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
-  background: rgba(59, 130, 246, 0.05);
-}
-
 .mission-content {
   max-width: 1200px;
   margin: 0 auto;
@@ -678,14 +638,8 @@
 }
 
 /* =============================================
-   PURPOSE SECTION
+   BELIEFS
    ============================================= */
-.purpose-section {
-  padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
-}
-
 .beliefs-grid {
   max-width: 1000px;
   margin: 0 auto 5rem auto;
@@ -708,7 +662,7 @@
 .belief-card:hover {
   transform: translateY(-6px);
   border-color: var(--belief-color, var(--fudi-green));
-  box-shadow: var(--glow-belief);
+  box-shadow: 0 0 25px var(--belief-color, var(--fudi-green));
 }
 
 .belief-icon {
@@ -758,15 +712,8 @@
 }
 
 /* =============================================
-   TEAM SECTION
+   TEAM STATS
    ============================================= */
-.team-section {
-  padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
-  background: rgba(139, 92, 246, 0.05);
-}
-
 .team-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -775,175 +722,6 @@
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
-}
-
-/* INFINITO Card - EPIC & WIDE */
-.infinito-card {
-  background: var(--glass-bg);
-  border: 2px solid rgba(251, 191, 36, 0.3);
-  border-radius: 32px;
-  padding: 4rem;
-  margin: 3rem auto 5rem auto;
-  max-width: 1000px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.infinito-card:hover {
-  transform: translateY(-12px) scale(1.02);
-  border-color: rgba(251, 191, 36, 0.6);
-  box-shadow: 
-    var(--shadow-xl),
-    0 0 60px rgba(251, 191, 36, 0.4);
-}
-
-.infinito-background {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.infinito-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(40px);
-  animation: infinito-float 10s ease-in-out infinite;
-}
-
-.infinito-orb.orb-1 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.4), transparent);
-  top: -20%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.infinito-orb.orb-2 {
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.3), transparent);
-  top: 40%;
-  right: 15%;
-  animation-delay: 3s;
-}
-
-.infinito-orb.orb-3 {
-  width: 180px;
-  height: 180px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.2), transparent);
-  bottom: -10%;
-  left: 60%;
-  animation-delay: 6s;
-}
-
-@keyframes infinito-float {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1);
-    opacity: 0.6;
-  }
-  33% { 
-    transform: translate(20px, -20px) scale(1.1);
-    opacity: 0.8;
-  }
-  66% { 
-    transform: translate(-15px, 15px) scale(0.9);
-    opacity: 0.7;
-  }
-}
-
-.infinito-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-  text-align: left;
-}
-
-.infinito-icon {
-  width: 120px;
-  height: 120px;
-  background: var(--glass-bg);
-  border: 3px solid var(--fudi-primary);
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.6s ease;
-  animation: infinito-icon-pulse 4s ease-in-out infinite;
-}
-
-@keyframes infinito-icon-pulse {
-  0%, 100% { 
-    transform: scale(1) rotate(0deg);
-    box-shadow: 0 0 30px var(--fudi-primary);
-  }
-  50% { 
-    transform: scale(1.05) rotate(5deg);
-    box-shadow: 0 0 50px var(--fudi-primary), inset 0 0 20px rgba(251, 191, 36, 0.2);
-  }
-}
-
-.infinito-card:hover .infinito-icon {
-  transform: scale(1.1) rotate(10deg);
-  box-shadow: 0 0 60px var(--fudi-primary);
-}
-
-.infinito-icon svg {
-  color: var(--fudi-primary);
-  filter: drop-shadow(0 0 15px currentColor);
-}
-
-.infinito-text {
-  flex: 1;
-}
-
-.infinito-symbol {
-  font-size: 8rem;
-  font-weight: 900;
-  color: var(--fudi-primary);
-  line-height: 1;
-  margin-bottom: 1rem;
-  text-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
-  animation: infinito-symbol-glow 3s ease-in-out infinite;
-}
-
-@keyframes infinito-symbol-glow {
-  0%, 100% { 
-    text-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
-    transform: scale(1);
-  }
-  50% { 
-    text-shadow: 0 0 60px rgba(251, 191, 36, 0.8), 0 0 80px rgba(245, 158, 11, 0.6);
-    transform: scale(1.02);
-  }
-}
-
-.infinito-title {
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-  letter-spacing: -1px;
-  text-transform: uppercase;
-}
-
-.infinito-description {
-  font-size: 1.4rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  font-weight: 500;
-}
-
-.infinito-description .highlight {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
 }
 
 .stat-card {
@@ -1044,16 +822,14 @@
 }
 
 /* =============================================
-   REVOLUTION CTA SECTION
+   REVOLUTION CTA - SIN ORBS
    ============================================= */
 .revolution-cta {
-  padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
   text-align: center;
   overflow: hidden;
 }
 
+/* ❌ ELIMINADO - CTA BACKGROUND Y ORBS PROBLEMÁTICOS
 .cta-background {
   position: absolute;
   inset: 0;
@@ -1066,42 +842,7 @@
   filter: blur(60px);
   animation: orb-float 8s ease-in-out infinite;
 }
-
-.orb-1 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.3), transparent);
-  top: 10%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.orb-2 {
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.3), transparent);
-  top: 60%;
-  right: 20%;
-  animation-delay: 2s;
-}
-
-.orb-3 {
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.3), transparent);
-  bottom: 20%;
-  left: 50%;
-  animation-delay: 4s;
-}
-
-@keyframes orb-float {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1);
-  }
-  50% { 
-    transform: translate(30px, -30px) scale(1.1);
-  }
-}
+*/
 
 .cta-content {
   max-width: 700px;
@@ -1197,7 +938,7 @@
    FOOTER
    ============================================= */
 .about-footer {
-  background: var(--fudi-dark);
+  background: rgba(0, 0, 0, 0.5);
   border-top: 1px solid var(--border-subtle);
   padding: 2rem;
   text-align: center;
@@ -1250,7 +991,7 @@
   }
   
   .nav-links {
-    gap: 1rem;
+    gap: 2rem;
     flex-wrap: wrap;
   }
   
@@ -1304,34 +1045,6 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
   
-  .infinito-card {
-    padding: 3rem;
-    margin: 2rem auto 4rem auto;
-  }
-  
-  .infinito-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 2rem;
-  }
-  
-  .infinito-icon {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .infinito-symbol {
-    font-size: 6rem;
-  }
-  
-  .infinito-title {
-    font-size: 2rem;
-  }
-  
-  .infinito-description {
-    font-size: 1.2rem;
-  }
-  
   .team-points {
     grid-template-columns: 1fr;
   }
@@ -1377,85 +1090,7 @@
   .stat-value {
     font-size: 2rem;
   }
-  
-  .infinito-card {
-    padding: 2rem;
-    margin: 2rem 1rem 3rem 1rem;
-  }
-  
-  .infinito-content {
-    gap: 1.5rem;
-  }
-  
-  .infinito-icon {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .infinito-icon svg {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .infinito-symbol {
-    font-size: 4rem;
-  }
-  
-  .infinito-title {
-    font-size: 1.5rem;
-  }
-  
-  .infinito-description {
-    font-size: 1rem;
-  }
 }
-
-/* =============================================
-   ANIMATIONS & EFFECTS
-   ============================================= */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Staggered animations for story cards */
-.story-card:nth-child(1) { animation: slideInLeft 0.6s ease-out 0.1s both; }
-.story-card:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.2s both; }
-.story-card:nth-child(3) { animation: slideInRight 0.6s ease-out 0.3s both; }
-
-/* Staggered animations for belief cards */
-.belief-card:nth-child(1) { animation: slideInLeft 0.6s ease-out 0.2s both; }
-.belief-card:nth-child(2) { animation: slideInRight 0.6s ease-out 0.3s both; }
-.belief-card:nth-child(3) { animation: slideInLeft 0.6s ease-out 0.4s both; }
-.belief-card:nth-child(4) { animation: slideInRight 0.6s ease-out 0.5s both; }
 
 /* =============================================
    UTILITIES
@@ -1465,18 +1100,16 @@
   color: var(--text-primary);
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Hide scrollbar but keep functionality */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--fudi-void);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -1488,14 +1121,12 @@ html {
   background: var(--border-hover);
 }
 
-/* Focus states for accessibility */
 button:focus,
 a:focus {
   outline: 2px solid var(--fudi-purple);
   outline-offset: 2px;
 }
 
-/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

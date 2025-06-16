@@ -1,16 +1,50 @@
-/* styles/pages/dashboard.css */
+/* styles/pages/board.css */
 /* =============================================
-   FUDIVERSE DASHBOARD - CYBERPUNK REVOLUTION
+   FUDIBOARD - ELEGANT CYBERPUNK PERFECTION
    ============================================= */
 
-/* CSS Variables - FUDIVERSE CYBERPUNK PALETTE */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================
+   CSS VARIABLES - CONSISTENT WITH FUDIGPT
+   ============================================= */
 :root {
+  /* Core FUDI Colors */
+  --fudi-primary: #fbbf24; /* Matrix Gold */
+  --fudi-secondary: #00ffff; /* Cyber Cyan */
+  --fudi-accent: #a78bfa; /* Neural Purple */
+  --fudi-blue: #3b82f6; /* Data Blue */
+  --fudi-green: #10b981; /* Success Green */
+  --fudi-red: #ef4444; /* Alert Red */
+  --fudi-orange: #f59e0b; /* Energy Orange */
+  --fudi-purple: #8b5cf6; /* Wisdom Purple */
+  
+  /* Glass System */
+  --glass-bg: rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.12);
+  
+  /* Text Hierarchy */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-muted: rgba(255, 255, 255, 0.3);
+  
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(251, 191, 36, 0.3);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.4);
+  
+  /* Legacy Variables for Compatibility */
   --fudi-void: #0a0a0a;
   --fudi-dark: #111111;
   --fudi-surface: #1a1a1a;
-  --fudi-primary: #fbbf24; /* Matrix Gold */
-  --fudi-secondary: #00ffff; /* Cyan */
-  --fudi-accent: #a78bfa; /* Purple */
   --fudi-success: #10b981;
   --fudi-danger: #ef4444;
   --fudi-glass: rgba(255, 255, 255, 0.03);
@@ -22,61 +56,217 @@
   --fudi-matrix-green: #00ff41;
 }
 
-/* Container principal - CYBERPUNK VOID */
-.dashboard-container {
+/* =============================================
+   GLOBAL RESETS
+   ============================================= */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* =============================================
+   MAIN CONTAINER - CLEAN
+   ============================================= */
+.board-container {
+  background: transparent;
+  position: relative;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--fudi-void) 0%, #1a1a1a 100%);
-  color: var(--fudi-text-primary);
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100vw !important;
+  min-width: 100vw !important;
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+}
+
+/* =============================================
+   HEADER - CONSISTENT WITH FUDIGPT
+   ============================================= */
+.board-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: all 0.3s ease;
+}
+
+.board-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--fudi-green) 15%, 
+    var(--fudi-blue) 35%, 
+    var(--fudi-primary) 50%, 
+    var(--fudi-purple) 65%,
+    transparent
+  );
+  opacity: 0.6;
+  animation: header-evolution 5s ease-in-out infinite;
+}
+
+@keyframes header-evolution {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.fudi-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fudi-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--fudi-blue), var(--fudi-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.fudi-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  letter-spacing: 1px;
+}
+
+/* Navigation Pills */
+.header-navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  padding: 0.5rem;
+  backdrop-filter: blur(15px);
+}
+
+.nav-pill {
+  background: transparent;
+  border: none;
+  border-radius: 16px;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
   position: relative;
   overflow: hidden;
 }
 
-/* NEURAL GRID BACKGROUND */
-.dashboard-container::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px);
-  background-size: 80px 80px;
-  animation: gridFloat 20s linear infinite;
-  z-index: 1;
-  pointer-events: none;
+.nav-pill:hover {
+  color: var(--fudi-blue);
+  background: rgba(59, 130, 246, 0.08);
+  transform: translateY(-1px);
 }
 
-@keyframes gridFloat {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(80px, 80px); }
+.nav-pill.active {
+  background: linear-gradient(135deg, var(--fudi-blue), var(--fudi-primary));
+  color: white;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
 }
 
-/* SCANNING LINE EFFECT */
-.scan-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--fudi-secondary),
-    transparent
-  );
-  animation: scanAnimation 8s linear infinite;
-  z-index: 1001;
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
-@keyframes scanAnimation {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(100vh); }
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--fudi-green);
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
-/* Loading State - MATRIX STYLE */
-.dashboard-loading {
+.live-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--fudi-green);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 0 4px rgba(16, 185, 129, 0.2),
+    0 0 20px rgba(16, 185, 129, 0.6);
+  animation: live-pulse 2s infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 
+      0 0 0 4px rgba(16, 185, 129, 0.2),
+      0 0 20px rgba(16, 185, 129, 0.6);
+  }
+  50% { 
+    transform: scale(1.2);
+    box-shadow: 
+      0 0 0 8px rgba(16, 185, 129, 0.1),
+      0 0 30px rgba(16, 185, 129, 0.8);
+  }
+}
+
+.restaurant-greeting {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.alert-sync {
+  color: var(--fudi-primary);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+/* =============================================
+   LOADING STATE - ELEGANT
+   ============================================= */
+.board-loading {
   min-height: 100vh;
   background: var(--fudi-void);
   display: flex;
@@ -107,7 +297,7 @@
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 3px;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
   text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
   animation: textPulse 2s infinite;
 }
@@ -121,113 +311,24 @@
   50% { opacity: 0.7; }
 }
 
-/* Header - UNIFIED CYBERPUNK */
-.dashboard-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  padding: 1.5rem 3rem;
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--fudi-glass-border);
-}
-
-.header-content {
+/* =============================================
+   MAIN LAYOUT - ELEGANT
+   ============================================= */
+.board-main {
+  flex: 1 1 auto !important;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.dashboard-greeting h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--fudi-text-primary);
-  letter-spacing: -0.5px;
-  font-family: 'Courier New', monospace;
-}
-
-.dashboard-username {
-  background: linear-gradient(135deg, var(--fudi-secondary) 0%, var(--fudi-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.dashboard-subtitle {
-  font-size: 0.875rem;
-  color: var(--fudi-text-secondary);
-  margin: 0.5rem 0 0 0;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.alert-sync {
-  color: var(--fudi-primary);
-  font-weight: 700;
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-}
-
-.header-stats {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-}
-
-.live-indicator {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.875rem;
-  color: var(--fudi-success);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-family: 'Courier New', monospace;
-  font-weight: 600;
-}
-
-.live-dot {
-  width: 12px;
-  height: 12px;
-  background: var(--fudi-success);
-  border-radius: 50%;
-  box-shadow: 
-    0 0 0 4px rgba(16, 185, 129, 0.2),
-    0 0 20px rgba(16, 185, 129, 0.6);
-  animation: neuralPulse 2s infinite;
-}
-
-@keyframes neuralPulse {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 
-      0 0 0 4px rgba(16, 185, 129, 0.2),
-      0 0 20px rgba(16, 185, 129, 0.6);
-  }
-  50% { 
-    transform: scale(1.2);
-    box-shadow: 
-      0 0 0 8px rgba(16, 185, 129, 0.1),
-      0 0 30px rgba(16, 185, 129, 0.8);
-  }
-}
-
-/* Main Layout - CYBERPUNK SPACIOUS */
-.dashboard-main {
+  flex-direction: column;
   position: relative;
-  z-index: 10;
+  z-index: 2;
+  background: transparent !important;
+  min-width: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  margin-top: 80px; /* Account for fixed header */
   padding: 2rem 3rem;
-  margin-top: 140px;
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 80px);
 }
 
 .main-grid {
@@ -238,11 +339,13 @@
   margin: 0 auto;
 }
 
-/* 🧠 FUDINTELLIGENCE CAROUSEL - HERO SECTION */
+/* =============================================
+   FUDINTELLIGENCE CAROUSEL - HERO SECTION
+   ============================================= */
 .fudi-insights-carousel {
   width: 100%;
-  background: var(--fudi-glass);
-  border: 3px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 3px solid var(--glass-border);
   backdrop-filter: blur(20px);
   border-radius: 24px;
   position: relative;
@@ -291,7 +394,7 @@
   align-items: center;
   padding: 2rem 3rem;
   background: rgba(0, 0, 0, 0.4);
-  border-bottom: 2px solid var(--fudi-glass-border);
+  border-bottom: 2px solid var(--glass-border);
   position: relative;
   z-index: 10;
 }
@@ -324,7 +427,7 @@
   text-transform: uppercase;
   letter-spacing: 3px;
   text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .carousel-status {
@@ -344,7 +447,7 @@
   display: flex;
   align-items: center;
   gap: 2rem;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .carousel-count {
@@ -358,7 +461,7 @@
 
 .carousel-time {
   font-size: 0.75rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -398,9 +501,9 @@
 .carousel-error {
   padding: 6rem 3rem;
   text-align: center;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   font-size: 1.1rem;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Carousel Container */
@@ -420,8 +523,8 @@
   transform: translateY(-50%);
   width: 60px;
   height: 60px;
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -445,8 +548,8 @@
 
 /* Main Insight Card */
 .insight-main-card {
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
   border-radius: 24px;
   padding: 4rem;
   position: relative;
@@ -497,7 +600,7 @@
   font-weight: 700;
   color: var(--fudi-primary);
   text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Main Content */
@@ -511,11 +614,11 @@
 
 .insight-category {
   font-size: 0.875rem;
-  color: var(--fudi-text-secondary);
-  background: var(--fudi-glass);
+  color: var(--text-secondary);
+  background: var(--glass-bg);
   padding: 0.5rem 1.5rem;
   border-radius: 20px;
-  border: 1px solid var(--fudi-glass-border);
+  border: 1px solid var(--glass-border);
   text-transform: uppercase;
   letter-spacing: 2px;
   font-weight: 600;
@@ -530,12 +633,12 @@
   line-height: 1.2;
   margin: 0;
   text-shadow: 0 0 30px rgba(251, 191, 36, 0.4);
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .insight-main-description {
   font-size: 1.1rem;
-  color: var(--fudi-text-primary);
+  color: var(--text-primary);
   line-height: 1.6;
   max-width: 600px;
   margin: 0;
@@ -553,13 +656,13 @@
   font-weight: 100;
   color: var(--fudi-secondary);
   text-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
   letter-spacing: -2px;
 }
 
 .metric-label-large {
   font-size: 0.875rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -569,11 +672,11 @@
   align-items: center;
   gap: 1rem;
   font-size: 1rem;
-  color: var(--fudi-text-primary);
-  background: var(--fudi-glass);
+  color: var(--text-primary);
+  background: var(--glass-bg);
   padding: 1.25rem 2.5rem;
   border-radius: 16px;
-  border: 2px solid var(--fudi-glass-border);
+  border: 2px solid var(--glass-border);
   transition: all 0.4s ease;
   cursor: pointer;
   text-decoration: none;
@@ -636,7 +739,9 @@
   transform: scale(1.2);
 }
 
-/* 🤖 ASK FUDI SECTION - STRATEGIC CTA */
+/* =============================================
+   ASK FUDI SECTION - STRATEGIC CTA
+   ============================================= */
 .ask-fudi-section {
   background: linear-gradient(135deg, 
     rgba(0,255,255,0.1) 0%, 
@@ -707,12 +812,12 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .ask-fudi-hook {
   font-size: 1.25rem;
-  color: var(--fudi-text-primary);
+  color: var(--text-primary);
   margin-bottom: 1rem;
   line-height: 1.4;
 }
@@ -735,7 +840,7 @@
   color: var(--fudi-void);
   padding: 1.5rem 3rem;
   border-radius: 16px;
-  border: none; /* BUTTON STYLING */
+  border: none;
   text-decoration: none;
   font-weight: 700;
   font-size: 1.1rem;
@@ -743,8 +848,8 @@
   letter-spacing: 1px;
   transition: all 0.4s ease;
   box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
-  cursor: pointer; /* EXPLICIT CURSOR */
-  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
 }
 
 .chat-cta-button:hover {
@@ -752,10 +857,12 @@
   box-shadow: 0 0 50px rgba(0, 255, 255, 0.6);
 }
 
-/* Hero Card - CYBERPUNK METRICS */
+/* =============================================
+   HERO CARD - ELEGANT METRICS
+   ============================================= */
 .hero-card {
-  background: var(--fudi-glass);
-  border: 3px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 3px solid var(--glass-border);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 3rem;
@@ -802,12 +909,12 @@
 
 .hero-label {
   font-size: 0.875rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 3px;
   margin-bottom: 1.5rem;
   font-weight: 700;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .hero-number {
@@ -819,7 +926,7 @@
   letter-spacing: -3px;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .hero-trend {
@@ -834,7 +941,7 @@
   font-size: 1rem;
   font-weight: 700;
   transition: all 0.4s ease;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .hero-trend:hover {
@@ -855,7 +962,9 @@
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* Metric Cards Grid */
+/* =============================================
+   METRIC CARDS GRID
+   ============================================= */
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -864,8 +973,8 @@
 }
 
 .metric-card {
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
   backdrop-filter: blur(15px);
   border-radius: 16px;
   padding: 2.5rem;
@@ -923,12 +1032,12 @@
 
 .metric-label {
   font-size: 0.75rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 1rem;
   font-weight: 700;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .metric-value {
@@ -938,7 +1047,7 @@
   margin-bottom: 1rem;
   text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
   font-variant-numeric: tabular-nums;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
   letter-spacing: -1px;
 }
 
@@ -985,7 +1094,9 @@
   text-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
 }
 
-/* Charts Section */
+/* =============================================
+   CHARTS SECTION
+   ============================================= */
 .chart-section {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -995,8 +1106,8 @@
 
 /* Chart Card */
 .chart-card {
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 2.5rem;
@@ -1027,11 +1138,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .chart-title svg {
@@ -1096,7 +1207,7 @@
   z-index: 100;
   color: var(--fudi-secondary);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .chart-label {
@@ -1105,15 +1216,17 @@
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.75rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   font-weight: 600;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Products List */
+/* =============================================
+   PRODUCTS LIST
+   ============================================= */
 .products-list {
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 2.5rem;
@@ -1132,12 +1245,12 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .products-header svg {
@@ -1146,11 +1259,11 @@
 
 .products-subtext {
   font-size: 0.75rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   margin-bottom: 2.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .product-row {
@@ -1159,8 +1272,8 @@
   align-items: center;
   gap: 1.5rem;
   padding: 1.5rem;
-  background: var(--fudi-glass);
-  border: 1px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   margin-bottom: 1rem;
   transition: all 0.4s ease;
@@ -1185,11 +1298,11 @@
   justify-content: center;
   font-weight: 700;
   font-size: 1rem;
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
-  color: var(--fudi-text-secondary);
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
+  color: var(--text-secondary);
   transition: all 0.4s ease;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .rank-badge.top {
@@ -1216,7 +1329,7 @@
 .product-name {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--fudi-text-primary);
+  color: var(--text-primary);
   margin-bottom: 0.75rem;
   letter-spacing: 0.5px;
 }
@@ -1263,7 +1376,7 @@
   align-items: baseline;
   gap: 0.5rem;
   justify-content: flex-end;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .product-value.gold {
@@ -1273,13 +1386,15 @@
 
 .product-unit {
   font-size: 0.75rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
 }
 
-/* Bottom Stats */
+/* =============================================
+   BOTTOM STATS
+   ============================================= */
 .bottom-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1287,8 +1402,8 @@
 }
 
 .stat-card {
-  background: var(--fudi-glass);
-  border: 2px solid var(--fudi-glass-border);
+  background: var(--glass-bg);
+  border: 2px solid var(--glass-border);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   padding: 2rem;
@@ -1326,9 +1441,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .stat-value {
@@ -1336,23 +1451,25 @@
   font-weight: 700;
   line-height: 1;
   text-shadow: 0 0 15px currentColor;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .stat-subtext {
   font-size: 0.875rem;
-  color: var(--fudi-text-secondary);
+  color: var(--text-secondary);
   margin-top: 0.5rem;
-  font-family: 'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
-/* FUDI Entity */
-.dashboard-entity {
+/* =============================================
+   FUDI ENTITY
+   ============================================= */
+.board-entity {
   position: fixed;
   top: 50%;
   right: 5%;
   transform: translateY(-50%);
-  z-index: 150; /* BELOW EYE (z-index: 150) */
+  z-index: 150;
   width: 400px;
   height: 400px;
   pointer-events: none;
@@ -1361,11 +1478,11 @@
   justify-content: center;
 }
 
-.dashboard-entity > * {
+.board-entity > * {
   z-index: 150 !important;
 }
 
-.dashboard-entity > * {
+.board-entity > * {
   pointer-events: all;
 }
 
@@ -1424,29 +1541,17 @@
   }
 }
 
-/* Particle Canvas */
-.particle-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-/* FUDI Presence Eye - POSITIONED ABOVE ENTITY */
+/* FUDI Presence Eye */
 .fudi-presence {
   position: fixed;
   top: 50%;
   right: calc(4% + 204px);  
   transform: translateY(-50%);
-  z-index: 150; /* ABOVE ENTITY (z-index: 100) */
+  z-index: 150;
 }
 
 .fudi-eye {
-  width: 35px; /* SMALLER SIZE */
+  width: 35px;
   height: 35px;
   background: radial-gradient(circle, var(--fudi-secondary), var(--fudi-primary));
   border-radius: 50%;
@@ -1472,7 +1577,7 @@
 }
 
 .fudi-pupil {
-  width: 12px; /* SMALLER PUPIL */
+  width: 12px;
   height: 12px;
   background: var(--fudi-void);
   border-radius: 50%;
@@ -1484,16 +1589,29 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
 }
 
-.dashboard-entity > div:first-child {
-  z-index: 50 !important;
-}
-
 @keyframes eyeBlink {
   0%, 95%, 100% { transform: scaleY(1); }
   97.5% { transform: scaleY(0.1); }
 }
 
-/* Responsive Design */
+@keyframes neuralPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 
+      0 0 0 4px rgba(16, 185, 129, 0.2),
+      0 0 20px rgba(16, 185, 129, 0.6);
+  }
+  50% { 
+    transform: scale(1.2);
+    box-shadow: 
+      0 0 0 8px rgba(16, 185, 129, 0.1),
+      0 0 30px rgba(16, 185, 129, 0.8);
+  }
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
 @media (max-width: 1200px) {
   .chart-section {
     grid-template-columns: 1fr;
@@ -1503,7 +1621,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .dashboard-entity {
+  .board-entity {
     right: 2%;
     width: 300px;
     height: 300px;
@@ -1511,11 +1629,11 @@
 }
 
 @media (max-width: 768px) {
-  .dashboard-header {
+  .board-header {
     padding: 1rem 2rem;
   }
   
-  .dashboard-main {
+  .board-main {
     padding: 2rem;
     margin-top: 120px;
   }
@@ -1532,7 +1650,7 @@
     grid-template-columns: 1fr;
   }
   
-  .dashboard-entity {
+  .board-entity {
     display: none;
   }
   
@@ -1572,14 +1690,18 @@
   
   .carousel-nav.prev { left: 1rem; }
   .carousel-nav.next { right: 1rem; }
+  
+  .header-navigation {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {
-  .dashboard-header {
+  .board-header {
     padding: 1rem;
   }
   
-  .dashboard-main {
+  .board-main {
     padding: 1rem;
   }
   
@@ -1596,3 +1718,19 @@
   }
 }
 
+/* =============================================
+   UTILITIES
+   ============================================= */
+::selection {
+  background: rgba(59, 130, 246, 0.2);
+  color: inherit;
+}
+
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
