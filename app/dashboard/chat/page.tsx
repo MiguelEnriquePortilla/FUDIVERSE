@@ -35,8 +35,9 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   
-  // ✅ NEW: Sidebar State (removed showUserDropdown)
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // ✅ CHANGED: Dropdown State (instead of sidebar)
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Easter eggs and effects
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([]);
@@ -69,6 +70,20 @@ export default function ChatPage() {
     }
   }, []);
 
+  // ✅ NEW: Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // 🔒 CRITICAL API FUNCTION - PRESERVED EXACTLY
   const loadConversations = async (restaurantId: string) => {
     try {
@@ -93,14 +108,27 @@ export default function ChatPage() {
     window.location.href = '/';
   };
 
-  // ✅ NEW: Switch Conversation
-  const switchConversation = (conversationId: string) => {
+  // ✅ UPDATED: Switch Conversation with dropdown close
+  const switchConversation = async (conversationId: string) => {
     setCurrentConversationId(conversationId);
-    setMessages([]); // In real app, load messages for this conversation
+    setMessages([]);
     setShowWelcome(false);
-    // Close sidebar on mobile after selection
-    if (window.innerWidth <= 768) {
-      setSidebarOpen(false);
+    setDropdownOpen(false); // Close dropdown after selection
+
+    // Load real messages from this conversation
+    try {
+      const response = await fudiAPI.conversations.getMessages(conversationId);
+      if (response.success && response.messages) {
+        const formattedMessages = response.messages.map((msg: any, index: number) => ({
+          id: index + 1,
+          type: msg.role === 'user' ? 'user' : 'assistant',
+          content: msg.content,
+          timestamp: new Date(msg.timestamp)
+        }));
+        setMessages(formattedMessages);
+      }
+    } catch (error) {
+      console.error('Error loading messages:', error);
     }
   };
 
@@ -203,6 +231,7 @@ export default function ChatPage() {
         setMessages([]);
         setShowWelcome(true);
         setInputMessage('');
+        setDropdownOpen(false); // Close dropdown after creating
       }
     } catch (error) {
       console.error('Error creating conversation:', error);
@@ -345,128 +374,98 @@ export default function ChatPage() {
         fixed={true}
       />
 
-      {/* ✅ NEW: Sidebar Overlay for Mobile */}
-      <div 
-        className={`sidebar-overlay ${sidebarOpen ? 'sidebar-overlay-open' : ''}`}
-        onClick={() => setSidebarOpen(false)}
-      />
-
-      {/* ✅ NEW: Conversations Sidebar */}
-      <aside className={`conversations-sidebar ${sidebarOpen ? 'conversations-sidebar-open' : ''}`}>
-        
-        {/* Sidebar Header */}
-        <div className="sidebar-header">
-          <div className="sidebar-title">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <div>
-              <h2>Conversaciones</h2>
-              <span className="conversations-count">{conversations.length} chats</span>
-            </div>
-          </div>
-          
-          <button 
-            className="sidebar-toggle"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* New Chat Button */}
-        <button 
-          className="new-chat-button"
-          onClick={startNewConversation}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Nueva Conversación
-        </button>
-
-        {/* Conversations List */}
-        <div className="conversations-list">
-          {conversations.length === 0 ? (
-            <div className="no-conversations">
-              <p>No hay conversaciones aún</p>
-              <p className="no-conversations-subtitle">Inicia tu primera conversación</p>
-            </div>
-          ) : (
-            conversations.map((conversation) => (
-              <button
-                key={conversation.id}
-                className={`conversation-item ${
-                  currentConversationId === conversation.id ? 'conversation-item-active' : ''
-                }`}
-                onClick={() => switchConversation(conversation.id)}
-              >
-                <div className="conversation-icon">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </div>
-                <div className="conversation-content">
-                  <h3 className="conversation-title">{conversation.title}</h3>
-                  <p className="conversation-preview">{conversation.lastMessage}</p>
-                </div>
-                <div className="conversation-time">
-                  {new Date(conversation.timestamp).toLocaleDateString()}
-                </div>
-              </button>
-            ))
-          )}
-        </div>
-
-        {/* User Section with Logout */}
-        <div className="sidebar-user">
-          <div className="user-info">
-            <div className="user-avatar">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-            </div>
-            <div className="user-details">
-              <div className="user-name">{userData.ownerName}</div>
-              <div className="user-restaurant">{userData.restaurantName}</div>
-            </div>
-          </div>
-          
-          <button 
-            className="logout-button"
-            onClick={handleLogout}
-            title="Cerrar sesión"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </button>
-        </div>
-      </aside>
-
-      {/* Header - Enhanced with Simple Logout Button */}
+      {/* Header - Enhanced with Conversations Dropdown */}
       <header className="chat-header">
+        
         <div className="header-content">
-          <div className="header-left">
-            {/* ✅ NEW: Mobile Sidebar Toggle */}
-          <button 
-            className="fudi-logo-toggle"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            <img 
-              src="/images/logo.png" 
-              alt="FUDI Logo" 
-              className="fudi-header-logo"
-            />
-          </button>
 
             <div className="fudi-logo">
+              <img 
+                src="/images/logo.png" 
+                alt="FUDI Logo" 
+                className="fudi-header-logo"
+              />
               <div>
                 <div className="fudi-title">fudiGPT</div>
                 <div className="fudi-subtitle">Tu asistente inteligente</div>
               </div>
+            </div>
+
+          <div className="header-left">
+            
+             {/* ✅ NEW: Conversations Dropdown Trigger */}
+            <div className="conversations-dropdown" ref={dropdownRef}>
+              <button 
+                className="conversations-trigger"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <span>Conversaciones</span>
+                <span className="conversations-count">({conversations.length})</span>
+                <svg className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* ✅ NEW: Conversations Dropdown Panel */}
+              {dropdownOpen && (
+                <div className="conversations-panel">
+                  {/* New Chat Button */}
+                  <button 
+                    className="dropdown-new-chat"
+                    onClick={startNewConversation}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Nueva Conversación
+                  </button>
+
+                  {/* Conversations List */}
+                  <div className="dropdown-conversations">
+                    {conversations.length === 0 ? (
+                      <div className="dropdown-empty">
+                        <p>No hay conversaciones</p>
+                        <p className="dropdown-empty-subtitle">Inicia tu primera conversación</p>
+                      </div>
+                    ) : (
+                      conversations.map((conversation) => (
+                        <button
+                          key={conversation.id}
+                          className={`dropdown-conversation ${
+                            currentConversationId === conversation.id ? 'dropdown-conversation-active' : ''
+                          }`}
+                          onClick={() => switchConversation(conversation.id)}
+                        >
+                          <div className="dropdown-conversation-content">
+                            <h4 className="dropdown-conversation-title">{conversation.title}</h4>
+                            <p className="dropdown-conversation-time">
+                              {new Date(conversation.timestamp).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+            
+                  {/* User Info */}
+                  <div className="dropdown-user">
+                    <div className="dropdown-user-info">
+                      <div className="dropdown-user-avatar">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <div className="dropdown-user-details">
+                        <div className="dropdown-user-name">{userData.ownerName}</div>
+                        <div className="dropdown-user-restaurant">{userData.restaurantName}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Navigation Pills */}
@@ -532,8 +531,8 @@ export default function ChatPage() {
         </div>
       </header>
 
-      {/* Main Chat Area - Adjusted for Sidebar */}
-      <main className={`chat-main ${sidebarOpen ? 'chat-main-with-sidebar' : ''}`}>
+      {/* Main Chat Area - No Sidebar Adjustments Needed */}
+      <main className="chat-main">
         <div className="messages-area">
           {showWelcome && messages.length === 0 ? (
             // Welcome Screen
@@ -629,53 +628,55 @@ export default function ChatPage() {
         {/* Input Area */}
         <div className="input-area">
           <div className="input-container">
-            <div className="floating-input">
-              {/* Custom Placeholder */}
-              <div className={`input-placeholder ${inputMessage ? 'hidden' : ''}`}>
-                Tu éxito comienza con una conversación...
-              </div>
-              
-              <textarea
-                ref={inputRef}
-                value={inputMessage}
-                onChange={handleInputChange}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage(e);
-                  }
-                }}
-                placeholder=""
-                className="text-input"
-                rows={1}
-              />
-              
-              <div className="input-actions">
-                <button
-                  type="button"
-                  className="attach-button"
-                  title="Adjuntar archivo"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                  </svg>
-                </button>
+            <form onSubmit={handleSendMessage}>
+              <div className="floating-input">
+                {/* Custom Placeholder */}
+                <div className={`input-placeholder ${inputMessage ? 'hidden' : ''}`}>
+                  Tu éxito comienza con una conversación...
+                </div>
                 
-                <button
-                  type="submit"
-                  disabled={!inputMessage.trim() || isTyping}
-                  className={`send-button ${
-                    inputMessage.trim() && !isTyping
-                      ? 'send-button-enabled' 
-                      : 'send-button-disabled'
-                  }`}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </button>
+                <textarea
+                  ref={inputRef}
+                  value={inputMessage}
+                  onChange={handleInputChange}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage(e);
+                    }
+                  }}
+                  placeholder=""
+                  className="text-input"
+                  rows={1}
+                />
+                
+                <div className="input-actions">
+                  <button
+                    type="button"
+                    className="attach-button"
+                    title="Adjuntar archivo"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                  </button>
+                  
+                  <button
+                    type="submit"
+                    disabled={!inputMessage.trim() || isTyping}
+                    className={`send-button ${
+                      inputMessage.trim() && !isTyping
+                        ? 'send-button-enabled' 
+                        : 'send-button-disabled'
+                    }`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
           
           <p className="input-disclaimer">

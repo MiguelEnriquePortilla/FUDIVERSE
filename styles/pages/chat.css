@@ -122,22 +122,40 @@ html, body {
   max-width: 1400px;
   margin: 0 auto;
   padding: 1rem 2rem;
+  position: relative; /* ← Agregar esto */
 }
 
+/* ✅ NUEVA REGLA: Conversaciones en la esquina izquierda */
+.conversations-dropdown {
+  position: absolute !important;
+  left: -18rem !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 1001;
+}
+
+/* ✅ AJUSTAR: Header-left sin las conversaciones */
 .header-left {
   display: flex;
   align-items: center;
   gap: 2rem;
+  margin-left: 80px; /* ← Espacio para que no se encime con conversaciones */
+}
+
+.fudi-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .fudi-header-logo {
-  width: 80px;  /* ← Era 32px, ahora doble */
-  height: 80px; /* ← Era 32px, ahora doble */
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   transition: all 0.3s ease;
 }
 
-.fudi-logo-toggle:hover .fudi-header-logo {
+.fudi-header-logo:hover {
   transform: scale(1.1);
   filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.6));
 }
@@ -160,11 +178,285 @@ html, body {
   letter-spacing: 1px;
 }
 
+/* =============================================
+   NEW: CONVERSATIONS DROPDOWN
+   ============================================= */
+.conversations-dropdown {
+  margin-right: 1rem !important;
+  flex-shrink: 0;
+}
+
+
+.conversations-trigger {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(15px);
+  letter-spacing: 0.3px;
+  min-width: 200px;
+}
+
+.conversations-trigger:hover {
+  border-color: var(--fudi-blue);
+  background: rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
+}
+
+.conversations-count {
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid var(--fudi-blue);
+  color: var(--fudi-blue);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.125rem 0.5rem;
+  border-radius: 8px;
+  margin-left: auto;
+}
+
+.conversations-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: 320px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(25px);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  box-shadow: var(--shadow-xl);
+  z-index: 1002;
+  overflow: hidden;
+  animation: dropdown-appear 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes dropdown-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* New Chat Button in Dropdown */
+.dropdown-new-chat {
+  background: linear-gradient(135deg, var(--fudi-blue), var(--fudi-primary));
+  border: none;
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dropdown-new-chat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.dropdown-new-chat:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
+}
+
+.dropdown-new-chat:hover::before {
+  left: 100%;
+}
+
+/* Conversations List in Dropdown */
+.dropdown-conversations {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 1rem;
+  margin-bottom: 0.5rem;
+  max-height: 300px;
+}
+
+.dropdown-conversations::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dropdown-conversations::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dropdown-conversations::-webkit-scrollbar-thumb {
+  background: var(--fudi-blue);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* Empty State */
+.dropdown-empty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-secondary);
+}
+
+.dropdown-empty p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.dropdown-empty-subtitle {
+  font-size: 0.75rem !important;
+  opacity: 0.7;
+}
+
+/* Individual Conversation Items */
+.dropdown-conversation {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+.dropdown-conversation:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-default);
+  transform: translateX(4px);
+}
+
+.dropdown-conversation-active {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--fudi-blue);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.dropdown-conversation-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--fudi-blue);
+  border-radius: 0 2px 2px 0;
+}
+
+.dropdown-conversation-content {
+  min-width: 0;
+}
+
+.dropdown-conversation-title {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.dropdown-conversation-time {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+/* User Info in Dropdown */
+.dropdown-user {
+  border-top: 1px solid var(--border-subtle);
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dropdown-user-avatar {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid var(--fudi-primary);
+  border-radius: 50%;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dropdown-user-avatar svg {
+  color: var(--fudi-primary);
+  width: 16px;
+  height: 16px;
+}
+
+.dropdown-user-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.dropdown-user-name {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.125rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.dropdown-user-restaurant {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
 /* Navigation Pills */
 .header-navigation {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 2rem;
   background: var(--glass-bg);
   border: 1px solid var(--border-default);
   border-radius: 20px;
@@ -197,21 +489,6 @@ html, body {
   background: linear-gradient(135deg, var(--fudi-blue), var(--fudi-primary));
   color: white;
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
-}
-
-.new-chat-pill {
-  background: rgba(59, 130, 246, 0.1) !important;
-  border: 1px solid var(--fudi-blue) !important;
-  color: var(--fudi-blue) !important;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.new-chat-pill:hover {
-  background: rgba(59, 130, 246, 0.2) !important;
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.3);
-  transform: translateY(-2px);
 }
 
 .header-right {
@@ -265,12 +542,6 @@ html, body {
   font-weight: 600;
 }
 
-.restaurant-greeting {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
 /* =============================================
    FUDIBUTTON LOGOUT STYLING
    ============================================= */
@@ -292,12 +563,10 @@ html, body {
   transform: translateY(-1px) !important;
 }
 
-/* Icon styling dentro del botón */
 .header-user-section .FudiButton_icon {
   color: var(--fudi-red) !important;
 }
 
-/* Mantener el container normal */
 .header-user-section {
   display: flex;
   align-items: center;
@@ -306,7 +575,7 @@ html, body {
 }
 
 /* =============================================
-   MAIN CHAT AREA
+   MAIN CHAT AREA - NO SIDEBAR ADJUSTMENTS
    ============================================= */
 .chat-main {
   flex: 1 1 auto !important;
@@ -316,8 +585,8 @@ html, body {
   z-index: 2;
   background: transparent !important;
   min-width: 0 !important;
-  width: auto !important;
-  max-width: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
   margin-top: 80px; /* Account for fixed header */
@@ -931,6 +1200,10 @@ html, body {
   .input-area {
     padding: 2rem;
   }
+  
+  .conversations-panel {
+    width: 280px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -940,6 +1213,24 @@ html, body {
   
   .header-navigation {
     display: none;
+  }
+  
+  .conversations-dropdown {
+    order: -1; /* Move dropdown before logo on mobile */
+  }
+  
+  .conversations-trigger {
+    min-width: auto;
+    padding: 0.5rem;
+  }
+  
+  .conversations-trigger span:not(.conversations-count) {
+    display: none; /* Hide text on mobile, keep icon and count */
+  }
+  
+  .conversations-panel {
+    width: 260px;
+    max-height: 60vh;
   }
   
   .messages-list {
@@ -972,6 +1263,15 @@ html, body {
 @media (max-width: 480px) {
   .chat-header {
     padding: 0.75rem;
+  }
+  
+  .header-left {
+    gap: 10rem;
+  }
+  
+  .conversations-panel {
+    width: 240px;
+    left: -20px; /* Adjust position on very small screens */
   }
   
   .messages-list {
@@ -1023,3 +1323,4 @@ html, body {
     transform: translateY(-100px) scale(0);
   }
 }
+

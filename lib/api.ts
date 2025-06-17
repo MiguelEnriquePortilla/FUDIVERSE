@@ -1,4 +1,4 @@
-// lib/api.ts
+// lib/api.ts - MEMORY FIX 🧠
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 // Tipos de respuesta
@@ -20,7 +20,6 @@ interface AuthResponse {
 // Cliente API
 class FudiAPI {
   private token: string | null = null;
-  conversations: any;
 
   // Configurar token de autenticación
   setToken(token: string) {
@@ -222,27 +221,116 @@ class FudiAPI {
     }
   }
 
-    conversations = {
+  // 🧠 REAL CONVERSATIONS MANAGEMENT - NO MORE MOCKS!
+  conversations = {
+    // 📥 GET ALL CONVERSATIONS
     getAll: async (restaurantId: string) => {
-      return { success: true, conversations: [] };
+      try {
+        const response = await fetch(`/api/conversations?restaurantId=${restaurantId}`, {
+          method: 'GET',
+          headers: this.getHeaders()
+        });
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Get conversations error:', error);
+        return {
+          success: false,
+          conversations: [],
+          error: (error as Error).message
+        };
+      }
     },
 
+    // 🆕 CREATE NEW CONVERSATION
     create: async (restaurantId: string, title: string, firstMessage?: string) => {
-      return { 
-        success: true, 
-        conversation: { 
-          id: 'conv-' + Date.now(), 
-          title: title 
-        } 
-      };
+      try {
+        const response = await fetch('/api/conversations', {
+          method: 'POST',
+          headers: this.getHeaders(),
+          body: JSON.stringify({
+            restaurantId,
+            title,
+            firstMessage
+          })
+        });
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Create conversation error:', error);
+        return {
+          success: false,
+          error: (error as Error).message
+        };
+      }
     },
 
-    saveInteraction: async (data: any) => {
-      return { success: true };
+    // 💾 SAVE USER MESSAGE + FUDI RESPONSE
+    saveInteraction: async (data: {
+      restaurantId: string;
+      conversationId: string;
+      userMessage: string;
+      fudiResponse: string;
+      responseTime?: number;
+    }) => {
+      try {
+        const response = await fetch('/api/conversations/save-interaction', {
+          method: 'POST',
+          headers: this.getHeaders(),
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        console.error('Save interaction error:', error);
+        return {
+          success: false,
+          error: (error as Error).message
+        };
+      }
     },
 
-    update: async (conversationId: string, data: any) => {
-      return { success: true };
+    // ✏️ UPDATE CONVERSATION TITLE
+    update: async (conversationId: string, data: { title?: string }) => {
+      try {
+        const response = await fetch(`/api/conversations/${conversationId}`, {
+          method: 'PATCH',
+          headers: this.getHeaders(),
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        console.error('Update conversation error:', error);
+        return {
+          success: false,
+          error: (error as Error).message
+        };
+      }
+    },
+
+    // 📖 GET CONVERSATION MESSAGES
+    getMessages: async (conversationId: string) => {
+      try {
+        const response = await fetch(`/api/conversations/${conversationId}/messages`, {
+          method: 'GET',
+          headers: this.getHeaders()
+        });
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Get messages error:', error);
+        return {
+          success: false,
+          messages: [],
+          error: (error as Error).message
+        };
+      }
     }
   };
 
