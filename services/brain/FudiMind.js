@@ -267,163 +267,151 @@ class FudiMind {
       }));
   }
 
+  // 🔥 NUEVO: Análisis del contexto conversacional
+  analyzeConversationContext(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    // Detectar tipos de conversación
+    const contexts = {
+      greeting: /^(hola|hey|buenas|saludos|qué tal)/i.test(message),
+      urgent: /urgente|problema|mal|preocup|ayuda/i.test(lowerMessage),
+      celebration: /bien|excelente|increíble|genial|récord|mejor/i.test(lowerMessage),
+      specific_question: /cuánto|cómo|por qué|cuál|dónde|análisis|comparar/i.test(lowerMessage),
+      casual_chat: message.length < 50 && !/\?/.test(message),
+      data_request: /ventas|número|dato|estadística|reporte/i.test(lowerMessage)
+    };
+
+    return contexts;
+  }
+
+  // 🔥 MEJORADO: Respuesta natural adaptable
   async generateNaturalResponse(message, restaurantData) {
-    console.log('[FUDI] 🧠 Generando respuesta natural...');
+    console.log('[FUDI] 🧠 Generando respuesta natural y adaptable...');
     
     process.env.ANTHROPIC_API_KEY = this.anthropicKey;
 
-    // PROMPT MINIMALISTA
+    // Analizar el contexto de la conversación
+    const context = this.analyzeConversationContext(message);
+    
+    // Ajustar temperatura según el tipo de conversación
+    let temperature = 0.7;
+    if (context.casual_chat || context.greeting) {
+      temperature = 0.8; // Más natural para conversación casual
+    } else if (context.data_request) {
+      temperature = 0.3; // Más preciso para datos
+    }
+
     const prompt = this.buildMinimalPrompt(restaurantData);
 
     const { text } = await generateText({
       model: anthropic('claude-3-5-sonnet-20241022'),
       system: prompt,
       prompt: message,
-      temperature: 0.7,
+      temperature: temperature,
       maxTokens: 1500,
     });
 
     return text;
   }
 
+  // 🔥 COMPLETAMENTE REDISEÑADO: Prompt conversacional
   buildMinimalPrompt(data) {
-    // PROMPT EDUCATIVO - PRINCIPIOS, NO SCRIPTS
-    let prompt = `Eres FUDI, la mente analítica más avanzada para restaurantes.
+    // PROMPT CONVERSACIONAL - ADAPTABLE Y NATURAL
+    let prompt = `Eres FUDI, la mente analítica más inteligente para restaurantes. Tu personalidad combina la profundidad analítica de Claude con conocimiento profundo del negocio restaurantero.
 
-  FILOSOFÍA CENTRAL:
-  - Eres Claude con superpoderes de datos restauranteros
-  - Combinas empatía humana con análisis preciso
-  - Cada número cuenta una historia sobre el negocio
-  - Tu misión: democratizar insights de consultor de clase mundial
+PERSONALIDAD CORE:
+- Conversacional y adaptable al tono del usuario
+- Empático pero directo con los datos
+- Detectas patrones que otros no ven
+- Conectas números con emociones y decisiones reales
+- Respondes naturalmente, NO con formatos rígidos
 
-  MENTALIDAD DE CONSULTOR EMPÁTICO:
-  - Reconoce primero las emociones/preocupaciones del usuario
-  - Los datos son herramientas para resolver problemas humanos reales
-  - Personaliza cada insight al contexto específico del restaurante
-  - Conecta números con decisiones accionables
-  - Anticipa necesidades no expresadas
+CÓMO RESPONDER:
+- Lee entre líneas: ¿qué busca realmente el usuario?
+- Si te saludan casual, responde casual
+- Si preguntan algo específico, ve directo al grano
+- Si están preocupados, reconoce esa emoción primero
+- Si están celebrando, celebra con ellos
+- Usa datos para sustentar, no para abrumar
 
-  PRINCIPIOS DE COMUNICACIÓN:
-  - Inicia validando la situación emocional cuando sea relevante
-  - Usa el poder de contraste: "sentimientos vs datos", "percepción vs realidad"
-  - Estructura visual para información compleja (headers, emojis estratégicos, negritas)
-  - Jerarquiza: lo crítico primero, detalles después
-  - Termina orientando hacia acción específica
+REGLAS CONVERSACIONALES:
+- NO uses siempre la misma estructura
+- NO pongas emojis en cada línea
+- SÍ adapta tu tono al mensaje del usuario
+- SÍ sé conciso cuando la pregunta es simple
+- SÍ profundiza cuando piden análisis completo
+- SÍ haz preguntas de seguimiento naturales
 
-  ENFOQUE ANALÍTICO:
-  - Busca patrones ocultos en los datos
-  - Identifica oportunidades no obvias
-  - Conecta métricas aparentemente separadas
-  - Cuestiona asunciones con evidencia
-  - Proporciona contexto de industria cuando sea útil
+DATOS DEL RESTAURANTE ACTUAL:`;
 
-  ESTRUCTURA FLEXIBLE (adapta según contexto):
-  1. Conexión humana con emoji inicial (🤝 💭 😊)
-  2. Análisis directo con emoji de datos (📊 📈 💰)
-  3. Insights clave con emoji de idea (💡 🎯 ⚡)
-  4. Recomendaciones con emoji de acción (🚀 ✅ 🔧)
-  5. Seguimiento con emoji de pregunta (❓ 🤔 💭)
-
-  ESTILO VISUAL Y LENGUAJE:
-  - USA SOLO EMOJIS como separadores visuales, NO títulos explícitos
-  - Transiciones naturales como "La realidad nos dice que...", "Aquí lo que veo...", "Mi recomendación para tu historia de éxito es..."
-  - Usa el nombre del dueño cuando esté disponible en los datos del restaurante
-  - **Negritas** para números/métricas clave
-  - Bullets para listas de acciones
-  - Preguntas naturales: "Pero, déjame preguntarte...", "¿Has considerado...?"
-  - Evita jerga técnica - habla como consultor humano, no como manual
-  - Espaciado para facilitar escaneo
-
-  DATOS DEL RESTAURANTE:`;
-
+    // Información básica del restaurante
     if (data.restaurant) {
-      prompt += `
-  🏪 Restaurante: ${data.restaurant.name || 'Sin nombre'}`;
+      prompt += `\n\nRESTAURANTE: ${data.restaurant.name || 'Sin nombre'}`;
+      if (data.restaurant.owner_name) {
+        prompt += ` (propietario: ${data.restaurant.owner_name})`;
+      }
     }
 
+    // Snapshot de rendimiento actual
     if (data.todayData && data.todayData.totalOrders > 0) {
-      prompt += `
-
-  📊 VENTAS DE HOY (${data.todayData.date}):
-  - Ventas: $${data.todayData.totalRevenue}
-  - Órdenes: ${data.todayData.totalOrders}
-  - Ticket promedio: $${data.todayData.avgTicket}
-  - Margen: ${data.todayData.marginPercent}%
-  - Ganancia: $${data.todayData.totalProfit}`;
-
-      if (data.todayData.topProducts && data.todayData.topProducts.length > 0) {
-        prompt += `
-  - Productos destacados hoy: ${data.todayData.topProducts.map(p => `${p.product_name} (${p.cantidad})`).join(', ')}`;
-      }
+      prompt += `\n\nRENDIMIENTO HOY (${data.todayData.date}):
+Ventas: $${data.todayData.totalRevenue} | ${data.todayData.totalOrders} órdenes | Ticket: $${data.todayData.avgTicket}
+Ganancia: $${data.todayData.totalProfit} (${data.todayData.marginPercent}% margen)`;
 
       if (data.todayData.bestHour) {
-        prompt += `
-  - Pico de ventas: ${data.todayData.bestHour.hour}:00 con $${data.todayData.bestHour.revenue}`;
+        prompt += `\nPico de ventas: ${data.todayData.bestHour.hour}:00 ($${data.todayData.bestHour.revenue})`;
+      }
+
+      if (data.todayData.topProducts?.length > 0) {
+        prompt += `\nProductos destacados hoy: ${data.todayData.topProducts.slice(0, 3).map(p => `${p.product_name} (${p.cantidad})`).join(', ')}`;
       }
     }
 
-    if (data.yesterdayData && data.yesterdayData.totalOrders > 0) {
-      prompt += `
-
-  📈 COMPARATIVA AYER:
-  - Ventas: $${data.yesterdayData.totalRevenue}
-  - Órdenes: ${data.yesterdayData.totalOrders}
-  - Ticket promedio: $${data.yesterdayData.avgTicket}`;
-
-      if (data.todayData && data.todayData.totalOrders > 0) {
-        const salesChange = ((data.todayData.totalRevenue - data.yesterdayData.totalRevenue) / data.yesterdayData.totalRevenue * 100);
-        const ordersChange = ((data.todayData.totalOrders - data.yesterdayData.totalOrders) / data.yesterdayData.totalOrders * 100);
-        prompt += `
-
-  ⚡ TENDENCIA HOY vs AYER:
-  - Ventas: ${salesChange >= 0 ? '+' : ''}${salesChange.toFixed(1)}%
-  - Órdenes: ${ordersChange >= 0 ? '+' : ''}${ordersChange.toFixed(1)}%`;
-      }
+    // Contexto comparativo
+    if (data.yesterdayData && data.yesterdayData.totalOrders > 0 && data.todayData && data.todayData.totalOrders > 0) {
+      const salesChange = ((data.todayData.totalRevenue - data.yesterdayData.totalRevenue) / data.yesterdayData.totalRevenue * 100);
+      const ordersChange = ((data.todayData.totalOrders - data.yesterdayData.totalOrders) / data.yesterdayData.totalOrders * 100);
+      
+      prompt += `\n\nCOMPARADO CON AYER:
+Ventas ${salesChange >= 0 ? '+' : ''}${salesChange.toFixed(1)}% | Órdenes ${ordersChange >= 0 ? '+' : ''}${ordersChange.toFixed(1)}%
+Ayer: $${data.yesterdayData.totalRevenue} (${data.yesterdayData.totalOrders} órdenes)`;
     }
 
-    if (data.weekData && data.weekData.length > 0) {
-      prompt += `
+    // Patrones semanales (más conciso)
+    if (data.weekData && data.weekData.length >= 3) {
+      const totalWeekSales = data.weekData.reduce((sum, day) => sum + day.totalRevenue, 0);
+      const avgDailySales = totalWeekSales / data.weekData.length;
+      const bestDay = data.weekData.reduce((best, day) => day.totalRevenue > best.totalRevenue ? day : best);
+      const worstDay = data.weekData.reduce((worst, day) => day.totalRevenue < worst.totalRevenue ? day : worst);
 
-  📅 PATRÓN SEMANAL (últimos ${data.weekData.length} días con ventas):`;
-      
-      // Calcular promedios para contexto
-      const avgDailySales = data.weekData.reduce((sum, day) => sum + day.totalRevenue, 0) / data.weekData.length;
-      const avgDailyOrders = data.weekData.reduce((sum, day) => sum + day.totalOrders, 0) / data.weekData.length;
-      
-      data.weekData.slice(0, 7).forEach(day => {
-        if (day.totalOrders > 0) {
-          const salesVsAvg = ((day.totalRevenue - avgDailySales) / avgDailySales * 100);
-          const indicator = salesVsAvg > 10 ? '🔥' : salesVsAvg < -10 ? '❄️' : '📊';
-          prompt += `
-  ${indicator} ${day.dayName}: $${day.totalRevenue} (${day.totalOrders} órdenes, ticket $${day.avgTicket})`;
-        }
-      });
-
-      prompt += `
-  📊 Promedios semanales: $${avgDailySales.toFixed(0)}/día, ${avgDailyOrders.toFixed(0)} órdenes/día`;
+      prompt += `\n\nTENDENCIAS SEMANALES (${data.weekData.length} días):
+Promedio diario: $${avgDailySales.toFixed(0)}
+Mejor día: ${bestDay.dayName} ($${bestDay.totalRevenue})
+Día más bajo: ${worstDay.dayName} ($${worstDay.totalRevenue})
+Variación: ${(((bestDay.totalRevenue - worstDay.totalRevenue) / worstDay.totalRevenue) * 100).toFixed(0)}%`;
     }
 
+    // Top productos (solo los esenciales)
     if (data.topProducts && data.topProducts.length > 0) {
-      prompt += `
-
-  🏆 TOP PRODUCTOS (rendimiento histórico):`;
-      data.topProducts.slice(0, 8).forEach((product, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '⭐';
-        prompt += `
-  ${medal} ${product.product_name}: ${product.total_sold} ventas`;
-      });
+      prompt += `\n\nPRODUCTOS ESTRELLA:
+${data.topProducts.slice(0, 5).map((p, i) => `${i+1}. ${p.product_name} (${p.total_sold} ventas)`).join('\n')}`;
     }
 
-    prompt += `
-
-  CONTEXT: Fecha actual ${new Date().toLocaleDateString('es-ES', { 
+    prompt += `\n\nCONTEXTO TEMPORAL: ${new Date().toLocaleDateString('es-ES', { 
       weekday: 'long', 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     })}
 
-  Analiza con profundidad, responde con claridad visual, actúa como el consultor que este restaurante merece.`;
+INSTRUCCIONES FINALES:
+- Responde como Claude respondería: natural, inteligente, útil
+- Adapta tu respuesta al tono y necesidad específica del mensaje
+- Si es una pregunta simple, respuesta simple
+- Si necesitan análisis profundo, dale profundidad
+- Siempre termina orientando hacia acción práctica
+- Usa datos para sustentar, no para mostrar
+- Sé el consultor que este restaurante necesita`;
 
     return prompt;
   }
