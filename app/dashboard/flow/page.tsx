@@ -389,7 +389,7 @@ export default function Flow() {
               
               <button 
                 className="nav-pill"
-                onClick={() => window.location.href = '/dashboard/fudiMart'}
+                onClick={() => window.location.href = '/dashboard/mart'}
               >
                 fudiMART
               </button>

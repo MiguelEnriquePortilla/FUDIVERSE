@@ -543,35 +543,34 @@ export default function FudiVaultFilofax() {
           <nav className="header-navigation">
             <button 
               className="nav-pill"
-              onClick={() => navigateTo('/dashboard/chat')}
+              onClick={() => window.location.href = '/dashboard/chat'}
             >
               fudiGPT
             </button>
             
-            <button 
-              className="nav-pill"
-              onClick={() => navigateTo('/dashboard/board')}
+            <button className="nav-pill"
+              onClick={() => window.location.href = '/dashboard/board'}
             >
               fudiBOARD
             </button>
             
-            <button 
-              className="nav-pill"
-              onClick={() => navigateTo('/dashboard/discovery')}
+            <button className="nav-pill"
+              onClick={() => window.location.href = '/dashboard/flow'}
             >
-              fudiFLOW
+              fudiFlow
             </button>
             
-            <button className="nav-pill active">
+            <button className="nav-pill active"
+              onClick={() => window.location.href = '/dashboard/vault'}
+            >
               fudiVAULT
             </button>
             
-            <button 
-              className="nav-pill"
-              onClick={() => navigateTo('/dashboard/pos')}
-            >
-              fudiMART
-            </button>
+          <button className="nav-pill"
+            onClick={() => window.location.href = '/dashboard/mart'}
+          >
+            fudiMART
+          </button>
           </nav>
         </div>
           

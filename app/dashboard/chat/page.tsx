@@ -498,7 +498,7 @@ export default function ChatPage() {
               
               <button 
                 className="nav-pill"
-                onClick={() => navigateTo('/dashboard/fudiMart')}
+                onClick={() => navigateTo('/dashboard/mart')}
               >
                 fudiMART
               </button>
