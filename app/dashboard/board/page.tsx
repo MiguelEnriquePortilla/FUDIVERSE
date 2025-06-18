@@ -11,6 +11,7 @@ import {
   ChevronLeft, ChevronRight, MessageCircle, Rocket
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
+import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import '@/styles/pages/dashboard.css';
 
 // Initialize Supabase
@@ -237,34 +238,6 @@ export default function FudiBoardDashboard() {
       prev <= 0 ? fudiInsights.length - 1 : prev - 1
     );
   };
-
-  // Navigation functions
-  const navigateTo = (path: string) => {
-    window.location.href = path;
-  };
-
-  // 🤖 FUDI WISDOM ROTATION - REMOVED
-  // useEffect(() => {
-  //   const wisdomInterval = setInterval(() => {
-  //     setCurrentWisdomIndex(prev => 
-  //       prev >= fudiWisdom.length - 1 ? 0 : prev + 1
-  //     );
-  //     setShowWisdomBubble(true);
-      
-  //     // Hide bubble after 4 seconds
-  //     setTimeout(() => {
-  //       setShowWisdomBubble(false);
-  //     }, 4000);
-  //   }, 8000);
-
-  //   // Show first message after 2 seconds
-  //   setTimeout(() => {
-  //     setShowWisdomBubble(true);
-  //     setTimeout(() => setShowWisdomBubble(false), 4000);
-  //   }, 2000);
-
-  //   return () => clearInterval(wisdomInterval);
-  // }, []);
 
   // 💬 ASK FUDI HOOK ROTATION
   useEffect(() => {
@@ -987,12 +960,17 @@ export default function FudiBoardDashboard() {
     );
   }
 
-  function setSidebarOpen(arg0: boolean): void {
-    throw new Error('Function not implemented.');
-  }
-
   return (
     <div className="board-container">
+      
+      {/* ✅ NUEVO: FudiDashHeader reemplaza header custom */}
+      <FudiDashHeader 
+        currentModule="board" 
+        userName={userData?.ownerName || 'Operador'}
+        userPlan="pro"
+        notifications={3}
+      />
+      
       {/* Single Clean Background */}
       <FudiBackground 
         variant="premium"
@@ -1002,89 +980,6 @@ export default function FudiBoardDashboard() {
         fixed={true}
       />
 
-      {/* Header - Consistent with Other Pages */}
-      <header className="board-header">
-        <div className="header-content">
-          <div className="header-left">
-            <button 
-              className="fudi-logo-toggle"
-              onClick={() => setSidebarOpen(!setSidebarOpen)}
-            >
-              <img 
-                src="/images/logo.png" 
-                alt="FUDI Logo" 
-                className="fudi-header-logo"
-              />
-            </button>
-
-            <div className="fudi-logo">
-              <div>
-                <div className="fudi-title">fudiBOARD</div>
-                <div className="fudi-subtitle">Tu tablero inteligente</div>
-              </div>
-            </div>
-            
-            {/* Navigation Pills */}
-            <nav className="header-navigation">
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/chat')}
-              >
-                fudiGPT
-              </button>
-              
-              <button className="nav-pill active">
-                fudiBOARD
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/discovery')}
-              >
-                fudiFLOW
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/vault')}
-              >
-                fudiVAULT
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/pos')}
-              >
-                fudiMART
-              </button>
-            </nav>
-          </div>
-          
-          <div className="header-right">
-            <div className="live-indicator">
-              <div className="live-dot"></div>
-              Datos en tiempo real
-            </div>
-            <div className="restaurant-greeting">
-              {ultimaSincronizacion ? (
-                <>
-                  {sinDatosHoy && <span className="alert-sync">⚠️ Mostrando: </span>}
-                  {ultimaSincronizacion.toLocaleDateString('es-MX', { 
-                    weekday: 'short', 
-                    month: 'short', 
-                    day: 'numeric' 
-                  }).toUpperCase()}
-                </>
-              ) : (
-                'Sincronizando...'
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* FUDI Entity observando con Aura + Wisdom Bubbles - REMOVED */}
-      
       {/* Main Content */}
       <main className="board-main">
         <div className="main-grid">
@@ -1101,7 +996,7 @@ export default function FudiBoardDashboard() {
             </div>
             <div className="hero-label">
               ÚLTIMA VENTA REGISTRADA
-                          </div>
+            </div>
             <div className="hero-number">
               {formatMoney(data.ventasHoy)}
             </div>

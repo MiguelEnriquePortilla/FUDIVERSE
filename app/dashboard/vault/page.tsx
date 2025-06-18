@@ -9,6 +9,7 @@ import {
   PlusCircle, Edit3, Copy, Download, Share2, Heart, Eye,
   ArrowRight, ArrowLeft, MoreHorizontal, Mic, Bell, Sun, Moon
 } from 'lucide-react';
+import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import '@/styles/pages/FudiVault.css';
 
@@ -517,74 +518,13 @@ export default function FudiVaultFilofax() {
         fixed={true}
       />
 
-      {/* Header - Consistent with Dashboard */}
-      <header className="vault-header">
-        <div className="header-content">
-          <div className="header-left">
-            <button 
-              className="fudi-logo-toggle"
-              onClick={() => toggleFudiPanel()}
-            >
-              <img 
-                src="/images/logo.png" 
-                alt="FUDI Logo" 
-                className="fudi-header-logo"
-              />
-            </button>
-
-            <div className="fudi-logo">
-              <div>
-                <div className="fudi-title">fudiVAULT</div>
-                <div className="fudi-subtitle">Tu Filofax inteligente</div>
-              </div>
-            </div>
-            
-          {/* Navigation Pills */}
-          <nav className="header-navigation">
-            <button 
-              className="nav-pill"
-              onClick={() => window.location.href = '/dashboard/chat'}
-            >
-              fudiGPT
-            </button>
-            
-            <button className="nav-pill"
-              onClick={() => window.location.href = '/dashboard/board'}
-            >
-              fudiBOARD
-            </button>
-            
-            <button className="nav-pill"
-              onClick={() => window.location.href = '/dashboard/flow'}
-            >
-              fudiFlow
-            </button>
-            
-            <button className="nav-pill active"
-              onClick={() => window.location.href = '/dashboard/vault'}
-            >
-              fudiVAULT
-            </button>
-            
-          <button className="nav-pill"
-            onClick={() => window.location.href = '/dashboard/mart'}
-          >
-            fudiMART
-          </button>
-          </nav>
-        </div>
-          
-          <div className="header-right">
-            <div className="live-indicator">
-              <div className="live-dot"></div>
-              Sistema inteligente
-            </div>
-            <div className="vault-status">
-              Próximamente Q3 2025
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* ✅ NUEVO: FudiDashHeader reemplaza header custom */}
+      <FudiDashHeader 
+        currentModule="vault" 
+        userName="Mikelon"
+        userPlan="pro"
+        notifications={2}
+      />
 
       {/* Main Content */}
       <main className="vault-main">

@@ -6,6 +6,7 @@ import { fudiAPI } from '@/lib/api';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import '@/styles/pages/chat.css';
 
 interface Conversation {
@@ -35,7 +36,7 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   
-  // ✅ CHANGED: Dropdown State (instead of sidebar)
+  // ✅ MOVED: Dropdown State (now for floating button)
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -358,10 +359,110 @@ export default function ChatPage() {
     }
   };
 
-  // Navigation functions
-  const navigateTo = (path: string) => {
-    window.location.href = path;
-  };
+  // ✅ TEASE: Intercept FUDIVERSE clicks
+  useEffect(() => {
+    const handleFudiverseClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.textContent?.includes('FUDIVERSE') || target.closest('[href*="fudiverse"]')) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // 🚀 EPIC TEASE MODAL
+        const modal = document.createElement('div');
+        modal.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+          ">
+            <div style="
+              background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+              border: 1px solid rgba(255, 255, 255, 0.1);
+              border-radius: 24px;
+              padding: 3rem;
+              text-align: center;
+              backdrop-filter: blur(25px);
+              max-width: 500px;
+              margin: 2rem;
+              box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            ">
+              <div style="
+                font-size: 3rem;
+                margin-bottom: 1rem;
+              ">🚀</div>
+              
+              <div style="
+                font-size: 2rem;
+                font-weight: 700;
+                color: #fbbf24;
+                margin-bottom: 1rem;
+                background: linear-gradient(135deg, #fbbf24, #f59e0b);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+              ">FUDIVERSE.AI</div>
+              
+              <div style="
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 1.2rem;
+                margin-bottom: 2rem;
+                line-height: 1.6;
+              ">
+                Something <strong style="color: #3b82f6;">EPIC</strong> is being built...<br>
+                The future of restaurant intelligence is <strong style="color: #fbbf24;">almost here</strong>
+              </div>
+              
+              <button onclick="this.closest('div[style*=fixed]').remove()" style="
+                background: linear-gradient(135deg, #3b82f6, #fbbf24);
+                border: none;
+                border-radius: 12px;
+                padding: 1rem 2rem;
+                color: white;
+                font-weight: 600;
+                cursor: pointer;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+              " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                ✨ Can't wait!
+              </button>
+            </div>
+          </div>
+          
+          <style>
+            @keyframes fadeIn {
+              from { opacity: 0; transform: scale(0.9); }
+              to { opacity: 1; transform: scale(1); }
+            }
+          </style>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Auto close after 5 seconds
+        setTimeout(() => {
+          if (modal.parentNode) {
+            modal.remove();
+          }
+        }, 8000);
+      }
+    };
+
+    // Add click listener to document
+    document.addEventListener('click', handleFudiverseClick, true);
+    
+    return () => {
+      document.removeEventListener('click', handleFudiverseClick, true);
+    };
+  }, []);
 
   return (
     <div className="chat-container">
@@ -374,164 +475,97 @@ export default function ChatPage() {
         fixed={true}
       />
 
-      {/* Header - Enhanced with Conversations Dropdown */}
-      <header className="chat-header">
-        
-        <div className="header-content">
+      {/* ✅ FASE 2: FudiDashHeader Implanted Successfully */}
+      <FudiDashHeader 
+        currentModule="chat" 
+        userName={userData.ownerName}
+        userPlan="pro"
+        notifications={2}
+      />
 
-            <div className="fudi-logo">
-              <img 
-                src="/images/logo.png" 
-                alt="FUDI Logo" 
-                className="fudi-header-logo"
-              />
-              <div>
-                <div className="fudi-title">fudiGPT</div>
-                <div className="fudi-subtitle">Tu asistente inteligente</div>
-              </div>
-            </div>
+      {/* ✅ ENCHULADO: Floating Conversations Button with FudiButton styling */}
+      <div className="floating-conversations" ref={dropdownRef}>
+        <FudiButton
+          variant="primary"
+          size="large"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          icon={
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          }
+          iconPosition="left"
+          className="floating-conversations-trigger"
+          aria-label="Conversaciones"
+        >
+          <span className="floating-conversations-text">Conversaciones</span>
+        </FudiButton>
 
-          <div className="header-left">
-            
-             {/* ✅ NEW: Conversations Dropdown Trigger */}
-            <div className="conversations-dropdown" ref={dropdownRef}>
-              <button 
-                className="conversations-trigger"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        {/* ✅ MOVED: Conversations Dropdown Panel (now floating) */}
+        {dropdownOpen && (
+          <div className="floating-conversations-panel">
+            {/* New Chat Button */}
+            <FudiButton
+              variant="primary"
+              size="medium"
+              onClick={startNewConversation}
+              icon={
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
-                <span>Conversaciones</span>
-                <span className="conversations-count">({conversations.length})</span>
-                <svg className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              }
+              iconPosition="left"
+              className="floating-new-chat"
+            >
+              Nueva Conversación
+            </FudiButton>
 
-              {/* ✅ NEW: Conversations Dropdown Panel */}
-              {dropdownOpen && (
-                <div className="conversations-panel">
-                  {/* New Chat Button */}
-                  <button 
-                    className="dropdown-new-chat"
-                    onClick={startNewConversation}
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Nueva Conversación
-                  </button>
-
-                  {/* Conversations List */}
-                  <div className="dropdown-conversations">
-                    {conversations.length === 0 ? (
-                      <div className="dropdown-empty">
-                        <p>No hay conversaciones</p>
-                        <p className="dropdown-empty-subtitle">Inicia tu primera conversación</p>
-                      </div>
-                    ) : (
-                      conversations.map((conversation) => (
-                        <button
-                          key={conversation.id}
-                          className={`dropdown-conversation ${
-                            currentConversationId === conversation.id ? 'dropdown-conversation-active' : ''
-                          }`}
-                          onClick={() => switchConversation(conversation.id)}
-                        >
-                          <div className="dropdown-conversation-content">
-                            <h4 className="dropdown-conversation-title">{conversation.title}</h4>
-                            <p className="dropdown-conversation-time">
-                              {new Date(conversation.timestamp).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </button>
-                      ))
-                    )}
-                  </div>
-            
-                  {/* User Info */}
-                  <div className="dropdown-user">
-                    <div className="dropdown-user-info">
-                      <div className="dropdown-user-avatar">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <div className="dropdown-user-details">
-                        <div className="dropdown-user-name">{userData.ownerName}</div>
-                        <div className="dropdown-user-restaurant">{userData.restaurantName}</div>
-                      </div>
-                    </div>
-                  </div>
+            {/* Conversations List */}
+            <div className="floating-conversations-list">
+              {conversations.length === 0 ? (
+                <div className="floating-empty">
+                  <p>No hay conversaciones</p>
+                  <p className="floating-empty-subtitle">Inicia tu primera conversación</p>
                 </div>
+              ) : (
+                conversations.map((conversation) => (
+                  <button
+                    key={conversation.id}
+                    className={`floating-conversation ${
+                      currentConversationId === conversation.id ? 'floating-conversation-active' : ''
+                    }`}
+                    onClick={() => switchConversation(conversation.id)}
+                  >
+                    <div className="floating-conversation-content">
+                      <h4 className="floating-conversation-title">{conversation.title}</h4>
+                      <p className="floating-conversation-time">
+                        {new Date(conversation.timestamp).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </button>
+                ))
               )}
             </div>
-            
-            {/* Navigation Pills */}
-            <nav className="header-navigation">
-              <button className="nav-pill active">
-                fudiGPT
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/board')}
-              >
-                fudiBOARD
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/discovery')}
-              >
-                fudiFLOW
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/vault')}
-              >
-                fudiVAULT
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => navigateTo('/dashboard/mart')}
-              >
-                fudiMART
-              </button>
-            </nav>
-          </div>
-          
-          <div className="header-right">
-            <div className="live-indicator">
-              <div className="live-dot"></div>
-              ONLINE
-            </div>
-            
-            {/* ✅ SIMPLIFIED: Restaurant Name + Logout Button */}
-            <div className="header-user-section">
-              <span className="restaurant-name">{userData.restaurantName}</span>
-              <FudiButton
-                variant="danger"
-                size="small"
-                onClick={handleLogout}
-                icon={
+      
+            {/* User Info */}
+            <div className="floating-user">
+              <div className="floating-user-info">
+                <div className="floating-user-avatar">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                }
-                iconPosition="left"
-              >
-                Cerrar sesión
-              </FudiButton>
+                </div>
+                <div className="floating-user-details">
+                  <div className="floating-user-name">{userData.ownerName}</div>
+                  <div className="floating-user-restaurant">{userData.restaurantName}</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        )}
+      </div>
 
-      {/* Main Chat Area - No Sidebar Adjustments Needed */}
+      {/* Main Chat Area - No Changes */}
       <main className="chat-main">
         <div className="messages-area">
           {showWelcome && messages.length === 0 ? (
@@ -696,6 +730,286 @@ export default function ChatPage() {
           }}
         />
       ))}
+
+      {/* ✅ ENHANCED: CSS for Floating Conversations with FudiButton Integration */}
+      <style jsx>{`
+        .floating-conversations {
+          position: fixed;
+          bottom: 2rem;
+          left: 2rem;
+          z-index: 1000;
+        }
+
+        /* ✅ ENCHULADO: FudiButton styling for floating conversations */
+        .floating-conversations .floating-conversations-trigger {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          border-radius: 50% !important;
+          width: 60px !important;
+          height: 60px !important;
+          padding: 0 !important;
+          min-width: auto !important;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(102, 126, 234, 0.4) !important;
+          backdrop-filter: blur(20px) !important;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          position: relative !important;
+          overflow: hidden !important;
+        }
+
+        .floating-conversations .floating-conversations-trigger:hover {
+          transform: translateY(-3px) scale(1.05) !important;
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(102, 126, 234, 0.6) !important;
+          border-color: var(--fudi-blue) !important;
+        }
+
+        .floating-conversations .floating-conversations-trigger:active {
+          transform: translateY(-1px) scale(1.02) !important;
+        }
+
+        /* Hide text on circular button, show only icon */
+        .floating-conversations-text {
+          display: none !important;
+        }
+
+        .floating-conversations-count {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          background: linear-gradient(135deg, #ff4757, #ff3742);
+          color: white;
+          border-radius: 50%;
+          width: 22px;
+          height: 22px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.75rem;
+          font-weight: bold;
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+          animation: count-pulse 2s infinite;
+        }
+
+        @keyframes count-pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+        }
+
+        .floating-conversations-panel {
+          position: absolute;
+          bottom: 75px;
+          left: 0;
+          width: 320px;
+          max-height: 500px;
+          background: rgba(0, 0, 0, 0.85);
+          backdrop-filter: blur(25px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(102, 126, 234, 0.2);
+          overflow: hidden;
+          animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        /* ✅ ENCHULADO: New Chat Button with FudiButton styling */
+        .floating-conversations-panel .floating-new-chat {
+          width: 100% !important;
+          margin: 1rem !important;
+          margin-bottom: 0.5rem !important;
+          border-radius: 12px !important;
+          background: linear-gradient(135deg, var(--fudi-blue), var(--fudi-primary)) !important;
+          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        .floating-conversations-panel .floating-new-chat:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4) !important;
+        }
+
+        .floating-conversations-list {
+          max-height: 300px;
+          overflow-y: auto;
+          padding: 0.5rem 1rem;
+        }
+
+        .floating-conversation {
+          width: 100%;
+          padding: 0.75rem;
+          border: none;
+          background: transparent;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border-radius: 10px;
+          margin-bottom: 0.25rem;
+          border: 1px solid transparent;
+        }
+
+        .floating-conversation:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.1);
+          transform: translateX(4px);
+        }
+
+        .floating-conversation-active {
+          background: rgba(59, 130, 246, 0.15);
+          border-color: var(--fudi-blue);
+          box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+          position: relative;
+        }
+
+        .floating-conversation-active::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: var(--fudi-blue);
+          border-radius: 0 2px 2px 0;
+        }
+
+        .floating-conversation-title {
+          color: var(--text-primary);
+          font-size: 0.875rem;
+          font-weight: 600;
+          margin: 0 0 0.25rem 0;
+          line-height: 1.4;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .floating-conversation-time {
+          color: var(--text-tertiary);
+          font-size: 0.75rem;
+          margin: 0;
+        }
+
+        .floating-empty {
+          padding: 2rem 1rem;
+          text-align: center;
+          color: var(--text-secondary);
+        }
+
+        .floating-empty p {
+          margin: 0.25rem 0;
+          font-size: 0.875rem;
+        }
+
+        .floating-empty-subtitle {
+          font-size: 0.75rem !important;
+          opacity: 0.7;
+        }
+
+        .floating-user {
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          padding: 1rem;
+          background: rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-user-info {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .floating-user-avatar {
+          width: 36px;
+          height: 36px;
+          background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(0, 0, 0, 0.8);
+          font-weight: bold;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .floating-user-name {
+          font-weight: 600;
+          font-size: 0.875rem;
+          color: var(--text-primary);
+        }
+
+        .floating-user-restaurant {
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+          opacity: 0.8;
+        }
+
+        /* ✅ ENHANCED: Mobile responsiveness for floating button */
+        @media (max-width: 768px) {
+          .floating-conversations {
+            bottom: 1.5rem;
+            left: 1.5rem;
+          }
+
+          .floating-conversations .floating-conversations-trigger {
+            width: 56px !important;
+            height: 56px !important;
+          }
+
+          .floating-conversations-panel {
+            width: calc(100vw - 3rem);
+            max-width: 300px;
+          }
+
+          .floating-conversations-count {
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .floating-conversations {
+            bottom: 1rem;
+            left: 1rem;
+          }
+
+          .floating-conversations .floating-conversations-trigger {
+            width: 52px !important;
+            height: 52px !important;
+          }
+
+          .floating-conversations-panel {
+            width: calc(100vw - 2rem);
+            max-width: 280px;
+          }
+        }
+
+        /* ✅ Scrollbar styling for conversations list */
+        .floating-conversations-list::-webkit-scrollbar {
+          width: 4px;
+        }
+
+        .floating-conversations-list::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .floating-conversations-list::-webkit-scrollbar-thumb {
+          background: var(--fudi-blue);
+          border-radius: 2px;
+          opacity: 0.6;
+        }
+
+        .floating-conversations-list::-webkit-scrollbar-thumb:hover {
+          opacity: 0.8;
+        }
+      `}</style>
     </div>
   );
 }

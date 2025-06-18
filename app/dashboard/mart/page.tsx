@@ -9,6 +9,7 @@ import {
   Smartphone, Truck, DollarSign, Clock, Eye, ChevronRight,
   User, Package, BookOpen, Settings, HelpCircle
 } from 'lucide-react';
+import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 
 // Import styles
 import '@/styles/pages/FudiMart.css';
@@ -216,73 +217,14 @@ const products: Product[] = [
 
   return (
     <div className="fudimart-container">
-      {/* Header - Exact same as dashboard */}
-      <header className="fudimart-header">
-        <nav className="fudimart-nav">
-          <Link href="/" className="fudimart-logo">
-            <span className="logo-text">FUDIVERSE</span>
-            <span className="logo-subtitle">RESTO AI</span>
-          </Link>
-
-          {/* Navigation Pills */}
-          <div className="nav-pills">
-            <Link href="/dashboard/chat" className="nav-pill">
-              fudiGPT
-            </Link>
-            <Link href="/dashboard/board" className="nav-pill">
-              fudiBOARD
-            </Link>
-            <Link href="/dashboard/flow" className="nav-pill">
-              fudiFlow
-            </Link>
-            <Link href="/dashboard/vault" className="nav-pill">
-              fudiVAULT
-            </Link>
-            <Link href="/dashboard/mart" className="nav-pill active">
-              fudiMART
-            </Link>
-          </div>
-
-          {/* Nav Actions */}
-          <div className="nav-actions">
-            <button 
-              style={{
-                background: 'linear-gradient(135deg, var(--fudi-primary), var(--fudi-blue))',
-                color: '#000',
-                border: 'none',
-                borderRadius: '30px',
-                padding: '16px 32px',
-                fontWeight: '800',
-                fontSize: '1.1rem',
-                cursor: 'pointer',
-                textTransform: 'uppercase',
-                letterSpacing: '2px',
-                boxShadow: '0 6px 20px rgba(251, 191, 36, 0.4)',
-                marginRight: '1rem',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              🚀 PRÓXIMAMENTE
-            </button>
-            
-            <button 
-              className="mobile-nav-toggle"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              style={{ display: 'none' }}
-            >
-              {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-            
-            <button className="nav-action-btn">
-              <MessageCircle size={20} />
-            </button>
-            
-            <button className="nav-action-btn">
-              <User size={20} />
-            </button>
-          </div>
-        </nav>
-      </header>
+      
+      {/* ✅ NUEVO: FudiDashHeader reemplaza header custom */}
+      <FudiDashHeader 
+        currentModule="mart" 
+        userName="Mikelon"
+        userPlan="pro"
+        notifications={2}
+      />
 
       {/* Main Layout */}
       <main className="fudimart-main">

@@ -8,6 +8,7 @@ import {
   ChefHat, Star, TrendingUp, Crown, Gift, Zap, Flame,
   Eye, Users, DollarSign, Target, Award, ThumbsUp
 } from 'lucide-react';
+import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 
 // Import CSS
 import '../../../styles/pages/FudiDiscovery.css';
@@ -341,73 +342,13 @@ export default function Flow() {
   return (
     <div className="fudiflow-container">
       
-      {/* Header con Navigation - Igual al Chat */}
-      <header className="fudiflow-header">
-        <div className="header-content">
-          <div className="header-left">
-            <div className="fudi-logo">
-              <img 
-                src="/images/logo.png" 
-                alt="FUDI Logo" 
-                className="fudi-header-logo"
-              />
-              <div>
-                <div className="fudi-title">fudiFLOW</div>
-                <div className="fudi-subtitle">Tu red social food</div>
-              </div>
-            </div>
-            
-            {/* Navigation Pills - Igual al Chat */}
-            <nav className="header-navigation">
-              <button 
-                className="nav-pill"
-                onClick={() => window.location.href = '/dashboard/chat'}
-              >
-                fudiGPT
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => window.location.href = '/dashboard/board'}
-              >
-                fudiBOARD
-              </button>
-              
-              <button 
-                className="nav-pill active"
-                onClick={() => window.location.href = '/dashboard/flow'}
-              >
-                fudiFLOW
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => window.location.href = '/dashboard/vault'}
-              >
-                fudiVAULT
-              </button>
-              
-              <button 
-                className="nav-pill"
-                onClick={() => window.location.href = '/dashboard/mart'}
-              >
-                fudiMART
-              </button>
-            </nav>
-          </div>
-          
-          <div className="header-right">
-            <div className="live-indicator">
-              <div className="live-dot"></div>
-              BETA
-            </div>
-            
-            <div className="coming-soon-badge">
-              PRÓXIMAMENTE
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* ✅ NUEVO: FudiDashHeader reemplaza header custom */}
+      <FudiDashHeader 
+        currentModule="flow" 
+        userName="Mikelon"
+        userPlan="pro"
+        notifications={2}
+      />
 
       {/* Feed Principal - CLEAN */}
       <div ref={feedRef} className="feed-container">
