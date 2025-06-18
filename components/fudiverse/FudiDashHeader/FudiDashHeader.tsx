@@ -13,14 +13,16 @@ interface FudiDashHeaderProps {
   userName?: string;
   userPlan?: 'basic' | 'pro' | 'max' | 'enterprise';
   notifications?: number;
+  onLogout?: () => void;  // ✅ AGREGADO: Función de logout
   className?: string;
 }
 
 export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
   currentModule = 'chat',
-  userName = 'Mikelon',
+  userName,
   userPlan = 'pro',
   notifications = 0,
+  onLogout,  // ✅ AGREGADO: Prop de logout
   className = ''
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -35,6 +37,15 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
   };
 
   const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  // ✅ AGREGADO: Handler para logout
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+    }
+    setIsUserMenuOpen(false);
     setIsMobileMenuOpen(false);
   };
 
@@ -185,7 +196,10 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
                   <span>Upgrade Plan</span>
                 </Link>
                 <div className={styles.dropdownDivider}></div>
-                <button className={`${styles.dropdownItem} ${styles.logoutItem}`}>
+                <button 
+                  className={`${styles.dropdownItem} ${styles.logoutItem}`}
+                  onClick={handleLogout}  // ✅ ARREGLADO: Función de logout
+                >
                   <LogOut size={16} />
                   <span>Cerrar Sesión</span>
                 </button>
@@ -262,7 +276,10 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
                 <Crown size={18} />
                 <span>Upgrade Plan</span>
               </Link>
-              <button className={`${styles.mobileAction} ${styles.mobileLogout}`}>
+              <button 
+                className={`${styles.mobileAction} ${styles.mobileLogout}`}
+                onClick={handleLogout}  // ✅ ARREGLADO: Función de logout mobile
+              >
                 <LogOut size={18} />
                 <span>Cerrar Sesión</span>
               </button>

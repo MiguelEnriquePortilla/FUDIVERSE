@@ -359,111 +359,7 @@ export default function ChatPage() {
     }
   };
 
-  // ✅ TEASE: Intercept FUDIVERSE clicks
-  useEffect(() => {
-    const handleFudiverseClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.textContent?.includes('FUDIVERSE') || target.closest('[href*="fudiverse"]')) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // 🚀 EPIC TEASE MODAL
-        const modal = document.createElement('div');
-        modal.innerHTML = `
-          <div style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            animation: fadeIn 0.3s ease;
-          ">
-            <div style="
-              background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-              border: 1px solid rgba(255, 255, 255, 0.1);
-              border-radius: 24px;
-              padding: 3rem;
-              text-align: center;
-              backdrop-filter: blur(25px);
-              max-width: 500px;
-              margin: 2rem;
-              box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            ">
-              <div style="
-                font-size: 3rem;
-                margin-bottom: 1rem;
-              ">🚀</div>
-              
-              <div style="
-                font-size: 2rem;
-                font-weight: 700;
-                color: #fbbf24;
-                margin-bottom: 1rem;
-                background: linear-gradient(135deg, #fbbf24, #f59e0b);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-              ">FUDIVERSE.AI</div>
-              
-              <div style="
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 1.2rem;
-                margin-bottom: 2rem;
-                line-height: 1.6;
-              ">
-                Something <strong style="color: #3b82f6;">EPIC</strong> is being built...<br>
-                The future of restaurant intelligence is <strong style="color: #fbbf24;">almost here</strong>
-              </div>
-              
-              <button onclick="this.closest('div[style*=fixed]').remove()" style="
-                background: linear-gradient(135deg, #3b82f6, #fbbf24);
-                border: none;
-                border-radius: 12px;
-                padding: 1rem 2rem;
-                color: white;
-                font-weight: 600;
-                cursor: pointer;
-                font-size: 1rem;
-                transition: all 0.3s ease;
-              " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                ✨ Can't wait!
-              </button>
-            </div>
-          </div>
-          
-          <style>
-            @keyframes fadeIn {
-              from { opacity: 0; transform: scale(0.9); }
-              to { opacity: 1; transform: scale(1); }
-            }
-          </style>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Auto close after 5 seconds
-        setTimeout(() => {
-          if (modal.parentNode) {
-            modal.remove();
-          }
-        }, 8000);
-      }
-    };
-
-    // Add click listener to document
-    document.addEventListener('click', handleFudiverseClick, true);
-    
-    return () => {
-      document.removeEventListener('click', handleFudiverseClick, true);
-    };
-  }, []);
-
+ 
   return (
     <div className="chat-container">
       {/* Single Clean Background */}
@@ -481,6 +377,7 @@ export default function ChatPage() {
         userName={userData.ownerName}
         userPlan="pro"
         notifications={2}
+        onLogout={handleLogout}
       />
 
       {/* ✅ ENCHULADO: Floating Conversations Button with FudiButton styling */}
@@ -496,7 +393,6 @@ export default function ChatPage() {
           }
           iconPosition="left"
           className="floating-conversations-trigger"
-          aria-label="Conversaciones"
         >
           <span className="floating-conversations-text">Conversaciones</span>
         </FudiButton>
