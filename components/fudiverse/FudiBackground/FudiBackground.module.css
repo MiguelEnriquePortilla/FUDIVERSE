@@ -1,16 +1,16 @@
 /* =============================================
-   PRUEBA LOCA 🧪 - DETECTIVE MODE
+   FUDI BACKGROUND - CANVAS TEXTURIZADO
    ============================================= */
 
-/* CLAUDE EXACT COLOR - BASADO EN OBSERVACIÓN DIRECTA */
+/* Container base */
 .fudiBackground {
   position: relative;
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
-  background: #000000 !important; /* CLAUDE DARK - MUY OSCURO */
 }
 
+/* Fixed positioning */
 .fudiBackground.fixed {
   position: fixed;
   top: 0;
@@ -18,80 +18,121 @@
   width: 100vw;
   height: 100vh;
   z-index: 0;
-  background: #000000 !important; /* CLAUDE DARK - MUY OSCURO */
 }
 
-/* CLAUDE THEME - COLOR EXACTO */
-.claude {
-  background: #000000 !important; /* CLAUDE EXACT */
-}
-
-/* PRUEBA: OTROS TEMAS NORMALES */
-.business {
-  background: #0f172a !important; /* BUSINESS DARK */
-}
-
-.gold {
-  background: #0a0a0a !important; /* GOLD DARK */
-}
-
-.mixed {
-  background: #1e293b !important; /* MIXED DARK */
-}
-
-/* VARIANTES - CLAUDE STYLE */
-.minimal {
-  background: #101014 !important; /* CLAUDE DARK */
-}
-
-.gradient {
-  background: linear-gradient(
-    135deg,
-    #101014 0%,
-    #1a1a1e 50%,
-    #101014 100%
-  ) !important; /* CLAUDE GRADIENT */
-}
-
-.particles {
-  background: #101014 !important; /* CLAUDE DARK */
-}
-
-.premium {
-  background: linear-gradient(
-    135deg,
-    #101014 0%,
-    #181820 50%,
-    #101014 100%
-  ) !important; /* CLAUDE PREMIUM */
-}
-
-/* CONTENT - LIMPIO */
-.content {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  height: 100%;
-  /* background removido */
-}
-
-/* CANVAS - LIMPIO */
-.particlesCanvas {
+/* Canvas texturizado */
+.canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
   pointer-events: none;
-  /* background removido */
+  z-index: 1;
 }
 
-/* BODY Y HTML - REMOVIDOS
-body {
-  background: #ff1493 !important;
+/* Content layer */
+.content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: inherit;
 }
 
-html {
-  background: #32cd32 !important;
-} */
+/* =============================================
+   VARIANTES DE INTENSIDAD
+   ============================================= */
+
+.minimal {
+  /* Textura muy sutil */
+}
+
+.subtle {
+  /* Textura ligera */
+}
+
+.medium {
+  /* Textura estándar */
+}
+
+.intense {
+  /* Textura más pronunciada */
+}
+
+/* =============================================
+   TEMAS DE COLOR
+   ============================================= */
+
+.dark {
+  background-color: #0a0a0a; /* Gris muy oscuro */
+}
+
+.darker {
+  background-color: #050505; /* Casi negro */
+}
+
+.darkest {
+  background-color: #000000; /* Negro puro */
+}
+
+.gray {
+  background-color: #1a1a1a; /* Gris más claro */
+}
+
+.light-gray {
+  background-color: #2a2a2a; /* Gris claro */
+}
+
+.charcoal {
+  background-color: #151515; /* Carbón */
+}
+
+/* =============================================
+   RESPONSIVIDAD MÓVIL
+   ============================================= */
+
+@media (max-width: 768px) {
+  .fudiBackground {
+    /* Optimizaciones móvil si necesarias */
+  }
+  
+  .canvas {
+    /* Canvas optimizado para móvil */
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+  }
+}
+
+@media (max-width: 480px) {
+  .fudiBackground {
+    /* Pantallas muy pequeñas */
+  }
+}
+
+/* =============================================
+   PERFORMANCE Y ACCESIBILIDAD
+   ============================================= */
+
+/* Reduce motion para usuarios sensibles */
+@media (prefers-reduced-motion: reduce) {
+  .canvas {
+    /* Sin animaciones si el usuario las tiene deshabilitadas */
+  }
+}
+
+/* Dark mode support (aunque ya somos dark por defecto) */
+@media (prefers-color-scheme: dark) {
+  .fudiBackground {
+    /* Ajustes adicionales para dark mode */
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .canvas {
+    /* Ajustes para alto contraste */
+    opacity: 0.3;
+  }
+}

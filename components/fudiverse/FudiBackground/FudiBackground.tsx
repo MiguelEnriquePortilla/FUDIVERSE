@@ -3,8 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import styles from './FudiBackground.module.css';
 
-export type FudiBackgroundVariant = 'minimal' | 'gradient' | 'particles' | 'premium';
-export type FudiBackgroundTheme = 'business' | 'gold' | 'mixed' | 'claude';
+export type FudiBackgroundVariant = 'minimal' | 'subtle' | 'medium' | 'intense';
+export type FudiBackgroundTheme = 'dark' | 'darker' | 'darkest' | 'gray' | 'light-gray' | 'charcoal';
 
 interface FudiBackgroundProps {
   variant?: FudiBackgroundVariant;
@@ -16,191 +16,190 @@ interface FudiBackgroundProps {
   children?: React.ReactNode;
 }
 
-interface Particle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  size: number;
-  alpha: number;
-  color: string;
-}
-
 export const FudiBackground: React.FC<FudiBackgroundProps> = ({
-  variant = 'premium',
-  theme = 'Claude',  // ← CLAUDE POR DEFECTO
-  intensity = 0.5,
+  variant = 'medium',
+  theme = 'dark',
+  intensity = 0.6,
   opacity = 1,
-  fixed = true,
+  fixed = false,
   className = '',
   children
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
-  const animationFrameRef = useRef<number | undefined>(undefined);
 
-  // Theme colors - CORREGIDOS PARA CLAUDE
+  // Configuración de intensidad basada en variante
+  const getVariantIntensity = () => {
+    const baseIntensity = intensity;
+    switch (variant) {
+      case 'minimal':
+        return baseIntensity * 0.3;
+      case 'subtle':
+        return baseIntensity * 0.6;
+      case 'medium':
+        return baseIntensity * 1.0;
+      case 'intense':
+        return baseIntensity * 1.4;
+      default:
+        return baseIntensity;
+    }
+  };
+
+  // Colores por tema
   const getThemeColors = () => {
     switch (theme) {
-      case 'claude':
+      case 'dark':
         return {
-          primary: '#3b82f6',     // Claude Blue
-          secondary: '#6366f1',   // Claude Purple
-          accent: '#f59e0b',      // Claude Accent
+          base: '#0a0a0a',      // Gris muy oscuro
+          dots: 'rgba(26, 26, 26, ALPHA)',
+          bright: 'rgba(35, 35, 35, ALPHA)'
         };
-      case 'business':
+      case 'darker':
         return {
-          primary: '#1e40af',     // Business Blue
-          secondary: '#3b82f6',   // Royal Blue
-          accent: '#d4af37',      // Premium Gold
+          base: '#050505',      // Casi negro
+          dots: 'rgba(20, 20, 20, ALPHA)',
+          bright: 'rgba(30, 30, 30, ALPHA)'
         };
-      case 'gold':
+      case 'darkest':
         return {
-          primary: '#fbbf24',     // Matrix Gold
-          secondary: '#f59e0b',   // Amber
-          accent: '#d97706',      // Orange
+          base: '#000000',      // Negro puro
+          dots: 'rgba(15, 15, 15, ALPHA)',
+          bright: 'rgba(25, 25, 25, ALPHA)'
         };
-      case 'mixed':
+      case 'gray':
+        return {
+          base: '#1a1a1a',      // Gris más claro
+          dots: 'rgba(45, 45, 45, ALPHA)',
+          bright: 'rgba(60, 60, 60, ALPHA)'
+        };
+      case 'light-gray':
+        return {
+          base: '#2a2a2a',      // Gris claro
+          dots: 'rgba(55, 55, 55, ALPHA)',
+          bright: 'rgba(75, 75, 75, ALPHA)'
+        };
+      case 'charcoal':
+        return {
+          base: '#151515',      // Carbón
+          dots: 'rgba(40, 40, 40, ALPHA)',
+          bright: 'rgba(55, 55, 55, ALPHA)'
+        };
       default:
         return {
-          primary: '#1e40af',     // Business Blue
-          secondary: '#fbbf24',   // Gold
-          accent: '#10b981',      // Green
+          base: '#0a0a0a',
+          dots: 'rgba(26, 26, 26, ALPHA)',
+          bright: 'rgba(35, 35, 35, ALPHA)'
         };
     }
   };
 
-  const colors = getThemeColors();
-
-  // Initialize particles - SOLO SI SE NECESITAN
   useEffect(() => {
-    if (variant === 'particles' || variant === 'premium') {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      const updateCanvasSize = () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      };
-
-      updateCanvasSize();
-      window.addEventListener('resize', updateCanvasSize);
-
-      // Create particles
-      const particleCount = Math.floor(5000 * intensity); // ← MENOS PARTÍCULAS
-      const particles: Particle[] = [];
-
-      for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.3, // ← MÁS LENTAS
-          vy: (Math.random() - 0.5) * 0.3, // ← MÁS LENTAS
-          size: Math.random() * 1.5 + 0.5, // ← MÁS PEQUEÑAS
-          alpha: Math.random() * 0.3 + 0.1, // ← MÁS SUTILES
-          color: Math.random() > 0.7 ? colors.primary : colors.secondary
-        });
-      }
-
-      particlesRef.current = particles;
-
-      return () => {
-        window.removeEventListener('resize', updateCanvasSize);
-      };
-    }
-  }, [variant, intensity, colors]);
-
-  // Canvas animation - OPTIMIZADA
-  useEffect(() => {
-    if (variant !== 'particles' && variant !== 'premium') return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let time = 0;
+    const colors = getThemeColors();
+    const finalIntensity = getVariantIntensity();
 
-    const animate = () => {
-      time += 0.003; // ← MÁS LENTO
-
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw particles
-      particlesRef.current.forEach((particle, index) => {
-        // Update position
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-
-        // Wrap around edges
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
-
-        // Breathing effect - MÁS SUTIL
-        const breath = Math.sin(time * 1.5 + index * 0.1) * 0.2 + 0.8;
-        
-        // Draw particle
-        ctx.fillStyle = particle.color;
-        ctx.globalAlpha = particle.alpha * breath * opacity * 0.8; // ← MÁS SUTIL
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size * breath, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Draw connections - MÁS SUTILES
-        particlesRef.current.forEach(other => {
-          if (particle === other) return;
-          
-          const dx = particle.x - other.x;
-          const dy = particle.y - other.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 150) { // ← DISTANCIA MENOR
-            ctx.strokeStyle = particle.color;
-            ctx.globalAlpha = (1 - distance / 150) * 0.05 * opacity; // ← MÁS SUTIL
-            ctx.lineWidth = 0.3; // ← MÁS DELGADA
-            ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.stroke();
-          }
-        });
-      });
-
-      ctx.globalAlpha = 1;
-      animationFrameRef.current = requestAnimationFrame(animate);
+    const updateCanvasSize = () => {
+      const devicePixelRatio = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      
+      canvas.width = rect.width * devicePixelRatio;
+      canvas.height = rect.height * devicePixelRatio;
+      
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      
+      drawTexture();
     };
 
-    animate();
+    const drawTexture = () => {
+      const width = canvas.width / (window.devicePixelRatio || 1);
+      const height = canvas.height / (window.devicePixelRatio || 1);
 
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      // Base color
+      ctx.fillStyle = colors.base;
+      ctx.fillRect(0, 0, width, height);
+
+      // Tamaño de punto y espaciado responsivo
+      const isMobile = width < 768;
+      const dotSize = isMobile ? 1.0 : 1.2;
+      const spacing = isMobile ? 2.5 : 3;
+      
+      const rows = Math.ceil(height / spacing) + 2;
+      const cols = Math.ceil(width / spacing) + 2;
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          // Patrón hexagonal offset
+          const offsetX = (row % 2) * (spacing / 2);
+          const x = col * spacing + offsetX;
+          const y = row * spacing;
+
+          // Skip si está fuera del canvas
+          if (x < -spacing || x > width + spacing || y < -spacing || y > height + spacing) {
+            continue;
+          }
+
+          // Variación natural en intensidad
+          const noise = Math.sin(x * 0.1) * Math.cos(y * 0.1) * 0.3;
+          const baseAlpha = 0.15 + noise * 0.1;
+          const calculatedAlpha = Math.max(0, Math.min(1, baseAlpha * finalIntensity));
+
+          // Variación sutil en tamaño
+          const sizeVariation = 0.8 + Math.sin(x * 0.05 + y * 0.05) * 0.4;
+          const finalSize = dotSize * sizeVariation;
+
+          // Puntos base
+          ctx.fillStyle = colors.dots.replace('ALPHA', calculatedAlpha.toString());
+          ctx.beginPath();
+          ctx.arc(x, y, finalSize, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Algunos puntos más brillantes para variedad
+          if (Math.random() < 0.03 * finalIntensity) {
+            ctx.fillStyle = colors.bright.replace('ALPHA', (calculatedAlpha * 0.7).toString());
+            ctx.beginPath();
+            ctx.arc(x, y, finalSize * 0.6, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // Gradiente sutil para profundidad (solo en variantes medium e intense)
+      if (variant === 'medium' || variant === 'intense') {
+        const gradient = ctx.createLinearGradient(0, 0, 0, height);
+        gradient.addColorStop(0, 'rgba(15, 15, 15, 0.1)');
+        gradient.addColorStop(0.5, 'rgba(10, 10, 10, 0)');
+        gradient.addColorStop(1, 'rgba(5, 5, 5, 0.05)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
       }
     };
-  }, [variant, opacity]);
+
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+
+    return () => {
+      window.removeEventListener('resize', updateCanvasSize);
+    };
+  }, [variant, theme, intensity]);
 
   return (
     <div 
-      ref={containerRef}
       className={`${styles.fudiBackground} ${styles[variant]} ${styles[theme]} ${fixed ? styles.fixed : ''} ${className}`}
       style={{ opacity }}
     >
-      {/* ❌ GRADIENT LAYER ELIMINADO - ERA EL CULPABLE DEL LOOK VIDRIOSO */}
+      <canvas 
+        ref={canvasRef}
+        className={styles.canvas}
+        style={{ backgroundColor: getThemeColors().base }}
+      />
       
-      {/* Particles Canvas - SOLO SI SE NECESITA */}
-      {(variant === 'particles' || variant === 'premium') && (
-        <canvas 
-          ref={canvasRef}
-          className={styles.particlesCanvas}
-        />
-      )}
-
-      {/* Content */}
       <div className={styles.content}>
         {children}
       </div>
