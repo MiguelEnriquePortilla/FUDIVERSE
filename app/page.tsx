@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { 
   Brain, Zap, TrendingUp, Eye, MessageSquare, 
@@ -9,23 +8,13 @@ import {
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
-import { InfinitoCard } from '@/components/fudiverse/InfinitoCard';
+import { FudiHeader } from '@/components/fudiverse/FudiHeader';
 
 // Import styles
 import '@/styles/pages/fudi.splash.css';
 
 export default function Home() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [currentFeature, setCurrentFeature] = useState(0);
-
-  // Handle scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Auto-cycle through features
   useEffect(() => {
@@ -80,45 +69,17 @@ export default function Home() {
   return (
     <div className="splash-container">
       
+      {/* ✅ NUEVO: FudiHeader reemplaza el header custom */}
+      <FudiHeader currentPage="home" />
+      
       {/* ✅ FUDI Background - ULTRA LIMPIO COMO ABOUT */}
       <FudiBackground 
         variant="premium"
         theme="claude"
-        intensity={0.2}    // ← MÁS SUTIL
-        opacity={1}        // ← OPACIDAD COMPLETA COMO ABOUT
+        intensity={0.2}
+        opacity={1}
         fixed={true}
       />
-
-      {/* Header */}
-      <header className={`splash-header ${isScrolled ? 'header-scrolled' : ''}`}>
-        <nav className="splash-nav">
-          <Link href="/" className="splash-logo">
-            <span className="logo-text">FUDIVERSE</span>
-            <span className="logo-subtitle">RESTO AI</span>
-          </Link>
-          <div className="nav-links">
-            <Link href="/features" className="nav-link">
-              <Brain size={16} />
-              <span>Características</span>
-            </Link>
-            <Link href="/pricing" className="nav-link">
-              <Crown size={16} />
-              <span>Planes</span>
-            </Link>
-            <Link href="/about" className="nav-link">
-              <Rocket size={16} />
-              <span>Nosotros</span>
-            </Link>
-            <Link href="/login" className="nav-link login-link">
-              <span>ENTRAR</span>
-            </Link>
-            <FudiButton variant="primary" size="small" href="/register">
-              <Sparkles size={16} />
-              <span>EMPEZAR GRATIS</span>
-            </FudiButton>
-          </div>
-        </nav>
-      </header>
 
       {/* Hero Section - The Dream */}
       <section className="splash-hero">
@@ -133,8 +94,8 @@ export default function Home() {
           
           {/* Main Hero Text */}
           <h1 className="hero-title">
-          <span className="title-highlight-gold"></span><br/>
-          ¡No analices <span className="title-highlight-gold">datos</span>, escribe una historia de <span className="title-highlight-gold">éxito!</span><br/>
+            <span className="title-highlight-gold"></span><br/>
+            ¡No analices <span className="title-highlight-gold">datos</span>, escribe una historia de <span className="title-highlight-gold">éxito!</span><br/>
           </h1>
           
           <div className="hero-subtitle">
@@ -142,9 +103,9 @@ export default function Home() {
               FUDIVERSE <strong>IA predice ventas, optimiza inventario y maximiza ganancias</strong> PARA tu restaurante
             </p>
             <p className="subtitle-secondary">
-              <p className="subtitle-highlight">
+              <span className="subtitle-highlight">              ←← ✅ AHORA <span>
                 Mientras otros restaurantes operan a la antigüa y a ciegas, tú tomas decisiones informadas e inteligentes que te llevan más lejos
-              </p>
+              </span>                                             ←← ✅ AHORA </span>
             </p>
           </div>
 
@@ -314,31 +275,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ❌ INFINITO CARD TEMPORALMENTE COMENTADO PARA PRUEBAS
-      <section className="vision-section">
-        <InfinitoCard 
-          variant="default"
-          title="TU RESTAURANTE, OPTIMIZADO"
-          subtitle="TECNOLOGÍA DE HOY"
-          description="El restaurante eficiente y rentable que siempre quisiste. Tecnología que hace la diferencia."
-          icon={<Eye size={60} />}
-          size="xl"
-          glow={true}
-          animated={true}
-        />
-      </section>
-      */}
-
-      {/* Final CTA - SIN ORBS PROBLEMÁTICOS */}
+      {/* Final CTA */}
       <section className="final-cta">
-        {/* ❌ ELIMINADO - ORBS QUE CREAN CAPAS PROBLEMÁTICAS
-        <div className="final-cta-background">
-          <div className="final-orb orb-1"></div>
-          <div className="final-orb orb-2"></div>
-          <div className="final-orb orb-3"></div>
-        </div>
-        */}
-        
         <div className="final-cta-content">
           <div className="final-badge">
             <Sparkles size={16} />
@@ -355,11 +293,11 @@ export default function Home() {
           
           <div className="final-actions">
             <FudiButton 
-                variant="primary" 
-                size="large" 
-                href="/register"
-                className="final-primary-cta"
-              >
+              variant="primary" 
+              size="large" 
+              href="/register"
+              className="final-primary-cta"
+            >
               <Rocket size={24} />
               <span>EMPEZAR PRUEBA GRATIS</span>
             </FudiButton>

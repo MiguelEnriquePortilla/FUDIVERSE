@@ -1,21 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { 
-  Brain, TrendingUp, Vault, Users, ShoppingCart, 
-  Truck, Sparkles, Zap, Target, ChevronRight,
-  BarChart3, MessageSquare, Rocket, Award,
-  Shield, Lightbulb, Clock, Globe, Star,
-  Coffee, Code, Heart, Flame,
-  Crown
+  Brain, TrendingUp, Users, Target, 
+  Sparkles, Zap, ChevronRight, BarChart3, 
+  MessageSquare, Rocket, Heart, Lightbulb, 
+  Clock, Globe, Star, Coffee, Shield, Flame
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-import { FudiEntity } from '@/components/fudiverse/FudiEntity';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
-import { FudiCard } from '@/components/fudiverse/FudiCard';
-import { FudiAura } from '@/components/fudiverse/FudiAura';
-import { InfinitoCard } from '@/components/fudiverse/InfinitoCard';
+import { FudiHeader } from '@/components/fudiverse/FudiHeader';
 
 // Import the CLEAN CSS
 import '@/styles/pages/fudi.about.css';
@@ -65,12 +59,6 @@ export default function AboutPage() {
       value: "500+",
       label: "Restaurantes",
       description: "Ya confían en FUDI"
-    },
-    {
-      icon: Target,
-      value: "∞",
-      label: "Potencial",
-      description: "De cada restaurante"
     }
   ];
 
@@ -107,63 +95,18 @@ export default function AboutPage() {
 
   return (
     <div className="about-container">
-      {/* ❌ ELIMINADOS - MÚLTIPLES BACKGROUNDS QUE SE PELEABAN
-      <FudiChatGrid 
-        opacity={0.15}
-        gridSize={60}
-        color="#4a4a4a"
-        animated={true}
-        showGradient={true}
-        pulseSpeed={2}
-      />
       
-      <FudiBackground 
-        variant="neural"
-        intensity={0.6}
-        speed={0.4}
-        color="mixed"
-        opacity={0.25}
-        fixed={true}
-      />
-      */}
-
+      {/* ✅ NUEVO: FudiHeader reemplaza header custom */}
+      <FudiHeader currentPage="about" />
+      
       {/* ✅ UN SOLO BACKGROUND ULTRA LIMPIO */}
       <FudiBackground 
         variant="premium"
         theme="claude"
-        intensity={0.2}    // ← MÁS SUTIL
-        opacity={1}        // ← OPACIDAD COMPLETA
+        intensity={0.2}
+        opacity={1}
         fixed={true}
       />
-
-      {/* Header */}
-      <header className="about-header">
-        <nav className="about-nav">
-          <Link href="/" className="about-logo">
-            <span>FUDIVERSE</span>
-          </Link>
-          <div className="nav-links">
-            <Link href="/features" className="nav-link">
-              <Brain size={16} />
-              <span>Características</span>
-            </Link>
-            <Link href="/pricing" className="nav-link">
-              <Crown size={16} />
-              <span>Planes</span>
-            </Link>
-            <Link href="/about" className="nav-link">
-              <Rocket size={16} />
-              <span>Nosotros</span>
-            </Link>
-            <Link href="/login" className="nav-link login-link">
-              <span>ENTRAR</span>
-            </Link>
-            <FudiButton variant="primary" size="small" href="/register">
-             EMPEZAR GRATIS
-            </FudiButton>
-          </div>
-        </nav>
-      </header>
 
       {/* Hero Section - Revolution Manifesto */}
       <section className="about-hero">
@@ -188,28 +131,6 @@ export default function AboutPage() {
             <span>"¡No analices datos, escribe una historia de éxito!"</span>
           </div>
         </div>
-
-        {/* ❌ ELIMINADO - FUDI ENTITY Y AURA QUE PUEDEN CREAR CAPAS PROBLEMÁTICAS
-        <div className="hero-entity">
-          <FudiAura 
-            variant="combined"
-            color="#8b5cf6"
-            intensity={0.4}
-            size={250}
-            pulseSpeed={3}
-            particleCount={10}
-          />
-          <FudiEntity 
-            variant="floating"
-            mood="thoughtful"
-            size="medium"
-            followCursor={true}
-            showParticles={false}
-            showDataStreams={false}
-            intensity={0.4}
-          />
-        </div>
-        */}
       </section>
 
       {/* Origin Story Section */}
@@ -383,7 +304,7 @@ export default function AboutPage() {
         </div>
 
         <div className="team-stats">
-          {teamStats.slice(0, 3).map((stat, index) => {
+          {teamStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div key={index} className="stat-card">
@@ -399,18 +320,6 @@ export default function AboutPage() {
             );
           })}
         </div>
-
-        {/* ❌ INFINITO CARD TEMPORALMENTE COMENTADO PARA PRUEBAS
-        <InfinitoCard 
-          variant="default"
-          title="POTENCIAL INFINITO"
-          description="para cada restaurante, y aún más importante, para su gente!"
-          icon={<Target size={60} />}
-          size="large"
-          glow={true}
-          animated={true}
-        />
-        */}
 
         <div className="team-description">
           <div className="team-points">
@@ -434,16 +343,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Revolution CTA Section - SIN ORBS */}
+      {/* Revolution CTA Section */}
       <section className="revolution-cta">
-        {/* ❌ ELIMINADO - CTA BACKGROUND CON ORBS QUE ESTORBABAN
-        <div className="cta-background">
-          <div className="cta-orb orb-1"></div>
-          <div className="cta-orb orb-2"></div>
-          <div className="cta-orb orb-3"></div>
-        </div>
-        */}
-        
         <div className="cta-content">
           <div className="cta-badge">
             <Flame size={16} />
@@ -486,18 +387,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="about-footer">
-        <div className="footer-content">
-          <p>&copy; 2024 FUDIVERSE. La revolución continúa.</p>
-          <div className="footer-links">
-            <Link href="/terms">Términos</Link>
-            <Link href="/privacy">Privacidad</Link>
-            <Link href="/contact">Contacto</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

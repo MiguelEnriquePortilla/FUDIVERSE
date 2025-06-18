@@ -1,15 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { 
   Check, Sparkles, Rocket, Crown, Building2,
-  MessageSquare, BarChart3, Vault, Users, ShoppingCart,
-  Zap, Star, TrendingUp, Award, ChevronRight, Brain
+  MessageSquare, BarChart3, Users, Zap, Star, 
+  TrendingUp, Award, ChevronRight, Brain
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
-import { InfinitoCard } from '@/components/fudiverse/InfinitoCard';
+import { FudiHeader } from '@/components/fudiverse/FudiHeader';
 import '@/styles/pages/fudi.pricing.css';
 
 export default function PricingPage() {
@@ -100,25 +99,10 @@ export default function PricingPage() {
 
   return (
     <div className="pricing-container">
-      {/* ❌ ELIMINADOS - MÚLTIPLES BACKGROUNDS QUE SE PELEAN
-      <FudiChatGrid 
-        opacity={0.15}
-        gridSize={80}
-        color="#4a4a4a"
-        animated={true}
-        showGradient={true}
-        pulseSpeed={1.5}
-      />
       
-      <FudiBackground 
-        variant="grid"
-        intensity={0.3}
-        speed={0.5}
-        color="mixed"
-        opacity={0.4}
-      />
-      */}
-
+      {/* ✅ NUEVO: FudiHeader reemplaza header custom */}
+      <FudiHeader currentPage="pricing" />
+      
       {/* ✅ UN SOLO BACKGROUND LIMPIO */}
       <FudiBackground 
         variant="premium"
@@ -127,24 +111,6 @@ export default function PricingPage() {
         opacity={1}
         fixed={true}
       />
-
-      {/* Header */}
-      <header className="pricing-header">
-        <nav className="pricing-nav">
-          <Link href="/" className="pricing-logo">
-            <span>FUDIVERSE</span>
-          </Link>
-          <div className="nav-links">
-            <Link href="/features" className="nav-link">Características</Link>
-            <Link href="/pricing" className="nav-link active">Planes</Link>
-            <Link href="/about" className="nav-link">Nosotros</Link>
-            <Link href="/login" className="nav-link">Entrar</Link>
-            <FudiButton variant="primary" size="small" href="/register">
-              ÚNETE
-            </FudiButton>
-          </div>
-        </nav>
-      </header>
 
       {/* Hero Section */}
       <section className="pricing-hero">
@@ -289,31 +255,8 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ❌ INFINITO CARD TEMPORALMENTE COMENTADO
-      <section className="potential-section">
-        <InfinitoCard 
-          variant="cosmic"
-          title="TU POTENCIAL INFINITO"
-          subtitle="NO HAY LÍMITES"
-          description="Cada plan es un escalón hacia la grandeza, y aún más importante, hacia el crecimiento de tu gente!"
-          icon={<Rocket size={60} />}
-          size="large"
-          glow={true}
-          animated={true}
-        />
-      </section>
-      */}
-
-      {/* Bottom CTA - SIN ORBS */}
+      {/* Bottom CTA */}
       <section className="bottom-cta">
-        {/* ❌ ELIMINADO - CTA BACKGROUND CON ORBS
-        <div className="cta-background">
-          <div className="cta-orb orb-1"></div>
-          <div className="cta-orb orb-2"></div>
-          <div className="cta-orb orb-3"></div>
-        </div>
-        */}
-        
         <div className="cta-content">
           <div className="cta-badge">
             <Brain size={16} />
@@ -352,18 +295,6 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="pricing-footer">
-        <div className="footer-content">
-          <p>&copy; 2024 FUDIVERSE. Inteligencia para todos los restauranteros.</p>
-          <div className="footer-links">
-            <Link href="/terms">Términos</Link>
-            <Link href="/privacy">Privacidad</Link>
-            <Link href="/contact">Contacto</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

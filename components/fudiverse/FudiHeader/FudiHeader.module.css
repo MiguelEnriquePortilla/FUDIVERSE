@@ -1,0 +1,408 @@
+/* components/fudiverse/FudiHeader/FudiHeader.module.css */
+/* PREMIUM HEADER - MOBILE FIRST */
+
+.fudiHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.95); /* Semi-transparent dark */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px; /* Mobile height */
+  position: relative;
+}
+
+/* ========================================
+   LOGO SECTION
+   ======================================== */
+.logo {
+  flex-shrink: 0;
+  z-index: 1001;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.logoText {
+  color: #ffffff;
+  margin-right: 0.125rem;
+}
+
+.logoAccent {
+  color: #3b82f6; /* Business blue */
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logoLink:hover {
+  transform: scale(1.05);
+}
+
+/* ========================================
+   DESKTOP NAVIGATION
+   ======================================== */
+.desktopNav {
+  display: none; /* Hidden on mobile */
+  gap: 2rem;
+  align-items: center;
+}
+
+.navLink {
+  color: rgba(241, 245, 249, 0.8);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.025em;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  transition: width 0.3s ease;
+}
+
+.navLink:hover {
+  color: #ffffff;
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.navLinkActive {
+  color: #3b82f6;
+}
+
+.navLinkActive::after {
+  width: 100%;
+}
+
+/* ========================================
+   DESKTOP AUTH BUTTONS
+   ======================================== */
+.desktopAuth {
+  display: none; /* Hidden on mobile */
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.loginButton {
+  margin-right: 0.25rem;
+}
+
+/* ========================================
+   MOBILE MENU BUTTON
+   ======================================== */
+.mobileMenuButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  z-index: 1002;
+}
+
+.mobileMenuButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hamburgerLine {
+  width: 20px;
+  height: 2px;
+  background: #ffffff;
+  margin: 2px 0;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border-radius: 2px;
+}
+
+/* Hamburger animation when open */
+.mobileMenuButtonOpen .hamburgerLine:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+  background: #3b82f6;
+}
+
+.mobileMenuButtonOpen .hamburgerLine:nth-child(2) {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.mobileMenuButtonOpen .hamburgerLine:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+  background: #3b82f6;
+}
+
+/* ========================================
+   MOBILE MENU OVERLAY
+   ======================================== */
+.mobileMenuOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+.mobileMenu {
+  position: absolute;
+  top: 60px; /* Below header */
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.98);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem 1rem 2rem;
+  animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ========================================
+   MOBILE NAVIGATION
+   ======================================== */
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.mobileNavLink {
+  color: rgba(241, 245, 249, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.125rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.mobileNavLink:hover,
+.mobileNavLink:active {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.mobileNavLinkActive {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #3b82f6;
+}
+
+/* ========================================
+   MOBILE AUTH BUTTONS
+   ======================================== */
+.mobileAuth {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1.5rem;
+}
+
+/* ========================================
+   TABLET BREAKPOINT - 768px+
+   ======================================== */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 2rem;
+    height: 70px; /* Slightly taller on tablet */
+  }
+
+  .logoLink {
+    font-size: 1.375rem;
+  }
+
+  .mobileMenuButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .hamburgerLine {
+    width: 22px;
+  }
+
+  .mobileMenu {
+    top: 70px;
+    padding: 2rem 2rem 2.5rem;
+  }
+
+  .mobileNavLink {
+    font-size: 1.25rem;
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* ========================================
+   DESKTOP BREAKPOINT - 1024px+
+   ======================================== */
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 3rem;
+    height: 80px; /* Full desktop height */
+  }
+
+  .logoLink {
+    font-size: 1.5rem;
+  }
+
+  /* Show desktop navigation */
+  .desktopNav {
+    display: flex;
+  }
+
+  /* Show desktop auth buttons */
+  .desktopAuth {
+    display: flex;
+  }
+
+  /* Hide mobile menu button */
+  .mobileMenuButton {
+    display: none;
+  }
+
+  /* Ensure mobile menu is hidden */
+  .mobileMenuOverlay {
+    display: none;
+  }
+}
+
+/* ========================================
+   LARGE DESKTOP - 1440px+
+   ======================================== */
+@media (min-width: 1440px) {
+  .container {
+    padding: 0 4rem;
+  }
+
+  .desktopNav {
+    gap: 2.5rem;
+  }
+
+  .navLink {
+    font-size: 1rem;
+  }
+
+  .desktopAuth {
+    gap: 1rem;
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY & PERFORMANCE
+   ======================================== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .fudiHeader,
+  .logoLink,
+  .navLink,
+  .navLink::after,
+  .mobileMenuButton,
+  .hamburgerLine,
+  .mobileNavLink {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .mobileMenuOverlay,
+  .mobileMenu {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .fudiHeader {
+    background: #000000;
+    border-bottom-color: #ffffff;
+  }
+
+  .navLink,
+  .mobileNavLink {
+    color: #ffffff;
+  }
+
+  .logoText {
+    color: #ffffff;
+  }
+
+  .logoAccent {
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+  }
+}
+
+/* Focus states for accessibility */
+.logoLink:focus,
+.navLink:focus,
+.mobileMenuButton:focus,
+.mobileNavLink:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+

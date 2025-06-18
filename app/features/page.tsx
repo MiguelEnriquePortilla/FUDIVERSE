@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
 import { 
   Brain, BarChart3, Vault, Users, ShoppingCart,
   Sparkles, TrendingUp, Award, ChevronRight, Star,
@@ -9,6 +7,7 @@ import {
 } from 'lucide-react';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiHeader } from '@/components/fudiverse/FudiHeader';
 import '@/styles/pages/fudi.features.css';
 
 export default function FeaturesPage() {
@@ -77,6 +76,10 @@ export default function FeaturesPage() {
 
   return (
     <div className="features-container">
+      
+      {/* ✅ NUEVO: FudiHeader reemplaza header custom */}
+      <FudiHeader currentPage="features" />
+      
       {/* Single Clean Background */}
       <FudiBackground 
         variant="premium"
@@ -85,24 +88,6 @@ export default function FeaturesPage() {
         opacity={1}
         fixed={true}
       />
-
-      {/* Header - Consistent with Pricing */}
-      <header className="features-header">
-        <nav className="features-nav">
-          <Link href="/" className="features-logo">
-            <span>FUDIVERSE</span>
-          </Link>
-          <div className="nav-links">
-            <Link href="/features" className="nav-link active">Características</Link>
-            <Link href="/pricing" className="nav-link">Planes</Link>
-            <Link href="/about" className="nav-link">Nosotros</Link>
-            <Link href="/login" className="nav-link">Entrar</Link>
-            <FudiButton variant="primary" size="small" href="/register">
-              ÚNETE
-            </FudiButton>
-          </div>
-        </nav>
-      </header>
 
       {/* Hero Section */}
       <section className="features-hero">
@@ -258,18 +243,6 @@ export default function FeaturesPage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="features-footer">
-        <div className="footer-content">
-          <p>&copy; 2024 FUDIVERSE. Inteligencia para restauranteros inteligentes.</p>
-          <div className="footer-links">
-            <Link href="/terms">Términos</Link>
-            <Link href="/privacy">Privacidad</Link>
-            <Link href="/contact">Contacto</Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
