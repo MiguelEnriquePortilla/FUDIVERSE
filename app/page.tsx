@@ -74,8 +74,8 @@ export default function Home() {
       
       {/* ✅ FUDI Background - ULTRA LIMPIO COMO ABOUT */}
       <FudiBackground 
-        variant="premium"
-        theme="claude"
+        variant="medium"
+        theme="charcoal"
         intensity={0.2}
         opacity={1}
         fixed={true}

@@ -163,8 +163,8 @@ export default function RegisterPage() {
     <div className="register-container">
       {/* Single Clean Background - VISUAL ONLY */}
       <FudiBackground 
-        variant="premium"
-        theme="claude"
+        variant="medium"
+        theme="charcoal"
         intensity={0.2}
         opacity={1}
         fixed={true}

@@ -78,8 +78,8 @@ export default function LoginPage() {
     <div className="login-container">
       {/* Single Clean Background */}
       <FudiBackground 
-        variant="premium"
-        theme="claude"
+        variant="medium"
+        theme="charcoal"
         intensity={0.2}
         opacity={1}
         fixed={true}

@@ -105,8 +105,8 @@ export default function PricingPage() {
       
       {/* ✅ UN SOLO BACKGROUND LIMPIO */}
       <FudiBackground 
-        variant="premium"
-        theme="claude"
+        variant="medium"
+        theme="charcoal"
         intensity={0.2}
         opacity={1}
         fixed={true}
