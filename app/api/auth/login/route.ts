@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         console.log(`[Login] Triggering incremental sync for restaurant ${SHARED_RESTAURANT_ID}`);
         
         // Importar el servicio de sincronización
-        const { IncrementalSyncService } = require('../../../../../services/sync/IncrementalSyncService.js');
+        const { IncrementalSyncService } = require('../../../services/sync/IncrementalSyncService.js');
         
         // Crear instancia del servicio
         const syncService = new IncrementalSyncService(SHARED_RESTAURANT_ID);

@@ -6,12 +6,12 @@ import {
   Home, Search, Hash, Bell, Mail, User, Plus, Play, Pause,
   MoreVertical, Camera, Video, Image, Mic, MapPin, Clock,
   ChefHat, Star, TrendingUp, Crown, Gift, Zap, Flame,
-  Eye, Users, DollarSign, Target, Award, ThumbsUp
+  Eye, Users, DollarSign, Target, Award, ThumbsUp, Store
 } from 'lucide-react';
 import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 
 // Import CSS
-import '../../../styles/pages/FudiDiscovery.css';
+import '../../../styles/pages/FudiFlow.css';
 
 // CONTENT GENERATORS - IRRESISTIBLE FOOD POSTS
 const generateFoodPosts = () => {
@@ -215,6 +215,31 @@ export default function Flow() {
 
   const feedRef = useRef(null);
 
+  // ✅ LOGOUT FUNCTION - Copy/paste exacto
+  const handleLogout = () => {
+    try {
+      // Clear authentication token
+      localStorage.removeItem('fudi_token');
+      
+      // Clear any user session data
+      localStorage.removeItem('user_data');
+      localStorage.removeItem('restaurant_data');
+      
+      // Clear any cached API data (optional)
+      localStorage.removeItem('dashboard_cache');
+      
+      console.log('Logout successful - redirecting to home');
+      
+      // Redirect to main page
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error during logout process:', error);
+      
+      // Force redirect even if there's an error
+      window.location.href = '/';
+    }
+  };
+
   useEffect(() => {
     // Simulate loading
     setTimeout(() => {
@@ -253,13 +278,13 @@ export default function Flow() {
   const handleLike = (postId) => {
     setPosts(prev => prev.map(post => {
       if (post.id === postId) {
-        const liked = !post.liked;
+        const liked = !post.liked || false; // Default false si no existe
         return {
           ...post,
-          liked,
+          liked: !liked,
           stats: {
             ...post.stats,
-            likes: liked ? post.stats.likes + 1 : post.stats.likes - 1
+            likes: !liked ? post.stats.likes + 1 : post.stats.likes - 1
           }
         };
       }
@@ -270,13 +295,13 @@ export default function Flow() {
   const handleSave = (postId) => {
     setPosts(prev => prev.map(post => {
       if (post.id === postId) {
-        const saved = !post.saved;
+        const saved = !post.saved || false; // Default false si no existe
         return {
           ...post,
-          saved,
+          saved: !saved,
           stats: {
             ...post.stats,
-            saves: saved ? post.stats.saves + 1 : post.stats.saves - 1
+            saves: !saved ? post.stats.saves + 1 : post.stats.saves - 1
           }
         };
       }
@@ -295,12 +320,15 @@ export default function Flow() {
           ...post,
           stats: {
             ...post.stats,
-            shares: post.stats.shares + 1
+            shares: (post.stats.shares || 0) + 1 // Safe increment
           }
         };
       }
       return post;
     }));
+    
+    // Optional: Show share success message
+    console.log('Post compartido exitosamente');
   };
 
   const handlePost = () => {
@@ -342,55 +370,133 @@ export default function Flow() {
   return (
     <div className="fudiflow-container">
       
-      {/* ✅ NUEVO: FudiDashHeader reemplaza header custom */}
+      {/* ✅ FudiDashHeader with logout function */}
       <FudiDashHeader 
         currentModule="flow" 
         userName="Mikelon"
         userPlan="pro"
         notifications={2}
+        onLogout={handleLogout}
       />
 
-      {/* Feed Principal - CLEAN */}
-      <div ref={feedRef} className="feed-container">
+      {/* Main Content - 3 Column Layout */}
+      <div className="main-content">
         
-        {/* Tab Navigation */}
-        <div className="tab-navigation">
-          <div className="tab-container">
-            {[
-              { id: 'foryou', label: 'Para Ti', icon: '🔥' },
-              { id: 'trending', label: 'Trending', icon: '📈' },
-              { id: 'following', label: 'Siguiendo', icon: '👥' }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
-              >
-                <span>{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
+        {/* Left Sidebar - Navigation Menu */}
+        <div className="left-sidebar">
+          <div className="sidebar-content">
+            <div className="sidebar-user">
+              <div className="sidebar-user-avatar">
+                {currentUser.avatar}
+              </div>
+              <span className="sidebar-user-name">{currentUser.name}</span>
+            </div>
+            
+            <div className="sidebar-menu">
+              <div className="menu-item">
+                <Users size={20} />
+                <span>Amigos</span>
+              </div>
+              <div className="menu-item">
+                <Clock size={20} />
+                <span>Recuerdos</span>
+              </div>
+              <div className="menu-item">
+                <Bookmark size={20} />
+                <span>Guardado</span>
+              </div>
+              <div className="menu-item">
+                <Users size={20} />
+                <span>Grupos</span>
+              </div>
+              <div className="menu-item">
+                <Video size={20} />
+                <span>Reels</span>
+              </div>
+              <div className="menu-item">
+                <Store size={20} />
+                <span>Marketplace</span>
+              </div>
+              <div className="menu-item">
+                <Hash size={20} />
+                <span>Feeds</span>
+              </div>
+            </div>
+            
+            <div className="sidebar-section">
+              <h4>Tus accesos directos</h4>
+              <div className="shortcut-item">
+                <div className="shortcut-avatar">🍕</div>
+                <span>Pizza Bros</span>
+              </div>
+              <div className="shortcut-item">
+                <div className="shortcut-avatar">🌮</div>
+                <span>Tacos El Fuego</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Posts Feed - PURO */}
-        <div className="posts-feed">
-
-          {posts.map((post, index) => (
-            <div key={post.id} className="post-card">
-              
-              {/* Media Container */}
-              <div 
-                className="post-media"
-                style={{ backgroundImage: `url(${post.media.url})` }}
+        {/* Feed Container - Central */}
+        <div className="feed-container">
+          
+          {/* Sticky Composer - "¿Cuál es tu Flow?" */}
+          <div className="create-post-composer">
+            <div className="composer-header">
+              <div className="composer-user-avatar">
+                {currentUser.avatar}
+              </div>
+              <button 
+                className="composer-input"
+                onClick={() => setShowComposer(true)}
               >
-                
-                {/* Gradient Overlay */}
-                <div className="media-overlay" />
+                ¿Cuál es tu Flow, {currentUser.name}?
+              </button>
+            </div>
+            
+            <div className="composer-options">
+              <button className="composer-option video">
+                <Video size={20} />
+                <span>Video en vivo</span>
+              </button>
+              <button className="composer-option photo">
+                <Image size={20} />
+                <span>Foto/video</span>
+              </button>
+              <button className="composer-option activity">
+                <Star size={20} />
+                <span>Historia/actividad</span>
+              </button>
+            </div>
+          </div>
+          
+          {/* Tab Navigation */}
+          <div className="tab-navigation">
+            <div className="tab-container">
+              {[
+                { id: 'foryou', label: 'Para Ti', icon: '🔥' },
+                { id: 'trending', label: 'Trending', icon: '📈' },
+                { id: 'following', label: 'Siguiendo', icon: '👥' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
+                >
+                  <span>{tab.icon}</span>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-                {/* Top Content */}
+          {/* Posts Feed */}
+          <div className="posts-feed">
+            {posts.map((post, index) => (
+              <div key={post.id} className="post-card">
+                
+                {/* Post Header */}
                 <div className="post-header">
-                  {/* Author Info */}
                   <div className="author-info">
                     <div className="author-avatar">
                       {post.author.avatar}
@@ -404,121 +510,202 @@ export default function Flow() {
                           </div>
                         )}
                       </h4>
-                      <div className="author-followers">
-                        {post.author.followers} seguidores
+                      <div className="author-meta">
+                        <span>{post.author.followers} seguidores</span>
+                        <div className="meta-dot"></div>
+                        <span>{post.timestamp}</span>
+                        <div className="meta-dot"></div>
+                        <span>{post.location}</span>
                       </div>
                     </div>
                   </div>
-
-                  {/* More Options */}
                   <button className="more-button">
                     <MoreVertical size={20} />
                   </button>
                 </div>
-
-                {/* Video Play Button */}
-                {post.media.type === 'video' && (
-                  <div className="video-play-container">
-                    <button
-                      onClick={() => handleVideoPlay(post.id)}
-                      className="video-play-button"
-                    >
-                      {playingVideo === post.id ? <Pause size={32} /> : <Play size={32} />}
-                    </button>
-                  </div>
-                )}
-
-                {/* Bottom Content */}
+                
+                {/* Post Content */}
                 <div className="post-content">
-                  {/* Location & Time */}
-                  <div className="post-meta">
-                    <div className="meta-item">
-                      <MapPin size={14} />
-                      {post.location}
-                    </div>
-                    <div className="meta-item">
-                      <Clock size={14} />
-                      {post.timestamp}
-                    </div>
-                  </div>
-
-                  {/* Content */}
                   <p className="post-text">
                     {post.content}
                   </p>
-
+                  
                   {/* Tags */}
-                  <div className="post-tags">
-                    {post.tags.map((tag, i) => (
-                      <span key={i} className="tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Music/Audio Info */}
-                  {post.music && (
-                    <div className="music-info">
-                      <Mic size={16} />
-                      <span className="music-text">{post.music}</span>
+                  {post.tags && (
+                    <div className="post-tags">
+                      {post.tags.map((tag, i) => (
+                        <span key={i} className="tag">
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   )}
+                  
+                  {/* Media */}
+                  <div 
+                    className="post-media"
+                    style={{ backgroundImage: `url(${post.media.url})` }}
+                  >
+                    <div className="media-overlay">
+                      {post.media.type === 'video' && (
+                        <button
+                          onClick={() => handleVideoPlay(post.id)}
+                          className="video-play-button"
+                        >
+                          {playingVideo === post.id ? <Pause size={24} /> : <Play size={24} />}
+                        </button>
+                      )}
+                    </div>
+                    
+                    {/* Media metadata overlay */}
+                    <div className="post-meta-overlay">
+                      <div className="meta-item">
+                        <MapPin size={14} />
+                        {post.location}
+                      </div>
+                      <div className="meta-item">
+                        <Clock size={14} />
+                        {post.timestamp}
+                      </div>
+                      {post.media.views && (
+                        <div className="meta-item">
+                          <Eye size={14} />
+                          {post.media.views}
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Special badges */}
+                    {post.promotion && (
+                      <div className="promotion-badge">
+                        {post.promotion.text}
+                      </div>
+                    )}
+                    
+                    {post.trending && (
+                      <div className="trending-badge">
+                        <Flame size={14} />
+                        TRENDING
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions Bar */}
+                <div className="actions-bar">
+                  <div className="actions-left">
+                    <button
+                      onClick={() => handleLike(post.id)}
+                      className={`action-button ${post.liked ? 'liked' : ''}`}
+                    >
+                      <Heart size={20} fill={post.liked ? '#ff3040' : 'none'} />
+                      {formatNumber(post.stats.likes)}
+                    </button>
+
+                    <button className="action-button">
+                      <MessageCircle size={20} />
+                      {formatNumber(post.stats.comments)}
+                    </button>
+
+                    <button
+                      onClick={() => handleShare(post.id)}
+                      className="action-button"
+                    >
+                      <Share2 size={20} />
+                      {formatNumber(post.stats.shares)}
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => handleSave(post.id)}
+                    className={`action-button ${post.saved ? 'saved' : ''}`}
+                  >
+                    <Bookmark size={20} fill={post.saved ? '#ffa726' : 'none'} />
+                  </button>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
 
-              {/* Actions Bar */}
-              <div className="actions-bar">
-                <div className="actions-left">
-                  <button
-                    onClick={() => handleLike(post.id)}
-                    className={`action-button ${post.liked ? 'liked' : ''}`}
-                  >
-                    <Heart size={24} fill={post.liked ? '#ff3040' : 'none'} />
-                    {formatNumber(post.stats.likes)}
-                  </button>
-
-                  <button className="action-button">
-                    <MessageCircle size={24} />
-                    {formatNumber(post.stats.comments)}
-                  </button>
-
-                  <button
-                    onClick={() => handleShare(post.id)}
-                    className="action-button"
-                  >
-                    <Share2 size={24} />
-                    {formatNumber(post.stats.shares)}
-                  </button>
+        {/* Right Sidebar - Contacts & Ads */}
+        <div className="right-sidebar">
+          <div className="sidebar-content">
+            
+            {/* Sponsored/Ads Section */}
+            <div className="sidebar-section">
+              <h4>Patrocinado</h4>
+              
+              <div className="sponsored-item">
+                <div className="sponsored-image">
+                  <div className="sponsored-logo">📊</div>
                 </div>
-
-                <button
-                  onClick={() => handleSave(post.id)}
-                  className={`action-button ${post.saved ? 'saved' : ''}`}
-                >
-                  <Bookmark size={24} fill={post.saved ? '#ffa726' : 'none'} />
-                </button>
+                <div className="sponsored-content">
+                  <h5>Analytics Pro Report</h5>
+                  <p>Optimiza tu restaurante con datos</p>
+                  <span className="sponsored-link">fudiverse.ai</span>
+                </div>
               </div>
-
-              {/* Special Features */}
-              {post.promotion && (
-                <div className="promotion-badge">
-                  <div className="promotion-text">
-                    {post.promotion.text}
-                  </div>
-                  <div className="promotion-cta">
-                    {post.promotion.cta}
-                  </div>
+              
+              <div className="sponsored-item">
+                <div className="sponsored-image">
+                  <div className="sponsored-logo">🎯</div>
                 </div>
-              )}
-
-              {post.trending && (
-                <div className="trending-badge">
-                  <Flame size={16} />
-                  TRENDING
+                <div className="sponsored-content">
+                  <h5>Marketing para Restaurantes</h5>
+                  <p>Aumenta tus ventas 300%</p>
+                  <span className="sponsored-link">marketing.com</span>
                 </div>
-              )}
+              </div>
             </div>
-          ))}
+            
+            {/* Contacts Section */}
+            <div className="sidebar-section">
+              <div className="section-header">
+                <h4>Contactos</h4>
+                <div className="section-actions">
+                  <button className="icon-button">
+                    <Search size={16} />
+                  </button>
+                  <button className="icon-button">
+                    <MoreHorizontal size={16} />
+                  </button>
+                </div>
+              </div>
+              
+              <div className="contacts-list">
+                <div className="contact-item">
+                  <div className="contact-avatar">👨‍🍳</div>
+                  <span className="contact-name">Chef Carlos</span>
+                  <div className="contact-status online"></div>
+                </div>
+                
+                <div className="contact-item">
+                  <div className="contact-avatar">👩‍💼</div>
+                  <span className="contact-name">Ana González</span>
+                  <div className="contact-status online"></div>
+                </div>
+                
+                <div className="contact-item">
+                  <div className="contact-avatar">🧑‍🍳</div>
+                  <span className="contact-name">Mario Sánchez</span>
+                  <div className="contact-status away"></div>
+                </div>
+                
+                <div className="contact-item">
+                  <div className="contact-avatar">👩‍🍳</div>
+                  <span className="contact-name">Laura Martín</span>
+                  <div className="contact-status online"></div>
+                </div>
+                
+                <div className="contact-item">
+                  <div className="contact-avatar">🧑‍💼</div>
+                  <span className="contact-name">Roberto Díaz</span>
+                  <div className="contact-status offline"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

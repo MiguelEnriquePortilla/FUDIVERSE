@@ -1,17 +1,25 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
   Brain, BarChart3, Vault, Users, ShoppingCart,
   Sparkles, TrendingUp, Award, ChevronRight, Star,
   Play, MessageSquare, Rocket, Clock
 } from 'lucide-react';
+
+// Nuestros módulos limpios
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiCard } from '@/components/fudiverse/FudiCard';
 import { FudiHeader } from '@/components/fudiverse/FudiHeader';
+
+// Import del CSS separado y minimalista
 import '@/styles/pages/fudi.features.css';
 
 export default function FeaturesPage() {
-  const features = [
+  // Solo fudiGPT y fudiBOARD según ajustes
+  const coreFeatures = [
     {
       id: 'fudigpt',
       name: 'fudiGPT',
@@ -19,206 +27,155 @@ export default function FeaturesPage() {
       description: 'IA que conoce tu negocio mejor que tu contador',
       color: '#fbbf24',
       icon: Brain,
-      keyBenefit: '"Chef, tus clientes de los martes ordenan 40% más ensaladas después de las 7PM"',
-      impact: 'Decisiones inteligentes mientras duermes',
-      testimonial: '"Ya no adivino qué comprar. fudiGPT me dice exactamente qué necesito."',
-      status: 'available'
+      benefits: [
+        'Analiza patrones de consumo automáticamente',
+        'Predice demanda por horarios y días',
+        'Optimiza inventario sin desperdicio',
+        'Sugiere precios dinámicos rentables',
+        'Detecta oportunidades de upselling',
+        'Automatiza pedidos a proveedores'
+      ]
     },
     {
       id: 'fudiboard',
-      name: 'fudiBOARD',
+      name: 'fudiBOARD', 
       subtitle: 'EL PRIMER DASHBOARD Ai powered',
       description: 'Dashboards que hablan tu idioma de negocio',
       color: '#3b82f6',
       icon: BarChart3,
-      keyBenefit: '"Tu mesa #5 genera 23% menos revenue que la #3. ¿Movemos esa TV?"',
-      impact: 'Ve patrones que tus ojos no detectan',
-      testimonial: '"Mis números hablan. Ahora SÉ por qué algunos días vendo más."',
-      status: 'available'
-    },
-    {
-      id: 'fudihub',
-      name: 'fudiHUB',
-      subtitle: 'Tu Oficina que Nunca Cierra',
-      description: 'Documentos profesionales sin el estrés profesional',
-      color: '#8b5cf6',
-      icon: Vault,
-      keyBenefit: '"Genera propuestas profesionales en 3 clicks. Cierra deals mientras compites."',
-      impact: 'Documentos de 10/10 sin el estrés',
-      testimonial: '"Mis reportes ahora compiten con cadenas grandes. Mismo nivel, menos drama."',
-      status: 'available'
-    },
-    {
-      id: 'fudiflow',
-      name: 'fudiFLOW',
-      subtitle: 'La red social para nosotros los fudiErs',
-      description: 'Networking entre restauranteros que realmente funciona',
-      color: '#10b981',
-      icon: Users,
-      keyBenefit: '"Conecta con otros restos. Comparte clientes. Crece en red, no solo."',
-      impact: 'Tu competencia ahora es tu aliado',
-      testimonial: '"Intercambio clientes con el sushi de enfrente. Ambos ganamos más."',
-      status: 'available'
-    },
-    {
-      id: 'fudimart',
-      name: 'fudiMART',
-      subtitle: 'Vende, Compra, Cambia, Negocia, lo que quieras, estás entre RESTOS',
-      description: 'El marketplace donde cada peso se rentabiliza',
-      color: '#f59e0b',
-      icon: ShoppingCart,
-      keyBenefit: '"¿Te sobró salmón? Véndelo al resto de al lado. Cero desperdicio."',
-      impact: 'Cada peso invertido, rentabilizado',
-      testimonial: '"Mi exceso de inventario es el tesoro de otro resto. Win-win real."',
-      status: 'available'
+      benefits: [
+        'Métricas en tiempo real sin complicaciones',
+        'Alertas inteligentes de problemas críticos',
+        'Comparativas automáticas vs competencia',
+        'Reportes ejecutivos en 1 click',
+        'Proyecciones financieras precisas',
+        'Integración total con redes sociales'
+      ]
     }
   ];
 
   return (
-    <div className="features-container">
+    <div className="features-container-refined">
       
-      {/* ✅ NUEVO: FudiHeader reemplaza header custom */}
-      <FudiHeader currentPage="features" />
-      
-      {/* Single Clean Background */}
+      {/* Background ÚNICO - Apple Style */}
       <FudiBackground 
-        variant="medium"
-        theme="charcoal"
-        intensity={0.2}
+        variant="gradient"
+        theme="business"  
         opacity={1}
         fixed={true}
       />
 
+      {/* Header estándar */}
+      <FudiHeader 
+        currentPage="features"
+        showAuthButtons={true}
+      />
+
       {/* Hero Section */}
-      <section className="features-hero">
-        <div className="hero-content">
-          <div className="hero-badge">
-            <Sparkles size={16} />
-            <span>ARSENAL COMPLETO</span>
-          </div>
+      <section className="hero-refined">
+        <div className="hero-content-refined">
+          {/* Badge eliminado según ajustes */}
           
-          <h1 className="hero-title">
-            NO SOLO <span className="hero-highlight">HERRAMIENTAS</span>.<br/>
-            TU NUEVO <span className="hero-highlight">CEREBRO DE NEGOCIO</span>.
+          <h1 className="hero-title-refined">
+            NO SOLO <span className="hero-highlight-refined">HERRAMIENTAS</span>.<br/>
+            TU NUEVO <span className="hero-highlight-refined">CEREBRO DE NEGOCIO</span>.
           </h1>
-          <p className="hero-subtitle">
+          <p className="hero-subtitle-refined">
             Cada feature de FUDIVERSE está diseñada por <strong>restauranteros, para restauranteros</strong>. 
             Sin tecnicismos. Solo resultados.
           </p>
 
-          <div className="hero-stats">
-            <div className="stat">
-              <div className="stat-number">+500</div>
-              <div className="stat-label">Restaurantes</div>
+          {/* Stats eliminadas según ajustes - reemplazadas por características */}
+          <div className="hero-features-refined">
+            <div className="feature-chip-refined">
+              <Brain size={16} />
+              <span>IA que Aprende tu Negocio</span>
             </div>
-            <div className="stat">
-              <div className="stat-number">98%</div>
-              <div className="stat-label">Satisfacción</div>
+            <div className="feature-chip-refined">
+              <BarChart3 size={16} />
+              <span>Dashboards Inteligentes</span>
             </div>
-            <div className="stat">
-              <div className="stat-number">+25%</div>
-              <div className="stat-label">Revenue Promedio</div>
+            <div className="feature-chip-refined">
+              <TrendingUp size={16} />
+              <span>Decisiones Automáticas</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="features-grid">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div 
-                key={feature.id} 
-                className={`feature-card ${feature.status === 'coming-soon' ? 'coming-soon' : ''}`}
-                style={{ '--feature-color': feature.color } as React.CSSProperties}
-              >
-                {feature.status === 'coming-soon' && (
-                  <div className="coming-soon-badge">
-                    <Clock size={16} />
-                    <span>Q2 2025</span>
-                  </div>
-                )}
-
-                <div className="feature-header">
-                  <div className="feature-icon">
-                    <Icon size={32} />
-                    <div className="icon-glow"></div>
-                  </div>
-                  <div className="feature-number">0{index + 1}</div>
-                </div>
-
-                <div className="feature-content">
-                  <h3 className="feature-name">{feature.name}</h3>
-                  <p className="feature-subtitle">{feature.subtitle}</p>
-                  <p className="feature-description">{feature.description}</p>
-
-                  <div className="feature-benefit">
-                    <div className="benefit-icon">
+      {/* Core Features - Solo fudiGPT y fudiBOARD */}
+      {coreFeatures.map((feature, index) => {
+        const Icon = feature.icon;
+        return (
+          <section key={feature.id} className="feature-section-refined">
+            <div className="feature-section-header-refined">
+              <div className="feature-icon-large-refined" style={{ '--feature-color': feature.color } as React.CSSProperties}>
+                <Icon size={48} />
+              </div>
+              <div className="feature-info-refined">
+                <h2 className="feature-section-title-refined">{feature.name}</h2>
+                <p className="feature-section-subtitle-refined">{feature.subtitle}</p>
+                <p className="feature-section-description-refined">{feature.description}</p>
+              </div>
+            </div>
+            
+            <div className="benefits-grid-refined">
+              {feature.benefits.map((benefit, benefitIndex) => (
+                <FudiCard 
+                  key={benefitIndex}
+                  variant="chat" 
+                  padding="medium"
+                  className="benefit-card-refined"
+                >
+                  <div className="benefit-content-refined">
+                    <div className="benefit-check-refined">
                       <TrendingUp size={16} />
                     </div>
-                    <span>{feature.keyBenefit}</span>
+                    <span>{benefit}</span>
                   </div>
+                </FudiCard>
+              ))}
+            </div>
+            
+            <div className="feature-cta-section-refined">
+              <FudiButton 
+                variant="orange"
+                size="large"
+                href="/register"
+                icon={<Play size={20} />}
+              >
+                PROBAR {feature.name}
+              </FudiButton>
+            </div>
+          </section>
+        );
+      })}
 
-                  <div className="feature-impact">
-                    <Award size={16} />
-                    <span>{feature.impact}</span>
-                  </div>
-
-                  <blockquote className="feature-testimonial">
-                    <span>{feature.testimonial}</span>
-                  </blockquote>
-                </div>
-
-                <div className="feature-cta">
-                  {feature.status === 'available' ? (
-                    <FudiButton 
-                      variant="secondary"
-                      size="medium"
-                      href={`/demo/${feature.id}`}
-                      className="demo-btn"
-                    >
-                      <Play size={16} />
-                      VER DEMO
-                      <ChevronRight size={16} />
-                    </FudiButton>
-                  ) : (
-                    <FudiButton 
-                      variant="secondary"
-                      size="medium"
-                      href={`/notify/${feature.id}`}
-                      className="notify-btn"
-                    >
-                      <MessageSquare size={16} />
-                      NOTIFICARME
-                    </FudiButton>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+      {/* FRASE HERO - Destacada */}
+      <section className="philosophy-hero-refined">
+        <div className="philosophy-content-refined">
+          <h2 className="philosophy-title-refined">
+            "No es tecnología por tecnología.<br/>
+            Es <span className="philosophy-highlight-refined">inteligencia aplicada</span><br/>
+            al negocio que amas."
+          </h2>
         </div>
       </section>
 
       {/* Bottom CTA */}
-      <section className="bottom-cta">
-        <div className="cta-content">
-          <div className="cta-badge">
-            <Brain size={16} />
-            <span>EVOLUCIÓN COMPLETA</span>
-          </div>
+      <section className="cta-section-refined">
+        <div className="cta-content-refined">
           
-          <h2 className="cta-title">
-            ¿LISTO PARA <span className="highlight">EVOLUCIONAR</span> TU RESTAURANTE?
+          <h2 className="cta-title-refined">
+            ¿LISTO PARA <span className="cta-highlight-refined">EVOLUCIONAR</span> TU RESTAURANTE?
           </h2>
-          <p className="cta-subtitle">
+          <p className="cta-subtitle-refined">
             🎁 <strong>Primer mes GRATIS</strong> con acceso a todas las features
           </p>
           
-          <div className="cta-actions">
+          <div className="cta-actions-refined">
             <FudiButton 
-              variant="primary" 
+              variant="orange" 
               size="large" 
               href="/register"
               icon={<Rocket size={20} />}
@@ -236,10 +193,10 @@ export default function FeaturesPage() {
             </FudiButton>
           </div>
           
-          <div className="trust-quote">
-            <blockquote>
-              "No es tecnología por tecnología. Es <strong>inteligencia aplicada</strong> al negocio que amas."
-            </blockquote>
+          <div className="trust-quote-refined">
+            <p className="trust-note-refined">
+              🎁 <strong>Primer mes GRATIS</strong> con acceso completo a fudiGPT y fudiBOARD
+            </p>
           </div>
         </div>
       </section>

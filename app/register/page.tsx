@@ -6,9 +6,15 @@ import {
   User, Building2, CreditCard, Rocket, Brain, 
   CheckCircle, Mail, Lock, Phone, Store, Star
 } from 'lucide-react';
+
+// Nuestros módulos limpios
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiCard } from '@/components/fudiverse/FudiCard';
+import { FudiHeader } from '@/components/fudiverse/FudiHeader';
 import { fudiAPI } from '@/lib/api';
+
+// Import del CSS separado y minimalista
 import '@/styles/pages/register.css';
 
 export default function RegisterPage() {
@@ -34,7 +40,7 @@ export default function RegisterPage() {
       id: 'poster', 
       name: 'Poster',
       icon: (
-        <svg className="pos-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="pos-icon-refined" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
         </svg>
       ),
@@ -44,7 +50,7 @@ export default function RegisterPage() {
       id: 'square', 
       name: 'Square',
       icon: (
-        <svg className="pos-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="pos-icon-refined" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
         </svg>
       )
@@ -53,7 +59,7 @@ export default function RegisterPage() {
       id: 'toast', 
       name: 'Toast',
       icon: (
-        <svg className="pos-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="pos-icon-refined" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
         </svg>
       )
@@ -62,7 +68,7 @@ export default function RegisterPage() {
       id: 'clover', 
       name: 'Clover',
       icon: (
-        <svg className="pos-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="pos-icon-refined" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3zm0 0c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3zm0 6c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3zm0 0c0 1.657 1.343 3 3 3s3-1.343 3-3-1.343-3-3-3-3 1.343-3 3z" />
         </svg>
       )
@@ -71,7 +77,7 @@ export default function RegisterPage() {
       id: 'other', 
       name: 'Otro', 
       icon: (
-        <svg className="pos-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="pos-icon-refined" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       )
@@ -117,34 +123,36 @@ export default function RegisterPage() {
     }
   };
 
-  // ⚡ PRESERVED - Input change handler EXACTLY as original
+  // ⚡ PRESERVED - Input change handler EXACTLY as original + FIX
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
+    const newFormData = {
       ...formData,
       [e.target.name]: e.target.value
-    });
+    };
+    
+    setFormData(newFormData);
     setErrorMessage('');
 
-    // Check section completion
-    checkSectionCompletion();
+    // Check section completion with NEW data
+    checkSectionCompletion(newFormData);
   };
 
-  // ⚡ PRESERVED - Section completion logic EXACTLY as original
-  const checkSectionCompletion = () => {
+  // ⚡ PRESERVED - Section completion logic EXACTLY as original + FIX
+  const checkSectionCompletion = (currentFormData = formData) => {
     const completed = [];
     
     // Section 1: Personal info
-    if (formData.ownerName && formData.email && formData.password) {
+    if (currentFormData.ownerName && currentFormData.email && currentFormData.password) {
       completed.push(1);
     }
     
     // Section 2: Restaurant info
-    if (formData.restaurantName) {
+    if (currentFormData.restaurantName) {
       completed.push(2);
     }
     
     // Section 3: POS selection
-    if (formData.posType) {
+    if (currentFormData.posType) {
       completed.push(3);
     }
     
@@ -160,100 +168,85 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="register-container">
-      {/* Single Clean Background - VISUAL ONLY */}
+    <div className="register-container-refined">
+      
+      {/* Background ÚNICO - Apple Style */}
       <FudiBackground 
-        variant="medium"
-        theme="charcoal"
-        intensity={0.2}
+        variant="gradient"
+        theme="business"  
         opacity={1}
         fixed={true}
       />
 
-      {/* Header - Consistent with Features/Login */}
-      <header className="register-header">
-        <nav className="register-nav">
-          <Link href="/" className="register-logo">
-            <span>FUDIVERSE</span>
-          </Link>
-          <div className="nav-links">
-            <Link href="/features" className="nav-link">Características</Link>
-            <Link href="/pricing" className="nav-link">Planes</Link>
-            <Link href="/about" className="nav-link">Nosotros</Link>
-            <Link href="/login" className="nav-link">Entrar</Link>
-            <FudiButton variant="primary" size="small" href="/register">
-              ÚNETE
-            </FudiButton>
-          </div>
-        </nav>
-      </header>
+      {/* Header estándar */}
+      <FudiHeader 
+        currentPage="register"
+        showAuthButtons={false}
+      />
 
-      {/* Progress Indicator - PRESERVED */}
-      <div className="register-progress">
-        <div className="progress-steps">
-          <div className={`progress-dot ${completedSections.includes(1) ? 'completed' : ''}`}>
+      {/* ⚡ PRESERVED - Progress Indicator con funcionalidad intacta */}
+      <div className="register-progress-refined">
+        <div className="progress-steps-refined">
+          <div className={`progress-dot-refined ${completedSections.includes(1) ? 'completed' : ''}`}>
             <User size={16} />
           </div>
-          <div className={`progress-dot ${completedSections.includes(2) ? 'completed' : ''}`}>
+          <div className={`progress-dot-refined ${completedSections.includes(2) ? 'completed' : ''}`}>
             <Building2 size={16} />
           </div>
-          <div className={`progress-dot ${completedSections.includes(3) ? 'completed' : ''}`}>
+          <div className={`progress-dot-refined ${completedSections.includes(3) ? 'completed' : ''}`}>
             <CreditCard size={16} />
           </div>
-          <div className={`progress-dot ${acceptTerms ? 'completed' : ''}`}>
+          <div className={`progress-dot-refined ${acceptTerms ? 'completed' : ''}`}>
             <Rocket size={16} />
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="register-main">
-        {/* Hero Section - Business Casual Copy */}
-        <section className="register-hero">
-          <div className="hero-badge">
-            <Brain size={16} />
-            <span>REGISTRO INTELIGENTE</span>
-          </div>
-          <h1 className="hero-title">
-            TRANSFORMA <span className="title-highlight">TU RESTAURANTE</span><br/>
+      <main className="register-main-refined">
+        
+        {/* Hero sin badge marketero */}
+        <section className="register-hero-refined">
+          <h1 className="hero-title-refined">
+            TRANSFORMA <span className="title-highlight-refined">TU RESTAURANTE</span><br/>
             EMPIEZA HOY
           </h1>
-          <p className="hero-subtitle">
-            Únete a +500 restaurantes que ya optimizan con fudiGPT
+          <p className="hero-subtitle-refined">
+            Únete a restaurantes que ya optimizan con FUDIVERSE
           </p>
         </section>
 
-        {/* Error Message - PRESERVED */}
+        {/* ⚡ PRESERVED - Error Message con funcionalidad intacta */}
         {errorMessage && (
-          <div className="error-alert">
+          <div className="error-alert-refined">
             <span>{errorMessage}</span>
           </div>
         )}
 
-        {/* Registration Form - ⚡ PRESERVED STRUCTURE */}
-        <form onSubmit={handleSubmit} className="register-form">
+        {/* ⚡ PRESERVED - Registration Form estructura exacta */}
+        <form onSubmit={handleSubmit} className="register-form-refined">
           
           {/* Section 1: Personal Information */}
-          <section id="personal-info" className="form-section">
-            <div className="form-card">
-              <div className="section-header">
-                <div className="section-icon personal">
+          <section id="personal-info" className="form-section-refined">
+            <FudiCard variant="chat" padding="large" className="form-card-refined">
+              <div className="section-header-refined">
+                <div className="section-icon-refined personal">
                   <User size={28} />
                 </div>
-                <div className="section-info">
-                  <h2 className="section-title">Información Personal</h2>
-                  <p className="section-subtitle">Cuéntanos sobre ti</p>
+                <div className="section-info-refined">
+                  <h2 className="section-title-refined">Información Personal</h2>
+                  <p className="section-subtitle-refined">Cuéntanos sobre ti</p>
                 </div>
                 {completedSections.includes(1) && (
-                  <div className="section-check">
+                  <div className="section-check-refined">
                     <CheckCircle size={24} />
                   </div>
                 )}
               </div>
 
-              <div className="form-grid">
-                <div className="form-group">
-                  <label htmlFor="ownerName" className="form-label">
+              <div className="form-grid-refined">
+                <div className="form-group-refined">
+                  <label htmlFor="ownerName" className="form-label-refined">
                     <User size={16} />
                     Nombre Completo *
                   </label>
@@ -263,14 +256,14 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.ownerName}
                     onChange={handleChange}
-                    className="form-input"
+                    className="form-input-refined"
                     placeholder="Tu nombre completo"
                     required
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="email" className="form-label">
+                <div className="form-group-refined">
+                  <label htmlFor="email" className="form-label-refined">
                     <Mail size={16} />
                     Email del Restaurante *
                   </label>
@@ -280,14 +273,14 @@ export default function RegisterPage() {
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="form-input"
+                    className="form-input-refined"
                     placeholder="chef@turestaurante.com"
                     required
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="password" className="form-label">
+                <div className="form-group-refined">
+                  <label htmlFor="password" className="form-label-refined">
                     <Lock size={16} />
                     Contraseña *
                   </label>
@@ -297,45 +290,47 @@ export default function RegisterPage() {
                     type="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="form-input"
+                    className="form-input-refined"
                     placeholder="Mínimo 6 caracteres"
                     required
                   />
                 </div>
               </div>
 
-              <FudiButton 
-                variant="secondary" 
-                size="medium"
-                onClick={() => scrollToSection('restaurant-info')}
-                disabled={!completedSections.includes(1)}
-              >
-                CONTINUAR →
-              </FudiButton>
-            </div>
+              <div className="section-button-refined">
+                <FudiButton 
+                  variant="secondary" 
+                  size="medium"
+                  onClick={() => scrollToSection('restaurant-info')}
+                  disabled={!completedSections.includes(1)}
+                >
+                  CONTINUAR →
+                </FudiButton>
+              </div>
+            </FudiCard>
           </section>
 
           {/* Section 2: Restaurant Information */}
-          <section id="restaurant-info" className="form-section">
-            <div className="form-card">
-              <div className="section-header">
-                <div className="section-icon restaurant">
+          <section id="restaurant-info" className="form-section-refined">
+            <FudiCard variant="chat" padding="large" className="form-card-refined">
+              <div className="section-header-refined">
+                <div className="section-icon-refined restaurant">
                   <Building2 size={28} />
                 </div>
-                <div className="section-info">
-                  <h2 className="section-title">Tu Restaurante</h2>
-                  <p className="section-subtitle">Información del negocio</p>
+                <div className="section-info-refined">
+                  <h2 className="section-title-refined">Tu Restaurante</h2>
+                  <p className="section-subtitle-refined">Información del negocio</p>
                 </div>
                 {completedSections.includes(2) && (
-                  <div className="section-check">
+                  <div className="section-check-refined">
                     <CheckCircle size={24} />
                   </div>
                 )}
               </div>
 
-              <div className="form-grid">
-                <div className="form-group full-width">
-                  <label htmlFor="restaurantName" className="form-label">
+              <div className="form-grid-refined">
+                <div className="form-group-refined full-width">
+                  <label htmlFor="restaurantName" className="form-label-refined">
                     <Store size={16} />
                     Nombre del Restaurante *
                   </label>
@@ -345,14 +340,14 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.restaurantName}
                     onChange={handleChange}
-                    className="form-input"
+                    className="form-input-refined"
                     placeholder="Nombre de tu restaurante"
                     required
                   />
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="phoneNumber" className="form-label">
+                <div className="form-group-refined">
+                  <label htmlFor="phoneNumber" className="form-label-refined">
                     <Phone size={16} />
                     Teléfono (Opcional)
                   </label>
@@ -362,44 +357,46 @@ export default function RegisterPage() {
                     type="tel"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    className="form-input"
+                    className="form-input-refined"
                     placeholder="+52 55 1234 5678"
                   />
                 </div>
               </div>
 
-              <FudiButton 
-                variant="secondary" 
-                size="medium"
-                onClick={() => scrollToSection('pos-selection')}
-                disabled={!completedSections.includes(2)}
-              >
-                CONTINUAR →
-              </FudiButton>
-            </div>
+              <div className="section-button-refined">
+                <FudiButton 
+                  variant="secondary" 
+                  size="medium"
+                  onClick={() => scrollToSection('pos-selection')}
+                  disabled={!completedSections.includes(2)}
+                >
+                  CONTINUAR →
+                </FudiButton>
+              </div>
+            </FudiCard>
           </section>
 
           {/* Section 3: POS Selection - ⚡ PRESERVED EXACTLY */}
-          <section id="pos-selection" className="form-section">
-            <div className="form-card">
-              <div className="section-header">
-                <div className="section-icon pos">
+          <section id="pos-selection" className="form-section-refined">
+            <FudiCard variant="chat" padding="large" className="form-card-refined">
+              <div className="section-header-refined">
+                <div className="section-icon-refined pos">
                   <CreditCard size={28} />
                 </div>
-                <div className="section-info">
-                  <h2 className="section-title">Sistema POS</h2>
-                  <p className="section-subtitle">¿Con qué sistema trabajas?</p>
+                <div className="section-info-refined">
+                  <h2 className="section-title-refined">Sistema POS</h2>
+                  <p className="section-subtitle-refined">¿Con qué sistema trabajas?</p>
                 </div>
                 {completedSections.includes(3) && (
-                  <div className="section-check">
+                  <div className="section-check-refined">
                     <CheckCircle size={24} />
                   </div>
                 )}
               </div>
 
-              <div className="pos-grid">
+              <div className="pos-grid-refined">
                 {posOptions.map((pos) => (
-                  <div key={pos.id} className="pos-option">
+                  <div key={pos.id} className="pos-option-refined">
                     <input
                       type="radio"
                       id={pos.id}
@@ -407,87 +404,98 @@ export default function RegisterPage() {
                       value={pos.id}
                       checked={formData.posType === pos.id}
                       onChange={handleChange}
-                      className="pos-input"
+                      className="pos-input-refined"
                       required
                     />
-                    <label htmlFor={pos.id} className="pos-label">
+                    <label htmlFor={pos.id} className="pos-label-refined">
                       {pos.popular && (
-                        <span className="pos-popular">
+                        <span className="pos-popular-refined">
                           <Star size={12} />
                           Popular
                         </span>
                       )}
-                      <div className="pos-icon-container">
+                      <div className="pos-icon-container-refined">
                         {pos.icon}
                       </div>
-                      <span className="pos-name">{pos.name}</span>
+                      <span className="pos-name-refined">{pos.name}</span>
                     </label>
                   </div>
                 ))}
               </div>
 
-              <FudiButton 
-                variant="secondary" 
-                size="medium"
-                onClick={() => scrollToSection('final-step')}
-                disabled={!completedSections.includes(3)}
-              >
-                PASO FINAL →
-              </FudiButton>
-            </div>
+              <div className="section-button-refined">
+                <FudiButton 
+                  variant="secondary" 
+                  size="medium"
+                  onClick={() => scrollToSection('final-step')}
+                  disabled={!completedSections.includes(3)}
+                >
+                  PASO FINAL →
+                </FudiButton>
+              </div>
+            </FudiCard>
           </section>
 
           {/* Section 4: Final Step - ⚡ PRESERVED EXACTLY */}
-          <section id="final-step" className="form-section">
-            <div className="form-card">
-              <div className="section-header">
-                <div className="section-icon final">
+          <section id="final-step" className="form-section-refined">
+            <FudiCard variant="chat" padding="large" className="form-card-refined">
+              <div className="section-header-refined">
+                <div className="section-icon-refined final">
                   <Rocket size={28} />
                 </div>
-                <div className="section-info">
-                  <h2 className="section-title">¡Casi Listo!</h2>
-                  <p className="section-subtitle">Último paso para comenzar</p>
+                <div className="section-info-refined">
+                  <h2 className="section-title-refined">¡Casi Listo!</h2>
+                  <p className="section-subtitle-refined">Último paso para comenzar</p>
                 </div>
               </div>
 
-              <div className="terms-container">
+              <div className="terms-container-refined">
                 <input
                   id="terms"
                   type="checkbox"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
-                  className="checkbox"
+                  className="checkbox-refined"
                   required
                 />
-                <label htmlFor="terms" className="terms-text">
+                <label htmlFor="terms" className="terms-text-refined">
                   Acepto los{' '}
-                  <Link href="/terms" className="terms-link">
+                  <Link href="/terms" className="terms-link-refined">
                     términos y condiciones
                   </Link>
                   {' '}y la{' '}
-                  <Link href="/privacy" className="terms-link">
+                  <Link href="/privacy" className="terms-link-refined">
                     política de privacidad
                   </Link>
                 </label>
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading || !acceptTerms || completedSections.length < 3}
-                className="submit-btn"
-              >
-                <Rocket size={20} />
-                {isLoading ? 'CREANDO CUENTA...' : 'COMENZAR CON FUDIVERSE'}
-              </button>
-            </div>
+              <div className="submit-container-refined">
+                <FudiButton
+                  variant="orange"
+                  size="large"
+                  disabled={isLoading || !acceptTerms || completedSections.length < 3}
+                  onClick={() => {
+                    const form = document.querySelector('.register-form-refined') as HTMLFormElement;
+                    if (form) {
+                      const event = new Event('submit', { bubbles: true, cancelable: true });
+                      form.dispatchEvent(event);
+                    }
+                  }}
+                  icon={<Rocket size={20} />}
+                >
+                  {isLoading ? 'CREANDO CUENTA...' : 'COMENZAR CON FUDIVERSE'}
+                </FudiButton>
+              </div>
+            </FudiCard>
           </section>
         </form>
 
         {/* Footer */}
-        <div className="register-footer">
-          <p className="footer-text">
+        <div className="register-footer-refined">
+          <p className="footer-text-refined">
             ¿Ya tienes cuenta?{' '}
-            <Link href="/login" className="footer-link">
+            <Link href="/login" className="footer-link-refined">
               Inicia sesión aquí
             </Link>
           </p>

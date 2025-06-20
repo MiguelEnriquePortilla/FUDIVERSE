@@ -1,16 +1,21 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { 
   Brain, Zap, TrendingUp, Eye, MessageSquare, 
   Sparkles, Rocket, Crown, Star, ChevronRight,
-  Play, ArrowRight, Coffee, Clock, DollarSign
+  Play, ArrowRight, Coffee, Clock, DollarSign,
+  ArrowDown
 } from 'lucide-react';
+
+// Nuestros módulos limpios
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiCard } from '@/components/fudiverse/FudiCard';
 import { FudiHeader } from '@/components/fudiverse/FudiHeader';
 
-// Import styles
+// Import el CSS refinado separado
 import '@/styles/pages/fudi.splash.css';
 
 export default function Home() {
@@ -27,24 +32,24 @@ export default function Home() {
   const dreamScenarios = [
     {
       icon: Brain,
-      title: "IMAGINA ESTO:",
+      title: "Imagina esto:",
       scenario: "Son las 2PM, casa llena. El sistema ya calculó exactamente qué inventario necesitas mañana.",
       impact: "Cero desperdicio, máxima ganancia",
-      color: "#fbbf24"
+      color: "#ff6b35"
     },
     {
       icon: Eye,
-      title: "VISUALIZA:",
+      title: "Visualiza:",
       scenario: "Tu mesero atiende a Juan. El sistema muestra que es cliente VIP y sugiere su plato favorito con descuento personalizado.",
       impact: "Cliente satisfecho, facturación recurrente",
       color: "#3b82f6"
     },
     {
       icon: TrendingUp,
-      title: "EXPERIMENTA:",
+      title: "Experimenta:",
       scenario: "Viernes 8PM, noche perfecta. El sistema predijo la demanda exacta. Cero faltantes, cero desperdicio.",
       impact: "Eficiencia que tu competencia no tiene",
-      color: "#10b981"
+      color: "#00bcd4"
     }
   ];
 
@@ -67,207 +72,166 @@ export default function Home() {
   ];
 
   return (
-    <div className="splash-container">
+    <div className="splash-container-refined">
       
-      {/* ✅ NUEVO: FudiHeader reemplaza el header custom */}
-      <FudiHeader currentPage="home" />
-      
-      {/* ✅ FUDI Background - ULTRA LIMPIO COMO ABOUT */}
+      {/* FUDI Background Limpio */}
       <FudiBackground 
-        variant="medium"
-        theme="charcoal"
-        intensity={0.2}
+        variant="minimal"
+        theme="business"
         opacity={1}
         fixed={true}
       />
 
-      {/* Hero Section - The Dream */}
-      <section className="splash-hero">
-        <div className="hero-content">
+      {/* Header usando nuestro módulo */}
+      <FudiHeader 
+        currentPage="home"
+        showAuthButtons={true}
+      />
+
+      {/* Hero Section - Refinado */}
+      <section className="hero-refined">
+        <div className="hero-content-refined">
           
-          {/* Status Badge */}
-          <div className="status-badge">
-            <div className="status-dot"></div>
-            <span>OPTIMIZANDO RESTAURANTES</span>
-            <Zap size={14} />
-          </div>
-          
-          {/* Main Hero Text */}
-          <h1 className="hero-title">
-            <span className="title-highlight-gold"></span><br/>
-            ¡No analices <span className="title-highlight-gold">datos</span>, escribe una historia de <span className="title-highlight-gold">éxito!</span><br/>
+          {/* Main Hero Text - Sin status badge */}
+          <h1 className="hero-title-refined">
+            ¡No analices <span className="title-highlight-orange">datos</span>, 
+            escribe una historia de <span className="title-highlight-orange">éxito!</span>
           </h1>
           
-          <div className="hero-subtitle">
-            <p className="subtitle-main">
-              FUDIVERSE <strong>IA predice ventas, optimiza inventario y maximiza ganancias</strong> PARA tu restaurante
+          <div className="hero-subtitle-refined">
+            <p className="subtitle-main-refined">
+              FUDIVERSE integra <strong>Claude AI, la inteligencia artificial más avanzada del mundo</strong>, analizando tus datos para optimizar cada decisión de tu restaurante
             </p>
-            <p className="subtitle-secondary">
-              <span className="subtitle-highlight">              ←← ✅ AHORA <span>
-                Mientras otros restaurantes operan a la antigüa y a ciegas, tú tomas decisiones informadas e inteligentes que te llevan más lejos
-              </span>                                             ←← ✅ AHORA </span>
+            <p className="subtitle-secondary-refined">
+              <span className="subtitle-highlight">
+                Mientras tu competencia opera a ciegas, tú tienes el poder de la IA más sofisticada tomando decisiones que maximizan tus ganancias las 24 horas
+              </span>
             </p>
           </div>
 
-          {/* Dream Scenarios Carousel */}
-          <div className="dream-scenarios">
+          {/* Dream Scenarios - Simplificados */}
+          <div className="dream-scenarios-refined">
             {dreamScenarios.map((dream, index) => {
-              const Icon = dream.icon;
               const isActive = currentFeature === index;
               
               return (
-                <div 
+                <FudiCard 
                   key={index}
-                  className={`dream-card ${isActive ? 'active' : ''}`}
-                  style={{ '--dream-color': dream.color } as React.CSSProperties}
+                  variant={index === 0 ? "orange" : index === 1 ? "chat" : "cyan"}
+                  padding="medium"
+                  className={`dream-card-refined ${isActive ? 'active' : ''}`}
                 >
-                  <div className="dream-icon">
-                    <Icon size={24} />
-                  </div>
-                  <div className="dream-content">
-                    <h3 className="dream-title">{dream.title}</h3>
-                    <p className="dream-scenario">{dream.scenario}</p>
-                    <div className="dream-impact">
-                      <Sparkles size={14} />
+                  <div className="dream-content-refined">
+                    <h3 className="dream-title-refined">{dream.title}</h3>
+                    <p className="dream-scenario-refined">{dream.scenario}</p>
+                    <div className="dream-impact-refined">
                       <span>{dream.impact}</span>
                     </div>
                   </div>
-                </div>
+                </FudiCard>
               );
             })}
           </div>
 
-          {/* CTA Buttons */}
-          <div className="hero-cta">
+          {/* CTA Buttons - Limpios */}
+          <div className="hero-cta-refined">
             <FudiButton 
-              variant="primary" 
+              variant="orange" 
               size="large" 
               href="/register"
-              className="main-cta"
+              icon={<Rocket size={20} />}
             >
-              <Rocket size={20} />
-              <span>EMPEZAR AHORA</span>
+              Empezar ahora
             </FudiButton>
             
             <FudiButton 
-              variant="secondary" 
+              variant="cyan" 
               size="large" 
               href="/features"
-              className="secondary-cta"
+              icon={<Play size={18} />}
             >
-              <Play size={18} />
-              <span>CONOCELO GRATIS</span>
+              Conocerlo gratis
             </FudiButton>
-          </div>
-
-          {/* Social Proof */}
-          <div className="social-proof">
-            <div className="proof-stats">
-              <div className="proof-item">
-                <span className="proof-number">+500</span>
-                <span className="proof-label">Restaurantes</span>
-              </div>
-              <div className="proof-separator"></div>
-              <div className="proof-item">
-                <span className="proof-number">$2M+</span>
-                <span className="proof-label">Ahorrados</span>
-              </div>
-              <div className="proof-separator"></div>
-              <div className="proof-item">
-                <span className="proof-number">98%</span>
-                <span className="proof-label">Satisfacción</span>
-              </div>
-            </div>
-            <p className="proof-text">
-              <Star size={16} />
-              "Aumenté mis ganancias 35% en 3 meses. La mejor inversión que hice." - Chef María González, Ciudad de México
-            </p>
           </div>
         </div>
       </section>
 
-      {/* Power Timeline Section */}
-      <section className="power-timeline">
-        <div className="timeline-header">
-          <h2 className="timeline-title">
-            <Clock size={32} />
-            24 HORAS DE OPERACIÓN INTELIGENTE
+      {/* Timeline Section - Rediseñado con flujo visual */}
+      <section className="timeline-refined">
+        <div className="timeline-header-refined">
+          <h2 className="timeline-title-refined">
+            24 horas de operación inteligente
           </h2>
-          <p className="timeline-subtitle">
+          <p className="timeline-subtitle-refined">
             Mientras tu equipo descansa, <strong>FUDI sigue optimizando tu negocio</strong>
           </p>
         </div>
 
-        <div className="timeline-content">
-          {powerMoments.map((moment, index) => (
-            <div key={index} className="timeline-moment">
-              <div className="moment-time">
-                <Clock size={20} />
-                <span>{moment.time}</span>
-              </div>
-              <div className="moment-content">
-                <h3 className="moment-action">{moment.action}</h3>
-                <p className="moment-result">
-                  <ArrowRight size={16} />
-                  {moment.result}
-                </p>
-              </div>
-              <div className="moment-connector"></div>
-            </div>
-          ))}
-        </div>
+        <div className="timeline-flow">
+          {/* Inicio del flujo - GRANDE */}
+          <div className="flow-start">
+            <h3>Inicio del día</h3>
+            <p>Tu sistema ya está trabajando</p>
+          </div>
 
-        <div className="timeline-conclusion">
-          <div className="conclusion-card">
-            <DollarSign size={40} />
-            <h3>RESULTADO</h3>
-            <p>+30% rentabilidad, -50% desperdicio, 100% control</p>
-            <div className="conclusion-cta">
-              <FudiButton variant="primary" href="/register">
-                IMPLEMENTAR AHORA
-                <ChevronRight size={18} />
-              </FudiButton>
-            </div>
+          {/* Pasos del día - PEQUEÑOS con flechas */}
+          <div className="flow-steps">
+            {powerMoments.map((moment, index) => (
+              <div key={index} className="flow-step">
+                <div className="step-time">{moment.time}</div>
+                <div className="step-action">{moment.action}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Resultado - MÁS GRANDE Y VISTOSO */}
+          <div className="flow-result">
+            <h3 className="result-title">Resultado</h3>
+            <p className="result-stats">+30% rentabilidad, -50% desperdicio, 100% control</p>
+            <FudiButton 
+              variant="orange" 
+              size="medium"
+              href="/register"
+              icon={<ChevronRight size={18} />}
+            >
+              Implementar ahora
+            </FudiButton>
           </div>
         </div>
       </section>
 
-      {/* Transformation Section */}
-      <section className="transformation-section">
-        <div className="transformation-content">
-          <div className="transformation-header">
-            <h2 className="transformation-title">
-              LA EVOLUCIÓN QUE TU RESTAURANTE NECESITA
-            </h2>
-            <p className="transformation-subtitle">
-              No es solo tecnología. Es la diferencia entre sobrevivir y prosperar. No son analizar datos es escribir tu historia de éxito.
-            </p>
-          </div>
+      {/* Evolution Section - Tamaño Hero */}
+      <section className="evolution-refined">
+        <div className="evolution-content">
+          <h2 className="evolution-title-refined">
+            La evolución que tu restaurante necesita
+          </h2>
+          <p className="evolution-subtitle-refined">
+            No es solo tecnología. Es la diferencia entre sobrevivir y prosperar.
+          </p>
 
-          <div className="before-after">
-            <div className="before-card">
-              <h3 className="before-title">😰 ANTES</h3>
-              <ul className="before-list">
+          <div className="before-after-refined">
+            <div className="before-card-refined">
+              <h3 className="before-title-refined">Antes</h3>
+              <ul className="evolution-list">
                 <li>"¿Cuánto inventario necesito?"</li>
                 <li>"¿Por qué bajaron las ventas?"</li>
                 <li>"¿Cómo fidelizo a mis clientes?"</li>
-                <li>"¿Qué debo recomendar?"</li>
                 <li>Desperdicio, pérdidas, incertidumbre</li>
               </ul>
             </div>
 
-            <div className="transformation-arrow">
+            <div className="transformation-arrow-refined">
               <ArrowRight size={32} />
-              <span>CON FUDI</span>
+              <span>Con FUDI</span>
             </div>
 
-            <div className="after-card">
-              <h3 className="after-title">🚀 DESPUÉS</h3>
-              <ul className="after-list">
-                <li>"El sistema ya calculó las cantidades exactas"</li>
+            <div className="after-card-refined">
+              <h3 className="after-title-refined">Después</h3>
+              <ul className="evolution-list">
+                <li>"El sistema calculó las cantidades exactas"</li>
                 <li>"Cada semana mejoran los márgenes"</li>
-                <li>"El sistema identifica a todos los clientes VIP"</li>
-                <li>"Recomendaciones automáticas que aumentan ticket promedio"</li>
+                <li>"IA identifica a todos los clientes VIP"</li>
                 <li>Precisión, control, crecimiento</li>
               </ul>
             </div>
@@ -275,55 +239,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="final-cta">
-        <div className="final-cta-content">
-          <div className="final-badge">
-            <Sparkles size={16} />
-            <span>LISTA PARA IMPLEMENTAR</span>
-          </div>
-          
-          <h2 className="final-title">
-            ¿Listo para escribir tu propia <span className="highlight-gold">historia de éxito</span>?
+      {/* Final CTA - Ultra limpio */}
+      <section className="final-cta-refined">
+        <div className="final-content-refined">
+          <h2 className="final-title-refined">
+            ¿Listo para escribir tu propia <span className="highlight-orange">historia de éxito</span>?
           </h2>
           
-          <p className="final-subtitle">
+          <p className="final-subtitle-refined">
             La optimización de tu restaurante empieza hoy
           </p>
           
-          <div className="final-actions">
+          <div>
             <FudiButton 
-              variant="primary" 
+              variant="orange" 
               size="large" 
               href="/register"
-              className="final-primary-cta"
+              icon={<Rocket size={24} />}
             >
-              <Rocket size={24} />
-              <span>EMPEZAR PRUEBA GRATIS</span>
+              Empezar prueba gratis
             </FudiButton>
             
-            <p className="final-guarantee">
-              💎 30 días gratis · 💳 Sin tarjeta · 🚀 Activación inmediata
+            <p className="final-guarantee-refined">
+              30 días gratis • Sin tarjeta • Activación inmediata
             </p>
           </div>
         </div>
       </section>
-
-      {/* Scanning Line Effect */}
-      <div className="scan-line"></div>
-      
-      {/* Floating Action Button */}
-      <div className="floating-cta">
-        <FudiButton 
-          variant="primary" 
-          size="medium"
-          href="/register"
-          className="floating-button"
-        >
-          <MessageSquare size={18} />
-          <span>PROBAR GRATIS</span>
-        </FudiButton>
-      </div>
     </div>
   );
 }

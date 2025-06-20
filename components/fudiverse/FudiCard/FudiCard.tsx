@@ -1,10 +1,9 @@
-// components/fudiverse/FudiCard/FudiCard.tsx
 'use client';
 
 import React from 'react';
 import styles from './FudiCard.module.css';
 
-export type FudiCardVariant = 'default' | 'form' | 'modal' | 'dashboard' | 'glow';
+export type FudiCardVariant = 'chat' | 'document' | 'orange' | 'cyan' | 'ghost';
 export type FudiCardPadding = 'small' | 'medium' | 'large';
 
 interface FudiCardProps {
@@ -12,16 +11,14 @@ interface FudiCardProps {
   variant?: FudiCardVariant;
   padding?: FudiCardPadding;
   animate?: boolean;
-  scanEffect?: boolean;
   className?: string;
 }
 
 export const FudiCard: React.FC<FudiCardProps> = ({
   children,
-  variant = 'default',
+  variant = 'chat',
   padding = 'medium',
   animate = false,
-  scanEffect = false,
   className = ''
 }) => {
   const classes = `
@@ -34,16 +31,9 @@ export const FudiCard: React.FC<FudiCardProps> = ({
 
   return (
     <div className={classes}>
-      {scanEffect && <div className={styles.scanLine} />}
       <div className={styles.content}>
         {children}
       </div>
-      {variant === 'glow' && (
-        <>
-          <div className={styles.glowOrb1} />
-          <div className={styles.glowOrb2} />
-        </>
-      )}
     </div>
   );
 };

@@ -1,294 +1,137 @@
 /* =============================================
-   FUDI PRICING - ULTRA LIMPIO 🧹
+   FUDI PRICING REFINED - APPLE STYLE
    ============================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 /* =============================================
-   CSS VARIABLES - SOLO LO ESENCIAL
+   CSS VARIABLES - USAR LAS ESTÁNDAR
    ============================================= */
 :root {
-  /* Core FUDI Colors */
-  --fudi-primary: #fbbf24; /* Matrix Gold */
-  --fudi-secondary: #00ffff; /* Cyber Cyan */
-  --fudi-accent: #a78bfa; /* Neural Purple */
-  --fudi-blue: #3b82f6; /* Data Blue */
-  --fudi-green: #10b981; /* Success Green */
-  --fudi-red: #ef4444; /* Alert Red */
-  --fudi-orange: #f59e0b; /* Energy Orange */
-  --fudi-purple: #8b5cf6; /* Wisdom Purple */
+  --fudi-orange: #ff6b35;
+  --fudi-cyan: #00bcd4;
+  --fudi-blue: #3b82f6;
+  --fudi-purple: #8b5cf6;
+  --fudi-green: #10b981;
+  --fudi-red: #ef4444;
   
-  /* Glass System - MÁS TRANSPARENTE */
-  --glass-bg: rgba(0, 0, 0, 0.3);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-hover: rgba(255, 255, 255, 0.12);
+  --text-primary: rgba(255, 255, 255, 0.98);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
   
-  /* Text Hierarchy */
-  --text-primary: rgba(255, 255, 255, 0.95);
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-tertiary: rgba(255, 255, 255, 0.5);
-  --text-muted: rgba(255, 255, 255, 0.3);
-  
-  /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-hover: rgba(251, 191, 36, 0.3);
-  
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.4);
+  --section-padding: 8rem 2rem;
+  --container-max-width: 1200px;
 }
 
 /* =============================================
-   BASE CONTAINER - SIN BACKGROUNDS
+   CONTAINER BASE
    ============================================= */
-.pricing-container {
+.pricing-container-refined {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
-  color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  position: relative;
   overflow-x: hidden;
-  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
-}
-
-/* ❌ ELIMINADOS - BACKGROUNDS PROBLEMÁTICOS
-.pricing-container::before {
-  ... pricing-pulse animation
-}
-
-.pricing-container::after {
-  ... evolution-flow animation
-}
-*/
-
-/* =============================================
-   HEADER - TRANSPARENTE
-   ============================================= */
-.pricing-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle);
-  transition: all 0.3s ease;
-}
-
-.pricing-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    var(--fudi-green) 15%, 
-    var(--fudi-blue) 35%, 
-    var(--fudi-primary) 50%, 
-    var(--fudi-purple) 65%,
-    transparent
-  );
-  opacity: 0.6;
-  animation: header-evolution 5s ease-in-out infinite;
-}
-
-@keyframes header-evolution {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.9; }
-}
-
-.pricing-nav {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-}
-
-.pricing-logo {
-  font-size: 1.5rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-decoration: none;
-  letter-spacing: -0.5px;
-  transition: all 0.3s ease;
-}
-
-.pricing-logo:hover {
-  transform: scale(1.05);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.nav-link {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--fudi-primary), var(--fudi-blue));
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: var(--text-primary);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  transform: scaleX(1);
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 }
 
 /* =============================================
-   HERO SECTION - SIN BACKGROUND
+   HERO SECTION
    ============================================= */
-.pricing-hero {
-  min-height: 80vh;
+.hero-refined {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 10;
-  padding: 8rem 2rem 4rem 2rem;
+  padding: 12rem 2rem 8rem 2rem;
   text-align: center;
-  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
-.hero-content {
+.hero-content-refined {
   max-width: 800px;
   margin: 0 auto 3rem auto;
 }
 
-.hero-badge {
+.hero-badge-refined {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--glass-bg);
+  background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 50px;
   padding: 0.75rem 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--fudi-blue);
   text-transform: uppercase;
   letter-spacing: 1px;
-  animation: hero-badge-glow 3s ease-in-out infinite;
 }
 
-@keyframes hero-badge-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-  }
-}
-
-.hero-title {
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
-  font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
+.hero-title-refined {
+  font-size: clamp(3.5rem, 12vw, 7rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 3rem;
   color: var(--text-primary);
-  text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
-  animation: title-evolution 4s ease-in-out infinite;
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
 }
 
-@keyframes title-evolution {
-  0%, 100% { 
-    text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
-  }
-  50% { 
-    text-shadow: 0 0 60px rgba(59, 130, 246, 0.6), 0 0 80px rgba(251, 191, 36, 0.4);
-  }
-}
-
-.hero-highlight {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-blue));
+.hero-highlight-refined {
+  background: linear-gradient(135deg, var(--fudi-orange), var(--fudi-blue));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  position: relative;
 }
 
-.hero-subtitle {
-  font-size: 1.3rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  margin-bottom: 3rem;
+.hero-subtitle-refined {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  color: var(--text-tertiary);
   line-height: 1.6;
+  font-weight: 400;
+  margin-bottom: 4rem;
 }
 
-/* Hero Quote - NUEVO TAGLINE */
-.hero-quote {
-  background: var(--glass-bg);
-  border: 1px solid rgba(251, 191, 36, 0.2);
-  border-radius: 16px;
-  padding: 2rem;
-  margin-top: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  font-size: 1.2rem;
+.hero-quote-refined {
+  background: rgba(0, 0, 0, 0.4); /* Cintillo oscuro como la captura */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  display: block;
+  text-align: center;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem); /* Mucho más pequeño */
   font-weight: 600;
   font-style: italic;
-  color: var(--fudi-primary);
-  animation: quote-pulse 5s ease-in-out infinite;
+  color: var(--text-primary);
+  margin: 2rem auto 3rem auto;
+  line-height: 1.5;
+  font-family: 'Poppins', sans-serif;
+  max-width: 600px; /* Limitar ancho como cintillo */
 }
 
-@keyframes quote-pulse {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
-  }
-  50% { 
-    transform: scale(1.02);
-    box-shadow: 0 0 50px rgba(251, 191, 36, 0.4);
-  }
+.quote-highlight-refined {
+  background: linear-gradient(135deg, var(--fudi-orange), var(--fudi-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
 }
 
 /* Billing Toggle */
-.billing-toggle {
+.billing-toggle-refined {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--glass-bg);
-  border: 1px solid var(--border-default);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50px;
   padding: 0.5rem;
   margin: 0 auto;
 }
 
-.toggle-btn {
+.toggle-btn-refined {
   padding: 0.75rem 1.5rem;
   border: none;
   background: transparent;
@@ -301,15 +144,16 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
 }
 
-.toggle-btn.active {
-  background: var(--fudi-primary);
-  color: #0a0a0a;
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+.toggle-btn-refined.active {
+  background: var(--fudi-orange);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
-.discount {
+.discount-refined {
   background: var(--fudi-green);
   color: white;
   font-size: 0.75rem;
@@ -320,100 +164,59 @@
 }
 
 /* =============================================
-   PRICING SECTION - SIN BACKGROUND
+   SECCIONES ESTÁNDAR
    ============================================= */
-.pricing-section {
-  padding: 6rem 2rem;
-  position: relative;
-  z-index: 10;
-  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
-}
-
-.pricing-grid {
-  max-width: 1400px;
+.section-refined {
+  padding: var(--section-padding);
+  max-width: var(--container-max-width);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
 }
 
-/* Pricing Card - Versión Business */
-.pricing-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 2px solid var(--plan-color, var(--fudi-blue));
-  border-radius: 32px;
-  padding: 2.5rem;
+/* =============================================
+   PRICING GRID - CUATRO COLUMNAS UNIFORMES
+   ============================================= */
+.pricing-grid-refined {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 5rem;
+  align-items: start; /* Importante: alinea al top */
+}
+
+/* =============================================
+   PRICING CARDS - USANDO FUDICARD
+   ============================================= */
+.pricing-card-refined {
   position: relative;
-  cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  min-height: 600px;
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.pricing-card-refined:hover {
+  transform: translateY(-8px);
+}
+
+.pricing-card-refined.popular {
+  transform: none; /* Eliminar scale que rompe el grid */
+}
+
+.pricing-card-refined.popular:hover {
+  transform: translateY(-8px); /* Solo hover effect */
+}
+
+.plan-content-refined {
+  height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
-.pricing-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg,
-    transparent 0%,
-    var(--plan-color, var(--fudi-blue)) 30%,
-    transparent 70%
-  );
-  opacity: 0.1;
-  transform: translateX(-100%) translateY(-100%);
-  transition: transform 0.8s ease;
-}
-
-.pricing-card:hover::before {
-  transform: translateX(100%) translateY(100%);
-}
-
-.pricing-card::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(135deg, 
-    var(--plan-color, var(--fudi-blue)), 
-    transparent,
-    var(--plan-color, var(--fudi-blue))
-  );
-  border-radius: 34px;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.4s ease;
-}
-
-.pricing-card:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 
-    var(--shadow-xl),
-    0 0 30px var(--plan-color, var(--fudi-blue));
-}
-
-.pricing-card.popular {
-  transform: scale(1.05);
-  border-width: 3px;
-}
-
-.pricing-card.popular::after {
-  opacity: 0.2;
-}
-
-.pricing-card:hover::after {
-  opacity: 0.3;
-}
-
-/* Popular Badge */
-.popular-badge {
+.popular-badge-refined {
   position: absolute;
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
+  background: linear-gradient(135deg, var(--fudi-orange), var(--fudi-red));
   color: white;
   font-size: 0.75rem;
   font-weight: 800;
@@ -424,140 +227,92 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  animation: popular-pulse 2s ease-in-out infinite;
-  box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
 }
 
-@keyframes popular-pulse {
-  0%, 100% { 
-    transform: translateX(-50%) scale(1);
-    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
-  }
-  50% { 
-    transform: translateX(-50%) scale(1.05);
-    box-shadow: 0 6px 30px rgba(251, 191, 36, 0.6);
-  }
-}
-
-/* Plan Header */
-.plan-header {
+.plan-header-refined {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.plan-icon {
+.plan-icon-refined {
   width: 80px;
   height: 80px;
-  background: var(--glass-bg);
+  background: rgba(26, 26, 30, 0.8);
   border: 2px solid var(--plan-color, var(--fudi-blue));
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem auto;
-  position: relative;
-  transition: all 0.4s ease;
+  transition: transform 0.3s ease;
 }
 
-.pricing-card:hover .plan-icon {
-  transform: scale(1.1) rotate(5deg);
+.pricing-card-refined:hover .plan-icon-refined {
+  transform: scale(1.1);
   box-shadow: 0 0 30px var(--plan-color, var(--fudi-blue));
 }
 
-.plan-icon svg {
+.plan-icon-refined svg {
   color: var(--plan-color, var(--fudi-blue));
-  filter: drop-shadow(0 0 10px currentColor);
 }
 
-.icon-rings {
-  position: absolute;
-  inset: 0;
-}
-
-.ring {
-  position: absolute;
-  border: 2px solid var(--plan-color, var(--fudi-blue));
-  border-radius: 50%;
-  opacity: 0;
-  animation: ring-expand 3s ease-out infinite;
-}
-
-.ring-1 {
-  inset: -15px;
-  animation-delay: 0s;
-}
-
-.ring-2 {
-  inset: -30px;
-  animation-delay: 1s;
-}
-
-@keyframes ring-expand {
-  0% { 
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  50% { 
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  100% { 
-    opacity: 0;
-    transform: scale(1.5);
-  }
-}
-
-.plan-name {
+.plan-name-refined {
   font-size: 1.8rem;
   font-weight: 900;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
   letter-spacing: -0.5px;
   text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
 }
 
-.plan-tagline {
+.plan-tagline-refined {
   font-size: 1rem;
   color: var(--plan-color, var(--fudi-blue));
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Plan Price */
-.plan-price {
+.plan-price-refined {
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-.currency {
+.currency-refined {
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--text-secondary);
   vertical-align: top;
 }
 
-.amount {
+.amount-refined {
   font-size: 3rem;
   font-weight: 900;
   color: var(--plan-color, var(--fudi-blue));
   line-height: 1;
+  font-family: 'Poppins', sans-serif;
 }
 
-.period {
+.period-refined {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-secondary);
 }
 
-.price-custom {
+.price-custom-refined {
   font-size: 2rem;
   font-weight: 800;
   color: var(--plan-color, var(--fudi-purple));
   text-transform: uppercase;
+  font-family: 'Poppins', sans-serif;
 }
 
-.plan-description {
+.plan-description-refined {
   font-size: 1rem;
   color: var(--text-secondary);
   text-align: center;
@@ -566,7 +321,7 @@
 }
 
 /* Perfect For */
-.perfect-for {
+.perfect-for-refined {
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--plan-color, var(--fudi-blue));
   border-radius: 12px;
@@ -577,27 +332,28 @@
   gap: 0.75rem;
 }
 
-.perfect-for svg {
+.perfect-for-refined svg {
   color: var(--plan-color, var(--fudi-blue));
   flex-shrink: 0;
   margin-top: 0.25rem;
 }
 
-.perfect-for span {
+.perfect-for-refined span {
   color: var(--text-primary);
   font-weight: 600;
   line-height: 1.4;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Features */
-.features {
+.features-refined {
   list-style: none;
   padding: 0;
   margin: 0 0 2rem 0;
   flex-grow: 1;
 }
 
-.feature {
+.feature-refined {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -605,182 +361,124 @@
   padding: 0.5rem 0;
 }
 
-.check-icon {
+.check-icon-refined {
   width: 24px;
   height: 24px;
-  background: var(--plan-color, var(--fudi-blue));
+  background: linear-gradient(135deg, var(--plan-color, var(--fudi-blue)), var(--fudi-cyan));
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-top: 0.125rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.check-icon svg {
+.check-icon-refined svg {
   color: white;
   width: 14px;
   height: 14px;
 }
 
-.feature span {
+.feature-refined span {
   color: var(--text-secondary);
   line-height: 1.5;
   font-weight: 500;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Plan CTA */
-.plan-cta {
+.plan-cta-refined {
   margin-top: auto;
-  width: 100%;
-  padding: 1rem 1.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 /* =============================================
-   SOCIAL PROOF - SIN BACKGROUND ESPECIAL
+   PHILOSOPHY HERO - DESTACAR LA FRASE
    ============================================= */
-.social-proof-section {
-  padding: 6rem 2rem;
-  position: relative;
-  z-index: 10;
-  /* NO BACKGROUND ESPECIAL - DEJA PASAR EL FUDIBACKGROUND */
-}
-
-.social-proof-content {
-  max-width: 1000px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.social-proof-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: var(--text-primary);
-  margin-bottom: 3rem;
-}
-
-.proof-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 3rem;
-}
-
-.proof-stat {
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 3rem;
-  font-weight: 900;
-  color: var(--fudi-primary);
-  margin-bottom: 0.5rem;
-  text-shadow: 0 0 20px currentColor;
-}
-
-.stat-label {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.stat-description {
-  font-size: 1rem;
-  color: var(--text-secondary);
-}
-
-/* =============================================
-   BOTTOM CTA - SIN ORBS
-   ============================================= */
-.bottom-cta {
+.philosophy-hero-refined {
   padding: 8rem 2rem;
-  position: relative;
-  z-index: 10;
   text-align: center;
-  overflow: hidden;
-  /* NO BACKGROUND ORBS - DEJA PASAR EL FUDIBACKGROUND */
+  background: rgba(0, 0, 0, 0.2);
+  margin: 4rem 0;
 }
 
-/* ❌ ELIMINADO - CTA BACKGROUND Y ORBS
-.cta-background { ... }
-.cta-orb { ... }
-*/
+.philosophy-content-refined {
+  max-width: 800px;
+  margin: 0 auto;
+}
 
-.cta-content {
+.philosophy-title-refined {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-style: italic;
+  font-family: 'Poppins', sans-serif;
+}
+
+.philosophy-highlight-refined {
+  background: linear-gradient(135deg, var(--fudi-orange), var(--fudi-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 900;
+}
+
+/* =============================================
+   CTA SECTION
+   ============================================= */
+.cta-section-refined {
+  padding: var(--section-padding);
+  text-align: center;
+}
+
+.cta-content-refined {
   max-width: 700px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 }
 
-.cta-badge {
+.cta-badge-refined {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--glass-bg);
+  background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 50px;
   padding: 0.75rem 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--fudi-blue);
   text-transform: uppercase;
   letter-spacing: 1px;
-  animation: cta-badge-glow 3s ease-in-out infinite;
 }
 
-@keyframes cta-badge-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-  }
-}
-
-.cta-title {
+.cta-title-refined {
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 900;
   color: var(--text-primary);
   margin-bottom: 1.5rem;
   line-height: 1.2;
-  text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
-  animation: cta-title-glow 4s ease-in-out infinite;
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
 }
 
-@keyframes cta-title-glow {
-  0%, 100% { 
-    text-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
-  }
-  50% { 
-    text-shadow: 0 0 60px rgba(59, 130, 246, 0.6), 0 0 80px rgba(251, 191, 36, 0.4);
-  }
-}
-
-.cta-title .highlight {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
+.cta-highlight-refined {
+  background: linear-gradient(135deg, var(--fudi-orange), var(--fudi-blue));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.cta-subtitle {
-  font-size: 1.3rem;
+.cta-subtitle-refined {
+  font-size: clamp(1.2rem, 3vw, 1.4rem);
   color: var(--text-secondary);
   margin-bottom: 3rem;
   line-height: 1.6;
 }
 
-.cta-actions {
+.cta-actions-refined {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
@@ -788,176 +486,130 @@
   margin-bottom: 3rem;
 }
 
-.trust-quote {
+.trust-quote-refined {
   margin-top: 2rem;
 }
 
-.trust-quote blockquote {
-  font-size: 1.2rem;
+.trust-note-refined {
+  font-size: 1.1rem;
   font-weight: 600;
-  font-style: italic;
   color: var(--text-secondary);
   margin: 0;
+  line-height: 1.5;
 }
 
-.trust-quote strong {
-  color: var(--fudi-primary);
-}
-
-/* =============================================
-   FOOTER
-   ============================================= */
-.pricing-footer {
-  background: rgba(0, 0, 0, 0.5);
-  border-top: 1px solid var(--border-subtle);
-  padding: 2rem;
-  text-align: center;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-links {
-  display: flex;
-  gap: 2rem;
-}
-
-.footer-links a {
-  color: var(--text-tertiary);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-  color: var(--text-primary);
+.trust-note-refined strong {
+  color: var(--fudi-orange);
 }
 
 /* =============================================
-   RESPONSIVE DESIGN
+   RESPONSIVE OBLIGATORIO
    ============================================= */
-@media (max-width: 1200px) {
-  .pricing-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+/* =============================================
+   RESPONSIVE OBLIGATORIO - CUATRO NIVELES
+   ============================================= */
+
+/* Large Desktop - 4 columnas */
+@media (min-width: 1200px) {
+  .pricing-grid-refined {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 1400px;
+  }
+}
+
+/* Desktop/Laptop - 4 columnas */
+@media (max-width: 1199px) and (min-width: 769px) {
+  .pricing-grid-refined {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Tablet - 2 columnas */
+@media (max-width: 768px) and (min-width: 481px) {
+  .pricing-grid-refined {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Mobile - 1 columna */
+@media (max-width: 480px) {
+  .pricing-grid-refined {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
-  .pricing-nav {
-    padding: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+  :root {
+    --section-padding: 6rem 1rem;
   }
-  
-  .nav-links {
-    gap: 1rem;
-    flex-wrap: wrap;
+
+  .hero-refined {
+    padding: 8rem 1rem 6rem 1rem;
+    min-height: 80vh;
   }
-  
-  .pricing-hero {
-    padding: 6rem 1rem 4rem 1rem;
-    min-height: 70vh;
-  }
-  
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.1rem;
-  }
-  
-  .pricing-section,
-  .social-proof-section,
-  .bottom-cta {
-    padding: 4rem 1rem;
-  }
-  
-  .pricing-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  
-  .pricing-card {
-    padding: 2rem;
-    min-height: auto;
-  }
-  
-  .pricing-card.popular {
-    transform: none;
-  }
-  
-  .plan-icon {
+
+  .plan-icon-refined {
     width: 60px;
     height: 60px;
   }
-  
-  .plan-name {
-    font-size: 1.5rem;
-  }
-  
-  .amount {
+
+  .amount-refined {
     font-size: 2.5rem;
   }
-  
-  .proof-stats {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+
+  .philosophy-hero-refined {
+    padding: 4rem 1rem;
+    margin: 2rem 0;
   }
-  
-  .cta-actions {
+
+  .section-refined {
+    padding: 6rem 1rem;
+  }
+
+  .cta-actions-refined {
     flex-direction: column;
     align-items: center;
   }
-  
-  .footer-content {
-    flex-direction: column;
-    text-align: center;
-  }
-}
 
-@media (max-width: 480px) {
-  .pricing-card {
-    padding: 1.5rem;
-  }
-  
-  .plan-icon {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .plan-name {
-    font-size: 1.3rem;
-  }
-  
-  .amount {
-    font-size: 2rem;
-  }
-  
-  .billing-toggle {
+  .billing-toggle-refined {
     flex-direction: column;
     width: 100%;
     max-width: 300px;
   }
-  
-  .toggle-btn {
+
+  .toggle-btn-refined {
     width: 100%;
     justify-content: center;
   }
 }
 
+/* Mobile específico */
+@media (max-width: 480px) {
+  .plan-icon-refined {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .plan-name-refined {
+    font-size: 1.5rem;
+  }
+  
+  .amount-refined {
+    font-size: 2rem;
+  }
+  
+  .plan-content-refined {
+    padding: 0; /* FudiCard ya tiene padding */
+  }
+}
+
 /* =============================================
-   UTILITIES
+   UTILITIES ESTÁNDAR
    ============================================= */
 ::selection {
-  background: rgba(251, 191, 36, 0.3);
+  background: rgba(255, 107, 53, 0.2);
   color: var(--text-primary);
 }
 
@@ -974,26 +626,17 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-default);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-hover);
-}
-
-button:focus,
-a:focus {
-  outline: 2px solid var(--fudi-primary);
-  outline-offset: 2px;
+  background: rgba(255, 107, 53, 0.3);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  * {
+    animation: none !important;
+    transition: none !important;
   }
 }

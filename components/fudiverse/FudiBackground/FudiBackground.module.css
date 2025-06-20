@@ -1,138 +1,93 @@
 /* =============================================
-   FUDI BACKGROUND - CANVAS TEXTURIZADO
+   FUDI BACKGROUND - ESTILO CLAUDE MINIMALISTA
    ============================================= */
 
-/* Container base */
+/* BASE CONTAINER */
 .fudiBackground {
   position: relative;
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
+  /* El color se define en cada variante */
 }
 
-/* Fixed positioning */
 .fudiBackground.fixed {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
+  z-index: -1; /* Detrás de todo */
 }
 
-/* Canvas texturizado */
-.canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
+/* ==================== TEMAS ==================== */
+
+/* CLAUDE THEME - COLOR EXACTO DEL CHAT */
+.claude {
+  background: #101014; /* Color exacto de Claude chat oscuro */
 }
 
-/* Content layer */
+/* BUSINESS THEME */
+.business {
+  background: #0f172a; /* Slate muy oscuro */
+}
+
+/* DARK THEME */
+.dark {
+  background: #000000; /* Negro puro */
+}
+
+/* ==================== VARIANTES ==================== */
+
+/* MINIMAL - Solo color sólido */
+.minimal {
+  /* Usa el color del theme */
+}
+
+/* GRADIENT - Gradiente sutil */
+.gradient.claude {
+  background: linear-gradient(
+    135deg,
+    #0d0d11 0%,
+    #101014 50%,
+    #0d0d11 100%
+  );
+}
+
+.gradient.business {
+  background: linear-gradient(
+    135deg,
+    #0c1425 0%,
+    #0f172a 50%,
+    #0c1425 100%
+  );
+}
+
+.gradient.dark {
+  background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #0a0a0a 50%,
+    #000000 100%
+  );
+}
+
+/* CLAUDE - Gradiente premium como Claude */
+.claude.claude {
+  background: linear-gradient(
+    180deg,
+    #0d0d11 0%,
+    #101014 30%,
+    #101014 70%,
+    #0d0d11 100%
+  );
+}
+
+/* ==================== CONTENT ==================== */
+
 .content {
   position: relative;
   z-index: 10;
   width: 100%;
-  min-height: inherit;
-}
-
-/* =============================================
-   VARIANTES DE INTENSIDAD
-   ============================================= */
-
-.minimal {
-  /* Textura muy sutil */
-}
-
-.subtle {
-  /* Textura ligera */
-}
-
-.medium {
-  /* Textura estándar */
-}
-
-.intense {
-  /* Textura más pronunciada */
-}
-
-/* =============================================
-   TEMAS DE COLOR
-   ============================================= */
-
-.dark {
-  background-color: #0a0a0a; /* Gris muy oscuro */
-}
-
-.darker {
-  background-color: #050505; /* Casi negro */
-}
-
-.darkest {
-  background-color: #000000; /* Negro puro */
-}
-
-.gray {
-  background-color: #1a1a1a; /* Gris más claro */
-}
-
-.light-gray {
-  background-color: #2a2a2a; /* Gris claro */
-}
-
-.charcoal {
-  background-color: #151515; /* Carbón */
-}
-
-/* =============================================
-   RESPONSIVIDAD MÓVIL
-   ============================================= */
-
-@media (max-width: 768px) {
-  .fudiBackground {
-    /* Optimizaciones móvil si necesarias */
-  }
-  
-  .canvas {
-    /* Canvas optimizado para móvil */
-    image-rendering: optimizeSpeed;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-  }
-}
-
-@media (max-width: 480px) {
-  .fudiBackground {
-    /* Pantallas muy pequeñas */
-  }
-}
-
-/* =============================================
-   PERFORMANCE Y ACCESIBILIDAD
-   ============================================= */
-
-/* Reduce motion para usuarios sensibles */
-@media (prefers-reduced-motion: reduce) {
-  .canvas {
-    /* Sin animaciones si el usuario las tiene deshabilitadas */
-  }
-}
-
-/* Dark mode support (aunque ya somos dark por defecto) */
-@media (prefers-color-scheme: dark) {
-  .fudiBackground {
-    /* Ajustes adicionales para dark mode */
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  .canvas {
-    /* Ajustes para alto contraste */
-    opacity: 0.3;
-  }
+  height: 100%;
 }

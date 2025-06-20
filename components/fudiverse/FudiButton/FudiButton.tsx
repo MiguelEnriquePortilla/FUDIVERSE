@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import styles from './FudiButton.module.css';
 
-type FudiButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+type FudiButtonVariant = 'primary' | 'secondary' | 'ghost' | 'orange' | 'cyan';
 type FudiButtonSize = 'small' | 'medium' | 'large';
 
 interface FudiButtonProps {

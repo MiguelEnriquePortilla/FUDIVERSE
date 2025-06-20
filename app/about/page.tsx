@@ -1,17 +1,21 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
-  Brain, TrendingUp, Users, Target, 
-  Sparkles, Zap, ChevronRight, BarChart3, 
-  MessageSquare, Rocket, Heart, Lightbulb, 
-  Clock, Globe, Star, Coffee, Shield, Flame
+  Brain, TrendingUp, Users, Target, ChevronRight,
+  BarChart3, MessageSquare, Rocket, Award,
+  Shield, Lightbulb, Clock, Globe, Star,
+  Coffee, Heart, Flame, Crown, Eye, Sparkles
 } from 'lucide-react';
+
+// Nuestros módulos limpios
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiCard } from '@/components/fudiverse/FudiCard';
 import { FudiHeader } from '@/components/fudiverse/FudiHeader';
 
-// Import the CLEAN CSS
+// Import el CSS refinado
 import '@/styles/pages/fudi.about.css';
 
 export default function AboutPage() {
@@ -20,24 +24,24 @@ export default function AboutPage() {
   const founderStories = [
     {
       icon: Coffee,
-      title: "LAS TRINCHERAS",
+      title: "Las trincheras",
       subtitle: "30 años entre comandas y decisiones a las 3AM",
       description: "No nació en un garage de Silicon Valley. Nació entre horas pico y inventarios misteriosos.",
-      color: "#8b5cf6"
+      impact: "Experiencia real en operaciones"
     },
     {
       icon: BarChart3,
-      title: "LOS DATOS PERDIDOS",
+      title: "Los datos perdidos",
       subtitle: "Reportes que nadie entiende, Excel que no cuadra",
       description: "Después de décadas viendo restaurantes brillantes fracasar por falta de inteligencia de datos.",
-      color: "#3b82f6"
+      impact: "Entendiendo el dolor real"
     },
     {
       icon: Lightbulb,
-      title: "LA REVELACIÓN",
-      subtitle: '"Era hora de crear algo REAL"',
+      title: "La revelación",
+      subtitle: '"Era hora de crear algo real"',
       description: "Consultorías de $10K que no resuelven nada. Dashboards que necesitan PhD. Enough.",
-      color: "#fbbf24"
+      impact: "Solución desde la experiencia"
     }
   ];
 
@@ -65,24 +69,33 @@ export default function AboutPage() {
   const beliefs = [
     {
       icon: Users,
-      title: "Todo restaurantero merece acceso a inteligencia de negocios",
-      color: "#10b981"
+      title: "Todo restaurantero merece acceso a inteligencia de negocios"
     },
     {
       icon: MessageSquare,
-      title: "Todo dato tiene una historia que contar",
-      color: "#3b82f6"
+      title: "Todo dato tiene una historia que contar"
     },
     {
       icon: Brain,
-      title: "Toda decisión puede ser más inteligente",
-      color: "#8b5cf6"
+      title: "Toda decisión puede ser más inteligente"
     },
     {
       icon: Heart,
-      title: "Todo sueño culinario merece herramientas para crecer",
-      color: "#ef4444"
+      title: "Todo sueño culinario merece herramientas para crecer"
     }
+  ];
+
+  const painPoints = [
+    { icon: Target, text: "Las ventas que no cuadran" },
+    { icon: BarChart3, text: "Los inventarios misteriosos" },
+    { icon: Shield, text: "Los reportes que nadie entiende" },
+    { icon: Clock, text: "La tecnología que promete y no cumple" }
+  ];
+
+  const fudiSpeak = [
+    { icon: MessageSquare, text: "Oye, tu merma de papa está 3% arriba del mes pasado" },
+    { icon: TrendingUp, text: "Tus meseros top venden 40% más postres, ¿los premiamos?" },
+    { icon: Target, text: "Este proveedor te está cobrando 15% más que el promedio" }
   ];
 
   // Auto-rotate founder stories
@@ -94,39 +107,42 @@ export default function AboutPage() {
   }, [founderStories.length]);
 
   return (
-    <div className="about-container">
+    <div className="about-container-refined">
       
-      {/* ✅ NUEVO: FudiHeader reemplaza header custom */}
-      <FudiHeader currentPage="about" />
-      
-      {/* ✅ UN SOLO BACKGROUND ULTRA LIMPIO */}
+      {/* FUDI Background Limpio - UN SOLO BACKGROUND */}
       <FudiBackground 
-        variant="medium"
-        theme="charcoal"
-        intensity={0.2}
+        variant="gradient"
+        theme="business"
         opacity={1}
         fixed={true}
       />
 
-      {/* Hero Section - Revolution Manifesto */}
-      <section className="about-hero">
-        <div className="hero-content">
-          <div className="hero-badge">
+      {/* Header usando nuestro módulo */}
+      <FudiHeader 
+        currentPage="about"
+        showAuthButtons={true}
+      />
+
+      {/* Hero Section - Refinado */}
+      <section className="hero-refined">
+        <div className="hero-content-refined">
+          
+          <div className="hero-badge-refined">
             <Brain size={16} />
-            <span>INTELIGENCIA PARA RESTAURANTES</span>
+            <span>Inteligencia para restaurantes</span>
           </div>
           
-          <h1 className="hero-title">
-            NO SOMOS OTRO <span className="hero-highlight">SOFTWARE</span>.
+          <h1 className="hero-title-refined">
+            No somos otro <span className="hero-highlight">software</span>.
             <br />
-            SOMOS TU <span className="hero-highlight-2">SOCIO INTELIGENTE</span>.
+            Somos tu <span className="hero-highlight-2">socio inteligente</span>.
           </h1>
           
-          <p className="hero-subtitle">
+          <p className="hero-subtitle-refined">
             La primera IA diseñada específicamente para <strong>restauranteros que quieren entender sus datos</strong> y tomar mejores decisiones
           </p>
 
-          <div className="hero-quote">
+          <div className="hero-quote-refined">
             <Sparkles size={20} />
             <span>"¡No analices datos, escribe una historia de éxito!"</span>
           </div>
@@ -134,257 +150,242 @@ export default function AboutPage() {
       </section>
 
       {/* Origin Story Section */}
-      <section className="origin-section">
-        <div className="section-header">
-          <h2 className="section-title">
+      <section className="section-refined">
+        <div className="section-header-refined">
+          <h2 className="section-title-refined">
             <Brain size={32} />
-            EL ORIGEN
+            El origen
           </h2>
-          <p className="section-subtitle">"DE DATOS A DECISIONES INTELIGENTES"</p>
+          <p className="section-subtitle-refined">"De datos a decisiones inteligentes"</p>
         </div>
 
-        <div className="story-grid">
+        <div className="story-grid-refined">
           {founderStories.map((story, index) => {
             const Icon = story.icon;
             const isActive = activeStory === index;
             
             return (
-              <div
+              <FudiCard 
                 key={index}
-                className={`story-card ${isActive ? 'active' : ''}`}
-                style={{ '--story-color': story.color } as React.CSSProperties}
-                onClick={() => setActiveStory(index)}
+                variant={index === 0 ? "orange" : index === 1 ? "chat" : "cyan"}
+                padding="medium"
+                className={`story-card-refined ${isActive ? 'active' : ''}`}
               >
-                <div className="story-icon">
-                  <Icon size={28} />
+                <div
+                  className="story-content-refined"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => setActiveStory(index)}
+                >
+                  <div className="story-icon-refined">
+                    <Icon size={24} />
+                  </div>
+                  <h3 className="story-title-refined">{story.title}</h3>
+                  <p className="story-subtitle-refined">{story.subtitle}</p>
+                  <p className="story-description-refined">{story.description}</p>
+                  <div className="story-impact-refined">
+                    <span>{story.impact}</span>
+                  </div>
                 </div>
-                
-                <div className="story-content">
-                  <h3 className="story-title">{story.title}</h3>
-                  <p className="story-subtitle">{story.subtitle}</p>
-                  <p className="story-description">{story.description}</p>
-                </div>
-                
-                <div className="story-indicator">
-                  <div className="indicator-dot"></div>
-                </div>
-              </div>
+              </FudiCard>
             );
           })}
         </div>
 
-        {/* Pain Points */}
-        <div className="pain-points">
-          <h3 className="pain-title">Nuestro fundador vivió cada dolor del restaurantero:</h3>
-          <div className="pain-grid">
-            <div className="pain-item">
-              <Target size={20} />
-              <span>Las ventas que no cuadran</span>
-            </div>
-            <div className="pain-item">
-              <BarChart3 size={20} />
-              <span>Los inventarios misteriosos</span>
-            </div>
-            <div className="pain-item">
-              <Shield size={20} />
-              <span>Los reportes que nadie entiende</span>
-            </div>
-            <div className="pain-item">
-              <Zap size={20} />
-              <span>La tecnología que promete y NO cumple</span>
-            </div>
+        {/* Pain Points - Simplificado */}
+        <div className="pain-section-refined">
+          <h3 className="pain-title-refined">Nuestro fundador vivió cada dolor del restaurantero:</h3>
+          <div className="pain-grid-refined">
+            {painPoints.map((pain, index) => {
+              const Icon = pain.icon;
+              return (
+                <div key={index} className="pain-item-refined">
+                  <Icon size={20} />
+                  <span>{pain.text}</span>
+                </div>
+              );
+            })}
           </div>
           
-          <div className="founder-quote">
+          <div className="founder-quote-refined">
             <blockquote>
-              "Después de 30 años entre cocinas y datos, entre Excel y expeditors, entre BI y bistecs... era hora de crear algo REAL"
+              "Después de 30 años entre cocinas y datos, entre Excel y expeditors, entre BI y bistecs... era hora de crear algo real"
             </blockquote>
           </div>
         </div>
       </section>
 
       {/* Mission Section */}
-      <section className="mission-section">
-        <div className="section-header">
-          <h2 className="section-title">
+      <section className="section-refined">
+        <div className="section-header-refined">
+          <h2 className="section-title-refined">
             <Rocket size={32} />
-            LA MISIÓN
+            La misión
           </h2>
-          <p className="section-subtitle">"TRANSFORMAMOS NÚMEROS EN RESULTADOS"</p>
+          <p className="section-subtitle-refined">"Transformamos números en resultados"</p>
         </div>
 
-        <div className="mission-content">
-          <div className="mission-statement">
-            <div className="statement-card">
-              <Globe size={40} />
-              <h3>La primera IA que entiende tu restaurante 🏪</h3>
-              <p>Diseñada específicamente para restauranteros, no adaptada de otras industrias</p>
+        <div className="mission-grid-refined">
+          <FudiCard variant="chat" padding="medium" className="mission-card-refined">
+            <div className="mission-icon-refined">
+              <Globe size={32} />
             </div>
-            
-            <div className="statement-card">
-              <Brain size={40} />
-              <h3>Información clara, no dashboards complicados</h3>
-              <p>FUDI habla tu idioma - conversaciones naturales sobre tu negocio</p>
+            <h3 className="mission-title-refined">La primera IA que entiende tu restaurante</h3>
+            <p className="mission-description-refined">Diseñada específicamente para restauranteros, no adaptada de otras industrias</p>
+          </FudiCard>
+          
+          <FudiCard variant="chat" padding="medium" className="mission-card-refined">
+            <div className="mission-icon-refined">
+              <Brain size={32} />
             </div>
-            
-            <div className="statement-card">
-              <MessageSquare size={40} />
-              <h3>Tu socio de confianza para mejores decisiones</h3>
-              <p>Disponible 24/7 para ayudarte a entender qué está pasando en tu restaurante</p>
+            <h3 className="mission-title-refined">Información clara, no dashboards complicados</h3>
+            <p className="mission-description-refined">FUDI habla tu idioma - conversaciones naturales sobre tu negocio</p>
+          </FudiCard>
+          
+          <FudiCard variant="chat" padding="medium" className="mission-card-refined">
+            <div className="mission-icon-refined">
+              <MessageSquare size={32} />
             </div>
-          </div>
+            <h3 className="mission-title-refined">Tu socio de confianza para mejores decisiones</h3>
+            <p className="mission-description-refined">Disponible 24/7 para ayudarte a entender qué está pasando en tu restaurante</p>
+          </FudiCard>
+        </div>
 
-          {/* FUDI Speaking Examples */}
-          <div className="fudi-speaks">
-            <h3 className="speaks-title">
-              <MessageSquare size={24} />
-              ASÍ HABLA FUDIVERSE AI
-            </h3>
-            <div className="speaks-examples">
-              <div className="speak-bubble">
-                <MessageSquare size={16} />
-                <span>"Oye, tu merma de papa está 3% arriba del mes pasado"</span>
-              </div>
-              <div className="speak-bubble">
-                <TrendingUp size={16} />
-                <span>"Tus meseros top venden 40% más postres, ¿los premiamos?"</span>
-              </div>
-              <div className="speak-bubble">
-                <Target size={16} />
-                <span>"Este proveedor te está cobrando 15% más que el promedio"</span>
-              </div>
-            </div>
+        {/* FUDI Speaking Examples */}
+        <div className="speak-section-refined">
+          <h3 className="speak-title-refined">
+            <MessageSquare size={24} />
+            Así habla Fudiverse AI
+          </h3>
+          <div className="speak-grid-refined">
+            {fudiSpeak.map((speak, index) => {
+              const Icon = speak.icon;
+              return (
+                <div key={index} className="speak-bubble-refined">
+                  <Icon size={20} />
+                  <span>"{speak.text}"</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Why We Exist Section */}
-      <section className="purpose-section">
-        <div className="section-header">
-          <h2 className="section-title">
-            <Heart size={32} />
-            POR QUÉ EXISTIMOS
+      {/* Why We Exist Section - HERO SIZED */}
+      <section className="section-refined purpose-hero">
+        <div className="section-header-refined">
+          <h2 className="section-title-refined">
+            <Heart size={48} />
+            Por qué existimos
           </h2>
-          <p className="section-subtitle">"PORQUE CADA RESTAURANTE MERECE BRILLAR"</p>
+          <p className="section-subtitle-refined">"Porque cada restaurante merece brillar"</p>
         </div>
 
-        <div className="beliefs-grid">
+        <div className="beliefs-grid-refined">
           {beliefs.map((belief, index) => {
             const Icon = belief.icon;
             return (
-              <div
-                key={index}
-                className="belief-card"
-                style={{ '--belief-color': belief.color } as React.CSSProperties}
-              >
-                <div className="belief-icon">
+              <FudiCard key={index} variant="ghost" padding="medium" className="belief-card-refined">
+                <div className="belief-icon-refined">
                   <Icon size={24} />
                 </div>
-                <p className="belief-text">{belief.title}</p>
-              </div>
+                <p className="belief-text-refined">{belief.title}</p>
+              </FudiCard>
             );
           })}
         </div>
 
-        <div className="purpose-quote">
+        <div className="purpose-quote-refined">
           <blockquote>
-            "No vinimos a hacer software. Vinimos a cambiar <span className="highlight">VIDAS</span>"
+            "No vinimos a hacer software. Vinimos a cambiar <span className="highlight">vidas</span>"
           </blockquote>
         </div>
       </section>
 
       {/* Team Section */}
-      <section className="team-section">
-        <div className="section-header">
-          <h2 className="section-title">
+      <section className="section-refined">
+        <div className="section-header-refined">
+          <h2 className="section-title-refined">
             <Users size={32} />
-            NUESTRO EQUIPO
+            Nuestro equipo
           </h2>
-          <p className="section-subtitle">"VETERANOS CON VISIÓN"</p>
+          <p className="section-subtitle-refined">"Veteranos con visión"</p>
         </div>
 
-        <div className="team-stats">
+        <div className="team-stats-refined">
           {teamStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div key={index} className="stat-card">
-                <div className="stat-icon">
-                  <Icon size={32} />
+              <FudiCard key={index} variant="chat" padding="medium" className="stat-card-refined">
+                <div className="stat-icon-refined">
+                  <Icon size={28} />
                 </div>
-                <div className="stat-content">
-                  <div className="stat-value">{stat.value}</div>
-                  <div className="stat-label">{stat.label}</div>
-                  <div className="stat-description">{stat.description}</div>
-                </div>
-              </div>
+                <div className="stat-value-refined">{stat.value}</div>
+                <div className="stat-label-refined">{stat.label}</div>
+                <div className="stat-description-refined">{stat.description}</div>
+              </FudiCard>
             );
           })}
         </div>
 
-        <div className="team-description">
-          <div className="team-points">
-            <div className="team-point">
-              <Star size={20} />
-              <span>100+ años de experiencia COMBINADA en restaurantes</span>
-            </div>
-            <div className="team-point">
-              <Brain size={20} />
-              <span>Líderes en inteligencia de negocios y análisis</span>
-            </div>
-            <div className="team-point">
-              <Rocket size={20} />
-              <span>Visionarios que entienden tecnología Y servicio</span>
-            </div>
-            <div className="team-point">
-              <Heart size={20} />
-              <span>Obsesionados con tu éxito (no es marketing, es verdad)</span>
-            </div>
+        <div className="team-points-refined">
+          <div className="team-point-refined">
+            <Star size={20} />
+            <span>100+ años de experiencia combinada en restaurantes</span>
+          </div>
+          <div className="team-point-refined">
+            <Brain size={20} />
+            <span>Líderes en inteligencia de negocios y análisis</span>
+          </div>
+          <div className="team-point-refined">
+            <Rocket size={20} />
+            <span>Visionarios que entienden tecnología y servicio</span>
+          </div>
+          <div className="team-point-refined">
+            <Heart size={20} />
+            <span>Obsesionados con tu éxito (no es marketing, es verdad)</span>
           </div>
         </div>
       </section>
 
-      {/* Revolution CTA Section */}
-      <section className="revolution-cta">
-        <div className="cta-content">
-          <div className="cta-badge">
-            <Flame size={16} />
-            <span>LA REVOLUCIÓN</span>
-          </div>
+      {/* Final CTA */}
+      <section className="final-cta-refined">
+        <div className="cta-badge-refined">
+          <Flame size={16} />
+          <span>La revolución</span>
+        </div>
+        
+        <h2 className="cta-title-refined">
+          ¿Listo para ser parte de la <span className="highlight">historia</span>?
+        </h2>
+        
+        <p className="cta-description-refined">
+          El futuro de los restaurantes se escribe hoy. Y tú eres el protagonista.
+        </p>
+        
+        <div className="cta-actions-refined">
+          <FudiButton 
+            variant="orange" 
+            size="large" 
+            href="/register"
+            icon={<Rocket size={20} />}
+          >
+            Únete a la revolución
+          </FudiButton>
           
-          <h2 className="cta-title">
-            ¿LISTO PARA SER PARTE DE LA <span className="highlight">HISTORIA</span>?
-          </h2>
-          
-          <p className="cta-description">
-            El futuro de los restaurantes se escribe HOY. Y tú eres el protagonista.
-          </p>
-          
-          <div className="cta-actions">
-            <FudiButton 
-              variant="primary" 
-              size="large" 
-              href="/register"
-              icon={<Rocket size={20} />}
-            >
-              ÚNETE A LA REVOLUCIÓN
-            </FudiButton>
-            
-            <FudiButton 
-              variant="secondary" 
-              size="large" 
-              href="/features"
-              icon={<Brain size={20} />}
-            >
-              VER EL ARSENAL
-            </FudiButton>
-          </div>
-          
-          {/* Trust Quote */}
-          <div className="trust-quote">
-            <blockquote>
-              "Únete a los <strong>+500 restaurantes</strong> que ya viven en el futuro"
-            </blockquote>
-          </div>
+          <FudiButton 
+            variant="cyan" 
+            size="large" 
+            href="/features"
+            icon={<Brain size={20} />}
+          >
+            Ver el arsenal
+          </FudiButton>
+        </div>
+        
+        <div className="trust-quote-refined">
+          <blockquote>
+            "Únete a los <strong>+500 restaurantes</strong> que ya viven en el futuro"
+          </blockquote>
         </div>
       </section>
     </div>

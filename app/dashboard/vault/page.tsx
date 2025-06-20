@@ -1,769 +1,778 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Calendar, Search, Plus, BookOpen, FileText, DollarSign, Users,
-  BarChart3, Archive, Settings, Brain, Clock, Star, Filter,
-  ChefHat, Receipt, Briefcase, TrendingUp, AlertCircle, CheckCircle,
-  Phone, Mail, MapPin, Globe, Zap, Crown, Target, Activity,
-  PlusCircle, Edit3, Copy, Download, Share2, Heart, Eye,
-  ArrowRight, ArrowLeft, MoreHorizontal, Mic, Bell, Sun, Moon
+  Search, Plus, FileText, DollarSign, Users, Archive, Settings, Brain, 
+  ChefHat, Receipt, Briefcase, Filter, Star, Clock, Eye, Download, 
+  Share2, MoreHorizontal, MessageCircle, Sparkles, Folder, Grid3X3,
+  List, SortDesc, Upload, Bookmark, Tag, Calendar, TrendingUp, Mic, 
+  Send, X, Minimize2, Maximize2, Zap, Home, Building2, ClipboardList,
+  Package, Shield, BarChart3, Wrench, Menu, Bell, UserCircle, AlertCircle
 } from 'lucide-react';
 import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import '@/styles/pages/FudiVault.css';
 
-interface Section {
-  id: string;
-  name: string;
-  icon: React.ComponentType<{ size?: number }>;
-  color: string;
-  urgent: number;
-  description: string;
-}
-
-interface AgendaItem {
-  time: string;
-  title: string;
-  type: string;
-  priority: 'urgent' | 'high' | 'medium' | 'low';
-  fudiNote?: string;
-  location?: string;
-  contact?: string;
-  phone?: string;
-  documents?: string[];
-  autoActions?: string[];
-  linkedRecipes?: string[];
-  candidates?: string[];
-}
-
-interface Suggestion {
-  type: string;
-  title: string;
-  message: string;
-  action: string;
-  urgency: 'high' | 'medium' | 'low';
-  icon: React.ComponentType<{ size?: number }>;
-}
-
-interface Document {
-  name: string;
-  type: string;
-  section: string;
-  modified: string;
-  fudiTags: string[];
-  size: string;
-  status: string;
-}
-
-interface QuickStat {
-  label: string;
-  value: string;
-  change: string;
-  positive: boolean;
-}
-
-export default function FudiVaultFilofax() {
-  const [activeSection, setActiveSection] = useState('agenda');
-  const [currentDate, setCurrentDate] = useState(new Date());
+export default function FudiVaultOffice() {
+  // Main states
   const [searchQuery, setSearchQuery] = useState('');
-  const [fudiListening, setFudiListening] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
-  const [fudiPanelOpen, setFudiPanelOpen] = useState(false);
-  const [fudiPanelExpanded, setFudiPanelExpanded] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
+  
+  // Mobile states
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileRightPanelOpen, setMobileRightPanelOpen] = useState(false);
+  
+  // ASK FUDI States
+  const [isFudiOpen, setIsFudiOpen] = useState(false);
+  const [fudiMessages, setFudiMessages] = useState<any[]>([]);
+  const [fudiInput, setFudiInput] = useState('');
+  const [isFudiTyping, setIsFudiTyping] = useState(false);
+  
+  const fudiInputRef = useRef<HTMLInputElement>(null);
 
-  // FUDI sections with smart organization
-  const sections: Section[] = [
-    {
-      id: 'agenda',
-      name: 'Agenda',
-      icon: Calendar,
-      color: '#00ffff',
-      urgent: 3,
-      description: 'Tu día organizado por FUDI'
+  // ✅ LOGOUT FUNCTION
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('fudi_token');
+      localStorage.removeItem('user_data');
+      localStorage.removeItem('restaurant_data');
+      localStorage.removeItem('dashboard_cache');
+      console.log('Logout successful - redirecting to home');
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Error during logout process:', error);
+      window.location.href = '/';
+    }
+  };
+
+  // 🏢 CATEGORÍAS DE OFICINA - RESTAURANTE
+  const officeCategories = [
+    { 
+      id: 'all', 
+      label: 'Todos los documentos', 
+      icon: Home, 
+      count: 89,
+      description: 'Vista general de todos los documentos'
     },
-    {
-      id: 'contratos',
-      name: 'Contratos',
-      icon: FileText,
-      color: '#8b5cf6',
-      urgent: 1,
-      description: 'Documentos legales y acuerdos'
-    },
-    {
-      id: 'facturas',
-      name: 'Facturas',
-      icon: Receipt,
-      color: '#10b981',
-      urgent: 0,
-      description: 'Gastos e ingresos'
-    },
-    {
-      id: 'recetas',
-      name: 'Recetas',
-      icon: ChefHat,
-      color: '#f97316',
-      urgent: 0,
-      description: 'Tu arsenal culinario'
-    },
-    {
-      id: 'finanzas',
-      name: 'Finanzas',
-      icon: DollarSign,
-      color: '#eab308',
-      urgent: 2,
-      description: 'P&L y cash flow'
-    },
-    {
-      id: 'staff',
-      name: 'Staff',
-      icon: Users,
-      color: '#ec4899',
-      urgent: 1,
-      description: 'Tu equipo y recursos humanos'
-    },
-    {
-      id: 'insights',
-      name: 'Insights',
-      icon: Brain,
+    { 
+      id: 'operations', 
+      label: 'Operaciones Diarias', 
+      icon: ClipboardList, 
+      count: 23,
       color: '#06b6d4',
-      urgent: 0,
-      description: 'Análisis e inteligencia de FUDI'
+      description: 'Checklists, procedimientos, turnos'
     },
-    {
-      id: 'archivo',
-      name: 'Archivo',
-      icon: Archive,
-      color: '#64748b',
-      urgent: 0,
-      description: 'Historial y documentos antiguos'
+    { 
+      id: 'finances', 
+      label: 'Finanzas & Contabilidad', 
+      icon: DollarSign, 
+      count: 18,
+      color: '#10b981',
+      description: 'Facturas, gastos, reportes, impuestos'
+    },
+    { 
+      id: 'staff', 
+      label: 'Personal & RH', 
+      icon: Users, 
+      count: 15,
+      color: '#ec4899',
+      description: 'Contratos, horarios, capacitaciones'
+    },
+    { 
+      id: 'kitchen', 
+      label: 'Cocina & Menú', 
+      icon: ChefHat, 
+      count: 31,
+      color: '#f97316',
+      description: 'Recetas, costos, especificaciones'
+    },
+    { 
+      id: 'inventory', 
+      label: 'Inventarios & Compras', 
+      icon: Package, 
+      count: 12,
+      color: '#8b5cf6',
+      description: 'Stock, pedidos, recibos, mermas'
+    },
+    { 
+      id: 'legal', 
+      label: 'Administración Legal', 
+      icon: Shield, 
+      count: 8,
+      color: '#ef4444',
+      description: 'Licencias, permisos, seguros'
+    },
+    { 
+      id: 'reports', 
+      label: 'Reportes & Control', 
+      icon: BarChart3, 
+      count: 14,
+      color: '#06b6d4',
+      description: 'Ventas, análisis, métricas'
+    },
+    { 
+      id: 'maintenance', 
+      label: 'Mantenimiento', 
+      icon: Wrench, 
+      count: 6,
+      color: '#84cc16',
+      description: 'Equipos, reparaciones, checklist'
     }
   ];
 
-  // Today's agenda items with FUDI intelligence
-  const agendaItems: AgendaItem[] = [
-    {
-      time: '09:00',
-      title: 'Reunión Proveedor Carne Premium',
-      type: 'meeting',
-      priority: 'urgent',
-      fudiNote: 'FUDI sugiere: Negocia precios por volumen, el mercado está al alza',
-      location: 'Oficina principal',
-      contact: 'Carlos Mendoza',
-      phone: '555-0123'
-    },
-    {
-      time: '11:30',
-      title: 'Revisar Costos Menú Diciembre',
-      type: 'task',
-      priority: 'high',
-      fudiNote: 'Maíz subió 15%, considera ajustar precios de tacos',
-      documents: ['Menu_Costs_Nov.xlsx', 'Supplier_Prices_Dec.pdf']
-    },
-    {
-      time: '14:00',
-      title: 'Entrevista Chef Asistente',
-      type: 'interview',
-      priority: 'medium',
-      fudiNote: 'Candidato fuerte en parrilla, débil en repostería',
-      candidates: ['María González', 'Roberto Silva']
-    },
-    {
-      time: '16:00',
-      title: '⚠️ SAT Deadline Reminder',
-      type: 'deadline',
-      priority: 'urgent',
-      fudiNote: 'Formulario R1 listo en sección Contratos, solo falta firma',
-      autoActions: ['Open SAT Form', 'Prepare Documents']
-    },
-    {
-      time: '18:30',
-      title: 'Planning Menú Navideño',
-      type: 'planning',
-      priority: 'medium',
-      fudiNote: 'Basado en ventas 2023: Bacalao +340%, Romeritos +89%',
-      linkedRecipes: ['Bacalao Navideño', 'Romeritos Premium', 'Ponche Especial']
-    }
-  ];
-
-  // Recent documents with smart categorization
-  const recentDocs: Document[] = [
-    {
-      name: 'Contrato_AcmeFoods_2024.pdf',
-      type: 'contract',
-      section: 'contratos',
-      modified: '2 horas',
-      fudiTags: ['proveedor', 'carne', 'urgente'],
-      size: '2.4 MB',
-      status: 'pending_signature'
-    },
-    {
-      name: 'Receta_Taco_Supremo_v3.md',
-      type: 'recipe',
-      section: 'recetas',
-      modified: '5 horas',
-      fudiTags: ['bestseller', 'high-margin', 'trending'],
-      size: '156 KB',
-      status: 'updated'
-    },
-    {
-      name: 'SAT_Formulario_R1_Dic2024.pdf',
-      type: 'form',
-      section: 'contratos',
-      modified: '1 día',
-      fudiTags: ['sat', 'deadline', 'ready'],
-      size: '890 KB',
-      status: 'ready'
-    },
-    {
-      name: 'Análisis_Competencia_Local.xlsx',
-      type: 'analysis',
-      section: 'insights',
-      modified: '3 días',
-      fudiTags: ['intel', 'precios', 'competencia'],
-      size: '4.1 MB',
-      status: 'completed'
-    }
-  ];
-
-  // FUDI smart suggestions
-  const fudiSuggestions: Suggestion[] = [
-    {
-      type: 'alert',
-      title: 'Costo de Maíz Subiendo',
-      message: 'Impacto estimado: +$2,340/mes. ¿Ajustar precios de tacos?',
-      action: 'Ver Análisis',
-      urgency: 'high',
-      icon: TrendingUp
-    },
-    {
-      type: 'opportunity',
-      title: 'Nueva Receta Trending',
-      message: 'Tacos de Birria están viral. Margen potencial: 67%',
-      action: 'Ver Receta',
-      urgency: 'medium',
-      icon: ChefHat
-    },
-    {
-      type: 'reminder',
-      title: 'Inventario Bajo',
-      message: 'Chile guajillo: 3 días restantes. ¿Ordenar ahora?',
-      action: 'Hacer Pedido',
-      urgency: 'medium',
-      icon: AlertCircle
-    }
-  ];
-
-  // Quick stats for dashboard
-  const quickStats: QuickStat[] = [
-    { label: 'Ventas Hoy', value: '$24,580', change: '+12%', positive: true },
-    { label: 'Margen Promedio', value: '68%', change: '+3%', positive: true },
-    { label: 'Documentos Pendientes', value: '7', change: '-2', positive: true },
-    { label: 'Próximo Deadline', value: '3 días', change: 'SAT R1', positive: false }
-  ];
-
-  // Responsive handling
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < 768);
-      setIsTablet(width >= 768 && width < 1024);
-      
-      // Reset panel states on resize
-      if (width >= 1024) {
-        setFudiPanelOpen(false);
-        setFudiPanelExpanded(false);
+  // 📄 MOCK DOCUMENTS DATA - RESTAURANTE
+  const generateOfficeDocuments = () => {
+    return [
+      {
+        id: '1', 
+        name: 'Manual de Apertura Diaria', 
+        type: 'pdf', 
+        category: 'operations',
+        size: '2.1 MB', 
+        modified: '2 horas', 
+        preview: '/api/placeholder/400/300',
+        description: 'Procedimientos estándar para apertura del restaurante. Incluye checklist de limpieza, verificación de equipos y preparación inicial.',
+        tags: ['apertura', 'procedimientos', 'diario'], 
+        status: 'active',
+        author: 'Chef Miguel',
+        views: 245,
+        isStarred: true
+      },
+      {
+        id: '2', 
+        name: 'Receta Secreta - Salsa de la Casa', 
+        type: 'markdown', 
+        category: 'kitchen',
+        size: '156 KB', 
+        modified: '4 horas', 
+        preview: '/api/placeholder/400/300',
+        description: 'Receta exclusiva de la salsa de la casa. Tiempo de preparación: 45 min. Rendimiento: 2 litros.',
+        tags: ['receta', 'secreta', 'salsa'], 
+        status: 'confidential',
+        author: 'Chef Ana',
+        views: 89,
+        isStarred: true
+      },
+      {
+        id: '3', 
+        name: 'Reporte Fiscal Diciembre 2024', 
+        type: 'excel', 
+        category: 'finances',
+        size: '890 KB', 
+        modified: '1 día', 
+        preview: '/api/placeholder/400/300',
+        description: 'Declaración fiscal mensual con desglose de ventas, gastos deducibles e impuestos.',
+        tags: ['fiscal', 'diciembre', 'sat'], 
+        status: 'pending',
+        author: 'Contador López',
+        views: 23,
+        isStarred: false
+      },
+      {
+        id: '4', 
+        name: 'Contrato - Proveedor Carnes Premium', 
+        type: 'pdf', 
+        category: 'inventory',
+        size: '1.2 MB', 
+        modified: '3 días', 
+        preview: '/api/placeholder/400/300',
+        description: 'Contrato anual con CarnesSelect para suministro de cortes premium. Vigencia hasta dic 2025.',
+        tags: ['contrato', 'proveedor', 'carnes'], 
+        status: 'signed',
+        author: 'Administración',
+        views: 67,
+        isStarred: false
+      },
+      {
+        id: '5', 
+        name: 'Horarios del Personal - Enero', 
+        type: 'excel', 
+        category: 'staff',
+        size: '234 KB', 
+        modified: '1 semana', 
+        preview: '/api/placeholder/400/300',
+        description: 'Programación de turnos para todo el personal del restaurante durante enero 2025.',
+        tags: ['horarios', 'personal', 'enero'], 
+        status: 'approved',
+        author: 'RH - Carmen',
+        views: 156,
+        isStarred: false
+      },
+      {
+        id: '6', 
+        name: 'Licencia de Funcionamiento', 
+        type: 'pdf', 
+        category: 'legal',
+        size: '1.8 MB', 
+        modified: '2 semanas', 
+        preview: '/api/placeholder/400/300',
+        description: 'Licencia municipal vigente. Renovación automática. Próximo vencimiento: marzo 2026.',
+        tags: ['licencia', 'funcionamiento', 'municipal'], 
+        status: 'valid',
+        author: 'Legal',
+        views: 34,
+        isStarred: true
+      },
+      {
+        id: '7', 
+        name: 'Análisis de Ventas - Semana 3', 
+        type: 'pdf', 
+        category: 'reports',
+        size: '945 KB', 
+        modified: '3 días', 
+        preview: '/api/placeholder/400/300',
+        description: 'Reporte semanal de ventas con comparativo vs semana anterior y análisis de platillos estrella.',
+        tags: ['ventas', 'semanal', 'análisis'], 
+        status: 'recent',
+        author: 'Analytics',
+        views: 78,
+        isStarred: false
+      },
+      {
+        id: '8', 
+        name: 'Checklist Mantenimiento Enero', 
+        type: 'excel', 
+        category: 'maintenance',
+        size: '423 KB', 
+        modified: '5 días', 
+        preview: '/api/placeholder/400/300',
+        description: 'Lista de verificación mensual para mantenimiento preventivo de todos los equipos.',
+        tags: ['mantenimiento', 'equipos', 'preventivo'], 
+        status: 'in_progress',
+        author: 'Mantenimiento',
+        views: 45,
+        isStarred: false
       }
-    };
+    ];
+  };
 
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+  // Initialize documents
+  useEffect(() => {
+    setDocuments(generateOfficeDocuments());
   }, []);
 
-  // Navigation functions
-  const navigateTo = (path: string) => {
-    console.log('Navegating to:', path);
-    // In real implementation, this would be router navigation
-    if (path === '/dashboard/chat') {
-      window.location.href = path;
+  // Filter documents
+  const filteredDocuments = documents.filter(doc => {
+    const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         doc.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         doc.tags.some((tag: string) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesCategory = selectedCategory === 'all' || doc.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  // Get current category info
+  const currentCategory = officeCategories.find(cat => cat.id === selectedCategory) || officeCategories[0];
+
+  // Get file type icon and color
+  const getFileTypeInfo = (type: string) => {
+    switch (type) {
+      case 'pdf': return { icon: '📄', color: '#ef4444' };
+      case 'excel': return { icon: '📊', color: '#10b981' };
+      case 'markdown': return { icon: '📝', color: '#06b6d4' };
+      case 'word': return { icon: '📄', color: '#2563eb' };
+      default: return { icon: '📄', color: '#6b7280' };
     }
   };
 
-  const formatTime = (timeStr: string): string => {
-    const [hours, minutes] = timeStr.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
-
-  const getPriorityColor = (priority: string): string => {
-    switch(priority) {
-      case 'urgent': return '#ef4444';
-      case 'high': return '#f97316';
-      case 'medium': return '#eab308';
-      default: return '#64748b';
+  // Get status info
+  const getStatusInfo = (status: string) => {
+    switch (status) {
+      case 'active': return { color: '#10b981', text: 'Activo' };
+      case 'pending': return { color: '#f59e0b', text: 'Pendiente' };
+      case 'confidential': return { color: '#ef4444', text: 'Confidencial' };
+      case 'signed': return { color: '#06b6d4', text: 'Firmado' };
+      case 'approved': return { color: '#10b981', text: 'Aprobado' };
+      case 'valid': return { color: '#10b981', text: 'Vigente' };
+      case 'recent': return { color: '#8b5cf6', text: 'Reciente' };
+      case 'in_progress': return { color: '#f59e0b', text: 'En Proceso' };
+      default: return { color: '#6b7280', text: 'Normal' };
     }
   };
 
-  const getStatusIcon = (status: string): string => {
-    switch(status) {
-      case 'pending_signature': return '⚠️';
-      case 'updated': return '⭐';
-      case 'ready': return '✅';
-      case 'completed': return '✅';
-      default: return '📄';
-    }
+  // Handle FUDI quick responses
+  const handleFudiQuickResponse = (query: string) => {
+    const responses = [
+      "📊 Encontré 3 reportes de ventas de esta semana. ¿Cuál necesitas revisar?",
+      "🍳 Tu receta de salsa secreta está en la carpeta de Cocina. ¿La abro?",
+      "💰 Tienes 2 facturas pendientes de aprobar y 1 reporte fiscal por enviar.",
+      "👥 El horario de enero ya está listo. ¿Necesitas hacer algún ajuste?",
+      "📋 Faltan 3 items en el checklist de mantenimiento de esta semana."
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
   };
 
-  const handleSectionChange = (sectionId: string) => {
-    setActiveSection(sectionId);
-    
-    // Close mobile panel when section changes
-    if (isMobile) {
-      setFudiPanelExpanded(false);
-    }
-  };
+  // LEFT SIDEBAR - FACEBOOK STYLE
+  const LeftSidebar = () => (
+    <div className={`office-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+      {/* User Profile Section */}
+      <div className="sidebar-profile">
+        <div className="profile-avatar">
+          <UserCircle size={40} />
+        </div>
+        <div className="profile-info">
+          <h3>Restaurante Los Compadres</h3>
+          <p>Mikelon - Administrador</p>
+        </div>
+      </div>
 
-  const toggleFudiPanel = () => {
-    if (isTablet) {
-      setFudiPanelOpen(!fudiPanelOpen);
-    } else if (isMobile) {
-      setFudiPanelExpanded(!fudiPanelExpanded);
-    }
-  };
+      {/* Quick Search */}
+      <div className="sidebar-search">
+        <div className="search-container">
+          <Search size={16} />
+          <input 
+            type="text" 
+            placeholder="Buscar documentos..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
 
-  const handleVoiceSearch = () => {
-    setFudiListening(true);
-    setSearchQuery('🎤 Escuchando...');
-    
-    // Simulate voice recognition
-    setTimeout(() => {
-      setFudiListening(false);
-      setSearchQuery('contrato proveedor carne');
-      
-      // Simulate FUDI response
-      setTimeout(() => {
-        alert('🧠 FUDI: Encontré 3 contratos de proveedores de carne. ¿Te muestro el más reciente?');
-        setSearchQuery('');
-      }, 1000);
-    }, 2000);
-  };
+      {/* Quick Actions */}
+      <div className="sidebar-actions">
+        <button className="action-button primary">
+          <Plus size={16} />
+          <span>Nuevo Documento</span>
+        </button>
+        <button className="action-button secondary">
+          <Upload size={16} />
+          <span>Subir Archivo</span>
+        </button>
+      </div>
 
-  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      const query = searchQuery.trim();
-      if (query && !fudiListening) {
-        alert(`🧠 FUDI: Buscando "${query}"... Esta funcionalidad estará disponible pronto.`);
-      }
-    }
-  };
+      {/* Categories Navigation */}
+      <div className="sidebar-nav">
+        <div className="nav-section">
+          <h4>Mi Oficina</h4>
+          <div className="nav-items">
+            {officeCategories.map((category) => {
+              const IconComponent = category.icon;
+              const isActive = selectedCategory === category.id;
+              
+              return (
+                <button
+                  key={category.id}
+                  className={`nav-item ${isActive ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(category.id)}
+                  title={category.description}
+                >
+                  <div className="nav-icon" style={{ color: category.color || '#6b7280' }}>
+                    <IconComponent size={20} />
+                  </div>
+                  <div className="nav-content">
+                    <span className="nav-label">{category.label}</span>
+                    <span className="nav-description">{category.description}</span>
+                  </div>
+                  <span className="nav-count">{category.count}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-  // Interactive functions
-  const addNewItem = () => {
-    alert('🎯 Esta función estará disponible en la versión completa de fudiVAULT');
-  };
-
-  const filterItems = () => {
-    alert('🔍 Filtros inteligentes coming soon');
-  };
-
-  const openSettings = () => {
-    alert('⚙️ Configuración de fudiVAULT coming soon');
-  };
-
-  const previousDay = () => {
-    alert('📅 Navegación temporal estará disponible pronto');
-  };
-
-  const nextDay = () => {
-    alert('📅 Navegación temporal estará disponible pronto');
-  };
-
-  const quickAddEvent = () => {
-    alert('⚡ Quick add con AI estará disponible pronto');
-  };
-
-  const notifyWhenReady = (sectionName: string) => {
-    alert(`🔔 ¡Perfecto! Te notificaremos cuando la sección ${sectionName} esté lista en fudiVAULT.`);
-  };
-
-  // Render section content
-  const renderSectionContent = () => {
-    switch (activeSection) {
-      case 'agenda':
-        return (
-          <div className="agenda-content">
-            {/* Date Navigation */}
-            <div className="date-nav">
-              <button className="nav-arrow" onClick={previousDay}>
-                <ArrowLeft size={16} />
-              </button>
-              <div className="current-date">
-                <div className="date-main">Miércoles, 15 Junio 2025</div>
-                <div className="date-sub">{agendaItems.length} eventos programados</div>
+        {/* Recent Activity */}
+        <div className="nav-section">
+          <h4>Actividad Reciente</h4>
+          <div className="recent-items">
+            <div className="recent-item">
+              <div className="recent-icon">📄</div>
+              <div className="recent-info">
+                <span>Manual de Apertura</span>
+                <small>Editado hace 2h</small>
               </div>
-              <button className="nav-arrow" onClick={nextDay}>
-                <ArrowRight size={16} />
-              </button>
             </div>
-
-            {/* Agenda Items */}
-            <div className="agenda-items">
-              {agendaItems.map((item, idx) => (
-                <div key={idx} className={`agenda-item ${item.priority}`}>
-                  <div className="item-time">
-                    <div className="time-main">{formatTime(item.time)}</div>
-                    <div 
-                      className="time-indicator" 
-                      style={{ backgroundColor: getPriorityColor(item.priority) }}
-                    ></div>
-                  </div>
-                  
-                  <div className="item-content">
-                    <div className="item-header">
-                      <h4>{item.title}</h4>
-                      <div className="item-type">{item.type}</div>
-                    </div>
-                    
-                    {item.fudiNote && (
-                      <div className="fudi-note">
-                        <Brain size={14} />
-                        <span>{item.fudiNote}</span>
-                      </div>
-                    )}
-                    
-                    {item.location && (
-                      <div className="item-location">
-                        <MapPin size={12} />
-                        <span>{item.location}</span>
-                      </div>
-                    )}
-                    
-                    {item.contact && (
-                      <div className="item-contact">
-                        <Phone size={12} />
-                        <span>{item.contact}</span>
-                        {item.phone && <span> • {item.phone}</span>}
-                      </div>
-                    )}
-                    
-                    {item.documents && (
-                      <div className="item-documents">
-                        {item.documents.map((doc, docIdx) => (
-                          <span key={docIdx} className="doc-link">{doc}</span>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {item.autoActions && (
-                      <div className="auto-actions">
-                        {item.autoActions.map((action, actionIdx) => (
-                          <button key={actionIdx} className="auto-action">
-                            <Zap size={12} />
-                            {action}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Quick Add */}
-            <div className="quick-add">
-              <button className="quick-add-btn" onClick={quickAddEvent}>
-                <PlusCircle size={16} />
-                <span>Agregar evento rápido</span>
-              </button>
+            <div className="recent-item">
+              <div className="recent-icon">📊</div>
+              <div className="recent-info">
+                <span>Reporte de Ventas</span>
+                <small>Creado hace 1d</small>
+              </div>
             </div>
           </div>
-        );
-        
-      default:
-        const section = sections.find(s => s.id === activeSection);
-        const IconComponent = section?.icon || FileText;
-        
-        return (
-          <div className="section-placeholder">
-            <div style={{ fontSize: '4rem', marginBottom: '2rem' }}>
-              <IconComponent size={48} />
+        </div>
+      </div>
+
+      {/* Sidebar Footer */}
+      <div className="sidebar-footer">
+        <button className="footer-button">
+          <Settings size={16} />
+          <span>Configuración</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  // DOCUMENT CARD - FACEBOOK POST STYLE
+  const DocumentCard = ({ doc }: { doc: any }) => {
+    const fileInfo = getFileTypeInfo(doc.type);
+    const statusInfo = getStatusInfo(doc.status);
+    
+    return (
+      <div className="document-card-office">
+        {/* Card Header */}
+        <div className="card-header">
+          <div className="doc-author">
+            <div className="author-avatar">
+              <UserCircle size={32} />
             </div>
-            <h3>Sección {section?.name}</h3>
-            <p>{section?.description}</p>
-            <p>Esta sección estará disponible en la versión completa de fudiVAULT.</p>
-            <button 
-              className="notify-btn" 
-              onClick={() => notifyWhenReady(section?.name || 'desconocida')}
-            >
-              <Bell size={16} />
-              Notificarme cuando esté listo
+            <div className="author-info">
+              <h4>{doc.author}</h4>
+              <span className="doc-timestamp">Editado hace {doc.modified}</span>
+            </div>
+          </div>
+          
+          <div className="card-actions">
+            <button className="action-btn">
+              <MoreHorizontal size={16} />
             </button>
           </div>
-        );
-    }
+        </div>
+
+        {/* Document Preview */}
+        <div className="doc-preview-office">
+          <div className="preview-container">
+            <div className="preview-placeholder">
+              <div className="file-type-indicator" style={{ color: fileInfo.color }}>
+                <span className="file-icon">{fileInfo.icon}</span>
+                <span className="file-type">{doc.type.toUpperCase()}</span>
+              </div>
+              <div className="preview-overlay">
+                <button className="preview-action">
+                  <Eye size={20} />
+                  Ver documento
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Status Badge */}
+          <div className="status-badge" style={{ backgroundColor: statusInfo.color }}>
+            {statusInfo.text}
+          </div>
+        </div>
+
+        {/* Document Info */}
+        <div className="doc-content">
+          <h3 className="doc-title">{doc.name}</h3>
+          <p className="doc-description">{doc.description}</p>
+          
+          <div className="doc-meta">
+            <div className="meta-item">
+              <span className="meta-label">Tamaño:</span>
+              <span className="meta-value">{doc.size}</span>
+            </div>
+            <div className="meta-item">
+              <span className="meta-label">Vistas:</span>
+              <span className="meta-value">{doc.views}</span>
+            </div>
+          </div>
+
+          <div className="doc-tags">
+            {doc.tags.map((tag: string, idx: number) => (
+              <span key={idx} className="tag-office">{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* Card Footer - Actions */}
+        <div className="card-footer">
+          <button className={`footer-action ${doc.isStarred ? 'starred' : ''}`}>
+            <Star size={16} />
+            <span>{doc.isStarred ? 'Destacado' : 'Destacar'}</span>
+          </button>
+          
+          <button className="footer-action">
+            <Share2 size={16} />
+            <span>Compartir</span>
+          </button>
+          
+          <button className="footer-action">
+            <Download size={16} />
+            <span>Descargar</span>
+          </button>
+          
+          <button className="footer-action">
+            <MessageCircle size={16} />
+            <span>Comentar</span>
+          </button>
+        </div>
+      </div>
+    );
   };
+
+  // RIGHT PANEL - ADMINISTRATIVE ASSISTANT MODULE
+  const RightPanel = () => (
+    <div className={`office-right-panel ${rightPanelCollapsed ? 'collapsed' : ''}`}>
+      {/* Assistant Header */}
+      <div className="assistant-header">
+        <div className="assistant-avatar">
+          <Brain size={24} />
+        </div>
+        <div className="assistant-info">
+          <h3>Asistente Administrativo</h3>
+          <p>FUDI Office AI</p>
+        </div>
+        <button 
+          className="collapse-btn"
+          onClick={() => setRightPanelCollapsed(!rightPanelCollapsed)}
+        >
+          <Minimize2 size={16} />
+        </button>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="office-stats">
+        <div className="stat-card">
+          <div className="stat-icon">📊</div>
+          <div className="stat-info">
+            <span className="stat-number">89</span>
+            <span className="stat-label">Documentos</span>
+          </div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-icon">⚠️</div>
+          <div className="stat-info">
+            <span className="stat-number">3</span>
+            <span className="stat-label">Pendientes</span>
+          </div>
+        </div>
+        
+        <div className="stat-card">
+          <div className="stat-icon">⭐</div>
+          <div className="stat-info">
+            <span className="stat-number">12</span>
+            <span className="stat-label">Destacados</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Notifications */}
+      <div className="office-notifications">
+        <h4>Notificaciones</h4>
+        <div className="notification-list">
+          <div className="notification-item urgent">
+            <AlertCircle size={16} />
+            <div className="notification-content">
+              <span>Licencia municipal vence en 15 días</span>
+              <small>Administración Legal</small>
+            </div>
+          </div>
+          
+          <div className="notification-item">
+            <Clock size={16} />
+            <div className="notification-content">
+              <span>3 reportes fiscales pendientes</span>
+              <small>Finanzas & Contabilidad</small>
+            </div>
+          </div>
+          
+          <div className="notification-item">
+            <Users size={16} />
+            <div className="notification-content">
+              <span>Horarios de febrero por aprobar</span>
+              <small>Personal & RH</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick FUDI Chat */}
+      <div className="quick-fudi">
+        <h4>Pregúntale a FUDI</h4>
+        <div className="fudi-input-quick">
+          <input 
+            ref={fudiInputRef}
+            type="text" 
+            placeholder="¿Dónde está mi...?"
+            value={fudiInput}
+            onChange={(e) => setFudiInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleQuickFudi()}
+          />
+          <button onClick={handleQuickFudi}>
+            <Send size={14} />
+          </button>
+        </div>
+        
+        {fudiMessages.length > 0 && (
+          <div className="fudi-last-response">
+            <p>{fudiMessages[fudiMessages.length - 1]?.content}</p>
+          </div>
+        )}
+        
+        <button 
+          className="full-fudi-btn"
+          onClick={() => window.location.href = '/dashboard/chat'}
+        >
+          <MessageCircle size={14} />
+          Chat completo con FUDI
+          <Sparkles size={12} />
+        </button>
+      </div>
+
+      {/* Placeholder for future modules */}
+      <div className="module-placeholder">
+        <div className="placeholder-icon">🔧</div>
+        <h4>Módulos Adicionales</h4>
+        <p>Próximamente: Analytics avanzado, integración con proveedores, y más herramientas administrativas.</p>
+      </div>
+    </div>
+  );
+
+  // Handle quick FUDI interaction
+  const handleQuickFudi = () => {
+    if (!fudiInput.trim()) return;
+    
+    const response = {
+      content: handleFudiQuickResponse(fudiInput),
+      timestamp: new Date()
+    };
+    
+    setFudiMessages(prev => [...prev, response]);
+    setFudiInput('');
+  };
+
+  // MAIN CONTENT AREA
+  const MainContent = () => (
+    <div className="office-main-content">
+      {/* Content Header */}
+      <div className="content-header-office">
+        <div className="header-left">
+          <div className="category-indicator" style={{ color: currentCategory.color || '#6b7280' }}>
+            {currentCategory.icon && <currentCategory.icon size={24} />}
+          </div>
+          <div className="header-info">
+            <h1>{currentCategory.label}</h1>
+            <p>{currentCategory.description} • {filteredDocuments.length} documentos</p>
+          </div>
+        </div>
+        
+        <div className="header-actions">
+          <div className="view-controls">
+            <button 
+              className={`view-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+            >
+              <Grid3X3 size={16} />
+            </button>
+            <button 
+              className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+            >
+              <List size={16} />
+            </button>
+          </div>
+          
+          <button className="filter-button">
+            <Filter size={16} />
+            Filtros
+          </button>
+          
+          <button className="sort-button">
+            <SortDesc size={16} />
+            Ordenar
+          </button>
+        </div>
+      </div>
+
+      {/* Documents Feed */}
+      <div className={`documents-feed ${viewMode}`}>
+        {filteredDocuments.length > 0 ? (
+          filteredDocuments.map((doc) => (
+            <DocumentCard key={doc.id} doc={doc} />
+          ))
+        ) : (
+          <div className="empty-office-state">
+            <div className="empty-icon">📂</div>
+            <h3>No hay documentos en esta categoría</h3>
+            <p>Sube tu primer documento o cambia los filtros de búsqueda</p>
+            <button className="empty-action-btn">
+              <Plus size={16} />
+              Agregar Documento
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // Mobile Bottom Navigation
+  const MobileBottomNav = () => (
+    <div className="mobile-bottom-nav">
+      <button 
+        className={`mobile-nav-btn ${!mobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <Home size={20} />
+        <span>Inicio</span>
+      </button>
+      
+      <button 
+        className={`mobile-nav-btn ${mobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+      >
+        <Menu size={20} />
+        <span>Menú</span>
+      </button>
+      
+      <button className="mobile-nav-btn">
+        <Search size={20} />
+        <span>Buscar</span>
+      </button>
+      
+      <button 
+        className={`mobile-nav-btn ${mobileRightPanelOpen ? 'active' : ''}`}
+        onClick={() => setMobileRightPanelOpen(!mobileRightPanelOpen)}
+      >
+        <Bell size={20} />
+        <span>Avisos</span>
+      </button>
+    </div>
+  );
 
   return (
-    <div className="vault-container">
-      {/* FUDIVERSE Background */}
-      <FudiBackground 
-        variant="premium"
-        theme="claude"
-        intensity={0.15}
-        opacity={1}
-        fixed={true}
-      />
-
-      {/* ✅ NUEVO: FudiDashHeader reemplaza header custom */}
+    <div className="vault-office-container">
+      <FudiBackground variant="minimal" theme="Light" intensity={0.03} opacity={1} fixed={true} />
+      
       <FudiDashHeader 
         currentModule="vault" 
-        userName="Mikelon"
-        userPlan="pro"
-        notifications={2}
+        userName="Mikelon" 
+        userPlan="pro" 
+        notifications={3} 
+        onLogout={handleLogout} 
       />
 
-      {/* Main Content */}
-      <main className="vault-main">
-        <div className="main-grid">
-          {/* Coming Soon Section - Integrated in Feed */}
-          <div className="coming-soon-section">
-            <div className="vault-preview-card">
-              <div className="vault-badge">
-                <Brain size={16} />
-                PRÓXIMAMENTE Q3 2025
-              </div>
-              
-              <h3>🗂️ Tu FILOFAX Superinteligente</h3>
-              <p>El organizador personal que todo FUDIER necesita para mantener su restaurante perfectamente organizado con inteligencia artificial</p>
-              
-              <div className="feature-grid">
-                <div className="feature-item">
-                  <strong>📋 Plantillas Listas</strong><br />
-                  Formatos probados para contratos, recetas y más
-                </div>
-                <div className="feature-item">
-                  <strong>🧠 FUDIVERSE.Ai</strong><br />
-                  Genera y organiza contenido automáticamente
-                </div>
-                <div className="feature-item">
-                  <strong>💰 Marketplace</strong><br />
-                  Compra/vende plantillas con otros FUDIERs
-                </div>
-                <div className="feature-item">
-                  <strong>📄 Export MD/PDF</strong><br />
-                  Guarda todo en tu repositorio personal
-                </div>
-              </div>
-              
-              <button 
-                className="vault-cta-button" 
-                onClick={() => navigateTo('/dashboard/chat')}
-              >
-                💬 Pregúntale a FUDI qué plantillas necesitas
-              </button>
-            </div>
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}>
+          <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
+            <LeftSidebar />
           </div>
-
-          {/* Filofax Demo Section */}
-          <div className="filofax-demo">
-            <div className="filofax-layout-desktop">
-              
-              {/* Filofax Spine - Section Tabs */}
-              <div className="filofax-spine">
-                {!isMobile && (
-                  <div className="spine-header">
-                    <div className="filofax-logo">
-                      <BookOpen size={20} />
-                      <span>fudiVAULT</span>
-                    </div>
-                    <div className="powered-by">POWERED BY FUDIVERSE.AI</div>
-                  </div>
-                )}
-                
-                <div className="section-tabs">
-                  {sections.map(section => {
-                    const IconComponent = section.icon;
-                    return (
-                      <button
-                        key={section.id}
-                        className={`section-tab ${activeSection === section.id ? 'active' : ''}`}
-                        onClick={() => handleSectionChange(section.id)}
-                        style={{ '--section-color': section.color } as React.CSSProperties}
-                        title={section.description}
-                      >
-                        <div className="tab-icon">
-                          <IconComponent size={20} />
-                          {section.urgent > 0 && (
-                            <div className="urgent-indicator">{section.urgent}</div>
-                          )}
-                        </div>
-                        <div className="tab-label">{section.name}</div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* FUDI Assistant Panel */}
-              <div className={`fudi-panel ${fudiPanelOpen ? 'open' : ''} ${fudiPanelExpanded ? 'expanded' : ''}`}>
-                <div className="panel-header">
-                  <Brain size={20} />
-                  <span>FUDI Assistant</span>
-                  <div className="fudi-status"></div>
-                </div>
-                
-                <div className="fudi-search">
-                  <Search size={16} />
-                  <input 
-                    type="text"
-                    placeholder={fudiListening ? "🎤 Escuchando..." : "Hey FUDI, tráeme..."}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={handleSearchKeyPress}
-                    disabled={fudiListening}
-                  />
-                  <button className="voice-search" onClick={handleVoiceSearch}>
-                    <Mic size={14} />
-                  </button>
-                </div>
-
-                {/* Quick Stats */}
-                <div className="quick-stats">
-                  <h4>📊 Resumen de Hoy</h4>
-                  <div className="stats-grid">
-                    {quickStats.map((stat, idx) => (
-                      <div key={idx} className="stat-card">
-                        <div className="stat-label">{stat.label}</div>
-                        <div className="stat-value">{stat.value}</div>
-                        <div className={`stat-change ${stat.positive ? 'positive' : 'negative'}`}>
-                          {stat.change}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* FUDI Suggestions */}
-                <div className="fudi-suggestions">
-                  <h4>💡 Sugerencias Inteligentes</h4>
-                  {fudiSuggestions.map((suggestion, idx) => {
-                    const IconComponent = suggestion.icon;
-                    return (
-                      <div key={idx} className={`suggestion ${suggestion.urgency}`}>
-                        <div className="suggestion-icon">
-                          <IconComponent size={16} />
-                        </div>
-                        <div className="suggestion-content">
-                          <div className="suggestion-title">{suggestion.title}</div>
-                          <div className="suggestion-message">{suggestion.message}</div>
-                          <button className="suggestion-action">{suggestion.action}</button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Recent Documents */}
-                <div className="recent-docs">
-                  <h4>📄 Documentos Recientes</h4>
-                  {recentDocs.slice(0, 4).map((doc, idx) => (
-                    <div key={idx} className="doc-item">
-                      <div className="doc-icon">
-                        {getStatusIcon(doc.status)}
-                      </div>
-                      <div className="doc-info">
-                        <div className="doc-name">{doc.name}</div>
-                        <div className="doc-meta">
-                          <span>{doc.modified}</span>
-                          <span> • </span>
-                          <span>{doc.size}</span>
-                        </div>
-                        <div className="doc-tags">
-                          {doc.fudiTags.slice(0, 2).map((tag, tagIdx) => (
-                            <span key={tagIdx} className="doc-tag">#{tag}</span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="doc-actions">
-                        <button><Eye size={12} /></button>
-                        <button><Download size={12} /></button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Main Content Area */}
-              <div className="main-content">
-                {/* Page Header */}
-                <div className="page-header">
-                  <div className="page-title">
-                    <h2>{sections.find(s => s.id === activeSection)?.name}</h2>
-                    <p>{sections.find(s => s.id === activeSection)?.description}</p>
-                  </div>
-                  <div className="page-actions">
-                    <button className="add-item" onClick={addNewItem}>
-                      <Plus size={16} />
-                      <span>Agregar</span>
-                    </button>
-                    <button onClick={filterItems}>
-                      <Filter size={16} />
-                      <span>Filtrar</span>
-                    </button>
-                    <button onClick={openSettings}>
-                      <Settings size={16} />
-                      <span>Config</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Dynamic Content Based on Active Section */}
-                {renderSectionContent()}
-              </div>
-            </div>
-          </div>
-
-          {/* Tablet FUDI Toggle */}
-          {isTablet && (
-            <button className="fudi-toggle" onClick={toggleFudiPanel}>
-              <Brain size={24} />
-            </button>
-          )}
-
-          {/* Mobile FUDI Panel Toggle */}
-          {isMobile && (
-            <button 
-              className="fudi-toggle-mobile"
-              onClick={toggleFudiPanel}
-              style={{
-                position: 'fixed',
-                bottom: '2rem',
-                right: '1rem',
-                background: 'var(--glass-bg)',
-                border: '2px solid var(--border-default)',
-                borderRadius: '50%',
-                width: '60px',
-                height: '60px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--fudi-secondary)',
-                cursor: 'pointer',
-                zIndex: 100,
-                transition: 'all 0.3s ease',
-                backdropFilter: 'blur(15px)',
-                fontSize: '1.5rem'
-              }}
-            >
-              🧠
-            </button>
-          )}
         </div>
-      </main>
+      )}
+
+      {/* Mobile Right Panel Overlay */}
+      {mobileRightPanelOpen && (
+        <div className="mobile-panel-overlay" onClick={() => setMobileRightPanelOpen(false)}>
+          <div className="mobile-panel-content" onClick={(e) => e.stopPropagation()}>
+            <RightPanel />
+          </div>
+        </div>
+      )}
+
+      {/* Main 3-Column Layout */}
+      <div className="office-layout">
+        <LeftSidebar />
+        <MainContent />
+        <RightPanel />
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 }

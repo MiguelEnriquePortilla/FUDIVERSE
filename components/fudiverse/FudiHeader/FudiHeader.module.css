@@ -1,46 +1,39 @@
-/* components/fudiverse/FudiHeader/FudiHeader.module.css */
-/* PREMIUM HEADER - MOBILE FIRST */
+/* =============================================
+   FUDI HEADER - RESPONSIVE MINIMALISTA
+   ============================================= */
 
+/* BASE HEADER */
 .fudiHeader {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  background: rgba(15, 23, 42, 0.95); /* Semi-transparent dark */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  background: #101014;
+  border-bottom: 1px solid #2a2a2e;
+  transition: all 0.2s ease;
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px; /* Mobile height */
-  position: relative;
+  height: 60px;
 }
 
-/* ========================================
-   LOGO SECTION
-   ======================================== */
+/* ==================== LOGO ==================== */
 .logo {
-  flex-shrink: 0;
-  z-index: 1001;
-}
-
-.logoLink {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  text-decoration: none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  transition: all 0.3s ease;
 }
 
 .logoText {
@@ -49,35 +42,36 @@
 }
 
 .logoAccent {
-  color: #3b82f6; /* Business blue */
+  color: #3b82f6;
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.logoLink:hover {
-  transform: scale(1.05);
+.logo:hover {
+  transform: scale(1.02);
 }
 
-/* ========================================
-   DESKTOP NAVIGATION
-   ======================================== */
+/* ==================== DESKTOP NAV ==================== */
 .desktopNav {
   display: none; /* Hidden on mobile */
-  gap: 2rem;
+  gap: 0.5rem;
   align-items: center;
+  flex: 1;
+  justify-content: center;
+  max-width: 500px;
 }
 
 .navLink {
-  color: rgba(241, 245, 249, 0.8);
+  color: #a0a0a0;
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.9375rem;
-  letter-spacing: 0.025em;
+  font-size: 0.875rem;
   padding: 0.5rem 0;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  letter-spacing: 0.025em;
 }
 
 .navLink::after {
@@ -99,17 +93,23 @@
   width: 100%;
 }
 
-.navLinkActive {
+.navActive {
   color: #3b82f6;
 }
 
-.navLinkActive::after {
+.navActive::after {
   width: 100%;
 }
 
-/* ========================================
-   DESKTOP AUTH BUTTONS
-   ======================================== */
+/* ==================== USER SECTION ==================== */
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Desktop Auth Buttons */
 .desktopAuth {
   display: none; /* Hidden on mobile */
   gap: 0.75rem;
@@ -117,233 +117,238 @@
 }
 
 .loginButton {
-  margin-right: 0.25rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #2a2a2e;
+  border-radius: 6px;
+  color: #a0a0a0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
-/* ========================================
-   MOBILE MENU BUTTON
-   ======================================== */
+.loginButton:hover {
+  background: #1a1a1e;
+  border-color: #3a3a3e;
+  color: #ffffff;
+}
+
+.registerButton {
+  padding: 0.5rem 1rem;
+  background: #000000;
+  border: 1px solid #000000;
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.registerButton:hover {
+  background: #1a1a1a;
+  border-color: #333333;
+  transform: translateY(-1px);
+}
+
+/* ==================== MOBILE MENU ==================== */
 .mobileMenuButton {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
+  border: 1px solid #2a2a2e;
   border-radius: 6px;
-  transition: all 0.3s ease;
-  z-index: 1002;
+  color: #a0a0a0;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .mobileMenuButton:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: #1a1a1e;
+  border-color: #3a3a3e;
+  color: #ffffff;
 }
 
-.hamburgerLine {
-  width: 20px;
-  height: 2px;
-  background: #ffffff;
-  margin: 2px 0;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border-radius: 2px;
+.mobileMenuButtonOpen {
+  background: #1a1a1e;
+  border-color: #ff6b35;
+  color: #ff6b35;
 }
 
-/* Hamburger animation when open */
-.mobileMenuButtonOpen .hamburgerLine:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-  background: #3b82f6;
-}
-
-.mobileMenuButtonOpen .hamburgerLine:nth-child(2) {
-  opacity: 0;
-  transform: scale(0);
-}
-
-.mobileMenuButtonOpen .hamburgerLine:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
-  background: #3b82f6;
-}
-
-/* ========================================
-   MOBILE MENU OVERLAY
-   ======================================== */
 .mobileMenuOverlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   z-index: 999;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.2s ease;
 }
 
 .mobileMenu {
   position: absolute;
-  top: 60px; /* Below header */
+  top: 60px;
   left: 0;
   right: 0;
-  background: rgba(15, 23, 42, 0.98);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.5rem 1rem 2rem;
-  animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: #101014;
+  border-bottom: 1px solid #2a2a2e;
+  padding: 1rem;
+  animation: slideDown 0.3s ease;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
 }
 
-/* ========================================
-   MOBILE NAVIGATION
-   ======================================== */
+/* Mobile Navigation */
 .mobileNav {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .mobileNavLink {
-  color: rgba(241, 245, 249, 0.9);
+  color: #a0a0a0;
   text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
   font-weight: 500;
   font-size: 1.125rem;
   padding: 0.75rem 1rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
 }
 
-.mobileNavLink:hover,
-.mobileNavLink:active {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
+.mobileNavLink:hover {
+  background: #1a1a1e;
+  border-color: #3a3a3e;
   color: #ffffff;
   transform: translateX(4px);
 }
 
-.mobileNavLinkActive {
+.mobileNavActive {
   background: rgba(59, 130, 246, 0.15);
   border-color: rgba(59, 130, 246, 0.4);
   color: #3b82f6;
 }
 
-/* ========================================
-   MOBILE AUTH BUTTONS
-   ======================================== */
-.mobileAuth {
+/* Mobile Actions */
+.mobileActions {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 1.5rem;
+  gap: 0.25rem;
+  border-top: 1px solid #2a2a2e;
+  padding-top: 1rem;
 }
 
-/* ========================================
-   TABLET BREAKPOINT - 768px+
-   ======================================== */
+.mobileAction {
+  padding: 0.75rem 1rem;
+  color: #a0a0a0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.mobileAction:hover {
+  background: #1a1a1e;
+  border-color: #3a3a3e;
+  color: #ffffff;
+}
+
+.mobileRegister {
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
+}
+
+.mobileRegister:hover {
+  background: #1a1a1a;
+  border-color: #333333;
+  color: #ffffff;
+}
+
+/* ==================== RESPONSIVE BREAKPOINTS ==================== */
+
+/* TABLET - 768px+ */
 @media (min-width: 768px) {
   .container {
     padding: 0 2rem;
-    height: 70px; /* Slightly taller on tablet */
+    height: 70px;
   }
 
-  .logoLink {
-    font-size: 1.375rem;
-  }
-
-  .mobileMenuButton {
-    width: 44px;
-    height: 44px;
-  }
-
-  .hamburgerLine {
-    width: 22px;
-  }
-
-  .mobileMenu {
-    top: 70px;
-    padding: 2rem 2rem 2.5rem;
-  }
-
-  .mobileNavLink {
+  .logo {
     font-size: 1.25rem;
-    padding: 1rem 1.5rem;
-  }
-}
-
-/* ========================================
-   DESKTOP BREAKPOINT - 1024px+
-   ======================================== */
-@media (min-width: 1024px) {
-  .container {
-    padding: 0 3rem;
-    height: 80px; /* Full desktop height */
   }
 
-  .logoLink {
-    font-size: 1.5rem;
-  }
-
-  /* Show desktop navigation */
-  .desktopNav {
-    display: flex;
-  }
-
-  /* Show desktop auth buttons */
   .desktopAuth {
     display: flex;
   }
 
-  /* Hide mobile menu button */
+  .mobileMenu {
+    top: 70px;
+    padding: 1.5rem 2rem 2rem;
+  }
+}
+
+/* DESKTOP - 1024px+ */
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 3rem;
+    height: 70px;
+  }
+
+  .desktopNav {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .navLink {
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
   .mobileMenuButton {
     display: none;
   }
 
-  /* Ensure mobile menu is hidden */
   .mobileMenuOverlay {
     display: none;
   }
 }
 
-/* ========================================
-   LARGE DESKTOP - 1440px+
-   ======================================== */
+/* LARGE DESKTOP - 1440px+ */
 @media (min-width: 1440px) {
   .container {
     padding: 0 4rem;
+    max-width: 1600px;
   }
 
   .desktopNav {
-    gap: 2.5rem;
+    gap: 1rem;
+    max-width: 600px;
   }
 
   .navLink {
-    font-size: 1rem;
-  }
-
-  .desktopAuth {
-    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
   }
 }
 
-/* ========================================
-   ANIMATIONS
-   ======================================== */
+/* ==================== ANIMATIONS ==================== */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -351,58 +356,42 @@
   }
 }
 
-/* ========================================
-   ACCESSIBILITY & PERFORMANCE
-   ======================================== */
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-/* Reduce motion for users who prefer it */
+/* ==================== ACCESSIBILITY ==================== */
 @media (prefers-reduced-motion: reduce) {
   .fudiHeader,
-  .logoLink,
+  .fudiHeader *,
+  .logo,
   .navLink,
-  .navLink::after,
+  .notificationBtn,
+  .userButton,
   .mobileMenuButton,
-  .hamburgerLine,
-  .mobileNavLink {
+  .mobileNavLink,
+  .dropdownItem,
+  .mobileAction {
     transition: none !important;
     animation: none !important;
   }
-
-  .mobileMenuOverlay,
-  .mobileMenu {
-    animation: none !important;
-  }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .fudiHeader {
-    background: #000000;
-    border-bottom-color: #ffffff;
-  }
-
-  .navLink,
-  .mobileNavLink {
-    color: #ffffff;
-  }
-
-  .logoText {
-    color: #ffffff;
-  }
-
-  .logoAccent {
-    color: #ffffff;
-    -webkit-text-fill-color: #ffffff;
-  }
-}
-
-/* Focus states for accessibility */
-.logoLink:focus,
+.logo:focus,
 .navLink:focus,
+.notificationBtn:focus,
+.userButton:focus,
 .mobileMenuButton:focus,
-.mobileNavLink:focus {
-  outline: 2px solid #3b82f6;
+.mobileNavLink:focus,
+.dropdownItem:focus,
+.mobileAction:focus {
+  outline: 2px solid #ff6b35;
   outline-offset: 2px;
-  border-radius: 4px;
 }
-

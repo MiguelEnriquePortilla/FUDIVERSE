@@ -1,261 +1,116 @@
 /* =============================================
-   FUDI ABOUT - ULTRA LIMPIO 🧹
+   FUDI ABOUT REFINED - APPLE STYLE
    ============================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* =============================================
-   CSS VARIABLES - SOLO LO ESENCIAL
+   CSS VARIABLES - MINIMALISTAS
    ============================================= */
 :root {
-  /* Core FUDI Colors */
-  --fudi-primary: #fbbf24; /* Matrix Gold */
-  --fudi-secondary: #00ffff; /* Cyber Cyan */
-  --fudi-accent: #a78bfa; /* Neural Purple */
-  --fudi-blue: #3b82f6; /* Data Blue */
-  --fudi-green: #10b981; /* Success Green */
-  --fudi-red: #ef4444; /* Alert Red */
-  --fudi-orange: #f59e0b; /* Energy Orange */
-  --fudi-purple: #8b5cf6; /* Wisdom Purple */
-  
-  /* Glass System - MÁS TRANSPARENTE */
-  --glass-bg: rgba(0, 0, 0, 0.3);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-hover: rgba(255, 255, 255, 0.12);
+  /* Core Colors - Matching our modules */
+  --fudi-orange: #ff6b35;
+  --fudi-cyan: #00bcd4;
+  --fudi-blue: #3b82f6;
+  --fudi-purple: #8b5cf6;
+  --fudi-green: #10b981;
+  --fudi-red: #ef4444;
   
   /* Text Hierarchy */
-  --text-primary: rgba(255, 255, 255, 0.95);
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-tertiary: rgba(255, 255, 255, 0.5);
-  --text-muted: rgba(255, 255, 255, 0.3);
+  --text-primary: rgba(255, 255, 255, 0.98);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
   
-  /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.1);
-  --border-hover: rgba(251, 191, 36, 0.3);
-  
-  /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.4);
+  /* Spacing */
+  --section-padding: 8rem 2rem;
+  --container-max-width: 1200px;
 }
 
 /* =============================================
-   BASE CONTAINER - SIN BACKGROUNDS
+   CONTAINER - SIMPLE
    ============================================= */
-.about-container {
+.about-container-refined {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
-  color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  position: relative;
   overflow-x: hidden;
-  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
-}
-
-/* ❌ ELIMINADOS - BACKGROUNDS PROBLEMÁTICOS
-.about-container::before {
-  ... revolution-pulse animation
-}
-
-.about-container::after {
-  ... neural-flow animation
-}
-*/
-
-/* =============================================
-   HEADER - TRANSPARENTE
-   ============================================= */
-.about-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle);
-  transition: all 0.3s ease;
-}
-
-.about-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    var(--fudi-purple) 20%, 
-    var(--fudi-primary) 50%, 
-    var(--fudi-purple) 80%, 
-    transparent
-  );
-  opacity: 0.6;
-  animation: header-revolution 6s ease-in-out infinite;
-}
-
-@keyframes header-revolution {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.9; }
-}
-
-.about-nav {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-}
-
-.about-logo {
-  font-size: 1.5rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--fudi-purple), var(--fudi-primary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-decoration: none;
-  letter-spacing: -0.5px;
-  transition: all 0.3s ease;
-}
-
-.about-logo:hover {
-  transform: scale(1.05);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-
-.nav-link {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--fudi-purple), var(--fudi-primary));
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: var(--text-primary);
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  transform: scaleX(1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 }
 
 /* =============================================
-   HERO SECTION - SIN BACKGROUND
+   HERO SECTION - ULTRA CLEAN
    ============================================= */
-.about-hero {
+.hero-refined {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 10;
-  padding: 0 2rem;
+  padding: 12rem 2rem 8rem 2rem;
   text-align: center;
-  /* NO BACKGROUND - DEJA PASAR EL FUDIBACKGROUND */
 }
 
-.hero-content {
+.hero-content-refined {
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
+  z-index: 20;
 }
 
-.hero-badge {
+.hero-badge-refined {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--glass-bg);
+  background: rgba(26, 26, 30, 0.8);
   border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 50px;
   padding: 0.75rem 1.5rem;
   margin-bottom: 2rem;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--fudi-purple);
   text-transform: uppercase;
   letter-spacing: 1px;
-  animation: badge-glow 3s ease-in-out infinite;
 }
 
-@keyframes badge-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
-  }
-}
-
-.hero-title {
-  font-size: clamp(2.5rem, 8vw, 5.5rem);
-  font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 2rem;
+.hero-title-refined {
+  font-size: clamp(3.5rem, 12vw, 7rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 3rem;
   color: var(--text-primary);
-  text-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
-  animation: title-revolution 4s ease-in-out infinite;
-}
-
-@keyframes title-revolution {
-  0%, 100% { 
-    text-shadow: 0 0 40px rgba(139, 92, 246, 0.3);
-  }
-  50% { 
-    text-shadow: 0 0 60px rgba(139, 92, 246, 0.6), 0 0 80px rgba(251, 191, 36, 0.4);
-  }
+  position: relative;
+  z-index: 30;
+  letter-spacing: -0.02em;
 }
 
 .hero-highlight {
-  background: linear-gradient(135deg, var(--fudi-purple), var(--fudi-blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--fudi-purple);
   position: relative;
 }
 
 .hero-highlight-2 {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--fudi-orange);
   position: relative;
 }
 
-.hero-subtitle {
-  font-size: 1.4rem;
+.hero-subtitle-refined {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
   color: var(--text-secondary);
   font-weight: 500;
   margin-bottom: 3rem;
-  line-height: 1.6;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.hero-quote {
-  background: var(--glass-bg);
-  border: 1px solid rgba(251, 191, 36, 0.2);
+.hero-quote-refined {
+  background: rgba(26, 26, 30, 0.6);
+  border: 1px solid rgba(255, 107, 53, 0.2);
   border-radius: 16px;
   padding: 2rem;
   margin-top: 3rem;
@@ -266,144 +121,84 @@
   font-size: 1.2rem;
   font-weight: 600;
   font-style: italic;
-  color: var(--fudi-primary);
-  animation: quote-pulse 5s ease-in-out infinite;
-}
-
-@keyframes quote-pulse {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
-  }
-  50% { 
-    transform: scale(1.02);
-    box-shadow: 0 0 50px rgba(251, 191, 36, 0.4);
-  }
-}
-
-.hero-entity {
-  position: absolute;
-  top: 50%;
-  right: 5%;
-  transform: translateY(-50%);
-  z-index: 5;
+  color: var(--fudi-orange);
 }
 
 /* =============================================
-   TODAS LAS SECCIONES - SIN BACKGROUNDS
+   SECTIONS - CLEAN SPACING
    ============================================= */
-.origin-section,
-.mission-section,
-.purpose-section,
-.team-section,
-.revolution-cta {
-  padding: 8rem 2rem;
+.section-refined {
+  padding: var(--section-padding);
   position: relative;
   z-index: 10;
-  /* NO BACKGROUNDS - DEJA PASAR EL FUDIBACKGROUND */
+  max-width: var(--container-max-width);
+  margin: 0 auto;
 }
 
-.section-header {
+.section-header-refined {
   text-align: center;
   margin-bottom: 5rem;
 }
 
-.section-title {
+.section-title-refined {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  font-size: 2.5rem;
-  font-weight: 900;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
 }
 
-.section-subtitle {
-  font-size: 1.5rem;
-  color: var(--fudi-purple);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.section-subtitle-refined {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 /* =============================================
-   STORY CARDS
+   STORY CARDS - SIMPLIFIED
    ============================================= */
-.story-grid {
-  max-width: 1200px;
-  margin: 0 auto 5rem auto;
+.story-grid-refined {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  margin-bottom: 5rem;
 }
 
-.story-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  padding: 2.5rem;
-  position: relative;
+.story-card-refined {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.6;
+  transform: scale(0.95);
+  height: 100%;
+  display: flex;
+  align-items: stretch;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
 }
 
-.story-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg,
-    transparent 0%,
-    var(--story-color, var(--fudi-purple)) 30%,
-    transparent 70%
-  );
-  opacity: 0.1;
-  transform: translateX(-100%) translateY(-100%);
-  transition: transform 0.8s ease;
+.story-card-refined.active {
+  opacity: 1;
+  transform: scale(1);
 }
 
-.story-card:hover::before,
-.story-card.active::before {
-  transform: translateX(100%) translateY(100%);
+.story-content-refined {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
 }
 
-.story-card::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(135deg, 
-    var(--story-color, var(--fudi-purple)), 
-    transparent,
-    var(--story-color, var(--fudi-purple))
-  );
-  border-radius: 22px;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.4s ease;
-}
-
-.story-card:hover,
-.story-card.active {
-  transform: translateY(-12px) scale(1.03);
-  border-color: var(--story-color, var(--fudi-purple));
-  box-shadow: 
-    var(--shadow-xl),
-    0 0 30px var(--story-color, var(--fudi-purple));
-}
-
-.story-card.active::after {
-  opacity: 0.2;
-}
-
-.story-icon {
-  width: 60px;
-  height: 60px;
-  background: var(--glass-bg);
-  border: 2px solid var(--story-color, var(--fudi-purple));
-  border-radius: 16px;
+.story-icon-refined {
+  width: 50px;
+  height: 50px;
+  background: rgba(26, 26, 30, 0.8);
+  border: 2px solid var(--fudi-purple);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -411,265 +206,257 @@
   transition: all 0.4s ease;
 }
 
-.story-card:hover .story-icon,
-.story-card.active .story-icon {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 0 25px var(--story-color, var(--fudi-purple));
+.story-card-refined.active .story-icon-refined {
+  transform: scale(1.1);
 }
 
-.story-icon svg {
-  color: var(--story-color, var(--fudi-purple));
-  filter: drop-shadow(0 0 8px currentColor);
+.story-icon-refined svg {
+  color: var(--fudi-purple);
 }
 
-.story-title {
+.story-title-refined {
   font-size: 1.3rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
-  letter-spacing: -0.5px;
+  text-transform: lowercase;
 }
 
-.story-subtitle {
+.story-subtitle-refined {
   font-size: 1rem;
-  color: var(--story-color, var(--fudi-purple));
-  font-weight: 600;
+  color: var(--fudi-purple);
+  font-weight: 500;
   margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
-.story-description {
+.story-description-refined {
   font-size: 0.95rem;
   color: var(--text-secondary);
   line-height: 1.6;
+  margin-bottom: 1.2rem;
+  flex-grow: 1;
 }
 
-.story-indicator {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-}
-
-.indicator-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--story-color, var(--fudi-purple));
-  opacity: 0.3;
-  transition: all 0.3s ease;
-}
-
-.story-card.active .indicator-dot {
-  opacity: 1;
-  box-shadow: 0 0 15px var(--story-color, var(--fudi-purple));
-  animation: indicator-pulse 2s ease-in-out infinite;
-}
-
-@keyframes indicator-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
-/* =============================================
-   PAIN POINTS
-   ============================================= */
-.pain-points {
-  max-width: 800px;
-  margin: 0 auto;
+.story-impact-refined {
+  background: rgba(0, 188, 212, 0.1);
+  border: 1px solid rgba(0, 188, 212, 0.3);
+  border-radius: 8px;
+  padding: 0.7rem;
+  font-weight: 600;
+  color: rgba(0, 188, 212, 0.95);
+  font-size: 0.85rem;
   text-align: center;
 }
 
-.pain-title {
+/* =============================================
+   PAIN POINTS - CLEAN GRID
+   ============================================= */
+.pain-section-refined {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.pain-title-refined {
   font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-weight: 600;
+  color: var(--text-secondary);
   margin-bottom: 2rem;
 }
 
-.pain-grid {
+.pain-grid-refined {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
   margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.pain-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(239, 68, 68, 0.1);
+.pain-item-refined {
+  background: rgba(26, 26, 30, 0.6);
   border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 12px;
   padding: 1rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   transition: all 0.3s ease;
 }
 
-.pain-item:hover {
+.pain-item-refined:hover {
   transform: translateY(-4px);
   border-color: rgba(239, 68, 68, 0.4);
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
 }
 
-.pain-item svg {
+.pain-item-refined svg {
   color: var(--fudi-red);
   flex-shrink: 0;
 }
 
-.founder-quote {
-  background: var(--glass-bg);
-  border-left: 4px solid var(--fudi-primary);
+.pain-item-refined span {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.founder-quote-refined {
+  background: rgba(26, 26, 30, 0.6);
+  border-left: 4px solid var(--fudi-orange);
   border-radius: 12px;
   padding: 2rem;
-  margin-top: 3rem;
-  position: relative;
-}
-
-.founder-quote blockquote {
-  font-size: 1.2rem;
-  font-weight: 600;
-  font-style: italic;
-  color: var(--text-primary);
-  margin: 0;
-  line-height: 1.6;
   text-align: left;
-}
-
-/* =============================================
-   MISSION CARDS
-   ============================================= */
-.mission-content {
-  max-width: 1200px;
+  max-width: 700px;
   margin: 0 auto;
 }
 
-.mission-statement {
+.founder-quote-refined blockquote {
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* =============================================
+   MISSION CARDS - SIMPLIFIED
+   ============================================= */
+.mission-grid-refined {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-bottom: 5rem;
 }
 
-.statement-card {
-  background: var(--glass-bg);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 20px;
-  padding: 2.5rem;
+.mission-card-refined {
   text-align: center;
-  transition: all 0.4s ease;
+  padding: 0.5rem;
 }
 
-.statement-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(59, 130, 246, 0.4);
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+.mission-icon-refined {
+  width: 60px;
+  height: 60px;
+  background: rgba(26, 26, 30, 0.8);
+  border: 2px solid var(--fudi-blue);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
 }
 
-.statement-card svg {
+.mission-icon-refined svg {
   color: var(--fudi-blue);
-  margin-bottom: 1.5rem;
 }
 
-.statement-card h3 {
-  font-size: 1.3rem;
+.mission-title-refined {
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
-.statement-card p {
-  color: var(--text-secondary);
+.mission-description-refined {
+  color: var(--text-tertiary);
   line-height: 1.6;
+  font-size: 1rem;
 }
 
-/* FUDI Speaks */
-.fudi-speaks {
-  background: var(--glass-bg);
-  border-radius: 24px;
-  padding: 3rem;
+/* =============================================
+   FUDI SPEAK SECTION
+   ============================================= */
+.speak-section-refined {
   text-align: center;
+  margin-top: 5rem;
 }
 
-.speaks-title {
+.speak-title-refined {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
   font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--fudi-primary);
+  font-weight: 700;
+  color: var(--fudi-orange);
   margin-bottom: 2rem;
 }
 
-.speaks-examples {
+.speak-grid-refined {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.speak-bubble {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(251, 191, 36, 0.3);
-  border-radius: 16px;
+.speak-bubble-refined {
+  background: rgba(26, 26, 30, 0.6);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: 12px;
   padding: 1.5rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
   text-align: left;
   transition: all 0.3s ease;
 }
 
-.speak-bubble:hover {
+.speak-bubble-refined:hover {
   transform: translateY(-4px);
-  border-color: rgba(251, 191, 36, 0.5);
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+  border-color: rgba(255, 107, 53, 0.4);
 }
 
-.speak-bubble svg {
-  color: var(--fudi-primary);
-  flex-shrink: 0;
-  margin-top: 0.25rem;
+.speak-bubble-refined svg {
+  color: var(--fudi-orange);
+  margin-bottom: 0.75rem;
 }
 
-.speak-bubble span {
+.speak-bubble-refined span {
   color: var(--text-secondary);
   font-weight: 500;
   line-height: 1.5;
+  display: block;
 }
 
 /* =============================================
-   BELIEFS
+   PURPOSE SECTION - DESTACADA (SOLO 10 LÍNEAS AGREGADAS)
    ============================================= */
-.beliefs-grid {
-  max-width: 1000px;
-  margin: 0 auto 5rem auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
+.section-refined.purpose-hero {
+  padding: 12rem 2rem; /* Más padding que otras secciones */
+  min-height: 85vh; /* Más altura */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.02), rgba(16, 185, 129, 0.02)); /* Sutil background */
 }
 
-.belief-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 2rem;
+.section-refined.purpose-hero .section-title-refined {
+  font-size: clamp(4rem, 10vw, 7rem); /* Título más grande */
+}
+
+/* =============================================
+   BELIEFS GRID - CLEAN
+   ============================================= */
+.beliefs-grid-refined {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 5rem;
+}
+
+.belief-card-refined {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  transition: all 0.4s ease;
+  padding: 0.5rem;
 }
 
-.belief-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--belief-color, var(--fudi-green));
-  box-shadow: 0 0 25px var(--belief-color, var(--fudi-green));
-}
-
-.belief-icon {
+.belief-icon-refined {
   width: 50px;
   height: 50px;
-  background: var(--glass-bg);
-  border: 2px solid var(--belief-color, var(--fudi-green));
+  background: rgba(26, 26, 30, 0.8);
+  border: 2px solid var(--fudi-green);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -677,25 +464,26 @@
   flex-shrink: 0;
 }
 
-.belief-icon svg {
-  color: var(--belief-color, var(--fudi-green));
+.belief-icon-refined svg {
+  color: var(--fudi-green);
 }
 
-.belief-text {
+.belief-text-refined {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   line-height: 1.5;
   margin: 0;
+  padding-top: 0.75rem;
 }
 
-.purpose-quote {
+.purpose-quote-refined {
   text-align: center;
   max-width: 600px;
   margin: 0 auto;
 }
 
-.purpose-quote blockquote {
+.purpose-quote-refined blockquote {
   font-size: 2rem;
   font-weight: 800;
   font-style: italic;
@@ -704,213 +492,143 @@
   line-height: 1.4;
 }
 
-.purpose-quote .highlight {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.purpose-quote-refined .highlight {
+  color: var(--fudi-orange);
 }
 
 /* =============================================
-   TEAM STATS
+   TEAM STATS - CLEAN
    ============================================= */
-.team-stats {
+.team-stats-refined {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-bottom: 3rem;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-.stat-card {
-  background: var(--glass-bg);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 20px;
-  padding: 2.5rem;
+.stat-card-refined {
   text-align: center;
-  transition: all 0.4s ease;
+  padding: 0.5rem;
 }
 
-.stat-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(139, 92, 246, 0.4);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-}
-
-.stat-icon {
+.stat-icon-refined {
   width: 60px;
   height: 60px;
-  background: var(--glass-bg);
+  background: rgba(26, 26, 30, 0.8);
   border: 2px solid var(--fudi-purple);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem auto;
-  transition: all 0.4s ease;
 }
 
-.stat-card:hover .stat-icon {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 0 25px var(--fudi-purple);
-}
-
-.stat-icon svg {
+.stat-icon-refined svg {
   color: var(--fudi-purple);
 }
 
-.stat-value {
+.stat-value-refined {
   font-size: 2.5rem;
   font-weight: 900;
-  color: var(--fudi-primary);
+  color: var(--fudi-orange);
   margin-bottom: 0.5rem;
 }
 
-.stat-label {
+.stat-label-refined {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
-.stat-description {
+.stat-description-refined {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   line-height: 1.4;
 }
 
-.team-description {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.team-points {
+.team-points-refined {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
 }
 
-.team-point {
+.team-point-refined {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  background: var(--glass-bg);
-  border: 1px solid var(--border-subtle);
+  background: rgba(26, 26, 30, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
 }
 
-.team-point:hover {
+.team-point-refined:hover {
   transform: translateY(-4px);
   border-color: var(--fudi-purple);
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
 }
 
-.team-point svg {
+.team-point-refined svg {
   color: var(--fudi-purple);
   flex-shrink: 0;
   margin-top: 0.25rem;
 }
 
-.team-point span {
+.team-point-refined span {
   color: var(--text-secondary);
   font-weight: 500;
   line-height: 1.5;
 }
 
 /* =============================================
-   REVOLUTION CTA - SIN ORBS
+   FINAL CTA - ULTRA CLEAN
    ============================================= */
-.revolution-cta {
+.final-cta-refined {
   text-align: center;
-  overflow: hidden;
-}
-
-/* ❌ ELIMINADO - CTA BACKGROUND Y ORBS PROBLEMÁTICOS
-.cta-background {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-
-.cta-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  animation: orb-float 8s ease-in-out infinite;
-}
-*/
-
-.cta-content {
-  max-width: 700px;
+  padding: var(--section-padding);
+  max-width: 800px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 }
 
-.cta-badge {
+.cta-badge-refined {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--glass-bg);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: rgba(26, 26, 30, 0.8);
+  border: 1px solid rgba(255, 107, 53, 0.3);
   border-radius: 50px;
   padding: 0.75rem 1.5rem;
   margin-bottom: 2rem;
   font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--fudi-primary);
+  font-weight: 600;
+  color: var(--fudi-orange);
   text-transform: uppercase;
   letter-spacing: 1px;
-  animation: cta-badge-glow 3s ease-in-out infinite;
 }
 
-@keyframes cta-badge-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
-  }
-  50% { 
-    box-shadow: 0 0 40px rgba(251, 191, 36, 0.6);
-  }
-}
-
-.cta-title {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+.cta-title-refined {
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
   font-weight: 900;
   color: var(--text-primary);
   margin-bottom: 2rem;
   line-height: 1.2;
-  text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
-  animation: cta-title-glow 4s ease-in-out infinite;
+  letter-spacing: -0.01em;
 }
 
-@keyframes cta-title-glow {
-  0%, 100% { 
-    text-shadow: 0 0 40px rgba(251, 191, 36, 0.3);
-  }
-  50% { 
-    text-shadow: 0 0 60px rgba(251, 191, 36, 0.6), 0 0 80px rgba(139, 92, 246, 0.4);
-  }
+.cta-title-refined .highlight {
+  color: var(--fudi-orange);
 }
 
-.cta-title .highlight {
-  background: linear-gradient(135deg, var(--fudi-primary), var(--fudi-orange));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.cta-description {
-  font-size: 1.3rem;
-  color: var(--text-secondary);
+.cta-description-refined {
+  font-size: clamp(1.3rem, 3vw, 1.7rem);
+  color: var(--text-tertiary);
   margin-bottom: 3rem;
   line-height: 1.6;
+  font-weight: 400;
 }
 
-.cta-actions {
+.cta-actions-refined {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
@@ -918,177 +636,92 @@
   margin-bottom: 3rem;
 }
 
-.trust-quote {
+.trust-quote-refined {
   margin-top: 2rem;
 }
 
-.trust-quote blockquote {
+.trust-quote-refined blockquote {
   font-size: 1.2rem;
   font-weight: 600;
   font-style: italic;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   margin: 0;
 }
 
-.trust-quote strong {
-  color: var(--fudi-primary);
+.trust-quote-refined strong {
+  color: var(--fudi-orange);
 }
 
 /* =============================================
-   FOOTER
+   RESPONSIVE - CLEAN
    ============================================= */
-.about-footer {
-  background: rgba(0, 0, 0, 0.5);
-  border-top: 1px solid var(--border-subtle);
-  padding: 2rem;
-  text-align: center;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.footer-links {
-  display: flex;
-  gap: 2rem;
-}
-
-.footer-links a {
-  color: var(--text-tertiary);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: color 0.3s ease;
-}
-
-.footer-links a:hover {
-  color: var(--text-primary);
-}
-
-/* =============================================
-   RESPONSIVE DESIGN
-   ============================================= */
-@media (max-width: 1200px) {
-  .story-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-  
-  .mission-statement {
+@media (max-width: 1024px) {
+  .story-grid-refined {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .mission-grid-refined {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .speak-grid-refined {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .beliefs-grid-refined {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .team-stats-refined {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .team-points-refined {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .pain-grid-refined {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
-  .about-nav {
-    padding: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+  :root {
+    --section-padding: 6rem 1rem;
+  }
+
+  .hero-refined {
+    padding: 8rem 1rem 6rem 1rem;
+  }
+
+  .section-refined {
+    padding: 6rem 1rem;
+  }
+
+  .final-cta-refined {
+    padding: 6rem 1rem;
   }
   
-  .nav-links {
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
-  
-  .about-hero {
-    padding: 2rem 1rem;
-    min-height: 80vh;
-  }
-  
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.2rem;
-  }
-  
-  .hero-entity {
-    display: none;
-  }
-  
-  .origin-section,
-  .mission-section,
-  .purpose-section,
-  .team-section,
-  .revolution-cta {
-    padding: 4rem 1rem;
-  }
-  
-  .story-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .story-card {
-    padding: 2rem;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-  }
-  
-  .section-subtitle {
-    font-size: 1.2rem;
-  }
-  
-  .beliefs-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .team-stats {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-  
-  .team-points {
-    grid-template-columns: 1fr;
-  }
-  
-  .cta-actions {
+  .cta-actions-refined {
     flex-direction: column;
     align-items: center;
   }
-  
-  .footer-content {
-    flex-direction: column;
-    text-align: center;
-  }
-}
 
-@media (max-width: 480px) {
-  .story-card {
-    padding: 1.5rem;
+  /* Purpose section mobile */
+  .purpose-hero {
+    padding: 8rem 1rem;
+    min-height: auto;
   }
-  
-  .story-icon {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .hero-quote {
-    padding: 1.5rem;
-    font-size: 1rem;
-  }
-  
-  .speaks-examples {
-    grid-template-columns: 1fr;
-  }
-  
-  .pain-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .stat-card {
-    padding: 2rem;
-  }
-  
-  .stat-value {
-    font-size: 2rem;
+
+  .purpose-hero .section-title-refined {
+    font-size: clamp(2.5rem, 8vw, 4rem);
   }
 }
 
@@ -1096,7 +729,7 @@
    UTILITIES
    ============================================= */
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.2);
   color: var(--text-primary);
 }
 
@@ -1113,26 +746,17 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-default);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-hover);
-}
-
-button:focus,
-a:focus {
-  outline: 2px solid var(--fudi-purple);
-  outline-offset: 2px;
+  background: rgba(255, 107, 53, 0.3);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .story-card-refined {
+    animation: none !important;
+    transition: none !important;
   }
 }

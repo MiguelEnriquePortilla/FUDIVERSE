@@ -1,141 +1,131 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { FudiButton } from '../FudiButton';
-import styles from './FudiDashHeader.module.css';
 import { 
-  Brain, BarChart3, Vault, Users, ShoppingCart,
-  Bell, Settings, User, LogOut, Menu, X,
-  MessageSquare, Crown
+  Brain, BarChart3, MessageSquare, User, LogOut, 
+  Menu, X, ChevronDown, Plus
 } from 'lucide-react';
 
 interface FudiDashHeaderProps {
-  currentModule?: 'chat' | 'board' | 'flow' | 'vault' | 'mart';
+  currentModule?: 'chat' | 'board';
   userName?: string;
-  userPlan?: 'basic' | 'pro' | 'max' | 'enterprise';
-  notifications?: number;
-  onLogout?: () => void;  // ✅ AGREGADO: Función de logout
+  restaurantName?: string;
+  conversations?: Array<{id: string, title: string, timestamp: Date}>;
+  onLogout?: () => void;
+  onNewConversation?: () => void;
+  onSwitchConversation?: (id: string) => void;
   className?: string;
 }
 
 export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
   currentModule = 'chat',
-  userName,
-  userPlan = 'pro',
-  notifications = 0,
-  onLogout,  // ✅ AGREGADO: Prop de logout
+  userName = 'Usuario',
+  restaurantName = 'Mi Restaurante',
+  conversations = [],
+  onLogout,
+  onNewConversation,
+  onSwitchConversation,
   className = ''
 }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isConversationsOpen, setIsConversationsOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  // Solo fudiGPT y fudiBOARD
+  const modules = [
+    { href: '/dashboard/chat', label: 'fudiGPT', module: 'chat', icon: Brain },
+    { href: '/dashboard/board', label: 'fudiBOARD', module: 'board', icon: BarChart3 },
+  ];
 
-  const toggleUserMenu = () => {
-    setIsUserMenuOpen(!isUserMenuOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
-
-  // ✅ AGREGADO: Handler para logout
   const handleLogout = () => {
     if (onLogout) {
       onLogout();
     }
-    setIsUserMenuOpen(false);
-    setIsMobileMenuOpen(false);
-  };
-
-  const dashboardModules = [
-    { 
-      href: '/dashboard/chat', 
-      label: 'fudiGPT', 
-      module: 'chat', 
-      icon: Brain,
-      description: 'Asistente IA'
-    },
-    { 
-      href: '/dashboard/board', 
-      label: 'fudiBOARD', 
-      module: 'board', 
-      icon: BarChart3,
-      description: 'Analytics'
-    },
-    { 
-      href: '/dashboard/flow', 
-      label: 'fudiFLOW', 
-      module: 'flow', 
-      icon: Users,
-      description: 'Networking'
-    },
-    { 
-      href: '/dashboard/vault', 
-      label: 'fudiVAULT', 
-      module: 'vault', 
-      icon: Vault,
-      description: 'Documentos'
-    },
-    { 
-      href: '/dashboard/mart', 
-      label: 'fudiMART', 
-      module: 'mart', 
-      icon: ShoppingCart,
-      description: 'Marketplace'
-    },
-  ];
-
-  const getPlanColor = (plan: string) => {
-    switch (plan) {
-      case 'basic': return '#10b981';
-      case 'pro': return '#3b82f6';
-      case 'max': return '#fbbf24';
-      case 'enterprise': return '#8b5cf6';
-      default: return '#3b82f6';
-    }
-  };
-
-  const getPlanLabel = (plan: string) => {
-    switch (plan) {
-      case 'basic': return 'BÁSICO';
-      case 'pro': return 'PRO';
-      case 'max': return 'MAX';
-      case 'enterprise': return 'ENTERPRISE';
-      default: return 'PRO';
-    }
+    setIsConversationsOpen(false);
   };
 
   return (
-    <header className={`${styles.fudiDashHeader} ${className}`}>
-      <div className={styles.container}>
+    <header className={`fudi-dash-header ${className}`}>
+      <div className="header-container">
         
-        {/* Logo + Current Module */}
-        <div className={styles.brandSection}>
-          <Link href="/dashboard" className={styles.logoLink}>
-            <span className={styles.logoText}>FUDI</span>
-            <span className={styles.logoAccent}>VERSE</span>
-          </Link>
-          
-          {/* Current Module Indicator */}
-          <div className={styles.currentModule}>
-            <div className={styles.moduleIcon}>
-              {currentModule === 'chat' && <Brain size={20} />}
-              {currentModule === 'board' && <BarChart3 size={20} />}
-              {currentModule === 'flow' && <Users size={20} />}
-              {currentModule === 'vault' && <Vault size={20} />}
-              {currentModule === 'mart' && <ShoppingCart size={20} />}
-            </div>
-            <span className={styles.moduleName}>
-              {dashboardModules.find(m => m.module === currentModule)?.label}
-            </span>
-          </div>
-        </div>
+        {/* Conversations Dropdown - Solo en Chat */}
+        {currentModule === 'chat' && (
+          <div className="conversations-dropdown">
+            <button 
+              className="conversations-trigger"
+              onClick={() => setIsConversationsOpen(!isConversationsOpen)}
+            >
+              <MessageSquare size={16} />
+              <span>Conversaciones</span>
+              <span className="conversations-count">{conversations.length}</span>
+              <ChevronDown size={14} />
+            </button>
 
-        {/* Desktop Module Navigation */}
-        <nav className={styles.desktopNav}>
-          {dashboardModules.map((module) => {
+            {isConversationsOpen && (
+              <div className="conversations-panel">
+                {/* New Chat Button */}
+                <button 
+                  className="dropdown-new-chat"
+                  onClick={() => {
+                    onNewConversation?.();
+                    setIsConversationsOpen(false);
+                  }}
+                >
+                  <Plus size={16} />
+                  Nueva Conversación
+                </button>
+
+                {/* Conversations List */}
+                <div className="dropdown-conversations">
+                  {conversations.length === 0 ? (
+                    <div className="dropdown-empty">
+                      <p>No hay conversaciones aún</p>
+                      <p className="dropdown-empty-subtitle">Inicia tu primera conversación</p>
+                    </div>
+                  ) : (
+                    conversations.map((conversation) => (
+                      <button
+                        key={conversation.id}
+                        className="dropdown-conversation"
+                        onClick={() => {
+                          onSwitchConversation?.(conversation.id);
+                          setIsConversationsOpen(false);
+                        }}
+                      >
+                        <div className="dropdown-conversation-content">
+                          <h3 className="dropdown-conversation-title">{conversation.title}</h3>
+                          <p className="dropdown-conversation-time">
+                            {conversation.timestamp.toLocaleDateString()}
+                          </p>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+
+                {/* User Info */}
+                <div className="dropdown-user">
+                  <div className="dropdown-user-info">
+                    <div className="dropdown-user-avatar">
+                      <User size={16} />
+                    </div>
+                    <div className="dropdown-user-details">
+                      <div className="dropdown-user-name">{userName}</div>
+                      <div className="dropdown-user-restaurant">{restaurantName}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Logo */}
+        <Link href="/dashboard" className="dash-logo">
+          <span className="logo-text">FUDI</span>
+          <span className="logo-accent">VERSE</span>
+        </Link>
+
+        {/* Desktop Navigation - Solo 2 módulos */}
+        <nav className="desktop-nav">
+          {modules.map((module) => {
             const Icon = module.icon;
             const isActive = currentModule === module.module;
             
@@ -143,149 +133,40 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
               <Link
                 key={module.module}
                 href={module.href}
-                className={`${styles.moduleLink} ${isActive ? styles.moduleActive : ''}`}
-                onClick={closeMobileMenu}
+                className={`nav-link ${isActive ? 'nav-active' : ''}`}
               >
-                <Icon size={18} />
-                <span className={styles.moduleLabel}>{module.label}</span>
+                <Icon size={16} />
+                <span>{module.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* User Section */}
-        <div className={styles.userSection}>
-          
-          {/* Notifications */}
-          <button className={styles.notificationBtn}>
-            <Bell size={20} />
-            {notifications > 0 && (
-              <span className={styles.notificationBadge}>{notifications}</span>
-            )}
-          </button>
-
-          {/* User Menu */}
-          <div className={styles.userMenu}>
-            <button 
-              className={styles.userButton}
-              onClick={toggleUserMenu}
-            >
-              <div className={styles.userAvatar}>
-                <User size={18} />
-              </div>
-              <div className={styles.userInfo}>
-                <span className={styles.userName}>{userName}</span>
-                <span 
-                  className={styles.userPlan}
-                  style={{ '--plan-color': getPlanColor(userPlan) } as React.CSSProperties}
-                >
-                  {getPlanLabel(userPlan)}
-                </span>
-              </div>
-            </button>
-
-            {/* User Dropdown */}
-            {isUserMenuOpen && (
-              <div className={styles.userDropdown}>
-                <Link href="/dashboard/settings" className={styles.dropdownItem}>
-                  <Settings size={16} />
-                  <span>Configuración</span>
-                </Link>
-                <Link href="/pricing" className={styles.dropdownItem}>
-                  <Crown size={16} />
-                  <span>Upgrade Plan</span>
-                </Link>
-                <div className={styles.dropdownDivider}></div>
-                <button 
-                  className={`${styles.dropdownItem} ${styles.logoutItem}`}
-                  onClick={handleLogout}  // ✅ ARREGLADO: Función de logout
-                >
-                  <LogOut size={16} />
-                  <span>Cerrar Sesión</span>
-                </button>
-              </div>
-            )}
+        {/* Right Section */}
+        <div className="header-right">
+          {/* Restaurant Name */}
+          <div className="restaurant-badge">
+            {restaurantName}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className={`${styles.mobileMenuButton} ${
-              isMobileMenuOpen ? styles.mobileMenuButtonOpen : ''
-            }`}
-            onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
+          {/* Logout Button */}
+          <button 
+            className="logout-button"
+            onClick={handleLogout}
+            title="Cerrar sesión"
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <LogOut size={16} />
+            <span>Salir</span>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className={styles.mobileMenuOverlay} onClick={closeMobileMenu}>
-          <div className={styles.mobileMenu} onClick={(e) => e.stopPropagation()}>
-            
-            {/* Mobile User Info */}
-            <div className={styles.mobileUserInfo}>
-              <div className={styles.mobileUserAvatar}>
-                <User size={24} />
-              </div>
-              <div className={styles.mobileUserDetails}>
-                <span className={styles.mobileUserName}>{userName}</span>
-                <span 
-                  className={styles.mobileUserPlan}
-                  style={{ '--plan-color': getPlanColor(userPlan) } as React.CSSProperties}
-                >
-                  Plan {getPlanLabel(userPlan)}
-                </span>
-              </div>
-            </div>
-
-            {/* Mobile Module Navigation */}
-            <nav className={styles.mobileNav}>
-              {dashboardModules.map((module) => {
-                const Icon = module.icon;
-                const isActive = currentModule === module.module;
-                
-                return (
-                  <Link
-                    key={module.module}
-                    href={module.href}
-                    className={`${styles.mobileModuleLink} ${
-                      isActive ? styles.mobileModuleActive : ''
-                    }`}
-                    onClick={closeMobileMenu}
-                  >
-                    <Icon size={20} />
-                    <div className={styles.mobileModuleInfo}>
-                      <span className={styles.mobileModuleLabel}>{module.label}</span>
-                      <span className={styles.mobileModuleDesc}>{module.description}</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* Mobile Actions */}
-            <div className={styles.mobileActions}>
-              <Link href="/dashboard/settings" className={styles.mobileAction}>
-                <Settings size={18} />
-                <span>Configuración</span>
-              </Link>
-              <Link href="/pricing" className={styles.mobileAction}>
-                <Crown size={18} />
-                <span>Upgrade Plan</span>
-              </Link>
-              <button 
-                className={`${styles.mobileAction} ${styles.mobileLogout}`}
-                onClick={handleLogout}  // ✅ ARREGLADO: Función de logout mobile
-              >
-                <LogOut size={18} />
-                <span>Cerrar Sesión</span>
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Click outside to close */}
+      {isConversationsOpen && (
+        <div 
+          className="dropdown-overlay"
+          onClick={() => setIsConversationsOpen(false)}
+        />
       )}
     </header>
   );
