@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { fudiAPI } from '@/lib/api';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
@@ -11,9 +12,19 @@ import {
 } from 'lucide-react';
 import '@/styles/pages/chat.css';
 
-// 🔥 NUEVAS IMPORTACIONES PARA MARKDOWN
-import ReactMarkdown from 'react-markdown';
+// 🔥 DYNAMIC IMPORT PARA EVITAR SSR ISSUES
+const ReactMarkdown = dynamic(() => import('react-markdown'), {
+  ssr: false,
+  loading: () => (
+    <div className="animate-pulse">
+      <div className="h-4 bg-blue-400/20 rounded w-3/4 mb-2"></div>
+      <div className="h-4 bg-blue-400/20 rounded w-1/2"></div>
+    </div>
+  )
+});
+
 import remarkGfm from 'remark-gfm';
+
 
 // =============================================
 // INTERFACES - MANTENER EXACTAMENTE IGUAL
