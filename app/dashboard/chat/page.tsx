@@ -53,133 +53,175 @@ interface UserData {
 // 🎨 MARKDOWN COMPONENTS ÉPICOS
 // =============================================
 const MarkdownComponents = {
-  // Headers con estilos épicos
+  // Headers seguros
   h1: ({ children }: any) => (
-    <h1 className="text-4xl md:text-5xl font-black text-blue-400 mb-6 border-b-4 border-blue-400 pb-4 glow-text animate-slide-in">
+    <h1 style={{
+      fontSize: '2.5rem',
+      fontWeight: 900,
+      color: '#60a5fa',
+      marginBottom: '1.5rem',
+      borderBottom: '3px solid #60a5fa',
+      paddingBottom: '1rem'
+    }}>
       {children}
     </h1>
   ),
   
   h2: ({ children }: any) => (
-    <h2 className="text-3xl md:text-4xl font-bold text-orange-400 mb-4 border-b-2 border-orange-400 pb-3 animate-slide-in">
+    <h2 style={{
+      fontSize: '2rem',
+      fontWeight: 800,
+      color: '#fb923c',
+      marginBottom: '1rem',
+      borderBottom: '2px solid #fb923c',
+      paddingBottom: '0.75rem'
+    }}>
       {children}
     </h2>
   ),
   
   h3: ({ children }: any) => (
-    <h3 className="text-2xl md:text-3xl font-bold text-purple-400 mb-3 animate-slide-in">
+    <h3 style={{
+      fontSize: '1.5rem',
+      fontWeight: 700,
+      color: '#a78bfa',
+      marginBottom: '0.75rem'
+    }}>
       {children}
     </h3>
   ),
-  
-  h4: ({ children }: any) => (
-    <h4 className="text-xl md:text-2xl font-semibold text-green-400 mb-2 animate-slide-in">
-      {children}
-    </h4>
-  ),
 
-  // Párrafos espaciosos
+  // Párrafos seguros
   p: ({ children }: any) => (
-    <p className="mb-4 leading-relaxed text-lg text-white/90 animate-slide-in">
+    <p style={{
+      marginBottom: '1rem',
+      lineHeight: '1.7',
+      fontSize: '1rem',
+      color: 'rgba(255, 255, 255, 0.9)'
+    }}>
       {children}
     </p>
   ),
 
-  // Strong épico
+  // Strong seguro
   strong: ({ children }: any) => (
-    <strong className="font-black text-orange-400 text-lg animate-pulse">
+    <strong style={{
+      fontWeight: 800,
+      color: '#fb923c',
+      fontSize: '1.05em'
+    }}>
       {children}
     </strong>
   ),
 
-  // Cursivas elegantes
-  em: ({ children }: any) => (
-    <em className="italic font-semibold text-blue-400">
-      {children}
-    </em>
-  ),
-
-  // Blockquotes poderosos
+  // Blockquotes seguros
   blockquote: ({ children }: any) => (
-    <blockquote className="border-l-4 border-orange-400 bg-gradient-to-r from-orange-400/10 to-orange-400/5 pl-6 py-4 my-6 rounded-r-lg shadow-lg hover:scale-[1.02] transition-all duration-300">
-      <div className="text-lg font-medium italic text-orange-200">
-        {children}
-      </div>
+    <blockquote style={{
+      borderLeft: '4px solid #fb923c',
+      background: 'linear-gradient(135deg, rgba(251, 146, 60, 0.1), rgba(251, 146, 60, 0.05))',
+      paddingLeft: '1.5rem',
+      paddingTop: '1rem',
+      paddingBottom: '1rem',
+      margin: '1.5rem 0',
+      borderRadius: '0 8px 8px 0',
+      fontStyle: 'italic',
+      fontSize: '1.1rem'
+    }}>
+      {children}
     </blockquote>
   ),
 
-  // Listas organizadas
+  // Listas seguras
   ul: ({ children }: any) => (
-    <ul className="bg-blue-500/5 border-l-4 border-blue-400 rounded-r-lg p-4 my-4 space-y-2 hover:bg-blue-500/10 transition-all duration-300">
+    <ul style={{
+      background: 'rgba(96, 165, 250, 0.05)',
+      borderLeft: '4px solid #60a5fa',
+      borderRadius: '0 8px 8px 0',
+      padding: '1rem',
+      margin: '1rem 0'
+    }}>
       {children}
     </ul>
   ),
 
-  ol: ({ children }: any) => (
-    <ol className="bg-purple-500/5 border-l-4 border-purple-400 rounded-r-lg p-4 my-4 space-y-2 hover:bg-purple-500/10 transition-all duration-300">
-      {children}
-    </ol>
-  ),
-
   li: ({ children }: any) => (
-    <li className="text-base leading-relaxed ml-2 text-white/90">
+    <li style={{
+      marginBottom: '0.5rem',
+      lineHeight: '1.6',
+      color: 'rgba(255, 255, 255, 0.9)'
+    }}>
       {children}
     </li>
   ),
 
-  // Código destacado
+  // Código seguro
   code: ({ inline, children }: any) => {
     if (inline) {
       return (
-        <code className="bg-blue-400/15 border border-blue-400 text-blue-300 px-2 py-1 rounded font-mono text-sm font-semibold">
+        <code style={{
+          background: 'rgba(96, 165, 250, 0.15)',
+          border: '1px solid #60a5fa',
+          color: '#93c5fd',
+          padding: '0.25rem 0.5rem',
+          borderRadius: '4px',
+          fontFamily: 'monospace',
+          fontSize: '0.9rem'
+        }}>
           {children}
         </code>
       );
     }
     
     return (
-      <pre className="bg-black/60 border border-gray-600 rounded-lg p-4 my-4 overflow-x-auto shadow-xl hover:shadow-2xl transition-all duration-300">
-        <code className="text-green-400 font-mono text-sm">
+      <pre style={{
+        background: 'rgba(0, 0, 0, 0.6)',
+        border: '1px solid #374151',
+        borderRadius: '8px',
+        padding: '1rem',
+        margin: '1rem 0',
+        overflow: 'auto'
+      }}>
+        <code style={{ color: '#10b981', fontFamily: 'monospace' }}>
           {children}
         </code>
       </pre>
     );
   },
 
-  // Tablas profesionales
+  // Tablas seguras
   table: ({ children }: any) => (
-    <div className="overflow-x-auto my-6">
-      <table className="w-full bg-blue-500/5 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+    <div style={{ overflowX: 'auto', margin: '1.5rem 0' }}>
+      <table style={{
+        width: '100%',
+        background: 'rgba(96, 165, 250, 0.05)',
+        borderRadius: '8px',
+        overflow: 'hidden'
+      }}>
         {children}
       </table>
     </div>
   ),
 
-  thead: ({ children }: any) => (
-    <thead className="bg-blue-500 text-white">
-      {children}
-    </thead>
-  ),
-
   th: ({ children }: any) => (
-    <th className="px-4 py-3 text-left font-bold">
+    <th style={{
+      background: '#3b82f6',
+      color: 'white',
+      padding: '0.75rem',
+      textAlign: 'left',
+      fontWeight: 700
+    }}>
       {children}
     </th>
   ),
 
   td: ({ children }: any) => (
-    <td className="px-4 py-2 border-b border-white/10 text-white/90">
+    <td style={{
+      padding: '0.75rem',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+      color: 'rgba(255, 255, 255, 0.9)'
+    }}>
       {children}
     </td>
-  ),
-
-  // Separadores épicos
-  hr: () => (
-    <div className="my-8 flex items-center">
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
-      <div className="mx-4 text-blue-400 text-2xl">⭐</div>
-      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
-    </div>
   )
 };
 
