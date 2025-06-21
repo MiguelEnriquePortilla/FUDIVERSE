@@ -48,11 +48,245 @@
   justify-content: space-between;
   padding: 1rem 2rem;
   position: relative;
+  min-height: 60px;
+  gap: 0.75rem;
 }
 
 /* =============================================
-   CONVERSATIONS DROPDOWN - SOLO EN CHAT
+   MOBILE MENU - HAMBURGER STYLE
    ============================================= */
+.mobile-menu-trigger {
+  display: none;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: rgba(255, 255, 255, 0.98);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(15px);
+}
+
+.mobile-menu-trigger:hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.mobile-menu-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(25px);
+  z-index: 1003;
+  display: flex;
+  flex-direction: column;
+  animation: mobile-menu-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes mobile-menu-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-close {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  padding: 0.5rem;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-close:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.mobile-menu-content {
+  flex: 1;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-nav-section {
+  margin-bottom: 2rem;
+}
+
+.mobile-nav-title {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mobile-nav-link {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  color: rgba(255, 255, 255, 0.98);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mobile-nav-link:hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  transform: translateX(4px);
+}
+
+.mobile-nav-link.active {
+  background: linear-gradient(135deg, #3b82f6, #ff6b35);
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+}
+
+.mobile-conversations-section {
+  margin-bottom: 2rem;
+}
+
+.mobile-new-chat {
+  background: linear-gradient(135deg, #3b82f6, #ff6b35);
+  border: none;
+  border-radius: 12px;
+  padding: 1rem;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+  font-family: 'Poppins', sans-serif;
+}
+
+.mobile-new-chat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
+}
+
+.mobile-conversation-item {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-conversation-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-conversation-title {
+  color: rgba(255, 255, 255, 0.98);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mobile-conversation-time {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.mobile-menu-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+}
+
+.mobile-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.mobile-user-avatar {
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid #ff6b35;
+  border-radius: 50%;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-user-details {
+  flex: 1;
+}
+
+.mobile-user-name {
+  color: rgba(255, 255, 255, 0.98);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mobile-user-restaurant {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.mobile-logout-button {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: #ef4444;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mobile-logout-button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+}
 .conversations-dropdown {
   position: relative;
   margin-right: 2rem;
@@ -309,6 +543,8 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  flex-shrink: 0;
+  min-width: fit-content;
 }
 
 .logo-text {
@@ -316,10 +552,12 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: nowrap;
 }
 
 .logo-accent {
   color: rgba(255, 255, 255, 0.98);
+  white-space: nowrap;
 }
 
 .dash-logo:hover {
@@ -437,44 +675,65 @@
 }
 
 @media (max-width: 768px) {
+  /* Ocultar elementos de desktop */
+  .conversations-dropdown,
+  .desktop-nav,
+  .restaurant-badge,
+  .logout-button {
+    display: none;
+  }
+  
+  /* Mostrar menú hamburguesa */
+  .mobile-menu-trigger {
+    display: flex;
+  }
+  
   .header-container {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+    justify-content: space-between;
   }
   
-  .conversations-dropdown {
-    margin-right: 1rem;
+  .dash-logo {
+    font-size: 1.25rem;
+    letter-spacing: -0.3px;
+  }
+}
+
+/* Para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0.5rem 0.75rem;
   }
   
-  .conversations-trigger {
-    min-width: auto;
+  .dash-logo {
+    font-size: 1.1rem;
+    letter-spacing: -0.3px;
+    gap: 0.15rem;
+  }
+}
+
+/* Para pantallas extra pequeñas */
+@media (max-width: 375px) {
+  .header-container {
     padding: 0.5rem;
   }
   
-  .conversations-trigger span:not(.conversations-count) {
-    display: none;
+  .dash-logo {
+    font-size: 1rem;
+    letter-spacing: -0.2px;
+    gap: 0.1rem;
+  }
+}
+
+/* Para pantallas ultra pequeñas (Galaxy Fold, etc.) */
+@media (max-width: 320px) {
+  .header-container {
+    padding: 0.4rem;
   }
   
-  .conversations-panel {
-    width: 260px;
-    max-height: 60vh;
-  }
-  
-  .restaurant-badge {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.6rem;
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .logout-button {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.75rem;
-  }
-  
-  .logout-button span {
-    display: none;
+  .dash-logo {
+    font-size: 0.9rem;
+    letter-spacing: -0.1px;
   }
 }
 
