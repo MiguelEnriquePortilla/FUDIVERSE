@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import styles from './FudiDashHeader.module.css';
 import { 
   Brain, BarChart3, MessageSquare, User, LogOut, 
   Menu, X, ChevronDown, Plus
@@ -59,6 +60,14 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
     setIsMobileMenuOpen(false);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString('es-ES', {
       day: 'numeric',
@@ -68,29 +77,20 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
   };
 
   return (
-    <header className={`fudi-dash-header ${className}`}>
-      <div className="header-container">
+    <header className={`${styles.fudiDashHeader} ${className}`}>
+      <div className={styles.container}>
         
         {/* Logo */}
-        <Link href="/dashboard" className="dash-logo">
-          <span className="logo-text">FUDI</span>
-          <span className="logo-accent">VERSE</span>
+        <Link href="/dashboard" className={styles.logo}>
+          <span className={styles.logoText}>FUDI</span>
+          <span className={styles.logoAccent}>VERSE</span>
         </Link>
 
-        {/* Mobile Menu Trigger */}
-        <button 
-          className="mobile-menu-trigger"
-          onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Abrir menú"
-        >
-          <Menu size={20} />
-        </button>
-        
         {/* Conversations Dropdown - Solo en Chat y Desktop */}
         {currentModule === 'chat' && (
-          <div className="conversations-dropdown">
+          <div className={styles.conversationsDropdown}>
             <button 
-              className="conversations-trigger"
+              className={styles.conversationsTrigger}
               onClick={() => setIsConversationsOpen(!isConversationsOpen)}
               aria-expanded={isConversationsOpen}
               aria-haspopup="true"
@@ -98,15 +98,15 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
             >
               <MessageSquare size={16} />
               <span>Conversaciones</span>
-              <span className="conversations-count">{conversations.length}</span>
+              <span className={styles.conversationsCount}>{conversations.length}</span>
               <ChevronDown size={14} />
             </button>
 
             {isConversationsOpen && (
-              <div className="conversations-panel" role="menu">
+              <div className={styles.conversationsPanel} role="menu">
                 {/* New Chat Button */}
                 <button 
-                  className="dropdown-new-chat"
+                  className={styles.dropdownNewChat}
                   onClick={handleNewConversation}
                   role="menuitem"
                   aria-label="Crear nueva conversación"
@@ -116,24 +116,24 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
                 </button>
 
                 {/* Conversations List */}
-                <div className="dropdown-conversations">
+                <div className={styles.dropdownConversations}>
                   {conversations.length === 0 ? (
-                    <div className="dropdown-empty">
+                    <div className={styles.dropdownEmpty}>
                       <p>No hay conversaciones aún</p>
-                      <p className="dropdown-empty-subtitle">Inicia tu primera conversación</p>
+                      <p className={styles.dropdownEmptySubtitle}>Inicia tu primera conversación</p>
                     </div>
                   ) : (
                     conversations.map((conversation) => (
                       <button
                         key={conversation.id}
-                        className="dropdown-conversation"
+                        className={styles.dropdownConversation}
                         onClick={() => handleSwitchConversation(conversation.id)}
                         role="menuitem"
                         aria-label={`Cambiar a conversación: ${conversation.title}`}
                       >
-                        <div className="dropdown-conversation-content">
-                          <h3 className="dropdown-conversation-title">{conversation.title}</h3>
-                          <p className="dropdown-conversation-time">
+                        <div className={styles.dropdownConversationContent}>
+                          <h3 className={styles.dropdownConversationTitle}>{conversation.title}</h3>
+                          <p className={styles.dropdownConversationTime}>
                             {formatDate(conversation.timestamp)}
                           </p>
                         </div>
@@ -143,14 +143,14 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
                 </div>
 
                 {/* User Info */}
-                <div className="dropdown-user">
-                  <div className="dropdown-user-info">
-                    <div className="dropdown-user-avatar">
+                <div className={styles.dropdownUser}>
+                  <div className={styles.dropdownUserInfo}>
+                    <div className={styles.dropdownUserAvatar}>
                       <User size={16} />
                     </div>
-                    <div className="dropdown-user-details">
-                      <div className="dropdown-user-name">{userName}</div>
-                      <div className="dropdown-user-restaurant">{restaurantName}</div>
+                    <div className={styles.dropdownUserDetails}>
+                      <div className={styles.dropdownUserName}>{userName}</div>
+                      <div className={styles.dropdownUserRestaurant}>{restaurantName}</div>
                     </div>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
         )}
 
         {/* Desktop Navigation - Solo 2 módulos */}
-        <nav className="desktop-nav" role="navigation" aria-label="Navegación principal">
+        <nav className={styles.desktopNav} role="navigation" aria-label="Navegación principal">
           {modules.map((module) => {
             const Icon = module.icon;
             const isActive = currentModule === module.module;
@@ -169,7 +169,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
               <Link
                 key={module.module}
                 href={module.href}
-                className={`nav-link ${isActive ? 'nav-active' : ''}`}
+                className={`${styles.navLink} ${isActive ? styles.navActive : ''}`}
                 aria-current={isActive ? 'page' : undefined}
                 aria-label={`Ir a ${module.label}`}
               >
@@ -181,15 +181,15 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
         </nav>
 
         {/* Right Section - Solo Desktop */}
-        <div className="header-right">
+        <div className={styles.headerRight}>
           {/* Restaurant Name */}
-          <div className="restaurant-badge" title={restaurantName}>
+          <div className={styles.restaurantBadge} title={restaurantName}>
             {restaurantName}
           </div>
 
           {/* Logout Button */}
           <button 
-            className="logout-button"
+            className={styles.logoutButton}
             onClick={handleLogout}
             title="Cerrar sesión"
             aria-label="Cerrar sesión"
@@ -198,32 +198,27 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
             <span>Salir</span>
           </button>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className={`${styles.mobileMenuButton} ${
+            isMobileMenuOpen ? styles.mobileMenuButtonOpen : ''
+          }`}
+          onClick={toggleMobileMenu}
+          aria-label="Abrir menú"
+        >
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="mobile-menu-panel">
-          {/* Mobile Menu Header */}
-          <div className="mobile-menu-header">
-            <Link href="/dashboard" className="dash-logo" onClick={() => setIsMobileMenuOpen(false)}>
-              <span className="logo-text">FUDI</span>
-              <span className="logo-accent">VERSE</span>
-            </Link>
-            <button 
-              className="mobile-menu-close"
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Cerrar menú"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          {/* Mobile Menu Content */}
-          <div className="mobile-menu-content">
+        <div className={styles.mobileMenuOverlay} onClick={closeMobileMenu}>
+          <div className={styles.mobileMenu} onClick={(e) => e.stopPropagation()}>
             
-            {/* Navigation Section */}
-            <div className="mobile-nav-section">
-              <div className="mobile-nav-title">Navegación</div>
+            {/* Mobile Navigation */}
+            <div className={styles.mobileNav}>
+              <div className={styles.mobileNavTitle}>Navegación</div>
               {modules.map((module) => {
                 const Icon = module.icon;
                 const isActive = currentModule === module.module;
@@ -232,8 +227,8 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
                   <Link
                     key={module.module}
                     href={module.href}
-                    className={`mobile-nav-link ${isActive ? 'active' : ''}`}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`${styles.mobileNavLink} ${isActive ? styles.mobileNavActive : ''}`}
+                    onClick={closeMobileMenu}
                   >
                     <Icon size={20} />
                     <span>{module.label}</span>
@@ -244,11 +239,11 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
 
             {/* Conversations Section - Solo en Chat */}
             {currentModule === 'chat' && (
-              <div className="mobile-conversations-section">
-                <div className="mobile-nav-title">Conversaciones</div>
+              <div className={styles.mobileConversationsSection}>
+                <div className={styles.mobileNavTitle}>Conversaciones</div>
                 
                 <button 
-                  className="mobile-new-chat"
+                  className={styles.mobileNewChat}
                   onClick={handleNewConversation}
                 >
                   <Plus size={20} />
@@ -260,11 +255,11 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
                     {conversations.map((conversation) => (
                       <div
                         key={conversation.id}
-                        className="mobile-conversation-item"
+                        className={styles.mobileConversationItem}
                         onClick={() => handleSwitchConversation(conversation.id)}
                       >
-                        <div className="mobile-conversation-title">{conversation.title}</div>
-                        <div className="mobile-conversation-time">
+                        <div className={styles.mobileConversationTitle}>{conversation.title}</div>
+                        <div className={styles.mobileConversationTime}>
                           {formatDate(conversation.timestamp)}
                         </div>
                       </div>
@@ -273,27 +268,27 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
                 )}
               </div>
             )}
-          </div>
 
-          {/* Mobile Menu Footer */}
-          <div className="mobile-menu-footer">
-            <div className="mobile-user-info">
-              <div className="mobile-user-avatar">
-                <User size={20} />
+            {/* Mobile Footer */}
+            <div className={styles.mobileMenuFooter}>
+              <div className={styles.mobileUserInfo}>
+                <div className={styles.mobileUserAvatar}>
+                  <User size={20} />
+                </div>
+                <div className={styles.mobileUserDetails}>
+                  <div className={styles.mobileUserName}>{userName}</div>
+                  <div className={styles.mobileUserRestaurant}>{restaurantName}</div>
+                </div>
               </div>
-              <div className="mobile-user-details">
-                <div className="mobile-user-name">{userName}</div>
-                <div className="mobile-user-restaurant">{restaurantName}</div>
-              </div>
+              
+              <button 
+                className={styles.mobileLogoutButton}
+                onClick={handleLogout}
+              >
+                <LogOut size={20} />
+                Cerrar Sesión
+              </button>
             </div>
-            
-            <button 
-              className="mobile-logout-button"
-              onClick={handleLogout}
-            >
-              <LogOut size={20} />
-              Cerrar Sesión
-            </button>
           </div>
         </div>
       )}
@@ -301,7 +296,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
       {/* Click outside to close - Desktop Conversations */}
       {isConversationsOpen && (
         <div 
-          className="dropdown-overlay"
+          className={styles.dropdownOverlay}
           onClick={() => setIsConversationsOpen(false)}
           aria-hidden="true"
         />

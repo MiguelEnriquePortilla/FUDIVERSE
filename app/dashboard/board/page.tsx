@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { 
   TrendingUp, ArrowUp, ArrowDown, Activity, 
@@ -11,6 +11,7 @@ import {
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiCard } from '@/components/fudiverse/FudiCard';
 import { FudiButton } from '@/components/fudiverse/FudiButton';
+import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import '@/styles/pages/dashboard.css';
 
 // Initialize Supabase
@@ -60,24 +61,25 @@ export default function FudiBoardPage() {
     comensalesHoy: 0,
   });
   
-  // 🧠 INTELLIGENCE STATE
+  // 🧠 INTELLIGENCE STATE - SIMPLIFICADO (Sin carrusel)
   const [fudiInsights, setFudiInsights] = useState<FudiInsight[]>([]);
-  const [currentInsightIndex, setCurrentInsightIndex] = useState(0);
   const [topProductos, setTopProductos] = useState<any[]>([]);
   const [ventasPorHora, setVentasPorHora] = useState<any[]>([]);
   const [ultimaSincronizacion, setUltimaSincronizacion] = useState<Date | null>(null);
   const [sinDatosHoy, setSinDatosHoy] = useState(false);
 
-  // FEED STATE
+  // FEED STATE - MEJORADO
   const [feedCards, setFeedCards] = useState<any[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [canLoadMore, setCanLoadMore] = useState(true);
+  const [feedPage, setFeedPage] = useState(0);
   const centerFeedRef = useRef<HTMLDivElement>(null);
 
   // ASK FUDI STATE
   const [currentAskFudiIndex, setCurrentAskFudiIndex] = useState(0);
 
   // ✅ LOGOUT FUNCTION - PRODUCTION READY
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     try {
       localStorage.removeItem('fudi_token');
       localStorage.removeItem('user_data');
@@ -102,47 +104,24 @@ export default function FudiBoardPage() {
     "¿Análisis de competencia en mi zona?"
   ];
 
-  // 🧠 LOAD INSIGHTS
+  // 🧠 LOAD INSIGHTS - CONECTADO AL API REAL
   const cargarFudiInsights = async () => {
     if (!userData?.restaurantId) return;
     
     try {
-      // Create mock insights for demo
-      setFudiInsights([
-        {
-          type: 'business_model_detection',
-          title: 'Modelo takeaway dominante',
-          description: 'Tu operación es 85% para llevar según análisis de patrones de compra.',
-          metric: '85%',
-          confidence: 0.95,
-          action: 'Optimizar para velocidad y empaque',
-          impact: 'high',
-          category: 'operations'
-        },
-        {
-          type: 'velocity_excellence',
-          title: 'Eficiencia en preparación',
-          description: 'Tiempo promedio por orden es excepcional. Tu equipo mantiene alta productividad.',
-          metric: '1.1 min',
-          confidence: 0.92,
-          action: 'Mantener este estándar como ventaja competitiva',
-          impact: 'medium',
-          category: 'operations'
-        },
-        {
-          type: 'peak_hour_detection',
-          title: 'Hora pico identificada',
-          description: 'Mayor flujo de clientes entre 13:00-14:00. Momento clave para tu operación.',
-          metric: '2:00 PM',
-          confidence: 0.88,
-          action: 'Reforzar personal durante este horario',
-          impact: 'medium',
-          category: 'operations'
-        }
-      ]);
-      setCurrentInsightIndex(0);
+      console.log('🧠 Llamando al API de insights...');
+      
+      const response = await fetch('/api/fudintelligence');
+      const data = await response.json();
+      
+      if (data.success && data.insights) {
+        console.log(`✅ Cargados ${data.insights.length} insights reales`);
+        setFudiInsights(data.insights);
+      } else {
+        console.log('⚠️ No hay insights disponibles');
+      }
     } catch (error) {
-      console.error('Error loading insights:', error);
+      console.error('Error cargando insights:', error);
     }
   };
 
@@ -157,34 +136,23 @@ export default function FudiBoardPage() {
     return () => clearInterval(hookInterval);
   }, []);
 
-  // Auto-advance insights
-  useEffect(() => {
-    if (fudiInsights.length > 1) {
-      const interval = setInterval(() => {
-        setCurrentInsightIndex(prev => 
-          prev >= fudiInsights.length - 1 ? 0 : prev + 1
-        );
-      }, 8000);
-      return () => clearInterval(interval);
-    }
-  }, [fudiInsights.length]);
-
-  // Generate feed cards
-  const generateFeedCards = () => {
+  // ✅ Generate feed cards - REFACTORIZADO PARA INSIGHTS INDIVIDUALES
+  const generateFeedCards = useCallback((pageNum: number = 0) => {
     const baseCards = [
-      // INSIGHTS CARD
-      ...(fudiInsights.length > 0 ? [{
-        id: 'insights',
-        type: 'insights',
+      // 🧠 INSIGHTS INDIVIDUALES - UNA TARJETA POR INSIGHT
+      ...fudiInsights.map((insight, index) => ({
+        id: `insight-${index}-${pageNum}`,
+        type: 'individual_insight',
         content: {
-          title: 'Análisis Inteligente',
-          data: fudiInsights[currentInsightIndex]
+          data: insight,
+          index: index + 1,
+          total: fudiInsights.length
         }
-      }] : []),
+      })),
 
       // HERO CARD
       {
-        id: 'hero-sales',
+        id: `hero-sales-${pageNum}`,
         type: 'hero',
         content: {
           title: 'Ventas del Día',
@@ -196,7 +164,7 @@ export default function FudiBoardPage() {
 
       // METRIC CARDS
       {
-        id: 'ganancia',
+        id: `ganancia-${pageNum}`,
         type: 'metric',
         content: {
           title: 'Ganancia del Día',
@@ -205,7 +173,7 @@ export default function FudiBoardPage() {
         }
       },
       {
-        id: 'transacciones',
+        id: `transacciones-${pageNum}`,
         type: 'metric',
         content: {
           title: 'Transacciones',
@@ -216,7 +184,7 @@ export default function FudiBoardPage() {
 
       // CHART CARD
       {
-        id: 'chart',
+        id: `chart-${pageNum}`,
         type: 'chart',
         content: {
           title: 'Flujo de Ventas por Hora',
@@ -226,7 +194,7 @@ export default function FudiBoardPage() {
 
       // PRODUCTS CARD
       {
-        id: 'productos',
+        id: `productos-${pageNum}`,
         type: 'products',
         content: {
           title: 'Productos Destacados',
@@ -235,66 +203,94 @@ export default function FudiBoardPage() {
       }
     ];
 
-    return baseCards;
-  };
+    // Para páginas adicionales, agregar variaciones
+    if (pageNum > 0) {
+      baseCards.push({
+        id: `analysis-${pageNum}`,
+        type: 'metric',
+        content: {
+          title: 'Análisis Avanzado',
+          value: pageNum + 1,
+          trend: 'Datos históricos'
+        }
+      });
+    }
 
-  // Initialize feed cards
+    return baseCards;
+  }, [data, topProductos, fudiInsights, ventasPorHora]); // ❌ Quitamos currentInsightIndex
+
+  // Initialize feed cards - MEJORADO
   useEffect(() => {
     if (data.ventasHoy > 0 || topProductos.length > 0) {
-      const initialCards = generateFeedCards();
+      const initialCards = generateFeedCards(0);
       setFeedCards(initialCards);
+      setFeedPage(0);
+      setCanLoadMore(true);
     }
-  }, [data, topProductos, fudiInsights, currentInsightIndex, ventasPorHora]);
+  }, [data, topProductos, fudiInsights, ventasPorHora, generateFeedCards]); // ❌ Quitamos currentInsightIndex
 
-  // Infinite scroll handler
-  const handleScroll = () => {
-    if (!centerFeedRef.current) return;
-
-    const { scrollTop, scrollHeight, clientHeight } = centerFeedRef.current;
+  // Load more cards function - CORREGIDO
+  const loadMoreCards = useCallback(() => {
+    if (isLoadingMore || !canLoadMore) return;
     
-    if (scrollHeight - scrollTop <= clientHeight + 100 && !isLoadingMore && feedCards.length > 0) {
-      loadMoreCards();
-    }
-  };
-
-  const loadMoreCards = () => {
     setIsLoadingMore(true);
     
     setTimeout(() => {
-      const newCards = generateFeedCards().map(card => ({
-        ...card,
-        id: `${card.id}-${Date.now()}-${Math.random()}`
-      }));
+      const nextPage = feedPage + 1;
+      const newCards = generateFeedCards(nextPage);
       
       setFeedCards(prev => [...prev, ...newCards]);
+      setFeedPage(nextPage);
       setIsLoadingMore(false);
+      
+      // Limitar a 10 páginas para evitar scroll infinito real
+      if (nextPage >= 10) {
+        setCanLoadMore(false);
+      }
     }, 1000);
-  };
+  }, [isLoadingMore, canLoadMore, feedPage, generateFeedCards]);
 
-  // Add scroll listener
+  // Scroll handler - CORREGIDO
+  const handleScroll = useCallback(() => {
+    if (!centerFeedRef.current || isLoadingMore || !canLoadMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = centerFeedRef.current;
+    const scrollPosition = scrollTop + clientHeight;
+    const threshold = scrollHeight - 200; // 200px antes del final
+
+    if (scrollPosition >= threshold) {
+      loadMoreCards();
+    }
+  }, [isLoadingMore, canLoadMore, loadMoreCards]);
+
+  // Add scroll listener - CORREGIDO
   useEffect(() => {
     const feedElement = centerFeedRef.current;
-    if (feedElement) {
-      feedElement.addEventListener('scroll', handleScroll);
-      return () => feedElement.removeEventListener('scroll', handleScroll);
-    }
-  }, [feedCards.length, isLoadingMore]);
+    if (!feedElement) return;
 
-  // Render individual card
+    feedElement.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      feedElement.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
+
+  // ✅ Render individual card - REFACTORIZADO CON NUEVO TIPO
   const renderCard = (card: any, index: number) => {
     switch (card.type) {
-      case 'insights':
+      // 🧠 NUEVO TIPO: TARJETA INDIVIDUAL DE INSIGHT
+      case 'individual_insight':
         return (
           <FudiCard 
             key={`${card.id}-${index}`} 
             variant="orange" 
             padding="large"
-            className="insights-card-refined"
+            className="individual-insight-card"
           >
             <div className="card-header-refined">
               <Brain size={24} />
               <h3>Análisis Inteligente</h3>
-              <span className="card-meta-refined">{currentInsightIndex + 1} de {fudiInsights.length}</span>
+              <span className="card-meta-refined">{card.content.index} de {card.content.total}</span>
             </div>
             
             <div className="insight-content-refined">
@@ -302,7 +298,7 @@ export default function FudiBoardPage() {
                 {card.content.data.impact === 'high' && '🔥'}
                 {card.content.data.impact === 'medium' && '⚡'}
                 {card.content.data.impact === 'low' && '💡'}
-                {card.content.data.category?.toUpperCase()}
+                {card.content.data.category?.toUpperCase() || 'OPERACIONES'}
               </div>
               
               <h4 className="insight-title-refined">{card.content.data.title}</h4>
@@ -312,6 +308,22 @@ export default function FudiBoardPage() {
                 <span className="metric-value-refined">{card.content.data.metric}</span>
                 <span className="confidence-refined">{Math.round(card.content.data.confidence * 100)}% confianza</span>
               </div>
+
+              {/* Acción sugerida */}
+              {card.content.data.action && (
+                <div className="insight-action-refined">
+                  <p className="action-text-refined">{card.content.data.action}</p>
+                  <FudiButton
+                    variant="secondary"
+                    size="small"
+                    onClick={() => window.location.href = '/dashboard/chat'}
+                    icon={<MessageCircle size={16} />}
+                    className="ask-fudi-btn-refined"
+                  >
+                    Preguntar a FUDI
+                  </FudiButton>
+                </div>
+              )}
             </div>
           </FudiCard>
         );
@@ -355,6 +367,7 @@ export default function FudiBoardPage() {
             <div className="card-header-refined">
               {card.content.title === 'Ganancia del Día' && <TrendingUp size={24} />}
               {card.content.title === 'Transacciones' && <Users size={24} />}
+              {card.content.title === 'Análisis Avanzado' && <BarChart3 size={24} />}
               <h3>{card.content.title}</h3>
             </div>
             <div className="metric-content-refined">
@@ -720,7 +733,7 @@ export default function FudiBoardPage() {
 
   const getMaxSales = () => Math.max(...ventasPorHora.map(h => h.ventas));
 
-  // STATUS BAR
+  // ✅ STATUS BAR - PRESERVADO EXACTAMENTE
   const StatusBar = () => {
     const getStatusInfo = () => {
       if (!ultimaSincronizacion) {
@@ -809,51 +822,18 @@ export default function FudiBoardPage() {
         fixed={true}
       />
 
-      {/* ✅ EMBEDDED HEADER - NO EXTERNAL DEPENDENCIES */}
-      <header className="fudi-dash-header-refined">
-        <div className="header-container-refined">
-          
-          {/* Logo */}
-          <div className="dash-logo-refined">
-            <span className="logo-text-refined">FUDI</span>
-            <span className="logo-accent-refined">VERSE</span>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="desktop-nav-refined">
-            <a href="/dashboard/chat" className="nav-link-refined">
-              <Brain size={16} />
-              <span>fudiGPT</span>
-            </a>
-            
-            <div className="nav-link-refined nav-active-refined">
-              <BarChart3 size={16} />
-              <span>fudiBOARD</span>
-            </div>
-          </nav>
-
-          {/* Right Section */}
-          <div className="header-right-refined">
-            {/* Restaurant Name */}
-            <div className="restaurant-badge-refined">
-              {userData?.restaurantName || 'Mi Restaurante'}
-            </div>
-
-            {/* Logout Button */}
-            <FudiButton
-              variant="primary"
-              size="small"
-              onClick={handleLogout}
-              icon={<LogOut size={16} />}
-              iconPosition="left"
-            >
-              <span className="logout-text-refined">Salir</span>
-            </FudiButton>
-          </div>
-        </div>
-      </header>
+      {/* ✅ NUEVO HEADER MINIMALISTA */}
+      <FudiDashHeader
+        currentModule="board"
+        userName={userData?.ownerName || 'Usuario'}
+        restaurantName={userData?.restaurantName || 'Mi Restaurante'}
+        conversations={[]} // Board no necesita conversaciones
+        onLogout={handleLogout}
+        onNewConversation={() => window.location.href = '/dashboard/chat'}
+        onSwitchConversation={() => window.location.href = '/dashboard/chat'}
+      />
       
-      {/* Status Bar */}
+      {/* ✅ STATUS BAR - PRESERVADO EXACTAMENTE */}
       <StatusBar />
 
       {/* Main Content - CLEAN LAYOUT */}
@@ -912,13 +892,13 @@ export default function FudiBoardPage() {
           </FudiCard>
         </aside>
         
-        {/* Center Feed - INFINITE SCROLL */}
+        {/* Center Feed - INFINITE SCROLL CORREGIDO */}
         <div 
           className="center-feed-refined" 
           ref={centerFeedRef}
         >
           {feedCards.map((card, index) => (
-            <div key={`${card.id}-${index}`} className="feed-item-refined">
+            <div key={card.id} className="feed-item-refined">
               {renderCard(card, index)}
             </div>
           ))}
@@ -928,6 +908,13 @@ export default function FudiBoardPage() {
             <div className="feed-loading-refined">
               <div className="loading-spinner-small-refined"></div>
               <p>Cargando más insights...</p>
+            </div>
+          )}
+
+          {/* End message */}
+          {!canLoadMore && feedCards.length > 0 && (
+            <div className="feed-end-refined">
+              <p>🎯 Has explorado todo el análisis disponible</p>
             </div>
           )}
         </div>
@@ -941,19 +928,19 @@ export default function FudiBoardPage() {
               <div className="insight-category-item-refined">
                 <div className="category-icon-refined">💰</div>
                 <span>Revenue</span>
-                <div className="category-badge-refined">3</div>
+                <div className="category-badge-refined">{fudiInsights.filter(i => i.category === 'revenue').length}</div>
               </div>
               
               <div className="insight-category-item-refined">
                 <div className="category-icon-refined">⚡</div>
                 <span>Operaciones</span>
-                <div className="category-badge-refined">5</div>
+                <div className="category-badge-refined">{fudiInsights.filter(i => i.category === 'operations').length}</div>
               </div>
               
               <div className="insight-category-item-refined">
                 <div className="category-icon-refined">👥</div>
                 <span>Clientes</span>
-                <div className="category-badge-refined">2</div>
+                <div className="category-badge-refined">{fudiInsights.filter(i => i.category === 'customer').length}</div>
               </div>
             </div>
           </FudiCard>
@@ -985,6 +972,37 @@ export default function FudiBoardPage() {
         </aside>
         
       </main>
+
+      {/* ✅ ESTILOS ADICIONALES PARA NUEVAS TARJETAS */}
+      <style jsx>{`
+        .individual-insight-card {
+          background: linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(247,147,30,0.05) 100%);
+          border: 1px solid rgba(255,107,53,0.2);
+        }
+
+        .insight-action-refined {
+          margin-top: 16px;
+          padding-top: 16px;
+          border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .action-text-refined {
+          font-size: 13px;
+          color: #6B7280;
+          margin-bottom: 12px;
+          line-height: 1.4;
+        }
+
+        .ask-fudi-btn-refined {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .individual-insight-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 32px rgba(255,107,53,0.15);
+        }
+      `}</style>
     </div>
   );
 }

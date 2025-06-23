@@ -5,11 +5,7 @@ import dynamic from 'next/dynamic';
 import { fudiAPI } from '@/lib/api';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
-import { FudiButton } from '@/components/fudiverse/FudiButton';
-import { 
-  Brain, BarChart3, MessageSquare, User, LogOut, 
-  Menu, X, ChevronDown, Plus
-} from 'lucide-react';
+import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import '@/styles/pages/chat.css';
 
 // 🔥 DYNAMIC IMPORT PARA EVITAR SSR ISSUES
@@ -24,7 +20,6 @@ const ReactMarkdown = dynamic(() => import('react-markdown'), {
 });
 
 import remarkGfm from 'remark-gfm';
-
 
 // =============================================
 // INTERFACES - MANTENER EXACTAMENTE IGUAL
@@ -265,9 +260,6 @@ export default function ChatPage() {
   const [fudiPersonality, setFudiPersonality] = useState<'estratega' | 'motivador' | 'mentor' | 'casual'>('casual');
   const [messageCount, setMessageCount] = useState(0);
   
-  // Header state
-  const [isConversationsOpen, setIsConversationsOpen] = useState(false);
-  
   // Easter eggs and effects
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([]);
   const [glowIntensity, setGlowIntensity] = useState(0);
@@ -366,7 +358,6 @@ export default function ChatPage() {
     setCurrentConversationId(conversationId);
     setMessages([]); // In real app, load messages for this conversation
     setShowWelcome(false);
-    setIsConversationsOpen(false); // Close dropdown after selection
   };
 
   // 🔒 CRITICAL CONVERSATION FUNCTIONS - PRESERVED EXACTLY
@@ -390,7 +381,6 @@ export default function ChatPage() {
         setMessages([]);
         setShowWelcome(true);
         setInputMessage('');
-        setIsConversationsOpen(false);
       }
     } catch (error) {
       console.error('Error creating conversation:', error);
@@ -598,128 +588,6 @@ export default function ChatPage() {
   // RENDER COMPONENTS
   // =============================================
   
-  const renderHeader = () => (
-    <header className="fudi-dash-header-refined">
-      <div className="header-container-refined">
-        
-        {/* Conversations Dropdown */}
-        <div className="conversations-dropdown-refined">
-          <button 
-            className="conversations-trigger-refined"
-            onClick={() => setIsConversationsOpen(!isConversationsOpen)}
-          >
-            <MessageSquare size={16} />
-            <span>Conversaciones</span>
-            <span className="conversations-count-refined">{conversations.length}</span>
-            <ChevronDown size={14} />
-          </button>
-
-          {isConversationsOpen && (
-            <div className="conversations-panel-refined">
-              {/* New Chat Button */}
-              <FudiButton
-                variant="primary"
-                size="medium"
-                onClick={startNewConversation}
-                icon={<Plus size={16} />}
-                iconPosition="left"
-                className="dropdown-new-chat-refined"
-              >
-                Nueva Conversación
-              </FudiButton>
-
-              {/* Conversations List */}
-              <div className="dropdown-conversations-refined">
-                {conversations.length === 0 ? (
-                  <div className="dropdown-empty-refined">
-                    <p>No hay conversaciones aún</p>
-                    <p className="dropdown-empty-subtitle-refined">Inicia tu primera conversación</p>
-                  </div>
-                ) : (
-                  conversations.map((conversation) => (
-                    <button
-                      key={conversation.id}
-                      className={`dropdown-conversation-refined ${
-                        currentConversationId === conversation.id ? 'dropdown-conversation-active-refined' : ''
-                      }`}
-                      onClick={() => switchConversation(conversation.id)}
-                    >
-                      <div className="dropdown-conversation-content-refined">
-                        <h3 className="dropdown-conversation-title-refined">{conversation.title}</h3>
-                        <p className="dropdown-conversation-time-refined">
-                          {conversation.timestamp.toLocaleDateString()}
-                        </p>
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-
-              {/* User Info */}
-              <div className="dropdown-user-refined">
-                <div className="dropdown-user-info-refined">
-                  <div className="dropdown-user-avatar-refined">
-                    <User size={16} />
-                  </div>
-                  <div className="dropdown-user-details-refined">
-                    <div className="dropdown-user-name-refined">{userData.ownerName}</div>
-                    <div className="dropdown-user-restaurant-refined">{userData.restaurantName}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Logo */}
-        <div className="dash-logo-refined">
-          <span className="logo-text-refined">FUDI</span>
-          <span className="logo-accent-refined">VERSE</span>
-        </div>
-
-        {/* Desktop Navigation */}
-        <nav className="desktop-nav-refined">
-          <div className="nav-link-refined nav-active-refined">
-            <Brain size={16} />
-            <span>fudiGPT</span>
-          </div>
-          
-          <a href="/dashboard/board" className="nav-link-refined">
-            <BarChart3 size={16} />
-            <span>fudiBOARD</span>
-          </a>
-        </nav>
-
-        {/* Right Section */}
-        <div className="header-right-refined">
-          {/* Restaurant Name */}
-          <div className="restaurant-badge-refined">
-            {userData.restaurantName}
-          </div>
-
-          {/* Logout Button */}
-          <FudiButton
-            variant="primary"
-            size="small"
-            onClick={handleLogout}
-            icon={<LogOut size={16} />}
-            iconPosition="left"
-          >
-            <span className="logout-text-refined">Salir</span>
-          </FudiButton>
-        </div>
-      </div>
-
-      {/* Click outside to close */}
-      {isConversationsOpen && (
-        <div 
-          className="dropdown-overlay-refined"
-          onClick={() => setIsConversationsOpen(false)}
-        />
-      )}
-    </header>
-  );
-
   const renderWelcomeScreen = () => (
     <div className="welcome-screen-refined">
       <div className="welcome-card-refined">
@@ -735,7 +603,7 @@ export default function ChatPage() {
     </div>
   );
 
-  // 🔥 NUEVO: RENDER MESSAGE CON MARKDOWN POWER
+  // 🔥 RENDER MESSAGE CON MARKDOWN POWER
   const renderMessage = (message: Message) => {
     if (message.type === 'user') {
       // Usuario sigue con tarjetas (más compacto)
@@ -879,8 +747,20 @@ export default function ChatPage() {
         fixed={true}
       />
 
-      {/* Header */}
-      {renderHeader()}
+      {/* ✅ NUEVO HEADER MINIMALISTA */}
+      <FudiDashHeader
+        currentModule="chat"
+        userName={userData.ownerName}
+        restaurantName={userData.restaurantName}
+        conversations={conversations.map(conv => ({
+          id: conv.id,
+          title: conv.title,
+          timestamp: conv.timestamp
+        }))}
+        onLogout={handleLogout}
+        onNewConversation={startNewConversation}
+        onSwitchConversation={switchConversation}
+      />
 
       {/* Main Chat Area */}
       <main className="chat-main-refined">
