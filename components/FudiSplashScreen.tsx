@@ -38,7 +38,7 @@ export function FudiSplashScreen() {
         {/* Logo FUDI con animación de entrada */}
         <div className="fudi-logo-container">
           <Image
-            src="/fudi-logo.png" // Tu logo azul de FUDI chef
+            src="/favicon.png" // Tu logo azul de FUDI chef
             alt="FUDI - Tu asistente AI"
             width={140}
             height={140}
