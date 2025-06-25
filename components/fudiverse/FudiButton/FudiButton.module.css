@@ -1,8 +1,8 @@
 /* =============================================
-   FUDI BUTTON - ESTILO VECTORIAL SIMPLE
+   FUDI BUTTON - MOBILE FIRST RESPONSIVE
    ============================================= */
 
-/* BASE BUTTON */
+/* BASE BUTTON - MOBILE FIRST */
 .fudiButton {
   position: relative;
   display: inline-flex;
@@ -11,34 +11,59 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 500;
   border: 1px solid;
-  border-radius: 6px;
+  border-radius: clamp(4px, 1.5vw, 6px);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   letter-spacing: 0.01em;
+  overflow: hidden;
+  user-select: none;
+  white-space: nowrap;
+  box-sizing: border-box;
+  width: auto;
+  max-width: 100%;
 }
 
-.fudiButton:active {
-  transform: scale(0.98);
+.fudiButton:active:not(.disabled):not(.loading) {
+  transform: scale(0.95);
 }
 
-/* SIZES */
+/* ==================== SIZES - MOBILE FIRST ==================== */
+
+.tiny {
+  padding: clamp(0.2rem, 1vw, 0.25rem) clamp(0.4rem, 2vw, 0.5rem);
+  font-size: clamp(0.7rem, 3vw, 0.75rem);
+  border-radius: clamp(3px, 1vw, 4px);
+  min-height: clamp(20px, 6vw, 24px);
+}
+
 .small {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+  padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.8rem, 3vw, 1rem);
+  font-size: clamp(0.8rem, 3.5vw, 0.875rem);
+  min-height: clamp(28px, 8vw, 32px);
 }
 
 .medium {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  padding: clamp(0.6rem, 2vw, 0.75rem) clamp(1.2rem, 4vw, 1.5rem);
+  font-size: clamp(0.9rem, 4vw, 1rem);
+  min-height: clamp(36px, 10vw, 40px);
 }
 
 .large {
-  padding: 1rem 2rem;
-  font-size: 1.125rem;
+  padding: clamp(0.8rem, 2.5vw, 1rem) clamp(1.6rem, 5vw, 2rem);
+  font-size: clamp(1rem, 4.5vw, 1.125rem);
+  min-height: clamp(44px, 12vw, 48px);
 }
 
-/* MODIFIERS */
+.xl {
+  padding: clamp(1rem, 3vw, 1.25rem) clamp(2rem, 6vw, 2.5rem);
+  font-size: clamp(1.1rem, 5vw, 1.25rem);
+  min-height: clamp(52px, 14vw, 56px);
+  border-radius: clamp(6px, 2vw, 8px);
+}
+
+/* ==================== MODIFIERS ==================== */
+
 .fullWidth {
   width: 100%;
 }
@@ -49,109 +74,710 @@
   transform: none !important;
 }
 
-.hasIcon {
-  gap: 0.5rem;
+.loading {
+  cursor: wait;
+  pointer-events: none;
 }
 
-/* CONTENT */
-.content {
-  position: relative;
-  z-index: 2;
+.hasIcon {
+  gap: clamp(0.3rem, 1.5vw, 0.5rem);
 }
+
+.hasCount {
+  gap: clamp(0.2rem, 1vw, 0.25rem);
+}
+
+.hasBadge {
+  padding-right: clamp(0.6rem, 2vw, 0.75rem);
+}
+
+/* ==================== CONTENT ==================== */
 
 .text {
   display: flex;
   align-items: center;
+  gap: clamp(0.2rem, 1vw, 0.25rem);
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .icon {
   display: flex;
   align-items: center;
-  font-size: 0.9em;
+  font-size: clamp(0.8em, 3vw, 0.9em);
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
 }
 
-/* ==================== VARIANTES ==================== */
+.count {
+  font-size: clamp(0.75em, 3vw, 0.85em);
+  font-weight: 600;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
 
-/* PRIMARY - Negro sólido */
+.socialMetric {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.15rem, 0.8vw, 0.2rem);
+  font-size: clamp(0.75em, 3vw, 0.85em);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.trendingIcon {
+  font-size: clamp(0.7em, 2.5vw, 0.8em);
+  animation: trendingFlame 1s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* ==================== ORIGINAL VARIANTS ==================== */
+
+/* PRIMARY */
 .primary {
   background: #000000;
   color: #ffffff;
   border-color: #000000;
 }
 
-.primary:hover:not(.disabled) {
+.primary:hover:not(.disabled):not(.loading) {
   background: #1a1a1a;
   border-color: #333333;
-  transform: translateY(-1px);
+  transform: translateY(clamp(-0.5px, -0.2vw, -1px));
 }
 
-/* SECONDARY - Blanco con borde */
+/* SECONDARY */
 .secondary {
   background: #ffffff;
   color: #000000;
   border-color: #e5e5e5;
 }
 
-.secondary:hover:not(.disabled) {
+.secondary:hover:not(.disabled):not(.loading) {
   background: #f8f8f8;
   border-color: #d4d4d4;
-  transform: translateY(-1px);
+  transform: translateY(clamp(-0.5px, -0.2vw, -1px));
 }
 
-/* GHOST - Transparente con borde */
+/* GHOST */
 .ghost {
   background: transparent;
   color: #666666;
   border-color: #e5e5e5;
 }
 
-.ghost:hover:not(.disabled) {
+.ghost:hover:not(.disabled):not(.loading) {
   background: #f8f8f8;
   color: #000000;
   border-color: #d4d4d4;
-  transform: translateY(-1px);
+  transform: translateY(clamp(-0.5px, -0.2vw, -1px));
 }
 
-/* ORANGE - Naranja vibrante */
+/* ORANGE */
 .orange {
   background: #ff6b35;
   color: #ffffff;
   border-color: #ff6b35;
 }
 
-.orange:hover:not(.disabled) {
+.orange:hover:not(.disabled):not(.loading) {
   background: #ff5722;
   border-color: #ff5722;
-  transform: translateY(-1px);
+  transform: translateY(clamp(-0.5px, -0.2vw, -1px));
 }
 
-/* CYAN - Cyan moderno */
+/* CYAN */
 .cyan {
   background: #00bcd4;
   color: #ffffff;
   border-color: #00bcd4;
 }
 
-.cyan:hover:not(.disabled) {
+.cyan:hover:not(.disabled):not(.loading) {
   background: #00acc1;
   border-color: #00acc1;
-  transform: translateY(-1px);
+  transform: translateY(clamp(-0.5px, -0.2vw, -1px));
 }
 
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
-  .small {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.8rem;
+/* ==================== NEW FUDI-FLOW VARIANTS ==================== */
+
+/* PURPLE - Para AI features */
+.purple {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+  color: #ffffff;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 rgba(139, 92, 246, 0);
+  transition: all 0.3s ease, box-shadow 0.3s ease;
+}
+
+.purple:hover:not(.disabled):not(.loading) {
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  border-color: #7c3aed;
+  transform: translateY(clamp(-1px, -0.3vw, -2px));
+  box-shadow: 0 clamp(4px, 2vw, 8px) clamp(12px, 6vw, 25px) rgba(139, 92, 246, 0.3);
+}
+
+/* SOCIAL-LIKE - Para botones de like */
+.social-like {
+  background: transparent;
+  color: #e5e5e5;
+  border-color: transparent;
+  border-radius: 50%;
+  width: clamp(32px, 10vw, 40px);
+  height: clamp(32px, 10vw, 40px);
+  padding: 0;
+  min-height: auto;
+  aspect-ratio: 1;
+}
+
+.social-like:hover:not(.disabled):not(.loading) {
+  background: rgba(255, 48, 64, 0.1);
+  color: #ff3040;
+  transform: scale(clamp(1.05, 1.08, 1.1));
+}
+
+.social-like.active {
+  background: rgba(255, 48, 64, 0.15);
+  color: #ff3040;
+  animation: likeAnimation 0.3s ease;
+}
+
+/* SOCIAL-SAVE - Para botones de guardar */
+.social-save {
+  background: transparent;
+  color: #e5e5e5;
+  border-color: transparent;
+  border-radius: clamp(6px, 2vw, 8px);
+  padding: clamp(0.4rem, 1.5vw, 0.5rem);
+}
+
+.social-save:hover:not(.disabled):not(.loading) {
+  background: rgba(255, 167, 38, 0.1);
+  color: #ffa726;
+  transform: scale(clamp(1.02, 1.03, 1.05));
+}
+
+.social-save.active {
+  background: rgba(255, 167, 38, 0.15);
+  color: #ffa726;
+  animation: saveAnimation 0.4s ease;
+}
+
+/* CHEF-KISS - Para reacciones especiales */
+.chef-kiss {
+  background: linear-gradient(135deg, #ff6b35, #ffa726);
+  color: #ffffff;
+  border-color: #ff6b35;
+  border-radius: clamp(12px, 5vw, 20px);
+  position: relative;
+  overflow: visible;
+}
+
+.chef-kiss::before {
+  content: '';
+  position: absolute;
+  inset: clamp(-1px, -0.3vw, -2px);
+  background: linear-gradient(45deg, #ff6b35, #ffa726, #ff6b35);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: chefKissGlow 2s ease-in-out infinite;
+}
+
+.chef-kiss:hover:not(.disabled):not(.loading) {
+  transform: translateY(clamp(-1px, -0.3vw, -2px)) scale(clamp(1.02, 1.03, 1.05));
+  box-shadow: 0 clamp(4px, 2vw, 8px) clamp(12px, 6vw, 25px) rgba(255, 107, 53, 0.4);
+}
+
+.chef-kiss:hover::before {
+  opacity: 0.6;
+}
+
+.chef-kiss.active {
+  animation: chefKissReaction 0.6s ease;
+}
+
+/* TRENDING - Para contenido viral */
+.trending {
+  background: linear-gradient(135deg, #fbbf24, #ff6b35);
+  color: #ffffff;
+  border-color: #fbbf24;
+  position: relative;
+  animation: trendingPulse 2s ease-in-out infinite;
+}
+
+.trending::after {
+  content: '🔥';
+  position: absolute;
+  top: clamp(-3px, -1vw, -5px);
+  right: clamp(-3px, -1vw, -5px);
+  font-size: clamp(0.7rem, 3vw, 0.8rem);
+  animation: trendingFlame 1.5s ease-in-out infinite;
+}
+
+.trending:hover:not(.disabled):not(.loading) {
+  transform: translateY(clamp(-1px, -0.3vw, -2px));
+  box-shadow: 0 clamp(4px, 2vw, 8px) clamp(12px, 6vw, 25px) rgba(251, 191, 36, 0.4);
+}
+
+/* VERIFIED - Para elementos verificados */
+.verified {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: #ffffff;
+  border-color: #3b82f6;
+  position: relative;
+}
+
+.verified::before {
+  content: '✓';
+  position: absolute;
+  top: clamp(-2px, -0.8vw, -3px);
+  right: clamp(-2px, -0.8vw, -3px);
+  width: clamp(12px, 4vw, 16px);
+  height: clamp(12px, 4vw, 16px);
+  background: #10b981;
+  border: clamp(1px, 0.5vw, 2px) solid #ffffff;
+  border-radius: 50%;
+  font-size: clamp(0.5rem, 2vw, 0.6rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.verified:hover:not(.disabled):not(.loading) {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  transform: translateY(clamp(-0.5px, -0.2vw, -1px));
+  box-shadow: 0 clamp(3px, 1.5vw, 6px) clamp(10px, 5vw, 20px) rgba(59, 130, 246, 0.3);
+}
+
+/* AI-POWERED - Para features con AI */
+.ai-powered {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  color: #ffffff;
+  border-color: #06b6d4;
+  position: relative;
+  overflow: visible;
+}
+
+.ai-powered::before {
+  content: '🧠';
+  position: absolute;
+  top: clamp(-6px, -2vw, -8px);
+  left: clamp(-6px, -2vw, -8px);
+  width: clamp(16px, 5vw, 20px);
+  height: clamp(16px, 5vw, 20px);
+  background: rgba(6, 182, 212, 0.9);
+  border-radius: 50%;
+  font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: aiPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 clamp(5px, 2.5vw, 10px) rgba(6, 182, 212, 0.5);
+}
+
+.ai-powered:hover:not(.disabled):not(.loading) {
+  background: linear-gradient(135deg, #0891b2, #0e7490);
+  transform: translateY(clamp(-1px, -0.3vw, -2px));
+  box-shadow: 0 clamp(4px, 2vw, 8px) clamp(12px, 6vw, 25px) rgba(6, 182, 212, 0.3);
+}
+
+/* GRADIENT - Para CTAs especiales */
+.gradient {
+  background: linear-gradient(135deg, #ff6b35, #00bcd4, #8b5cf6);
+  background-size: 200% 200%;
+  color: #ffffff;
+  border: none;
+  animation: gradientShift 3s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ff6b35, #00bcd4, #8b5cf6);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease-in-out infinite reverse;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient:hover:not(.disabled):not(.loading) {
+  transform: translateY(clamp(-1px, -0.3vw, -2px)) scale(clamp(1.01, 1.015, 1.02));
+  box-shadow: 0 clamp(6px, 3vw, 12px) clamp(15px, 7vw, 30px) rgba(139, 92, 246, 0.3);
+}
+
+.gradient:hover::before {
+  opacity: 0.3;
+}
+
+/* GLASSMORPHIC - Para overlay buttons */
+.glassmorphic {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(clamp(10px, 4vw, 20px));
+  border-radius: clamp(8px, 3vw, 12px);
+}
+
+.glassmorphic:hover:not(.disabled):not(.loading) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(clamp(-0.5px, -0.2vw, -1px));
+  box-shadow: 0 clamp(4px, 2vw, 8px) clamp(16px, 8vw, 32px) rgba(0, 0, 0, 0.3);
+}
+
+/* ==================== STATES ==================== */
+
+.active {
+  transform: scale(0.95);
+  box-shadow: inset 0 clamp(1px, 0.5vw, 2px) clamp(4px, 2vw, 8px) rgba(0, 0, 0, 0.2);
+}
+
+.glowEffect {
+  box-shadow: 0 0 clamp(10px, 5vw, 20px) currentColor;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.pulseEffect {
+  animation: buttonPulse 1.5s ease-in-out infinite;
+}
+
+/* ==================== LOADING STATE ==================== */
+
+.loadingSpinner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: inherit;
+  border-radius: inherit;
+  z-index: 3;
+}
+
+.spinner {
+  width: clamp(12px, 4vw, 16px);
+  height: clamp(12px, 4vw, 16px);
+  border: clamp(1.5px, 0.5vw, 2px) solid transparent;
+  border-top: clamp(1.5px, 0.5vw, 2px) solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading .text,
+.loading .icon {
+  opacity: 0.3;
+}
+
+/* ==================== BADGE ==================== */
+
+.badge {
+  position: absolute;
+  top: clamp(-6px, -2vw, -8px);
+  right: clamp(-6px, -2vw, -8px);
+  background: #ff3040;
+  color: #ffffff;
+  font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+  font-weight: 700;
+  padding: clamp(0.1rem, 0.5vw, 0.15rem) clamp(0.3rem, 1vw, 0.4rem);
+  border-radius: clamp(8px, 2.5vw, 10px);
+  line-height: 1;
+  z-index: 4;
+  min-width: clamp(14px, 4.5vw, 18px);
+  text-align: center;
+  box-shadow: 0 clamp(1px, 0.5vw, 2px) clamp(4px, 2vw, 8px) rgba(255, 48, 64, 0.3);
+  animation: badgeNotification 2s ease-in-out infinite;
+}
+
+.tiny .badge {
+  top: clamp(-4px, -1.5vw, -6px);
+  right: clamp(-4px, -1.5vw, -6px);
+  font-size: clamp(0.5rem, 2vw, 0.6rem);
+  padding: clamp(0.08rem, 0.3vw, 0.1rem) clamp(0.2rem, 0.8vw, 0.3rem);
+  min-width: clamp(12px, 4vw, 16px);
+}
+
+/* ==================== RIPPLE EFFECT ==================== */
+
+.ripple {
+  position: absolute;
+  width: clamp(30px, 10vw, 40px);
+  height: clamp(30px, 10vw, 40px);
+  border-radius: 50%;
+  background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  transform: scale(0);
+  animation: rippleEffect 0.6s ease-out;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes likeAnimation {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(clamp(1.15, 1.18, 1.2)) rotate(-5deg); }
+  50% { transform: scale(clamp(1.08, 1.1, 1.1)) rotate(5deg); }
+  75% { transform: scale(clamp(1.12, 1.14, 1.15)) rotate(-2deg); }
+}
+
+@keyframes saveAnimation {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(clamp(1.08, 1.09, 1.1)) translateY(clamp(-1.5px, -0.5vw, -2px)); }
+  50% { transform: scale(clamp(1.03, 1.04, 1.05)) translateY(clamp(-0.8px, -0.3vw, -1px)); }
+  75% { transform: scale(clamp(1.06, 1.07, 1.08)) translateY(clamp(-1.2px, -0.4vw, -1.5px)); }
+}
+
+@keyframes chefKissReaction {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(clamp(1.08, 1.09, 1.1)) rotate(-5deg); }
+  50% { transform: scale(clamp(1.12, 1.14, 1.15)) rotate(5deg); }
+  75% { transform: scale(clamp(1.08, 1.09, 1.1)) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes chefKissGlow {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes trendingPulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 0 0 rgba(251, 191, 36, 0);
+  }
+  50% { 
+    transform: scale(clamp(1.01, 1.015, 1.02));
+    box-shadow: 0 0 clamp(10px, 5vw, 20px) rgba(251, 191, 36, 0.4);
+  }
+}
+
+@keyframes trendingFlame {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  25% { transform: scale(clamp(1.08, 1.09, 1.1)) rotate(2deg); }
+  50% { transform: scale(clamp(1.03, 1.04, 1.05)) rotate(-1deg); }
+  75% { transform: scale(clamp(1.06, 1.07, 1.08)) rotate(1deg); }
+}
+
+@keyframes aiPulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    transform: scale(1);
+    box-shadow: 0 0 clamp(5px, 2.5vw, 10px) rgba(6, 182, 212, 0.5);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(clamp(1.08, 1.09, 1.1));
+    box-shadow: 0 0 clamp(10px, 5vw, 20px) rgba(6, 182, 212, 0.8);
+  }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes buttonPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(clamp(1.03, 1.04, 1.05)); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { 
+    box-shadow: 0 0 clamp(10px, 5vw, 20px) currentColor;
+    opacity: 1;
+  }
+  50% { 
+    box-shadow: 0 0 clamp(15px, 7vw, 30px) currentColor;
+    opacity: 0.8;
+  }
+}
+
+@keyframes rippleEffect {
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes badgeNotification {
+  0%, 100% { transform: scale(1); }
+  10% { transform: scale(clamp(1.08, 1.09, 1.1)); }
+  20% { transform: scale(1); }
+  30% { transform: scale(clamp(1.08, 1.09, 1.1)); }
+  40% { transform: scale(1); }
+}
+
+/* ==================== RESPONSIVE BREAKPOINTS (MIN-WIDTH) ==================== */
+
+/* Móviles grandes */
+@media (min-width: 375px) {
+  .social-like {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Móviles XL */
+@media (min-width: 414px) {
+  .hasIcon { gap: 0.4rem; }
+  .hasCount { gap: 0.22rem; }
+}
+
+/* Tablets pequeñas */
+@media (min-width: 640px) {
+  .tiny { font-size: 0.75rem; }
+  .small { font-size: 0.875rem; }
+  .medium { font-size: 1rem; }
+  .large { font-size: 1.125rem; }
+  .xl { font-size: 1.25rem; }
+  
+  .social-like {
+    width: 38px;
+    height: 38px;
   }
   
-  .medium {
-    padding: 0.625rem 1.25rem;
-    font-size: 0.9rem;
+  .hasIcon { gap: 0.45rem; }
+  .hasCount { gap: 0.24rem; }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  .social-like {
+    width: 40px;
+    height: 40px;
   }
   
-  .large {
-    padding: 0.875rem 1.75rem;
-    font-size: 1rem;
+  .hasIcon { gap: 0.5rem; }
+  .hasCount { gap: 0.25rem; }
+  
+  .chef-kiss::before,
+  .ai-powered::before {
+    display: flex; /* Mostrar elementos decorativos en tablets+ */
+  }
+}
+
+/* Desktops */
+@media (min-width: 1024px) {
+  .fudiButton:hover:not(.disabled):not(.loading) {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ==================== TOUCH OPTIMIZATIONS ==================== */
+@media (hover: none) {
+  .fudiButton:hover:not(.disabled):not(.loading) {
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .fudiButton:active:not(.disabled):not(.loading) {
+    transform: scale(0.95);
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+@media (prefers-reduced-motion: reduce) {
+  .fudiButton,
+  .badge,
+  .ripple,
+  .loadingSpinner,
+  .spinner,
+  .trending,
+  .chef-kiss::before,
+  .ai-powered::before {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .glowEffect,
+  .pulseEffect {
+    animation: none !important;
+  }
+  
+  .gradient {
+    background: #ff6b35;
+    animation: none !important;
+  }
+}
+
+.fudiButton:focus-visible {
+  outline: clamp(1px, 0.5vw, 2px) solid #ff6b35;
+  outline-offset: clamp(1px, 0.5vw, 2px);
+}
+
+/* ==================== HIGH CONTRAST MODE ==================== */
+@media (prefers-contrast: high) {
+  .social-like,
+  .social-save,
+  .glassmorphic {
+    background: #000000;
+    border: clamp(1px, 0.5vw, 2px) solid #ffffff;
+    color: #ffffff;
+  }
+  
+  .chef-kiss,
+  .trending,
+  .verified,
+  .ai-powered,
+  .gradient {
+    background: #ffffff;
+    color: #000000;
+    border: clamp(1px, 0.5vw, 2px) solid #000000;
+  }
+  
+  .badge {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #000000;
+  }
+  
+  .glassmorphic {
+    backdrop-filter: none;
+  }
+}
+
+/* ==================== PERFORMANCE OPTIMIZATIONS ==================== */
+@media (max-width: 480px) {
+  .glassmorphic {
+    backdrop-filter: blur(8px); /* Reducir blur en móviles */
+  }
+  
+  .gradient {
+    background-size: 150% 150%; /* Reducir tamaño del gradient */
+  }
+  
+  .chef-kiss::before,
+  .ai-powered::before,
+  .trending::after,
+  .verified::before {
+    display: none; /* Ocultar decoraciones en móviles muy pequeños */
+  }
+}
+
+/* Container queries para elementos muy pequeños */
+@container (max-width: 120px) {
+  .count,
+  .socialMetric {
+    display: none;
+  }
+  
+  .badge {
+    font-size: 0.5rem;
+    padding: 0.05rem 0.2rem;
   }
 }

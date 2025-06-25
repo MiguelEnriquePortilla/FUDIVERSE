@@ -1,13 +1,15 @@
+'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import styles from './FudiDashHeader.module.css';
 import { 
   Brain, BarChart3, MessageSquare, User, LogOut, 
-  Menu, X, ChevronDown, Plus
+  Menu, X, ChevronDown, Plus,
+  Truck, ShoppingCart
 } from 'lucide-react';
 
 interface FudiDashHeaderProps {
-  currentModule?: 'chat' | 'board';
+  currentModule?: 'chat' | 'board' | 'delivery' | 'mart' | 'flow';
   userName?: string;
   restaurantName?: string;
   conversations?: Array<{id: string, title: string, timestamp: Date}>;
@@ -30,10 +32,46 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
   const [isConversationsOpen, setIsConversationsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Solo fudiGPT y fudiBOARD
+  // FUDIVERSE complete modules
   const modules = [
-    { href: '/dashboard/chat', label: 'fudiGPT', module: 'chat', icon: Brain },
-    { href: '/dashboard/board', label: 'fudiBOARD', module: 'board', icon: BarChart3 },
+    { 
+      href: '/dashboard/chat', 
+      label: 'fudiGPT', 
+      module: 'chat', 
+      icon: Brain,
+      status: 'active'
+    },
+    { 
+      href: '/dashboard/board', 
+      label: 'fudiBOARD', 
+      module: 'board', 
+      icon: BarChart3,
+      status: 'active'
+    },
+    { 
+      href: '/dashboard/delivery', 
+      label: 'fudi-delivery', 
+      module: 'delivery', 
+      icon: Truck,
+      status: 'coming-soon',
+      eta: '2 sem'
+    },
+    { 
+      href: '/dashboard/mart', 
+      label: 'fudi-mart', 
+      module: 'mart', 
+      icon: ShoppingCart,
+      status: 'coming-soon',
+      eta: 'Q2'
+    },
+    { 
+      href: '/dashboard/flow', 
+      label: 'fudi-flow', 
+      module: 'flow', 
+      icon: MessageSquare,
+      status: 'coming-soon',
+      eta: 'Q2'
+    }
   ];
 
   const handleLogout = () => {
@@ -159,22 +197,28 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
           </div>
         )}
 
-        {/* Desktop Navigation - Solo 2 módulos */}
+        {/* Desktop Navigation - All 5 modules */}
         <nav className={styles.desktopNav} role="navigation" aria-label="Navegación principal">
           {modules.map((module) => {
             const Icon = module.icon;
             const isActive = currentModule === module.module;
+            const isComingSoon = module.status === 'coming-soon';
             
             return (
               <Link
                 key={module.module}
                 href={module.href}
-                className={`${styles.navLink} ${isActive ? styles.navActive : ''}`}
+                className={`${styles.navLink} ${isActive ? styles.navActive : ''} ${isComingSoon ? styles.navComingSoon : ''}`}
                 aria-current={isActive ? 'page' : undefined}
                 aria-label={`Ir a ${module.label}`}
               >
                 <Icon size={16} />
                 <span>{module.label}</span>
+                {isComingSoon && (
+                  <span className={styles.comingSoonBadge}>
+                    {module.eta}
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -222,16 +266,22 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
               {modules.map((module) => {
                 const Icon = module.icon;
                 const isActive = currentModule === module.module;
+                const isComingSoon = module.status === 'coming-soon';
                 
                 return (
                   <Link
                     key={module.module}
                     href={module.href}
-                    className={`${styles.mobileNavLink} ${isActive ? styles.mobileNavActive : ''}`}
+                    className={`${styles.mobileNavLink} ${isActive ? styles.mobileNavActive : ''} ${isComingSoon ? styles.mobileNavComingSoon : ''}`}
                     onClick={closeMobileMenu}
                   >
                     <Icon size={20} />
                     <span>{module.label}</span>
+                    {isComingSoon && (
+                      <span className={styles.mobileComingSoonBadge}>
+                        {module.eta}
+                      </span>
+                    )}
                   </Link>
                 );
               })}

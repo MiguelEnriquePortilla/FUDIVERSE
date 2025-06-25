@@ -1,5 +1,5 @@
 /* =============================================
-   FUDI BACKGROUND - ESTILO CLAUDE MINIMALISTA
+   FUDI BACKGROUND - EXTENDED FOR FUDI-FLOW
    ============================================= */
 
 /* BASE CONTAINER */
@@ -8,7 +8,7 @@
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
-  /* El color se define en cada variante */
+  transition: all 0.3s ease;
 }
 
 .fudiBackground.fixed {
@@ -17,27 +17,95 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1; /* Detrás de todo */
+  z-index: -1;
 }
 
-/* ==================== TEMAS ==================== */
+.withParticles {
+  overflow: visible;
+}
 
-/* CLAUDE THEME - COLOR EXACTO DEL CHAT */
+/* ==================== ORIGINAL THEMES ==================== */
+
+/* CLAUDE THEME - Color exacto del chat */
 .claude {
-  background: #101014; /* Color exacto de Claude chat oscuro */
+  background: #101014;
 }
 
 /* BUSINESS THEME */
 .business {
-  background: #0f172a; /* Slate muy oscuro */
+  background: #0f172a;
 }
 
 /* DARK THEME */
 .dark {
-  background: #000000; /* Negro puro */
+  background: #000000;
 }
 
-/* ==================== VARIANTES ==================== */
+/* ==================== NEW FUDI-FLOW THEMES ==================== */
+
+/* SOCIAL THEME - Para fudi-flow general */
+.social {
+  background: linear-gradient(
+    135deg,
+    #0a0f1c 0%,
+    #1a1a2e 25%,
+    #16213e 50%,
+    #1a1a2e 75%,
+    #0a0f1c 100%
+  );
+  position: relative;
+}
+
+.social::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at 20% 20%,
+    rgba(255, 107, 53, 0.08) 0%,
+    transparent 40%
+  ),
+  radial-gradient(
+    circle at 80% 80%,
+    rgba(0, 188, 212, 0.06) 0%,
+    transparent 40%
+  ),
+  radial-gradient(
+    circle at 50% 50%,
+    rgba(139, 92, 246, 0.04) 0%,
+    transparent 50%
+  );
+  animation: socialPulse 8s ease-in-out infinite;
+}
+
+/* FLOW THEME - Específico para posts feed */
+.flow {
+  background: linear-gradient(
+    180deg,
+    #0d1117 0%,
+    #161b22 20%,
+    #21262d 50%,
+    #161b22 80%,
+    #0d1117 100%
+  );
+  position: relative;
+}
+
+.flow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(0, 188, 212, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 10%, rgba(251, 191, 36, 0.06) 0%, transparent 40%);
+  animation: flowGradientShift 12s ease-in-out infinite;
+}
+
+/* ==================== ORIGINAL VARIANTS ==================== */
 
 /* MINIMAL - Solo color sólido */
 .minimal {
@@ -83,6 +151,194 @@
   );
 }
 
+/* ==================== NEW VARIANTS FOR FLOW ==================== */
+
+/* ANIMATED - Con efectos de movimiento */
+.animated.social {
+  background: linear-gradient(
+    45deg,
+    #0a0f1c 0%,
+    #1a1a2e 25%,
+    #16213e 50%,
+    #1a1a2e 75%,
+    #0a0f1c 100%
+  );
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease-in-out infinite;
+}
+
+.animated.flow {
+  background: linear-gradient(
+    -45deg,
+    #0d1117 0%,
+    #161b22 25%,
+    #21262d 50%,
+    #161b22 75%,
+    #0d1117 100%
+  );
+  background-size: 300% 300%;
+  animation: flowGradientMove 10s ease-in-out infinite;
+}
+
+/* PARTICLES - Con sistema de partículas */
+.particles {
+  position: relative;
+}
+
+.particlesCanvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* ==================== INTENSITY LEVELS ==================== */
+
+.subtle {
+  filter: brightness(0.9) contrast(0.95);
+}
+
+.medium {
+  filter: brightness(1) contrast(1);
+}
+
+.intense {
+  filter: brightness(1.1) contrast(1.05) saturate(1.1);
+}
+
+/* ==================== FLOW ANIMATION LAYER ==================== */
+
+.flowAnimationLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.flowOrb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 107, 53, 0.1) 0%,
+    rgba(0, 188, 212, 0.05) 50%,
+    transparent 100%
+  );
+  animation: orbFloat 15s ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  filter: blur(20px);
+}
+
+.flowOrb:nth-child(1) {
+  top: -100px;
+  left: -100px;
+  animation-duration: 12s;
+}
+
+.flowOrb:nth-child(2) {
+  bottom: -100px;
+  right: -100px;
+  animation-duration: 16s;
+  animation-direction: reverse;
+}
+
+.flowOrb:nth-child(3) {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-duration: 20s;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(251, 191, 36, 0.08) 0%,
+    transparent 70%
+  );
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+@keyframes socialPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes flowGradientShift {
+  0%, 100% {
+    opacity: 0.7;
+    filter: hue-rotate(0deg);
+  }
+  33% {
+    opacity: 0.9;
+    filter: hue-rotate(10deg);
+  }
+  66% {
+    opacity: 0.8;
+    filter: hue-rotate(-5deg);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes flowGradientMove {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translate(20px, -30px) rotate(90deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-20px, -20px) rotate(180deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-30px, 20px) rotate(270deg);
+    opacity: 0.7;
+  }
+}
+
 /* ==================== CONTENT ==================== */
 
 .content {
@@ -90,4 +346,61 @@
   z-index: 10;
   width: 100%;
   height: 100%;
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 768px) {
+  .flowOrb {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .flowOrb:nth-child(3) {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .intense {
+    filter: brightness(1.05) contrast(1.02) saturate(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated,
+  .flowOrb,
+  .social::before,
+  .flow::before {
+    animation: none !important;
+  }
+  
+  .particlesCanvas {
+    display: none !important;
+  }
+}
+
+/* ==================== THEME-SPECIFIC ENHANCEMENTS ==================== */
+
+/* Social theme hover effects */
+.social:hover::before {
+  animation-duration: 4s;
+}
+
+/* Flow theme interactive effects */
+.flow:hover::before {
+  animation-duration: 6s;
+  opacity: 1.2;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .social,
+  .flow {
+    background: #000000;
+  }
+  
+  .social::before,
+  .flow::before {
+    display: none;
+  }
 }
