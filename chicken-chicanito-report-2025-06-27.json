@@ -1,0 +1,157 @@
+{
+  "timestamp": "2025-06-27T21:26:32.691Z",
+  "restaurant": "Chicken Chicanito",
+  "account_id": "201539",
+  "data_categories": {
+    "settings": {
+      "has_data": true,
+      "sample_count": 30,
+      "key_info": {}
+    },
+    "products": {
+      "has_data": true,
+      "total_count": 150,
+      "sample": [
+        {
+          "name": "AGUA BONAFONT 330 ML",
+          "price": {
+            "1": "1000"
+          },
+          "category": "BEBIDAS"
+        },
+        {
+          "name": "AGUA BURST 1.5 LI",
+          "price": {
+            "1": "1500"
+          },
+          "category": "BEBIDAS"
+        },
+        {
+          "name": "Agua Fresca",
+          "category": "BEBIDAS"
+        },
+        {
+          "name": "AGUA MEMBERS 1 LITRO",
+          "price": {
+            "1": "1500"
+          },
+          "category": "BEBIDAS"
+        },
+        {
+          "name": "AGUA MEMBERS 1/2 LITRO",
+          "price": {
+            "1": "1000"
+          },
+          "category": "BEBIDAS"
+        }
+      ]
+    },
+    "categories": {
+      "has_data": true,
+      "total_count": 22,
+      "list": [
+        "Top screen",
+        "ROSTI-ASADOS",
+        "COMBOS",
+        "PLATOS CHICANITOS",
+        "POLLO CRUJIENTE",
+        "PAQUETES",
+        "ALITAS CHICANITAS",
+        "ENSALADAS Y COMPLEMENTOS",
+        "COSTILLAS",
+        "PAQUETE INFANTIL",
+        "BEBIDAS",
+        "EXTRAS",
+        "TACOS DORADOS",
+        "SALSAS",
+        "PIZZAS",
+        "CLASICAS",
+        "ESPECIALIDADES",
+        "POLLO RELLENO",
+        "Pan",
+        "Pollo Pieza",
+        "Servicio domicilio",
+        "PROMOS DIARIAS"
+      ]
+    },
+    "ingredients": {
+      "has_data": true,
+      "total_count": 102,
+      "sample": [
+        {
+          "name": "Aceite",
+          "unit": "kg"
+        },
+        {
+          "name": "Aceite de olivo",
+          "unit": "kg"
+        },
+        {
+          "name": "Achiote",
+          "unit": "kg"
+        },
+        {
+          "name": "Ajo",
+          "unit": "kg"
+        },
+        {
+          "name": "Ajo Molido",
+          "unit": "kg"
+        }
+      ]
+    },
+    "inventory": {
+      "has_data": false
+    },
+    "employees": {
+      "has_data": true,
+      "total_count": 11,
+      "list": [
+        {
+          "name": "Liliam Lopez",
+          "role": "Propietario"
+        },
+        {
+          "name": "NANCY",
+          "role": "Cajero master"
+        },
+        {
+          "name": "Judith Vazquez ",
+          "role": "Administrador"
+        },
+        {
+          "name": "Wendy Mejia",
+          "role": "Cajero"
+        },
+        {
+          "name": "Miguel Enrique Portilla",
+          "role": "Administrador"
+        },
+        {
+          "name": "YESENIA NEPOMUCENO",
+          "role": "Mesero"
+        },
+        {
+          "name": "HECTOR RIVERA",
+          "role": "Administrador"
+        },
+        {
+          "name": "Veronica",
+          "role": "Cajero"
+        },
+        {
+          "name": "Ana",
+          "role": "Cajero"
+        },
+        {
+          "name": "DANIELA VENEGAS",
+          "role": "Cajero"
+        },
+        {
+          "name": "Marian O",
+          "role": "Administrador"
+        }
+      ]
+    }
+  }
+}

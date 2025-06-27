@@ -5,11 +5,11 @@ import styles from './FudiDashHeader.module.css';
 import { 
   Brain, BarChart3, MessageSquare, User, LogOut, 
   Menu, X, ChevronDown, Plus,
-  Truck, ShoppingCart
+  Truck, ShoppingCart, ChefHat
 } from 'lucide-react';
 
 interface FudiDashHeaderProps {
-  currentModule?: 'chat' | 'board' | 'delivery' | 'mart' | 'flow';
+  currentModule?: 'chat' | 'board' | 'recipes' | 'delivery' | 'mart' | 'flow';
   userName?: string;
   restaurantName?: string;
   conversations?: Array<{id: string, title: string, timestamp: Date}>;
@@ -32,7 +32,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
   const [isConversationsOpen, setIsConversationsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // FUDIVERSE complete modules
+  // FUDIVERSE complete modules - UPDATED with fudiRecetario
   const modules = [
     { 
       href: '/dashboard/chat', 
@@ -43,9 +43,16 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
     },
     { 
       href: '/dashboard/board', 
-      label: 'fudiBOARD', 
+      label: 'fudi-BOARD', 
       module: 'board', 
       icon: BarChart3,
+      status: 'active'
+    },
+    { 
+      href: '/dashboard/recipes', 
+      label: 'fudi-Recetario', 
+      module: 'recipes', 
+      icon: ChefHat,
       status: 'active'
     },
     { 
@@ -197,7 +204,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
           </div>
         )}
 
-        {/* Desktop Navigation - All 5 modules */}
+        {/* Desktop Navigation - All 6 modules including fudiRecetario */}
         <nav className={styles.desktopNav} role="navigation" aria-label="Navegación principal">
           {modules.map((module) => {
             const Icon = module.icon;
