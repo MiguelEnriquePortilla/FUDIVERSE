@@ -5,11 +5,11 @@ import styles from './FudiDashHeader.module.css';
 import { 
   Brain, BarChart3, MessageSquare, User, LogOut, 
   Menu, X, ChevronDown, Plus,
-  Truck, ShoppingCart, ChefHat
+  Truck, ShoppingCart, ChefHat, Settings
 } from 'lucide-react';
 
 interface FudiDashHeaderProps {
-  currentModule?: 'chat' | 'board' | 'recipes' | 'delivery' | 'mart' | 'flow';
+  currentModule?: 'chat' | 'board' | 'recipes' | 'ops' | 'delivery' | 'mart' | 'flow';
   userName?: string;
   restaurantName?: string;
   conversations?: Array<{id: string, title: string, timestamp: Date}>;
@@ -32,7 +32,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
   const [isConversationsOpen, setIsConversationsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // FUDIVERSE complete modules - UPDATED with fudiRecetario
+  // FUDIVERSE complete modules - UPDATED with fudiOPS
   const modules = [
     { 
       href: '/dashboard/chat', 
@@ -48,11 +48,18 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
       icon: BarChart3,
       status: 'active'
     },
-    { 
+    /*{ 
       href: '/dashboard/recipes', 
       label: 'fudi-Recetario', 
       module: 'recipes', 
       icon: ChefHat,
+      status: 'active'
+    },
+    { 
+      href: '/dashboard/fudiOps', 
+      label: 'fudi-OPS', 
+      module: 'ops', 
+      icon: Settings,
       status: 'active'
     },
     { 
@@ -78,7 +85,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
       icon: MessageSquare,
       status: 'coming-soon',
       eta: 'Q2'
-    }
+    }*/
   ];
 
   const handleLogout = () => {
@@ -204,7 +211,7 @@ export const FudiDashHeader: React.FC<FudiDashHeaderProps> = ({
           </div>
         )}
 
-        {/* Desktop Navigation - All 6 modules including fudiRecetario */}
+        {/* Desktop Navigation - All 7 modules including fudiOPS */}
         <nav className={styles.desktopNav} role="navigation" aria-label="Navegación principal">
           {modules.map((module) => {
             const Icon = module.icon;

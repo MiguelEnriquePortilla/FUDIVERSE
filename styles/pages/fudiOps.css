@@ -1,0 +1,732 @@
+/* ===================================
+   fudiOPS - OPTIMIZACIÓN OPERACIONAL
+   Estilos específicos para /dashboard/fudiOps
+   =================================== */
+
+/* ===================================
+   BASE LAYOUT
+   =================================== */
+.ops-container {
+  min-height: 100vh;
+  background: #0f0f23;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.ops-layout {
+  display: flex;
+  height: calc(100vh - 64px); /* Header height */
+  margin-top: 64px;
+}
+
+/* ===================================
+   SIDEBAR - QUICK ACTIONS
+   =================================== */
+.ops-sidebar {
+  width: 320px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 24px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.ops-sidebar-header {
+  margin-bottom: 24px;
+}
+
+.ops-sidebar-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+
+.ops-sidebar-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.ops-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+/* Quick Action Cards */
+.ops-action-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.ops-action-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(255, 107, 0, 0.15);
+}
+
+.ops-action-card.selected {
+  background: rgba(255, 107, 0, 0.2);
+  border-color: rgba(255, 107, 0, 0.4);
+  box-shadow: 0 8px 32px rgba(255, 107, 0, 0.2);
+}
+
+.ops-action-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ops-action-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.ops-action-icon {
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.ops-action-card.selected .ops-action-icon {
+  background: rgba(255, 107, 0, 0.3);
+}
+
+.ops-action-details h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 4px 0;
+}
+
+.ops-action-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ops-priority-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ops-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.ops-action-description {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.ops-action-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ops-action-impact {
+  font-size: 12px;
+  font-weight: 600;
+  color: #10b981;
+}
+
+.ops-action-chat-icon {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.ops-action-card:hover .ops-action-chat-icon {
+  color: #ff6b00;
+}
+
+/* Quick Stats */
+.ops-quick-stats {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.ops-quick-stats-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.ops-quick-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ops-quick-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.ops-quick-stat-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ops-quick-stat-value {
+  font-weight: 600;
+  color: white;
+}
+
+/* ===================================
+   MAIN CONTENT AREA
+   =================================== */
+.ops-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Dashboard Header */
+.ops-dashboard-header {
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ops-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: between;
+  margin-bottom: 24px;
+}
+
+.ops-header-left {
+  flex: 1;
+}
+
+.ops-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ops-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.ops-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.ops-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ops-savings-display {
+  text-align: right;
+}
+
+.ops-savings-amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #10b981;
+  margin: 0;
+}
+
+.ops-savings-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.ops-score-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 4px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  position: relative;
+}
+
+/* Metrics Grid */
+.ops-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.ops-metric-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.ops-metric-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ops-metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ops-metric-icon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ops-metric-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+
+.ops-metric-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+.ops-metric-progress {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ops-metric-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: all 0.5s ease;
+}
+
+/* ===================================
+   CHAT AREA
+   =================================== */
+.ops-chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Conversation Header */
+.ops-conversation-header {
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ops-conversation-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ops-conversation-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.ops-conversation-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.ops-conversation-close:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Messages Area */
+.ops-messages-area {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.ops-message {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ops-message.user {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.ops-message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 107, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ops-message.user .ops-message-avatar {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.ops-message-content {
+  max-width: 70%;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.ops-message.user .ops-message-content {
+  background: #ff6b00;
+  border-color: rgba(255, 107, 0, 0.3);
+}
+
+/* Input Area */
+.ops-input-area {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ops-input-form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.ops-input-field {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 12px 16px;
+  color: white;
+  font-size: 14px;
+  resize: none;
+  min-height: 44px;
+  max-height: 120px;
+  transition: all 0.3s ease;
+}
+
+.ops-input-field::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ops-input-field:focus {
+  outline: none;
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+}
+
+.ops-send-button {
+  background: #ff6b00;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.ops-send-button:hover {
+  background: #e55a00;
+  transform: translateY(-1px);
+}
+
+.ops-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===================================
+   WELCOME STATE
+   =================================== */
+.ops-welcome {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.ops-welcome-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.ops-welcome-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 107, 0, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px auto;
+}
+
+.ops-welcome-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.ops-welcome-description {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.ops-welcome-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ops-welcome-stat {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.ops-welcome-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ff6b00;
+  margin-bottom: 4px;
+}
+
+.ops-welcome-stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+@media (max-width: 1024px) {
+  .ops-sidebar {
+    width: 280px;
+  }
+  
+  .ops-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ops-layout {
+    flex-direction: column;
+  }
+  
+  .ops-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .ops-dashboard-header {
+    padding: 16px;
+  }
+  
+  .ops-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .ops-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ops-message-content {
+    max-width: 85%;
+  }
+  
+  .ops-input-form {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .ops-send-button {
+    align-self: flex-end;
+  }
+}
+
+/* ===================================
+   ANIMATIONS
+   =================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.ops-action-card,
+.ops-metric-card,
+.ops-message {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.ops-sidebar {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* ===================================
+   LOADING STATES
+   =================================== */
+.ops-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #0f0f23;
+}
+
+.ops-loading-content {
+  text-align: center;
+  color: white;
+}
+
+.ops-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid #ff6b00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.ops-loading-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.ops-loading-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+/* ===================================
+   UTILITIES
+   =================================== */
+.ops-text-gradient {
+  background: linear-gradient(135deg, #ff6b00, #ff8533);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ops-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ops-hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.ops-hover-lift:hover {
+  transform: translateY(-2px);
+}

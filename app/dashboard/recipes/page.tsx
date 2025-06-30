@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { 
   ChefHat, DollarSign, TrendingUp, Zap, AlertCircle,
   Plus, MessageCircle, Calculator, Target, Play,
   MoreVertical, Star, Package, Clock, Brain,
-  Settings, BarChart3, Users, Activity
+  Settings, BarChart3, Users, Activity, RefreshCw
 } from 'lucide-react';
 
 // Import FUDIVERSE Components
@@ -14,12 +13,6 @@ import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import '@/styles/pages/fudiRecipes.css';
-
-// Initialize Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // ==================== TYPES ====================
 interface Product {
@@ -35,6 +28,7 @@ interface Product {
   ingredients?: string[];
   costSavings?: number;
   monthlyImpact?: number;
+  recipeId?: string;
 }
 
 interface RecipeStats {
@@ -52,6 +46,23 @@ interface UserData {
   restaurantId: string;
 }
 
+interface APIResponse {
+  success: boolean;
+  data?: {
+    products: Product[];
+    stats: RecipeStats;
+    metadata: {
+      restaurantId: string;
+      timestamp: string;
+      productsCount: number;
+      recipesCount: number;
+      cached: boolean;
+    };
+  };
+  error?: string;
+  message?: string;
+}
+
 // ==================== DEMO DATA FALLBACK ====================
 const DEMO_USER_DATA: UserData = {
   restaurantName: 'Restaurante Demo',
@@ -62,9 +73,10 @@ const DEMO_USER_DATA: UserData = {
 // ==================== MAIN COMPONENT ====================
 export default function FudiRecetario() {
   // =============================================
-  // 🔒 CRITICAL STATE - REAL DATA
+  // 🔒 CRITICAL STATE - API INTEGRATED
   // =============================================
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [recipeStats, setRecipeStats] = useState<RecipeStats>({
     recipesCreated: 0,
@@ -85,7 +97,18 @@ export default function FudiRecetario() {
   // UI STATE
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [isCreatingRecipe, setIsCreatingRecipe] = useState(false);
-  const [chatStep, setChatStep] = useState(0);
+  const [creationProgress, setCreationProgress] = useState<{
+    step: number;
+    message: string;
+    progress: number;
+  }>({
+    step: 0,
+    message: '',
+    progress: 0
+  });
+
+  // Error handling
+  const [error, setError] = useState<string | null>(null);
 
   // =============================================
   // 🔒 PRODUCTION AUTH HANDLING
@@ -108,190 +131,139 @@ export default function FudiRecetario() {
   };
 
   // =============================================
-  // 🔥 REAL DATA LOADING FUNCTIONS
+  // 🔥 API INTEGRATION FUNCTIONS
   // =============================================
   
-  const loadRestaurantProducts = async (restaurantId: string): Promise<void> => {
+  const loadRecipesData = async (restaurantId: string, showLoader = false): Promise<void> => {
     try {
-      console.log('🔍 Loading products for restaurant:', restaurantId);
+      if (showLoader) setRefreshing(true);
       
-      // Get real products from poster_products
-      const { data: posterProducts, error: productsError } = await supabase
-        .from('poster_products')
-        .select('*')
-        .eq('restaurant_id', restaurantId)
-        .limit(20);
-
-      if (productsError) {
-        console.error('Error loading products:', productsError);
-        return;
-      }
-
-      console.log(`✅ Found ${posterProducts?.length || 0} products`);
-
-      // Get existing recipes from fudi_recipes
-      const { data: existingRecipes, error: recipesError } = await supabase
-        .from('fudi_recipes')
-        .select('*')
-        .eq('restaurant_id', restaurantId);
-
-      if (recipesError) {
-        console.error('Error loading recipes:', recipesError);
-      }
-
-      console.log(`✅ Found ${existingRecipes?.length || 0} existing recipes`);
-
-      // Get sales data from poster_transaction_products (last 30 days)
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-      const { data: salesData, error: salesError } = await supabase
-        .from('poster_transaction_products')
-        .select('product_id, num, product_sum')
-        .eq('restaurant_id', restaurantId)
-        .gte('created_at', thirtyDaysAgo.toISOString());
-
-      if (salesError) {
-        console.error('Error loading sales data:', salesError);
-      }
-
-      // Aggregate sales by product
-      const salesByProduct: { [key: string]: { volume: number, revenue: number } } = {};
-      salesData?.forEach(sale => {
-        const productId = sale.product_id;
-        if (!salesByProduct[productId]) {
-          salesByProduct[productId] = { volume: 0, revenue: 0 };
-        }
-        salesByProduct[productId].volume += parseInt(sale.num) || 0;
-        salesByProduct[productId].revenue += parseFloat(sale.product_sum) || 0;
+      console.log('🔍 Loading recipes data via API for restaurant:', restaurantId);
+      
+      const response = await fetch(`/api/fudirecipes?restaurantId=${restaurantId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
-      // Format products with real data
-      const formattedProducts: Product[] = posterProducts?.map(product => {
-        const recipe = existingRecipes?.find(r => r.poster_product_id === product.product_id);
-        const sales = salesByProduct[product.product_id] || { volume: 0, revenue: 0 };
-        
-        // Parse poster cost (it's in centavos)
-        const posterCost = parseFloat(product.cost) / 100 || 0;
-        const realCost = recipe?.calculated_cost || null;
-        const costSavings = recipe ? posterCost - realCost : undefined;
-        
-        // Determine priority based on sales volume and potential savings
-        let priority: 'high' | 'medium' | 'low' = 'low';
-        if (sales.volume > 100 || sales.revenue > 10000) priority = 'high';
-        else if (sales.volume > 20 || sales.revenue > 2000) priority = 'medium';
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      }
 
-        return {
-          id: product.product_id,
-          name: product.product_name,
-          category: product.category_name || 'GENERAL',
-          posterCost: posterCost,
-          realCost: realCost,
-          salesVolume: sales.volume,
-          revenue: sales.revenue,
-          status: recipe ? 'optimized' : 'pending',
-          priority: priority,
-          ingredients: recipe?.ingredients ? Object.keys(recipe.ingredients) : undefined,
-          costSavings: costSavings,
-          monthlyImpact: costSavings ? costSavings * sales.volume * 1.3 : undefined // 30% monthly projection
-        };
-      }) || [];
+      const apiResponse: APIResponse = await response.json();
 
-      // Sort by priority and sales volume
-      formattedProducts.sort((a, b) => {
-        const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
-        if (priorityOrder[b.priority] !== priorityOrder[a.priority]) {
-          return priorityOrder[b.priority] - priorityOrder[a.priority];
-        }
-        return b.salesVolume - a.salesVolume;
-      });
+      if (!apiResponse.success) {
+        throw new Error(apiResponse.error || 'Failed to load recipes data');
+      }
 
-      setProducts(formattedProducts);
-      console.log(`✅ Processed ${formattedProducts.length} products with real data`);
+      const { products, stats, metadata } = apiResponse.data!;
+
+      console.log(`✅ API Response: ${products.length} products, ${stats.recipesCreated} recipes`);
+      console.log(`📊 Cache status: ${metadata.cached ? 'HIT' : 'MISS'}`);
+
+      setProducts(products);
+      setRecipeStats(stats);
+      setError(null);
 
     } catch (error) {
-      console.error('💥 Error loading restaurant products:', error);
+      console.error('💥 Error loading recipes data:', error);
+      setError(error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      if (showLoader) setRefreshing(false);
     }
   };
 
-  const loadRecipeStats = async (restaurantId: string): Promise<void> => {
+  const createRecipeWithAI = async (product: Product): Promise<void> => {
     try {
-      console.log('📊 Loading recipe stats for restaurant:', restaurantId);
+      setIsCreatingRecipe(true);
+      setSelectedProduct(product.id);
+      setError(null);
 
-      // Get all recipes for this restaurant
-      const { data: recipes, error: recipesError } = await supabase
-        .from('fudi_recipes')
-        .select('*')
-        .eq('restaurant_id', restaurantId);
-
-      if (recipesError) {
-        console.error('Error loading recipe stats:', recipesError);
-        return;
-      }
-
-      console.log(`📈 Found ${recipes?.length || 0} recipes for stats`);
-
-      if (!recipes || recipes.length === 0) {
-        // No recipes yet - set empty stats
-        setRecipeStats({
-          recipesCreated: 0,
-          totalSavings: 0,
-          productsOptimized: 0,
-          monthlyProjection: 0,
-          avgSavingsPercent: 0,
-          topCategory: 'Sin datos'
-        });
-        return;
-      }
-
-      // Calculate real stats
-      const recipesCreated = recipes.length;
-      const totalSavings = recipes.reduce((sum, recipe) => 
-        sum + (parseFloat(recipe.cost_savings) || 0), 0
-      );
-      const productsOptimized = recipes.length; // Each recipe = 1 optimized product
-      
-      // Calculate monthly projection based on estimated sales
-      const monthlyProjection = recipes.reduce((sum, recipe) => 
-        sum + (parseFloat(recipe.weekly_savings_potential || 0) * 4.33), 0
-      );
-
-      // Calculate average savings percentage
-      const recipesWithSavings = recipes.filter(r => r.cost_savings && r.pos_cost);
-      const avgSavingsPercent = recipesWithSavings.length > 0 
-        ? recipesWithSavings.reduce((sum, recipe) => 
-            sum + ((parseFloat(recipe.cost_savings) / parseFloat(recipe.pos_cost)) * 100), 0
-          ) / recipesWithSavings.length
-        : 0;
-
-      // Find top category by total savings
-      const categorySavings: { [key: string]: number } = {};
-      recipes.forEach(recipe => {
-        const category = recipe.pos_category_name || 'GENERAL';
-        categorySavings[category] = (categorySavings[category] || 0) + parseFloat(recipe.cost_savings || 0);
-      });
-      
-      const topCategory = Object.keys(categorySavings).reduce((a, b) => 
-        categorySavings[a] > categorySavings[b] ? a : b, 'GENERAL'
-      );
-
-      setRecipeStats({
-        recipesCreated,
-        totalSavings,
-        productsOptimized,
-        monthlyProjection,
-        avgSavingsPercent,
-        topCategory
+      // Step 1: Analyze product
+      setCreationProgress({
+        step: 1,
+        message: `🔍 Analizando ${product.name}...`,
+        progress: 25
       });
 
-      console.log(`✅ Recipe stats calculated:`, {
-        recipesCreated,
-        totalSavings,
-        monthlyProjection
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Step 2: AI Processing
+      setCreationProgress({
+        step: 2,
+        message: '🧠 fudiGPT optimizando ingredientes...',
+        progress: 50
+      });
+
+      const requestBody = {
+        productId: product.id,
+        restaurantId: userData.restaurantId,
+        productName: product.name,
+        category: product.category,
+        posterCost: product.posterCost,
+        salesVolume: product.salesVolume
+      };
+
+      const response = await fetch('/api/fudirecipes/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || result.message || 'Failed to create recipe');
+      }
+
+      // Step 3: Saving recipe
+      setCreationProgress({
+        step: 3,
+        message: '💾 Guardando receta optimizada...',
+        progress: 75
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      // Step 4: Complete
+      setCreationProgress({
+        step: 4,
+        message: `✅ ¡Receta creada! Ahorro: ${formatMoney(result.data.savings.immediate)}`,
+        progress: 100
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Refresh data to show updated status
+      await loadRecipesData(userData.restaurantId, false);
+
+      console.log('🎉 Recipe created successfully:', {
+        productName: product.name,
+        savings: result.data.savings
       });
 
     } catch (error) {
-      console.error('💥 Error loading recipe stats:', error);
+      console.error('💥 Error creating recipe:', error);
+      setError(error instanceof Error ? error.message : 'Error creating recipe');
+      
+      setCreationProgress({
+        step: 0,
+        message: '❌ Error en la creación',
+        progress: 0
+      });
+
+      setTimeout(() => {
+        setIsCreatingRecipe(false);
+        setError(null);
+      }, 2000);
+    } finally {
+      setTimeout(() => {
+        setIsCreatingRecipe(false);
+        setCreationProgress({ step: 0, message: '', progress: 0 });
+      }, 2000);
     }
   };
 
@@ -321,11 +293,8 @@ export default function FudiRecetario() {
               id: decoded.restaurantId
             });
             
-            // 🔥 LOAD RESTAURANT SPECIFIC DATA
-            await Promise.all([
-              loadRestaurantProducts(decoded.restaurantId),
-              loadRecipeStats(decoded.restaurantId)
-            ]);
+            // 🔥 LOAD DATA VIA API
+            await loadRecipesData(decoded.restaurantId);
             
           } else {
             throw new Error('Invalid token structure');
@@ -337,6 +306,11 @@ export default function FudiRecetario() {
       } else {
         console.log('No token found, using demo data');
         handleInvalidAuth();
+        
+        // Load demo data
+        if (DEMO_USER_DATA.restaurantId) {
+          await loadRecipesData(DEMO_USER_DATA.restaurantId);
+        }
       }
       
       setLoading(false);
@@ -388,23 +362,10 @@ export default function FudiRecetario() {
     return '🍽️';
   };
 
-  const handleCreateRecipe = (productId: string) => {
-    setSelectedProduct(productId);
-    setIsCreatingRecipe(true);
-    setChatStep(0);
-    // Simulate chat progression
-    setTimeout(() => setChatStep(1), 1500);
-    setTimeout(() => setChatStep(2), 3000);
-    setTimeout(() => {
-      setChatStep(3);
-      // In real implementation, this would trigger actual recipe creation
-      setIsCreatingRecipe(false);
-      // Reload data to show updated status
-      if (userData.restaurantId) {
-        loadRestaurantProducts(userData.restaurantId);
-        loadRecipeStats(userData.restaurantId);
-      }
-    }, 4500);
+  const handleRefreshData = async () => {
+    if (userData.restaurantId) {
+      await loadRecipesData(userData.restaurantId, true);
+    }
   };
 
   // =============================================
@@ -418,8 +379,28 @@ export default function FudiRecetario() {
           <div className="loading-spinner"></div>
           <h2 className="loading-title">Cargando fudiRecetario</h2>
           <p className="loading-subtitle">
-            📊 Analizando productos • 🍽️ Cargando recetas • 💰 Calculando ahorros
+            📊 Conectando con API • 🍽️ Cargando recetas • 💰 Calculando ahorros
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  // =============================================
+  // ERROR STATE
+  // =============================================
+  if (error && products.length === 0) {
+    return (
+      <div className="recipes-error">
+        <FudiBackground variant="gradient" theme="business" opacity={1} fixed={true} />
+        <div className="error-content">
+          <AlertCircle className="error-icon" />
+          <h2 className="error-title">Error cargando datos</h2>
+          <p className="error-message">{error}</p>
+          <button onClick={handleRefreshData} className="error-button">
+            <RefreshCw />
+            Reintentar
+          </button>
         </div>
       </div>
     );
@@ -459,6 +440,15 @@ export default function FudiRecetario() {
           <p className="recipes-subtitle">
             {userData.restaurantName} • {recipeStats.recipesCreated} recetas activas • {formatMoney(recipeStats.totalSavings)} ahorrados
           </p>
+          
+          {/* Error Banner */}
+          {error && (
+            <div className="error-banner">
+              <AlertCircle />
+              <span>{error}</span>
+              <button onClick={() => setError(null)}>×</button>
+            </div>
+          )}
         </div>
 
         {/* Stats Grid */}
@@ -530,8 +520,12 @@ export default function FudiRecetario() {
             </span>
           </div>
           <div className="section-actions">
-            <button className="section-button section-button-secondary">
-              <Brain />
+            <button 
+              className={`section-button section-button-secondary ${refreshing ? 'loading' : ''}`}
+              onClick={handleRefreshData}
+              disabled={refreshing}
+            >
+              <RefreshCw className={refreshing ? 'spinning' : ''} />
             </button>
             <button className="section-button section-button-primary">
               <Plus />
@@ -546,8 +540,12 @@ export default function FudiRecetario() {
               <Package className="empty-icon" />
               <h3 className="empty-title">No hay productos disponibles</h3>
               <p className="empty-subtitle">
-                Verifica que tengas productos registrados en tu sistema POS
+                {error ? 'Error cargando datos. Intenta nuevamente.' : 'Verifica que tengas productos registrados en tu sistema POS'}
               </p>
+              <button onClick={handleRefreshData} className="empty-button">
+                <RefreshCw />
+                Recargar datos
+              </button>
             </div>
           ) : (
             products.map((product) => {
@@ -612,11 +610,12 @@ export default function FudiRecetario() {
                           className="product-button primary"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleCreateRecipe(product.id);
+                            createRecipeWithAI(product);
                           }}
+                          disabled={isCreatingRecipe}
                         >
                           <ChefHat />
-                          Crear Receta
+                          {isCreatingRecipe && selectedProduct === product.id ? 'Creando...' : 'Crear Receta'}
                         </button>
                         <button className="product-button secondary">
                           <Calculator />
@@ -679,7 +678,7 @@ export default function FudiRecetario() {
           )}
         </div>
 
-        {/* Chat Modal */}
+        {/* AI Creation Modal */}
         {isCreatingRecipe && (
           <div className="chat-modal">
             <div className="chat-modal-content">
@@ -687,14 +686,18 @@ export default function FudiRecetario() {
               <h3 className="chat-title">fudiGPT Creando Receta</h3>
               
               <div className="chat-steps">
-                {chatStep === 0 && <p>🔍 Analizando {products.find(p => p.id === selectedProduct)?.name}...</p>}
-                {chatStep === 1 && <p>🧠 Identificando ingredientes óptimos...</p>}
-                {chatStep === 2 && <p>💰 Calculando costos reales vs POSTER...</p>}
-                {chatStep === 3 && <p>✅ ¡Receta optimizada! Ahorro identificado.</p>}
+                <p>{creationProgress.message}</p>
               </div>
               
               <div className="chat-progress">
-                <div className="chat-progress-fill" style={{ width: `${(chatStep + 1) * 25}%` }}></div>
+                <div 
+                  className="chat-progress-fill" 
+                  style={{ width: `${creationProgress.progress}%` }}
+                ></div>
+              </div>
+              
+              <div className="chat-step-indicator">
+                Paso {creationProgress.step} de 4
               </div>
             </div>
           </div>
@@ -725,7 +728,7 @@ export default function FudiRecetario() {
       </div>
 
       {/* Floating Action Button */}
-      <button className="floating-action-button">
+      <button className="floating-action-button" onClick={handleRefreshData}>
         🍽️
       </button>
     </div>
