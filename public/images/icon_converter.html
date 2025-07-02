@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertidor de Logo a Icono</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+        }
+
+        .chef-icon {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 20px;
+            border: 3px solid #e9ecef;
+        }
+
+        .robot-chef {
+            width: 120px;
+            height: 140px;
+            position: relative;
+        }
+
+        .chef-hat {
+            width: 60px;
+            height: 40px;
+            background: #2c5282;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .chef-hat::before {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 15px;
+            background: #2c5282;
+            border-radius: 10px;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .robot-head {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(145deg, #1a365d, #2c5282);
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .robot-face {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .eye {
+            width: 12px;
+            height: 18px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .smile {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25px;
+            height: 12px;
+            border: 2px solid #00ff88;
+            border-top: none;
+            border-radius: 0 0 25px 25px;
+        }
+
+        .robot-body {
+            width: 70px;
+            height: 60px;
+            background: linear-gradient(145deg, #1a365d, #2c5282);
+            border-radius: 15px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .fud-badge {
+            background: #d73527;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 3px;
+            margin-bottom: 5px;
+        }
+
+        .button {
+            width: 8px;
+            height: 8px;
+            background: #4a5568;
+            border-radius: 50%;
+        }
+
+        .download-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .download-btn {
+            background: linear-gradient(145deg, #4299e1, #3182ce);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+
+        .size-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .size-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .size-btn:hover, .size-btn.active {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            color: #2b6cb0;
+        }
+
+        .instructions {
+            text-align: left;
+            background: #fff5f5;
+            border: 1px solid #fed7e2;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .step {
+            margin: 10px 0;
+            padding: 8px 0;
+        }
+
+        .step strong {
+            color: #2d3748;
+        }
+
+        .preview-sizes {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .preview-item {
+            text-align: center;
+        }
+
+        .preview-icon {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍳 Generador de Icono fudiGPT</h1>
+        
+        <div class="chef-icon" id="iconPreview">
+            <div class="robot-chef">
+                <div class="chef-hat"></div>
+                <div class="robot-head">
+                    <div class="robot-face">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                    <div class="smile"></div>
+                </div>
+                <div class="robot-body">
+                    <div class="buttons">
+                        <div class="button"></div>
+                        <div class="button"></div>
+                        <div class="button"></div>
+                    </div>
+                    <div class="fud-badge">FUD!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-sizes">
+            <div class="preview-item">
+                <div class="preview-icon" style="width: 16px; height: 16px;">
+                    <canvas width="16" height="16" id="preview16"></canvas>
+                </div>
+                <small>16x16</small>
+            </div>
+            <div class="preview-item">
+                <div class="preview-icon" style="width: 32px; height: 32px;">
+                    <canvas width="32" height="32" id="preview32"></canvas>
+                </div>
+                <small>32x32</small>
+            </div>
+            <div class="preview-item">
+                <div class="preview-icon" style="width: 48px; height: 48px;">
+                    <canvas width="48" height="48" id="preview48"></canvas>
+                </div>
+                <small>48x48</small>
+            </div>
+            <div class="preview-item">
+                <div class="preview-icon" style="width: 64px; height: 64px;">
+                    <canvas width="64" height="64" id="preview64"></canvas>
+                </div>
+                <small>64x64</small>
+            </div>
+        </div>
+
+        <div class="download-section">
+            <h3>📥 Descargar tu icono personalizado</h3>
+            <p>Selecciona el tamaño que necesites:</p>
+            
+            <div class="size-options">
+                <div class="size-btn active" data-size="16">16x16 px</div>
+                <div class="size-btn" data-size="32">32x32 px</div>
+                <div class="size-btn" data-size="48">48x48 px</div>
+                <div class="size-btn" data-size="64">64x64 px</div>
+                <div class="size-btn" data-size="256">256x256 px</div>
+            </div>
+            
+            <button class="download-btn" onclick="downloadIcon()">🎨 Descargar como PNG</button>
+            <button class="download-btn" onclick="downloadICO()">💾 Descargar como ICO</button>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Cómo usar tu icono personalizado:</h3>
+            <div class="step"><strong>1.</strong> Descarga el archivo .ico o .png</div>
+            <div class="step"><strong>2.</strong> Haz clic derecho en tu carpeta → Propiedades</div>
+            <div class="step"><strong>3.</strong> Ve a la pestaña "Personalizar"</div>
+            <div class="step"><strong>4.</strong> Haz clic en "Cambiar icono"</div>
+            <div class="step"><strong>5.</strong> Haz clic en "Examinar" y selecciona tu archivo</div>
+            <div class="step"><strong>6.</strong> ¡Aplica y disfruta tu icono personalizado! 🎉</div>
+        </div>
+    </div>
+
+    <script>
+        let selectedSize = 16;
+
+        // Función para dibujar el icono en un canvas
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 200; // Escala basada en el tamaño original de 200px
+            
+            ctx.clearRect(0, 0, size, size);
+            
+            // Fondo circular
+            ctx.fillStyle = '#f8f9fa';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - 2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Gorro del chef
+            ctx.fillStyle = '#2c5282';
+            ctx.beginPath();
+            ctx.ellipse(size/2, size*0.25, size*0.15, size*0.1, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Banda del gorro
+            ctx.fillRect(size*0.35, size*0.32, size*0.3, size*0.06);
+            
+            // Cabeza del robot
+            ctx.fillStyle = '#1a365d';
+            ctx.beginPath();
+            ctx.arc(size/2, size*0.45, size*0.2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Ojos
+            ctx.fillStyle = '#00ff88';
+            ctx.beginPath();
+            ctx.arc(size*0.43, size*0.42, size*0.03, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(size*0.57, size*0.42, size*0.03, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Sonrisa
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = scale * 2;
+            ctx.beginPath();
+            ctx.arc(size/2, size*0.47, size*0.06, 0, Math.PI);
+            ctx.stroke();
+            
+            // Cuerpo
+            ctx.fillStyle = '#2c5282';
+            ctx.fillRect(size*0.4, size*0.6, size*0.2, size*0.25);
+            
+            // Badge FUD
+            if (size >= 32) {
+                ctx.fillStyle = '#d73527';
+                ctx.fillRect(size*0.42, size*0.75, size*0.16, size*0.06);
+                
+                if (size >= 48) {
+                    ctx.fillStyle = 'white';
+                    ctx.font = `${scale * 8}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.fillText('FUD!', size/2, size*0.79);
+                }
+            }
+        }
+
+        // Generar previews
+        function generatePreviews() {
+            [16, 32, 48, 64].forEach(size => {
+                const canvas = document.getElementById(`preview${size}`);
+                drawIcon(canvas, size);
+            });
+        }
+
+        // Selección de tamaño
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedSize = parseInt(btn.dataset.size);
+            });
+        });
+
+        // Descargar PNG
+        function downloadIcon() {
+            const canvas = document.createElement('canvas');
+            canvas.width = selectedSize;
+            canvas.height = selectedSize;
+            drawIcon(canvas, selectedSize);
+            
+            const link = document.createElement('a');
+            link.download = `fudiGPT-icon-${selectedSize}x${selectedSize}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Descargar ICO (simulado como PNG con nombre .ico)
+        function downloadICO() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32; // Tamaño estándar para ICO
+            canvas.height = 32;
+            drawIcon(canvas, 32);
+            
+            const link = document.createElement('a');
+            link.download = 'fudiGPT-icon.ico';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Inicializar
+        generatePreviews();
+    </script>
+</body>
+</html>
