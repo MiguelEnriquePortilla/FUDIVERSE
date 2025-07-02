@@ -12,7 +12,7 @@ import {
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
-import '@/styles/pages/fudiOPS.css';
+import '@/styles/pages/fudiOps.css';
 
 // ==================== TYPES ====================
 interface OperationalMetrics {
