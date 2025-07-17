@@ -112,7 +112,7 @@ export default function RegisterPage() {
       });
 
       if (result.success) {
-        window.location.href = '/dashboard/chat';
+        window.location.href =  '/claude';
       } else {
         setErrorMessage(result.error || 'Error al crear la cuenta. Intenta de nuevo.');
       }

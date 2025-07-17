@@ -43,7 +43,7 @@ export const FudiHeader: React.FC<FudiHeaderProps> = ({
         {/* Logo */}
         <Link href="/" className={styles.logo}>
           <span className={styles.logoText}>FUDI</span>
-          <span className={styles.logoAccent}>VERSE</span>
+          <span className={styles.logoAccent}>GPT</span>
         </Link>
 
         {/* Desktop Navigation */}

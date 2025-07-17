@@ -1,0 +1,283 @@
+/* ===== CLAUDE PAGE STYLES ===== */
+
+/* Background limpio estilo Anthropic */
+.claude-clean-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.claude-simple-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #cbd5e1 75%,
+    #94a3b8 100%
+  );
+}
+
+/* Main Content */
+.claude-main {
+  margin-top: 0;
+  position: relative;
+  z-index: 10;
+  padding-top: 2rem;
+}
+
+/* Hero Section */
+.claude-hero-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  min-height: 90vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  gap: 4rem;
+}
+
+/* Content Left */
+.claude-content-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Typography */
+.claude-main-headline {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.claude-subtitle {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: #475569;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Status Message */
+.claude-status-message {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 107, 53, 0.05);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: 12px;
+  gap: 0.75rem;
+  width: fit-content;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.claude-status-indicator {
+  width: 8px;
+  height: 8px;
+  background: #ff6b35;
+  border-radius: 50%;
+  animation: claude-pulse 2s infinite;
+}
+
+.claude-status-message span {
+  color: #ff6b35;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+/* Buttons */
+.claude-buttons-container {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.claude-primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(30, 41, 59, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.claude-primary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(30, 41, 59, 0.3);
+}
+
+.claude-primary-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.claude-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: rgba(71, 85, 105, 0.05);
+  color: #475569;
+  border: 1px solid rgba(71, 85, 105, 0.2);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.claude-secondary-button:hover {
+  background: rgba(71, 85, 105, 0.1);
+  border-color: rgba(71, 85, 105, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.claude-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: claude-spin 1s linear infinite;
+}
+
+/* Logo Section */
+.claude-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  position: relative;
+}
+
+.claude-logo-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.claude-logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 107, 53, 0.05) 0%,
+    rgba(59, 130, 246, 0.03) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: claude-glow-pulse 4s ease-in-out infinite;
+  z-index: 1;
+}
+
+.claude-logo-frame {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  border-radius: 36px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  z-index: 2;
+  overflow: hidden;
+}
+
+.claude-main-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 32px;
+}
+
+.claude-powered-text {
+  position: relative;
+  z-index: 3;
+}
+
+.claude-powered-text span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(71, 85, 105, 0.6);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+/* Animations */
+@keyframes claude-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes claude-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes claude-glow-pulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.02); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .claude-hero-section {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    text-align: center;
+  }
+  
+  .claude-logo-container {
+    order: -1;
+    height: 500px !important;
+  }
+  
+  .claude-logo-frame {
+    width: 350px !important;
+    height: 350px !important;
+    border-radius: 30px !important;
+  }
+
+  .claude-logo-glow {
+    width: 400px !important;
+    height: 400px !important;
+  }
+
+  .claude-main-logo {
+    border-radius: 25px !important;
+  }
+}
