@@ -387,7 +387,57 @@ export default function ChatPage() {
     }
   };
 
-  // 🔒 CRITICAL SEND MESSAGE FUNCTION - PRESERVED EXACTLY
+  // 🔥 NUEVA FUNCIÓN CLAUDE MCP API
+  const callClaudeWithMCP = async (userMessage: string): Promise<string> => {
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "anthropic-beta": "mcp-client-2025-04-04"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1500,
+          messages: [
+            {
+              role: "system", 
+              content: `Eres fudiGPT, el asistente de inteligencia artificial especializado en restaurantes. Tienes acceso a datos reales del restaurante a través del MCP server. Usa un tono profesional pero amigable. Siempre proporciona análisis detallados y actionables para mejorar el negocio.`
+            },
+            {
+              role: "user", 
+              content: userMessage
+            }
+          ],
+          mcp_servers: [
+            {
+              type: "url",
+              url: "https://mcp.fudigpt.com/api/mcp/sse",
+              name: "fudigpt-restaurant-intelligence",
+              tool_configuration: {
+                enabled: true,
+                allowed_tools: ["query_restaurant_data"]
+              }
+            }
+          ]
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.content && data.content[0]) {
+        return data.content[0].text || 'Ups, no pude procesar tu consulta.';
+      } else {
+        console.error('Claude API Error:', data);
+        return 'Ups, tuve un problema técnico. ¿Puedes intentar de nuevo?';
+      }
+    } catch (error) {
+      console.error('Error calling Claude MCP API:', error);
+      return 'No pude conectarme al servicio. Verifica tu conexión e intenta de nuevo.';
+    }
+  };
+
+  // 🔒 CRITICAL SEND MESSAGE FUNCTION - ACTUALIZADO CON CLAUDE MCP
   const handleSendMessage = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
@@ -439,49 +489,44 @@ export default function ChatPage() {
     }
 
     try {
-      // 🔒 CRITICAL API CALL - PRESERVED EXACTLY
-      const response = await fudiAPI.chat(
-        userData.restaurantId,
-        userMessageContent
-      );
+      // 🔥 NUEVA LLAMADA A CLAUDE MCP API
+      const claudeResponse = await callClaudeWithMCP(userMessageContent);
+      
+      const responseTime = Date.now() - startTime;
+      const aiMessage: Message = {
+        id: messages.length + 2,
+        type: 'assistant',
+        content: claudeResponse,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, aiMessage]);
 
-      if (response.success) {
-        const responseTime = Date.now() - startTime;
-        const aiMessage: Message = {
-          id: messages.length + 2,
-          type: 'assistant',
-          content: response.response,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, aiMessage]);
+      // 🔒 CRITICAL SUPABASE SAVE - PRESERVED EXACTLY
+      if (conversationId) {
+        await fudiAPI.conversations.saveInteraction({
+          restaurantId: userData.restaurantId,
+          conversationId: conversationId,
+          userMessage: userMessageContent,
+          fudiResponse: claudeResponse,
+          responseTime: responseTime / 1000
+        });
 
-        // 🔒 CRITICAL SUPABASE SAVE - PRESERVED EXACTLY
-        if (conversationId) {
-          await fudiAPI.conversations.saveInteraction({
-            restaurantId: userData.restaurantId,
-            conversationId: conversationId,
-            userMessage: userMessageContent,
-            fudiResponse: response.response,
-            responseTime: responseTime / 1000
+        // Actualizar título de la conversación si es la primera
+        if (messages.length === 0) {
+          await fudiAPI.conversations.update(conversationId, {
+            title: userMessageContent.substring(0, 50) + '...'
           });
-
-          // Actualizar título de la conversación si es la primera
-          if (messages.length === 0) {
-            await fudiAPI.conversations.update(conversationId, {
-              title: userMessageContent.substring(0, 50) + '...'
-            });
-            
-            const updatedConversations = conversations.map(conv => 
-              conv.id === conversationId 
-                ? { ...conv, title: userMessageContent.substring(0, 50) + '...', lastMessage: 'Ahora' }
-                : conv
-            );
-            setConversations(updatedConversations);
-          }
+          
+          const updatedConversations = conversations.map(conv => 
+            conv.id === conversationId 
+              ? { ...conv, title: userMessageContent.substring(0, 50) + '...', lastMessage: 'Ahora' }
+              : conv
+          );
+          setConversations(updatedConversations);
         }
-        
-        playSound('receive');
       }
+      
+      playSound('receive');
     } catch (error) {
       console.error('Error:', error);
       const errorMessage: Message = {
@@ -597,8 +642,29 @@ export default function ChatPage() {
         </h1>
         
         <p className="welcome-subtitle-refined">
-          Escribe tu pregunta sobre el restaurante...
+          Pregúntame sobre las ventas, productos o cualquier análisis del restaurante...
         </p>
+        
+        <div className="welcome-suggestions">
+          <button 
+            onClick={() => setInputMessage('¿Cuáles fueron las ventas de ayer?')}
+            className="suggestion-chip"
+          >
+            💰 Ventas de ayer
+          </button>
+          <button 
+            onClick={() => setInputMessage('¿Cuáles son los productos más vendidos?')}
+            className="suggestion-chip"
+          >
+            🍗 Top productos
+          </button>
+          <button 
+            onClick={() => setInputMessage('Análisis de tendencias de la última semana')}
+            className="suggestion-chip"
+          >
+            📈 Tendencias
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -636,6 +702,7 @@ export default function ChatPage() {
             alt="fudiGPT" 
             className="fudi-avatar-liberated"
           />
+          <div className="mcp-badge">MCP</div>
         </div>
 
         {/* 🎨 MARKDOWN RENDERER ÉPICO */}
@@ -657,6 +724,7 @@ export default function ChatPage() {
           alt="fudiGPT" 
           className="fudi-avatar-liberated"
         />
+        <div className="mcp-badge">MCP</div>
       </div>
       <div className="fudi-content-liberated">
         <div className="typing-indicator-liberated">
@@ -686,7 +754,7 @@ export default function ChatPage() {
         <form onSubmit={handleSendMessage} className="floating-input-refined">
           {/* Custom Placeholder */}
           <div className={`input-placeholder-refined ${inputMessage ? 'hidden' : ''}`}>
-            Tu éxito comienza con una conversación...
+            Pregúntame sobre ventas, productos, tendencias...
           </div>
           
           <textarea
@@ -728,7 +796,7 @@ export default function ChatPage() {
       </div>
       
       <p className="input-disclaimer-refined">
-        fudiGPT puede cometer errores. Verifica información importante.
+        🔗 Conectado a Claude MCP • Datos en tiempo real del restaurante
       </p>
     </div>
   );
@@ -786,6 +854,47 @@ export default function ChatPage() {
           }}
         />
       ))}
+      
+      {/* CSS para MCP badge */}
+      <style jsx>{`
+        .mcp-badge {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          background: linear-gradient(45deg, #10b981, #059669);
+          color: white;
+          font-size: 0.6rem;
+          font-weight: 700;
+          padding: 2px 6px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .suggestion-chip {
+          background: rgba(96, 165, 250, 0.1);
+          border: 1px solid rgba(96, 165, 250, 0.3);
+          color: #93c5fd;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          margin: 0.25rem;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 0.9rem;
+        }
+        
+        .suggestion-chip:hover {
+          background: rgba(96, 165, 250, 0.2);
+          border-color: #60a5fa;
+          transform: translateY(-1px);
+        }
+        
+        .welcome-suggestions {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          margin-top: 1.5rem;
+        }
+      `}</style>
     </div>
   );
 }

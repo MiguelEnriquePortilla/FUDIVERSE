@@ -54,7 +54,7 @@ export default function LoginPage() {
         setStatusMessage('¡QUÉ GUSTO VERTE DE NUEVO!');
         
         setTimeout(() => {
-          window.location.href =  '/claude';
+          window.location.href =  '/dashboard/chat';
         }, 2000);
       } else {
         setStatusMessage('CREDENCIALES INCORRECTAS');
