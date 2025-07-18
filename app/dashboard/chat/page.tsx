@@ -387,53 +387,36 @@ export default function ChatPage() {
     }
   };
 
-  // 🔥 NUEVA FUNCIÓN CLAUDE MCP API
+  // 🔥 FUNCIÓN CLAUDE MCP VIA BACKEND SEGURO
   const callClaudeWithMCP = async (userMessage: string): Promise<string> => {
+    console.log('🔍 DEBUG: Llamando Claude via backend');
+    
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
+      const response = await fetch('/api/claude-mcp', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "anthropic-beta": "mcp-client-2025-04-04"
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1500,
-          messages: [
-            {
-              role: "system", 
-              content: `Eres fudiGPT, el asistente de inteligencia artificial especializado en restaurantes. Tienes acceso a datos reales del restaurante a través del MCP server. Usa un tono profesional pero amigable. Siempre proporciona análisis detallados y actionables para mejorar el negocio.`
-            },
-            {
-              role: "user", 
-              content: userMessage
-            }
-          ],
-          mcp_servers: [
-            {
-              type: "url",
-              url: "https://mcp.fudigpt.com/api/mcp/sse",
-              name: "fudigpt-restaurant-intelligence",
-              tool_configuration: {
-                enabled: true,
-                allowed_tools: ["query_restaurant_data"]
-              }
-            }
-          ]
+          message: userMessage,
+          restaurantId: userData.restaurantId
         })
       });
       
-      const data = await response.json();
+      console.log('📡 Backend response status:', response.status);
       
-      if (response.ok && data.content && data.content[0]) {
-        return data.content[0].text || 'Ups, no pude procesar tu consulta.';
+      const data = await response.json();
+      console.log('📦 Backend response success:', data.success);
+      
+      if (data.success) {
+        return data.response;
       } else {
-        console.error('Claude API Error:', data);
-        return 'Ups, tuve un problema técnico. ¿Puedes intentar de nuevo?';
+        console.error('❌ Backend Error:', data.error);
+        return `Error: ${data.error}`;
       }
     } catch (error) {
-      console.error('Error calling Claude MCP API:', error);
-      return 'No pude conectarme al servicio. Verifica tu conexión e intenta de nuevo.';
+      console.error('💥 Network Error:', error);
+      return `Error de conexión: ${error instanceof Error ? error.message : 'Error desconocido'}`;
     }
   };
 
