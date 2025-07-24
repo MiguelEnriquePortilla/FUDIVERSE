@@ -6,6 +6,7 @@ import { fudiAPI } from '@/lib/api';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
+import { ExpenseUpload, ExpenseAnalysisDisplay } from '@/components/ExpenseUpload';
 import '@/styles/pages/chat.css';
 
 // 🔥 DYNAMIC IMPORT PARA EVITAR SSR ISSUES
@@ -22,7 +23,7 @@ const ReactMarkdown = dynamic(() => import('react-markdown'), {
 import remarkGfm from 'remark-gfm';
 
 // =============================================
-// INTERFACES - MANTENER EXACTAMENTE IGUAL
+// INTERFACES
 // =============================================
 interface Conversation {
   id: string;
@@ -45,10 +46,9 @@ interface UserData {
 }
 
 // =============================================
-// 🎨 MARKDOWN COMPONENTS ÉPICOS
+// 🎨 MARKDOWN COMPONENTS
 // =============================================
 const MarkdownComponents = {
-  // Headers seguros
   h1: ({ children }: any) => (
     <h1 style={{
       fontSize: '2.5rem',
@@ -86,7 +86,6 @@ const MarkdownComponents = {
     </h3>
   ),
 
-  // Párrafos seguros
   p: ({ children }: any) => (
     <p style={{
       marginBottom: '1rem',
@@ -98,7 +97,6 @@ const MarkdownComponents = {
     </p>
   ),
 
-  // Strong seguro
   strong: ({ children }: any) => (
     <strong style={{
       fontWeight: 800,
@@ -109,7 +107,6 @@ const MarkdownComponents = {
     </strong>
   ),
 
-  // Blockquotes seguros
   blockquote: ({ children }: any) => (
     <blockquote style={{
       borderLeft: '4px solid #fb923c',
@@ -126,7 +123,6 @@ const MarkdownComponents = {
     </blockquote>
   ),
 
-  // Listas seguras
   ul: ({ children }: any) => (
     <ul style={{
       background: 'rgba(96, 165, 250, 0.05)',
@@ -149,7 +145,6 @@ const MarkdownComponents = {
     </li>
   ),
 
-  // Código seguro
   code: ({ inline, children }: any) => {
     if (inline) {
       return (
@@ -183,7 +178,6 @@ const MarkdownComponents = {
     );
   },
 
-  // Tablas seguras
   table: ({ children }: any) => (
     <div style={{ overflowX: 'auto', margin: '1.5rem 0' }}>
       <table style={{
@@ -221,7 +215,7 @@ const MarkdownComponents = {
 };
 
 // =============================================
-// 🎨 FUDI MARKDOWN RENDERER COMPONENT
+// 🎨 FUDI MARKDOWN RENDERER
 // =============================================
 const FudiMarkdownRenderer = ({ content }: { content: string }) => {
   return (
@@ -249,7 +243,7 @@ const DEMO_USER_DATA: UserData = {
 
 export default function ChatPage() {
   // =============================================
-  // 🔒 CRITICAL STATE - PRESERVED EXACTLY
+  // STATE
   // =============================================
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
@@ -259,12 +253,14 @@ export default function ChatPage() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [fudiPersonality, setFudiPersonality] = useState<'estratega' | 'motivador' | 'mentor' | 'casual'>('casual');
   const [messageCount, setMessageCount] = useState(0);
+  const [showExpenseUpload, setShowExpenseUpload] = useState(false);
+  const [currentAnalysis, setCurrentAnalysis] = useState<any>(null);
   
   // Easter eggs and effects
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number}>>([]);
   const [glowIntensity, setGlowIntensity] = useState(0);
   
-  // 🔒 CRITICAL USER DATA - PRESERVED EXACTLY + PRODUCTION READY
+  // User data
   const [userData, setUserData] = useState<UserData>({
     restaurantName: 'Cargando...',
     ownerName: 'Usuario',
@@ -281,12 +277,10 @@ export default function ChatPage() {
   // UTILITY FUNCTIONS
   // =============================================
   
-  // Saludo dinámico business casual
   const getGreeting = (): string => {
     const hour = new Date().getHours();
     const base = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
     
-    // Saludos especiales según hora - Business Style
     if (hour >= 2 && hour < 5) return '🦉 Trabajando tarde';
     if (hour >= 5 && hour < 7) return '🌅 Madrugador';
     if (hour === 13) return '🍽️ Hora del almuerzo';
@@ -294,7 +288,6 @@ export default function ChatPage() {
     return base;
   };
 
-  // Efectos de sonido
   const playSound = (type: 'send' | 'receive' | 'typing'): void => {
     if (type === 'send') {
       const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBi');
@@ -303,30 +296,25 @@ export default function ChatPage() {
     }
   };
 
-  // Scroll to bottom
   const scrollToBottom = (): void => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   // =============================================
-  // 🔒 PRODUCTION AUTH HANDLING
+  // AUTH HANDLING
   // =============================================
   const handleInvalidAuth = (): void => {
-    // Clear invalid tokens
     localStorage.removeItem('fudi_token');
     
-    // In production: redirect to login
-    // For development: use demo data
     if (process.env.NODE_ENV === 'production') {
       window.location.href = '/login';
     } else {
-      // Demo data for development
       setUserData(DEMO_USER_DATA);
     }
   };
 
   // =============================================
-  // 🔒 CRITICAL API FUNCTIONS - PRESERVED EXACTLY
+  // API FUNCTIONS
   // =============================================
   
   const loadConversations = async (restaurantId: string): Promise<void> => {
@@ -346,21 +334,18 @@ export default function ChatPage() {
     }
   };
 
-  // ✅ LOGOUT FUNCTION - PRODUCTION READY
   const handleLogout = (): void => {
     fudiAPI.logout();
     localStorage.removeItem('fudi_token');
     window.location.href = '/';
   };
 
-  // ✅ CONVERSATION MANAGEMENT
   const switchConversation = (conversationId: string): void => {
     setCurrentConversationId(conversationId);
-    setMessages([]); // In real app, load messages for this conversation
+    setMessages([]);
     setShowWelcome(false);
   };
 
-  // 🔒 CRITICAL CONVERSATION FUNCTIONS - PRESERVED EXACTLY
   const startNewConversation = async (): Promise<void> => {
     try {
       const response = await fudiAPI.conversations.create(
@@ -387,7 +372,6 @@ export default function ChatPage() {
     }
   };
 
-  // 🔥 FUNCIÓN CLAUDE MCP VIA BACKEND SEGURO
   const callClaudeWithMCP = async (userMessage: string): Promise<string> => {
     console.log('🔍 DEBUG: Llamando Claude via backend');
     
@@ -420,7 +404,6 @@ export default function ChatPage() {
     }
   };
 
-  // 🔒 CRITICAL SEND MESSAGE FUNCTION - ACTUALIZADO CON CLAUDE MCP
   const handleSendMessage = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
@@ -463,7 +446,6 @@ export default function ChatPage() {
     setInputMessage('');
     setIsTyping(true);
     
-    // Play send sound
     playSound('send');
 
     // Reset textarea height
@@ -472,7 +454,6 @@ export default function ChatPage() {
     }
 
     try {
-      // 🔥 NUEVA LLAMADA A CLAUDE MCP API
       const claudeResponse = await callClaudeWithMCP(userMessageContent);
       
       const responseTime = Date.now() - startTime;
@@ -484,7 +465,6 @@ export default function ChatPage() {
       };
       setMessages(prev => [...prev, aiMessage]);
 
-      // 🔒 CRITICAL SUPABASE SAVE - PRESERVED EXACTLY
       if (conversationId) {
         await fudiAPI.conversations.saveInteraction({
           restaurantId: userData.restaurantId,
@@ -494,7 +474,6 @@ export default function ChatPage() {
           responseTime: responseTime / 1000
         });
 
-        // Actualizar título de la conversación si es la primera
         if (messages.length === 0) {
           await fudiAPI.conversations.update(conversationId, {
             title: userMessageContent.substring(0, 50) + '...'
@@ -528,12 +507,10 @@ export default function ChatPage() {
   // EVENT HANDLERS
   // =============================================
   
-  // Auto-resize textarea
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     setInputMessage(e.target.value);
     setShowWelcome(false);
     
-    // Auto-resize
     e.target.style.height = 'auto';
     e.target.style.height = e.target.scrollHeight + 'px';
   };
@@ -545,21 +522,31 @@ export default function ChatPage() {
     }
   };
 
+  const handleExpenseAnalysisComplete = (analysis: any) => {
+    setCurrentAnalysis(analysis);
+    setShowExpenseUpload(false);
+    
+    const analysisMessage: Message = {
+      id: messages.length + 1,
+      type: 'assistant',
+      content: `¡Análisis de gasto completado! 📊\n\n**Proveedor:** ${analysis.supplier}\n**Total:** $${analysis.total_amount}\n\nHe actualizado automáticamente los márgenes de tus productos. ${analysis.analysis?.recommendations?.[0] || 'Todo se ve bien.'}`,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, analysisMessage]);
+  };
+
   // =============================================
   // EFFECTS
   // =============================================
   
-  // 🔒 CRITICAL DATA LOADING - PRODUCTION READY AUTHENTICATION
   useEffect(() => {
     const initializeUserData = async (): Promise<void> => {
       const token = localStorage.getItem('fudi_token');
       
       if (token) {
         try {
-          // Validate token format
           const decoded = JSON.parse(atob(token));
           
-          // Validate required fields
           if (decoded && decoded.restaurantId && decoded.ownerName) {
             setUserData({
               restaurantName: decoded.restaurantName || 'Mi Restaurante',
@@ -567,18 +554,15 @@ export default function ChatPage() {
               restaurantId: decoded.restaurantId
             });
             
-            // Load user's conversations
             await loadConversations(decoded.restaurantId);
           } else {
             throw new Error('Invalid token structure');
           }
         } catch (error) {
           console.error('Token validation failed:', error);
-          // Redirect to login for production
           handleInvalidAuth();
         }
       } else {
-        // No token - redirect to login
         handleInvalidAuth();
       }
     };
@@ -586,10 +570,8 @@ export default function ChatPage() {
     initializeUserData();
   }, []);
 
-  // Easter eggs effects
   useEffect(() => {
     if (inputMessage.toLowerCase().includes('fudiverse')) {
-      // Activar particles
       for (let i = 0; i < 8; i++) {
         setTimeout(() => {
           const particle = {
@@ -607,7 +589,6 @@ export default function ChatPage() {
     }
   }, [inputMessage]);
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -628,34 +609,13 @@ export default function ChatPage() {
           Pregúntame sobre las ventas, productos o cualquier análisis del restaurante...
         </p>
         
-        <div className="welcome-suggestions">
-          <button 
-            onClick={() => setInputMessage('¿Cuáles fueron las ventas de ayer?')}
-            className="suggestion-chip"
-          >
-            💰 Ventas de ayer
-          </button>
-          <button 
-            onClick={() => setInputMessage('¿Cuáles son los productos más vendidos?')}
-            className="suggestion-chip"
-          >
-            🍗 Top productos
-          </button>
-          <button 
-            onClick={() => setInputMessage('Análisis de tendencias de la última semana')}
-            className="suggestion-chip"
-          >
-            📈 Tendencias
-          </button>
-        </div>
+
       </div>
     </div>
   );
 
-  // 🔥 RENDER MESSAGE CON MARKDOWN POWER
   const renderMessage = (message: Message) => {
     if (message.type === 'user') {
-      // Usuario sigue con tarjetas (más compacto)
       return (
         <div
           key={message.id}
@@ -672,13 +632,11 @@ export default function ChatPage() {
       );
     }
 
-    // 🔥 FUDI COMPLETAMENTE LIBERADO CON MARKDOWN
     return (
       <div
         key={message.id}
         className="fudi-response-liberated"
       >
-        {/* Avatar flotante */}
         <div className="fudi-avatar-float">
           <img 
             src="/images/logo.png" 
@@ -688,10 +646,8 @@ export default function ChatPage() {
           <div className="mcp-badge">MCP</div>
         </div>
 
-        {/* 🎨 MARKDOWN RENDERER ÉPICO */}
         <FudiMarkdownRenderer content={message.content} />
         
-        {/* Firma de FUDI */}
         <div className="fudi-signature-container">
           <FudiSignature size="mini" showPulse={true} opacity={0.6} />
         </div>
@@ -735,7 +691,6 @@ export default function ChatPage() {
     <div className="input-area-refined">
       <div className="input-container-refined">
         <form onSubmit={handleSendMessage} className="floating-input-refined">
-          {/* Custom Placeholder */}
           <div className={`input-placeholder-refined ${inputMessage ? 'hidden' : ''}`}>
             Pregúntame sobre ventas, productos, tendencias...
           </div>
@@ -754,7 +709,8 @@ export default function ChatPage() {
             <button
               type="button"
               className="attach-button-refined"
-              title="Adjuntar archivo"
+              title="Subir documentos y gastos"
+              onClick={() => setShowExpenseUpload(!showExpenseUpload)}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -790,7 +746,6 @@ export default function ChatPage() {
   
   return (
     <div className="chat-container-refined">
-      {/* Single Clean Background */}
       <FudiBackground 
         variant="gradient"
         theme="business"
@@ -798,7 +753,6 @@ export default function ChatPage() {
         fixed={true}
       />
 
-      {/* ✅ NUEVO HEADER MINIMALISTA */}
       <FudiDashHeader
         currentModule="chat"
         userName={userData.ownerName}
@@ -813,7 +767,6 @@ export default function ChatPage() {
         onSwitchConversation={switchConversation}
       />
 
-      {/* Main Chat Area */}
       <main className="chat-main-refined">
         <div className="messages-area-refined">
           {showWelcome && messages.length === 0 ? 
@@ -822,11 +775,16 @@ export default function ChatPage() {
           }
         </div>
 
-        {/* Input Area */}
+        {showExpenseUpload && (
+          <ExpenseUpload
+            restaurantId={userData.restaurantId}
+            onAnalysisComplete={handleExpenseAnalysisComplete}
+          />
+        )}
+
         {renderInputArea()}
       </main>
       
-      {/* Particles for Easter Eggs */}
       {particles.map(particle => (
         <div
           key={particle.id}
@@ -838,7 +796,6 @@ export default function ChatPage() {
         />
       ))}
       
-      {/* CSS para MCP badge */}
       <style jsx>{`
         .mcp-badge {
           position: absolute;
