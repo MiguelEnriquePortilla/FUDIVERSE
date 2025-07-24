@@ -1,1 +1,18 @@
-{  "crons": [    {      "path": "/api/cron/poster-sync",      "schedule": "0 1 * * *"    },    {      "path": "/api/cron/intelligence",      "schedule": "0 2 * * *"    }  ]} 
+{
+  "crons": [
+    {
+      "path": "/api/cron/poster-sync",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/intelligence",
+      "schedule": "0 2 * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/dashboard/chat:token",
+      "destination": "/dashboard/chat?restaurant_token=:token"
+    }
+  ]
+}
