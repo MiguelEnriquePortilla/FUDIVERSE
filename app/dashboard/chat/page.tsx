@@ -6,9 +6,6 @@ import { fudiAPI } from '@/lib/api';
 import { FudiSignature } from '@/components/fudiverse/FudiSignature';
 import { FudiBackground } from '@/components/fudiverse/FudiBackground';
 import { FudiDashHeader } from '@/components/fudiverse/FudiDashHeader';
-import { FudiSmartVisualization } from '@/components/fudiverse/FudiSmartVisualization';
-import { enhanceMessageWithVisualization } from '@/utils/fudiVisualizationEngine';
-import { FudiChartsStyles } from '@/components/charts/FudiCharts';
 import '@/styles/pages/chat.css';
 
 const ReactMarkdown = dynamic(() => import('react-markdown'), { ssr: false });
@@ -27,8 +24,6 @@ interface Message {
   type: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  hasVisualization?: boolean;
-  visualizationData?: any;
 }
 
 interface UserData {
@@ -37,57 +32,243 @@ interface UserData {
   restaurantId: string;
 }
 
-// Markdown Components
+// 🎨 MARKDOWN COMPONENTS MEJORADOS COMO CLAUDE
 const MarkdownComponents = {
   h1: ({ children }: any) => (
-    <h1 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#60a5fa', marginBottom: '1.5rem' }}>
+    <h1 style={{ 
+      fontSize: '2.5rem', 
+      fontWeight: 900, 
+      color: '#60a5fa', 
+      marginBottom: '1.5rem',
+      textAlign: 'center'
+    }}>
       {children}
     </h1>
   ),
   h2: ({ children }: any) => (
-    <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#fb923c', marginBottom: '1rem' }}>
+    <h2 style={{ 
+      fontSize: '2rem', 
+      fontWeight: 800, 
+      color: '#fb923c', 
+      marginBottom: '1rem',
+      borderBottom: '2px solid rgba(251, 146, 60, 0.3)',
+      paddingBottom: '0.5rem'
+    }}>
       {children}
     </h2>
   ),
   h3: ({ children }: any) => (
-    <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#a78bfa', marginBottom: '0.75rem' }}>
+    <h3 style={{ 
+      fontSize: '1.5rem', 
+      fontWeight: 700, 
+      color: '#a78bfa', 
+      marginBottom: '0.75rem'
+    }}>
       {children}
     </h3>
   ),
   p: ({ children }: any) => (
-    <p style={{ marginBottom: '1rem', lineHeight: '1.7', color: 'rgba(255, 255, 255, 0.9)' }}>
+    <p style={{ 
+      marginBottom: '1rem', 
+      lineHeight: '1.7', 
+      color: 'rgba(255, 255, 255, 0.9)',
+      fontSize: '1.1rem'
+    }}>
       {children}
     </p>
   ),
   strong: ({ children }: any) => (
-    <strong style={{ fontWeight: 800, color: '#fb923c' }}>
+    <strong style={{ 
+      fontWeight: 800, 
+      color: '#fb923c',
+      background: 'rgba(251, 146, 60, 0.1)',
+      padding: '0.1rem 0.3rem',
+      borderRadius: '4px'
+    }}>
       {children}
     </strong>
   ),
+  em: ({ children }: any) => (
+    <em style={{ 
+      color: '#60a5fa',
+      fontStyle: 'italic'
+    }}>
+      {children}
+    </em>
+  ),
+  // 📊 TABLAS COMO CLAUDE
+  table: ({ children }: any) => (
+    <div style={{ 
+      overflow: 'auto', 
+      margin: '1.5rem 0',
+      borderRadius: '12px',
+      background: 'rgba(0, 0, 0, 0.3)',
+      border: '1px solid rgba(96, 165, 250, 0.2)'
+    }}>
+      <table style={{ 
+        width: '100%', 
+        borderCollapse: 'collapse'
+      }}>
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children }: any) => (
+    <thead style={{ 
+      background: 'rgba(96, 165, 250, 0.2)'
+    }}>
+      {children}
+    </thead>
+  ),
+  tbody: ({ children }: any) => (
+    <tbody>
+      {children}
+    </tbody>
+  ),
+  th: ({ children }: any) => (
+    <th style={{ 
+      padding: '1rem', 
+      textAlign: 'left', 
+      fontWeight: 700,
+      color: '#60a5fa',
+      borderBottom: '2px solid rgba(96, 165, 250, 0.3)'
+    }}>
+      {children}
+    </th>
+  ),
+  td: ({ children }: any) => (
+    <td style={{ 
+      padding: '0.75rem 1rem', 
+      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+      color: 'rgba(255, 255, 255, 0.9)'
+    }}>
+      {children}
+    </td>
+  ),
+  // 📝 LISTAS COMO CLAUDE
   ul: ({ children }: any) => (
-    <ul style={{ background: 'rgba(96, 165, 250, 0.05)', padding: '1rem', margin: '1rem 0' }}>
+    <ul style={{ 
+      background: 'rgba(96, 165, 250, 0.05)', 
+      padding: '1.5rem', 
+      margin: '1rem 0',
+      borderRadius: '12px',
+      border: '1px solid rgba(96, 165, 250, 0.2)',
+      listStyle: 'none'
+    }}>
       {children}
     </ul>
   ),
+  ol: ({ children }: any) => (
+    <ol style={{ 
+      background: 'rgba(167, 139, 250, 0.05)', 
+      padding: '1.5rem', 
+      margin: '1rem 0',
+      borderRadius: '12px',
+      border: '1px solid rgba(167, 139, 250, 0.2)',
+      counterReset: 'item'
+    }}>
+      {children}
+    </ol>
+  ),
   li: ({ children }: any) => (
-    <li style={{ marginBottom: '0.5rem', color: 'rgba(255, 255, 255, 0.9)' }}>
+    <li style={{ 
+      marginBottom: '0.75rem', 
+      color: 'rgba(255, 255, 255, 0.9)',
+      fontSize: '1.05rem',
+      lineHeight: '1.6',
+      paddingLeft: '0.5rem'
+    }}>
       {children}
     </li>
   ),
+  // 💻 CÓDIGO COMO CLAUDE
   code: ({ inline, children }: any) => {
     if (inline) {
       return (
-        <code style={{ background: 'rgba(96, 165, 250, 0.15)', padding: '0.25rem 0.5rem', borderRadius: '4px' }}>
+        <code style={{ 
+          background: 'rgba(96, 165, 250, 0.15)', 
+          color: '#60a5fa',
+          padding: '0.25rem 0.5rem', 
+          borderRadius: '6px',
+          fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace',
+          fontSize: '0.9em'
+        }}>
           {children}
         </code>
       );
     }
     return (
-      <pre style={{ background: 'rgba(0, 0, 0, 0.6)', padding: '1rem', borderRadius: '8px' }}>
-        <code style={{ color: '#10b981' }}>{children}</code>
-      </pre>
+      <div style={{
+        background: 'rgba(0, 0, 0, 0.6)',
+        border: '1px solid rgba(96, 165, 250, 0.2)',
+        borderRadius: '12px',
+        margin: '1.5rem 0',
+        overflow: 'auto'
+      }}>
+        <pre style={{ 
+          padding: '1.5rem',
+          margin: 0,
+          fontFamily: 'JetBrains Mono, Monaco, Consolas, monospace'
+        }}>
+          <code style={{ 
+            color: '#10b981',
+            fontSize: '0.95rem',
+            lineHeight: '1.5'
+          }}>
+            {children}
+          </code>
+        </pre>
+      </div>
     );
-  }
+  },
+  // 📦 BLOCKQUOTES COMO CLAUDE
+  blockquote: ({ children }: any) => (
+    <blockquote style={{
+      background: 'rgba(251, 146, 60, 0.1)',
+      border: '1px solid rgba(251, 146, 60, 0.3)',
+      borderLeft: '4px solid #fb923c',
+      borderRadius: '8px',
+      padding: '1.5rem',
+      margin: '1.5rem 0',
+      fontStyle: 'italic',
+      color: 'rgba(255, 255, 255, 0.95)'
+    }}>
+      {children}
+    </blockquote>
+  ),
+  // 🔗 LINKS COMO CLAUDE
+  a: ({ children, href }: any) => (
+    <a 
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        color: '#60a5fa',
+        textDecoration: 'underline',
+        textDecorationColor: 'rgba(96, 165, 250, 0.5)',
+        transition: 'all 0.2s'
+      }}
+      onMouseEnter={(e) => {
+        (e.target as HTMLElement).style.color = '#93c5fd';
+        (e.target as HTMLElement).style.textDecorationColor = '#60a5fa';
+      }}
+      onMouseLeave={(e) => {
+        (e.target as HTMLElement).style.color = '#60a5fa';
+        (e.target as HTMLElement).style.textDecorationColor = 'rgba(96, 165, 250, 0.5)';
+      }}
+    >
+      {children}
+    </a>
+  ),
+  // ➖ HR COMO CLAUDE
+  hr: () => (
+    <hr style={{
+      border: 'none',
+      height: '2px',
+      background: 'linear-gradient(90deg, transparent, rgba(96, 165, 250, 0.5), transparent)',
+      margin: '2rem 0'
+    }} />
+  )
 };
 
 const FudiMarkdownRenderer = ({ content }: { content: string }) => (
@@ -117,7 +298,6 @@ export default function ChatPage() {
     ownerName: 'Usuario',
     restaurantId: '13207c90-2ea6-4aa0-bfac-349753d24ea4'
   });
-  const [restaurantData, setRestaurantData] = useState<any>(null);
 
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -169,7 +349,7 @@ export default function ChatPage() {
     setShowWelcome(false);
   }, []);
 
-  // API call
+  // 🚀 API CALL SIMPLIFICADO
   const callClaudeWithMCP = async (userMessage: string) => {
     try {
       const response = await fetch('/api/claude-mcp', {
@@ -183,19 +363,18 @@ export default function ChatPage() {
       
       const data = await response.json();
       if (data.success) {
-        return { response: data.response, data: data.restaurantData || null };
+        return { response: data.response };
       } else {
-        return { response: `Error: ${data.error}`, data: null };
+        return { response: `Error: ${data.error}` };
       }
     } catch (error) {
       return { 
-        response: `Error de conexión: ${error instanceof Error ? error.message : 'Error desconocido'}`, 
-        data: null 
+        response: `Error de conexión: ${error instanceof Error ? error.message : 'Error desconocido'}`
       };
     }
   };
 
-  // Send message
+  // 📨 SEND MESSAGE SIMPLIFICADO
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
@@ -246,32 +425,15 @@ export default function ChatPage() {
       const claudeResult = await callClaudeWithMCP(userMessageContent);
       const responseTime = Date.now() - startTime;
       
-      // Enhance with visualizations
-
-      console.log('🚨 TESTING - About to call enhanceMessageWithVisualization');
-      console.log('🚨 userMessageContent:', userMessageContent);
-      console.log('🚨 claudeResult.response length:', claudeResult.response.length);
-      
-      const enhancedResult = enhanceMessageWithVisualization(userMessageContent, claudeResult.response, claudeResult.data || {});
-      
+      // ✅ SIMPLE: Solo usar la respuesta de Claude
       const aiMessage: Message = {
         id: messages.length + 2,
         type: 'assistant',
-        content: enhancedResult.enhancedText,
-        timestamp: new Date(),
-        hasVisualization: enhancedResult.hasVisualization,
-        visualizationData: enhancedResult.hasVisualization ? {
-          userMessage: userMessageContent,
-          restaurantData: claudeResult.data || restaurantData,
-          visualizationType: enhancedResult.visualizationType
-        } : null
+        content: claudeResult.response,
+        timestamp: new Date()
       };
       
       setMessages(prev => [...prev, aiMessage]);
-      
-      if (claudeResult.data) {
-        setRestaurantData(claudeResult.data);
-      }
 
       // Save interaction
       if (conversationId) {
@@ -279,7 +441,7 @@ export default function ChatPage() {
           restaurantId: userData.restaurantId,
           conversationId: conversationId,
           userMessage: userMessageContent,
-          fudiResponse: enhancedResult.enhancedText,
+          fudiResponse: claudeResult.response,
           responseTime: responseTime / 1000
         });
       }
@@ -354,7 +516,7 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages]);
 
-  // Render functions
+  // 📱 WELCOME SCREEN CON SUGERENCIAS
   const renderWelcomeScreen = () => (
     <div className="welcome-screen-refined">
       <div className="welcome-card-refined">
@@ -365,10 +527,33 @@ export default function ChatPage() {
         <p className="welcome-subtitle-refined">
           Pregúntame sobre las ventas, productos o cualquier análisis del restaurante...
         </p>
+        
+        {/* 💡 SUGERENCIAS RÁPIDAS */}
+        <div className="welcome-suggestions">
+          <div 
+            className="suggestion-chip"
+            onClick={() => setInputMessage('¿Cuáles son mis productos más vendidos?')}
+          >
+            📊 Top productos
+          </div>
+          <div 
+            className="suggestion-chip"
+            onClick={() => setInputMessage('¿Cómo estuvieron las ventas esta semana?')}
+          >
+            💰 Ventas semanales
+          </div>
+          <div 
+            className="suggestion-chip"
+            onClick={() => setInputMessage('Muéstrame un resumen completo del negocio')}
+          >
+            📈 Dashboard completo
+          </div>
+        </div>
       </div>
     </div>
   );
 
+  // 💬 RENDER MESSAGES
   const renderMessage = (message: Message) => {
     if (message.type === 'user') {
       return (
@@ -390,16 +575,6 @@ export default function ChatPage() {
         </div>
 
         <FudiMarkdownRenderer content={message.content} />
-        
-        {message.hasVisualization && message.visualizationData && (
-          <div className="fudi-visualization-container">
-            <FudiSmartVisualization
-              userMessage={message.visualizationData.userMessage}
-              responseText={message.content}
-              restaurantData={message.visualizationData.restaurantData}
-            />
-          </div>
-        )}
         
         <div className="fudi-signature-container">
           <FudiSignature size="mini" showPulse={true} opacity={0.6} />
@@ -498,8 +673,6 @@ export default function ChatPage() {
         </div>
       </main>
       
-      <FudiChartsStyles />
-      
       <style jsx>{`
         .mcp-badge {
           position: absolute;
@@ -518,31 +691,28 @@ export default function ChatPage() {
           background: rgba(96, 165, 250, 0.1);
           border: 1px solid rgba(96, 165, 250, 0.3);
           color: #93c5fd;
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
-          margin: 0.25rem;
+          padding: 0.75rem 1.25rem;
+          border-radius: 25px;
+          margin: 0.5rem;
           cursor: pointer;
-          transition: all 0.2s;
-          font-size: 0.9rem;
+          transition: all 0.3s ease;
+          font-size: 0.95rem;
+          font-weight: 500;
         }
         
         .suggestion-chip:hover {
           background: rgba(96, 165, 250, 0.2);
           border-color: #60a5fa;
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
         }
         
         .welcome-suggestions {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
-          margin-top: 1.5rem;
-        }
-        
-        .fudi-visualization-container {
-          margin: 1rem 0;
-          border-radius: 12px;
-          overflow: hidden;
+          margin-top: 2rem;
+          max-width: 600px;
         }
       `}</style>
     </div>
