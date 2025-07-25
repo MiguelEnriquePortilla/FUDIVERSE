@@ -247,9 +247,12 @@ export default function ChatPage() {
       const responseTime = Date.now() - startTime;
       
       // Enhance with visualizations
-      const enhancedResult = restaurantData ? 
-        enhanceMessageWithVisualization(userMessageContent, claudeResult.response, claudeResult.data || restaurantData) :
-        { enhancedText: claudeResult.response, hasVisualization: false, visualizationType: 'none' };
+
+      console.log('🚨 TESTING - About to call enhanceMessageWithVisualization');
+      console.log('🚨 userMessageContent:', userMessageContent);
+      console.log('🚨 claudeResult.response length:', claudeResult.response.length);
+      
+      const enhancedResult = enhanceMessageWithVisualization(userMessageContent, claudeResult.response, claudeResult.data || {});
       
       const aiMessage: Message = {
         id: messages.length + 2,

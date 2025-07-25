@@ -254,7 +254,7 @@ export class FudiVisualizationEngine {
   }
   
   static prepareProductsData(data: RestaurantData): ProductData[] {
-    if (!data.topProducts || data.topProducts.length === 0) return [];
+    if (!data || !data.topProducts || data.topProducts.length === 0) return [];
     
     return data.topProducts.slice(0, 8).map(product => ({
       product: product.product_name?.substring(0, 20) + (product.product_name?.length > 20 ? '...' : '') || 'Producto',
