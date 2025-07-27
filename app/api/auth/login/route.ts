@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     const { data: restaurant } = await supabase
       .from('restaurants')
       .select('name, owner_name, last_sync')
-      .eq('id', SHARED_RESTAURANT_ID)
+      .eq('email', email.toLowerCase())  // ← SOLUCIÓN
       .single();
 
     // Token completo
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       restaurantId: SHARED_RESTAURANT_ID,
       email: user.email,
       restaurantName: restaurant?.name || 'Mi Restaurante',
-      ownerName: restaurant?.owner_name || user.name,
+      ownerName: user.name,
       lastSync: restaurant?.last_sync || null
     })).toString('base64');
 

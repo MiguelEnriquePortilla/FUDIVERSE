@@ -529,26 +529,7 @@ export default function ChatPage() {
         </p>
         
         {/* 💡 SUGERENCIAS RÁPIDAS */}
-        <div className="welcome-suggestions">
-          <div 
-            className="suggestion-chip"
-            onClick={() => setInputMessage('¿Cuáles son mis productos más vendidos?')}
-          >
-            📊 Top productos
-          </div>
-          <div 
-            className="suggestion-chip"
-            onClick={() => setInputMessage('¿Cómo estuvieron las ventas esta semana?')}
-          >
-            💰 Ventas semanales
-          </div>
-          <div 
-            className="suggestion-chip"
-            onClick={() => setInputMessage('Muéstrame un resumen completo del negocio')}
-          >
-            📈 Dashboard completo
-          </div>
-        </div>
+        
       </div>
     </div>
   );
