@@ -1,0 +1,690 @@
+/* =============================================
+   FUDI DEMO PAGE - APPLE STYLE
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================
+   CSS VARIABLES - USAR LAS ESTÁNDAR
+   ============================================= */
+:root {
+  --fudi-orange: #ff6b35;
+  --fudi-cyan: #00bcd4;
+  --fudi-blue: #3b82f6;
+  --fudi-purple: #8b5cf6;
+  --fudi-green: #10b981;
+  --fudi-red: #ef4444;
+  
+  --text-primary: rgba(255, 255, 255, 0.98);
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  
+  --glass-bg: rgba(0, 0, 0, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.12);
+  
+  --section-padding: 8rem 2rem;
+  --container-max-width: 1200px;
+}
+
+/* =============================================
+   CONTAINER BASE
+   ============================================= */
+.demo-container-refined {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+}
+
+/* =============================================
+   LANGUAGE TOGGLE
+   ============================================= */
+.language-toggle-refined {
+  position: fixed;
+  top: 6rem;
+  right: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 100;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 25px;
+  padding: 0.5rem;
+}
+
+/* =============================================
+   HERO SECTION
+   ============================================= */
+.hero-demo-refined {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rem 2rem 4rem 2rem;
+  text-align: center;
+}
+
+.hero-content-demo-refined {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-badge-demo-refined {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 3rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--fudi-green);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+.fudi-character-demo-refined {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 2rem auto;
+  position: relative;
+  animation: characterFloat 4s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.fudi-logo-demo-refined {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(255, 107, 53, 0.3));
+  border-radius: 20px;
+}
+
+.hero-title-demo-refined {
+  font-size: clamp(3.5rem, 12vw, 7rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, var(--text-primary), var(--fudi-orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleShine 6s ease-in-out infinite;
+}
+
+.hero-subtitle-demo-refined {
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =============================================
+   DEMO SECTION
+   ============================================= */
+.demo-section-refined {
+  padding: 2rem 2rem 4rem 2rem;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+}
+
+.demo-content-refined {
+  text-align: center;
+}
+
+.demo-header-refined {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.demo-title-refined {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
+}
+
+.chat-demo-refined {
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 400px;
+}
+
+.chat-header-refined {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 2rem;
+}
+
+.chat-avatar-refined {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--fudi-orange);
+}
+
+.chat-avatar-refined img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chat-info-refined h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.chat-info-refined p {
+  font-size: 1rem;
+  color: var(--text-tertiary);
+}
+
+.chat-messages-refined {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 300px;
+}
+
+.message-demo-refined {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: messageSlideIn 0.8s ease-out 0.3s forwards;
+}
+
+.message-demo-refined.user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar-refined {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.message-content-refined {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1rem 1.5rem;
+  max-width: 70%;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  backdrop-filter: blur(10px);
+}
+
+.message-demo-refined.user .message-content-refined {
+  background: rgba(255, 107, 53, 0.15);
+  border-color: rgba(255, 107, 53, 0.3);
+  color: var(--text-primary);
+}
+
+.message-demo-refined.fudi .message-content-refined {
+  background: rgba(0, 188, 212, 0.15);
+  border-color: rgba(0, 188, 212, 0.3);
+  color: var(--text-primary);
+}
+
+/* =============================================
+   FORM SECTION
+   ============================================= */
+.form-section-refined {
+  padding: 4rem 2rem 6rem 2rem;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.form-content-refined {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-header-refined {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-title-refined {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.demo-form-refined {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 3rem;
+  backdrop-filter: blur(20px);
+}
+
+.form-grid-refined {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.form-group-refined {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group-refined.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group-refined label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.form-input-refined,
+.form-select-refined {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-input-refined:focus,
+.form-select-refined:focus {
+  outline: none;
+  border-color: var(--fudi-orange);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.form-input-refined::placeholder {
+  color: var(--text-muted);
+}
+
+.pain-points-grid-refined {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.pain-point-refined {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.pain-point-refined:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--fudi-orange);
+}
+
+.pain-point-refined.selected {
+  background: rgba(255, 107, 53, 0.15);
+  border-color: var(--fudi-orange);
+  color: var(--text-primary);
+}
+
+.pain-point-refined svg {
+  color: var(--text-muted);
+  transition: color 0.3s ease;
+}
+
+.pain-point-refined.selected svg {
+  color: var(--fudi-orange);
+}
+
+.pain-point-refined span {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.pain-point-refined.selected span {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.form-actions-refined {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+/* =============================================
+   ANIMATIONS - COMPLETING FROM WHERE IT LEFT OFF
+   ============================================= */
+@keyframes characterFloat {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  25% { 
+    transform: translateY(-10px) rotate(1deg); 
+  }
+  50% { 
+    transform: translateY(-5px) rotate(0deg); 
+  }
+  75% { 
+    transform: translateY(-15px) rotate(-1deg); 
+  }
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes titleShine {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes messageSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.6);
+  }
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
+@media (max-width: 1024px) {
+  .language-toggle-refined {
+    top: 5rem;
+    right: 1.5rem;
+  }
+  
+  .hero-demo-refined {
+    padding: 10rem 1.5rem 6rem 1.5rem;
+  }
+  
+  .fudi-character-demo-refined {
+    width: 220px;
+    height: 220px;
+    border-radius: 25px;
+  }
+  
+  .demo-section-refined,
+  .form-section-refined {
+    padding: 6rem 1.5rem;
+  }
+  
+  .demo-form-refined {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-padding: 4rem 1rem;
+  }
+  
+  .language-toggle-refined {
+    top: 4rem;
+    right: 1rem;
+    scale: 0.9;
+  }
+  
+  .hero-demo-refined {
+    min-height: 90vh;
+    padding: 8rem 1rem 4rem 1rem;
+  }
+  
+  .hero-badge-demo-refined {
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .fudi-character-demo-refined {
+    width: 180px;
+    height: 180px;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+  }
+  
+  .hero-title-demo-refined {
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-subtitle-demo-refined {
+    margin-bottom: 3rem;
+  }
+  
+  .demo-header-refined {
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .chat-demo-refined {
+    min-height: 300px;
+  }
+  
+  .chat-header-refined {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .chat-avatar-refined {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .message-content-refined {
+    max-width: 85%;
+    font-size: 0.9rem;
+  }
+  
+  .form-grid-refined {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .demo-form-refined {
+    padding: 1.5rem;
+  }
+  
+  .pain-points-grid-refined {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-demo-refined {
+    padding: 6rem 0.75rem 3rem 0.75rem;
+  }
+  
+  .fudi-character-demo-refined {
+    width: 150px;
+    height: 150px;
+    border-radius: 25px;
+  }
+  
+  .hero-badge-demo-refined {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .demo-form-refined {
+    padding: 1rem;
+  }
+  
+  .form-input-refined,
+  .form-select-refined {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .pain-point-refined {
+    padding: 0.8rem;
+  }
+  
+  .pain-point-refined span {
+    font-size: 0.85rem;
+  }
+}
+
+/* =============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  .fudi-character-demo-refined,
+  .hero-badge-demo-refined,
+  .hero-title-demo-refined {
+    animation: none;
+  }
+  
+  .message-demo-refined {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
+    --text-tertiary: #ffffff;
+    --glass-border: rgba(255, 255, 255, 0.3);
+  }
+  
+  .form-input-refined,
+  .form-select-refined {
+    border-width: 2px;
+  }
+  
+  .pain-point-refined {
+    border-width: 2px;
+  }
+}
+
+/* Focus management for better accessibility */
+.form-input-refined:focus-visible,
+.form-select-refined:focus-visible,
+.pain-point-refined:focus-visible {
+  outline: 2px solid var(--fudi-orange);
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.form-input-refined.loading {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Hover effects for better interactivity */
+.chat-demo-refined:hover {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Print styles */
+@media print {
+  .demo-container-refined {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .language-toggle-refined,
+  .hero-badge-demo-refined {
+    display: none;
+  }
+  
+  .fudi-character-demo-refined {
+    animation: none;
+  }
+}

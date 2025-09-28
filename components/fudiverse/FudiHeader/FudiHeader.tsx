@@ -5,11 +5,11 @@ import Link from 'next/link';
 import styles from './FudiHeader.module.css';
 import { 
   Brain, BarChart3, Vault, Users, ShoppingCart,
-  Bell, Settings, User, LogOut, Menu, X
+  Bell, Settings, User, LogOut, Menu, X, Play
 } from 'lucide-react';
 
 interface FudiHeaderProps {
-  currentPage?: 'home' | 'about' | 'features' | 'pricing' | 'login' | 'register' | 'dashboard';
+  currentPage?: 'home' | 'about' | 'features' | 'pricing' | 'login' | 'demo' | 'register' | 'dashboard';
   showAuthButtons?: boolean;
   className?: string;
 }
@@ -25,6 +25,7 @@ export const FudiHeader: React.FC<FudiHeaderProps> = ({
     { href: '/', label: 'Inicio', page: 'home' },
     { href: '/about', label: 'Nosotros', page: 'about' },
     { href: '/features', label: 'Features', page: 'features' },
+    { href: '/demo', label: 'Demo', page: 'demo', isSpecial: true },
     { href: '/pricing', label: 'Precios', page: 'pricing' },
   ];
 
@@ -55,9 +56,12 @@ export const FudiHeader: React.FC<FudiHeaderProps> = ({
               <Link
                 key={link.page}
                 href={link.href}
-                className={`${styles.navLink} ${isActive ? styles.navActive : ''}`}
+                className={`${styles.navLink} ${isActive ? styles.navActive : ''} ${
+                  link.isSpecial ? styles.navSpecial : ''
+                }`}
                 onClick={closeMobileMenu}
               >
+                {link.isSpecial && <Play size={14} />}
                 {link.label}
               </Link>
             );
@@ -67,7 +71,7 @@ export const FudiHeader: React.FC<FudiHeaderProps> = ({
         {/* User Section */}
         <div className={styles.userSection}>
           
-          {/* Desktop Auth Buttons - AHORA CON NAVEGACIÓN */}
+          {/* Desktop Auth Buttons */}
           {showAuthButtons && (
             <div className={styles.desktopAuth}>
               <Link href="/login" className={styles.loginButton}>
@@ -107,16 +111,17 @@ export const FudiHeader: React.FC<FudiHeaderProps> = ({
                     href={link.href}
                     className={`${styles.mobileNavLink} ${
                       isActive ? styles.mobileNavActive : ''
-                    }`}
+                    } ${link.isSpecial ? styles.mobileNavSpecial : ''}`}
                     onClick={closeMobileMenu}
                   >
+                    {link.isSpecial && <Play size={16} />}
                     {link.label}
                   </Link>
                 );
               })}
             </nav>
 
-            {/* Mobile Auth Buttons - AHORA CON NAVEGACIÓN */}
+            {/* Mobile Auth Buttons */}
             {showAuthButtons && (
               <div className={styles.mobileActions}>
                 <Link 

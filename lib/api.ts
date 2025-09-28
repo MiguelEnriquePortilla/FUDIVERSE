@@ -17,10 +17,15 @@ interface AuthResponse {
   error?: string;
 }
 
+interface DemoResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
+
 // Cliente API
 class FudiAPI {
   private token: string | null = null;
-  conversations: any;
 
   // Configurar token de autenticación
   setToken(token: string) {
@@ -109,6 +114,37 @@ class FudiAPI {
       return data;
     } catch (error) {
       console.error('Register error:', error);
+      return {
+        success: false,
+        error: (error as Error).message
+      };
+    }
+  }
+
+  // Solicitar demo
+  async demo(demoData: {
+    restaurantName: string;
+    ownerName: string;
+    email: string;
+    phone: string;
+    country?: string;
+    painPoints?: string[];
+    preferredLanguage?: string;
+    demoDate?: string;
+    demoTime?: string;
+    currentPOS?: string;
+  }): Promise<DemoResponse> {
+    try {
+      const response = await fetch('/api/demo', {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(demoData)
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Demo error:', error);
       return {
         success: false,
         error: (error as Error).message
@@ -259,4 +295,4 @@ class FudiAPI {
 export const fudiAPI = new FudiAPI();
 
 // Exportar tipos
-export type { ChatResponse, AuthResponse };
+export type { ChatResponse, AuthResponse, DemoResponse };
